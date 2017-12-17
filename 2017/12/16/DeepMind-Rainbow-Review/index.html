@@ -88,8 +88,8 @@
 <meta property="og:description" content="IntroductionSince the publication of Playing Atari with Deep Reinforcement Learning, there are six extensions (彩虹🌈) further developed by DeepMind:  Deep Reinforcement Learning with Double Q-learning">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1873837-8316481ba05d2bfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://drive.google.com/file/d/0B6zgGDAEaICRXzhQUzJGY3U0Y1V3aUhMVDRYSE9XR2xpaWdv/preview">
-<meta property="og:updated_time" content="2017-12-17T02:32:31.675Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1873837-a9aebc96868a27a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-12-17T02:51:42.167Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DeepMind--Rainbow: Review">
 <meta name="twitter:description" content="IntroductionSince the publication of Playing Atari with Deep Reinforcement Learning, there are six extensions (彩虹🌈) further developed by DeepMind:  Deep Reinforcement Learning with Double Q-learning">
@@ -333,11 +333,11 @@
 <li><a href="https://arxiv.org/pdf/1707.06887.pdf" target="_blank" rel="noopener">A Distributional Perspective on Reinforcement Learning - 2017</a></li>
 </ol>
 <p>The Oct.6th published article – <a href="https://arxiv.org/pdf/1710.02298.pdf" target="_blank" rel="noopener">Rainbow: Combining Improvements in Deep Reinforcement Learning</a> tries combine the above six method together. It shows promising and expected result. More interestingly, figure 3 revels the marginal improvement offered by each extension:</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1873837-8316481ba05d2bfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Screen Shot 2017-10-11 at 4.03.48 PM.png"></p>
+<h2 id="Which-extension-is-outstanding"><a href="#Which-extension-is-outstanding" class="headerlink" title="Which extension is outstanding?"></a>Which extension is outstanding?</h2><p><img src="http://upload-images.jianshu.io/upload_images/1873837-8316481ba05d2bfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Screen Shot 2017-10-11 at 4.03.48 PM.png"></p>
 <p>We can tell from Figure 3.:</p>
 <ul>
-<li><span style:"color:red"="">N-step return, prioritized replay and distributional Bellman generate the biggest marginal improvement individually</span>.</li>
-<li><span style:"color:blue"="">Dueling and Double Q offer the smallest improvement among all extensions</span>.</li>
+<li><span style="color:red">N-step return, prioritized replay and distributional Bellman generate the biggest marginal improvement individually</span>.</li>
+<li><span style="color:blue">Dueling and Double Q offer the smallest improvement among all extensions</span>.</li>
 </ul>
 <p>We know that:</p>
 <ul>
@@ -352,10 +352,10 @@
 <li>Distributional Bellman equation treat the “value function” as a distribution of rewards.</li>
 <li>These three extension aim to create/select a better target for the action-value function to learn.</li>
 </ul>
-<p>With that said, combining the result of Fig3, we are able to conclude that for a value-based method: Having better target to learn is generally more effective than learning target better.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>With that said, combining the result of Fig3, we are able to conclude that for a value-based method: Having better target to learn is generally more effective than learning target better.</p>
 <p>Further, adding a final noisy dense layer does help exploring (i.e. finding better target to learn) in general.</p>
-<p><img src="https://drive.google.com/file/d/0B6zgGDAEaICRXzhQUzJGY3U0Y1V3aUhMVDRYSE9XR2xpaWdv/preview" alt="Figure1"></p>
-<p>Also, Figure 1 shows prioritized DQN, and Distributional DQN are about the same level. DDQN aided by Dueling is better than plain DDQN, and DDQN &gt; DQN, meaning Dueling and Double Q (both are learning target better method) are good combination, but Dueling DDQN barely matches prioritized DQN, and Distributional DQN (which are learning better target).</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1873837-a9aebc96868a27a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Figure1"></p>
+<p>Also, Figure 1 shows prioritized DQN, and Distributional DQN are about the same level. DDQN aided by Dueling is better than plain DDQN. Besides plain DDQN &gt; plain DQN, this implies Dueling and Double Q (both are learning target better method) are good combination, but Dueling DDQN barely matches prioritized DQN, and Distributional DQN (which are learning better target).</p>
 <p>And going back to Figure3, <strong>it seems like Rainbow only needs one “learning target better” method</strong>. And it would be interesting to see how Rainbow performs without Dueling &amp; Double Q.</p>
 
       
@@ -524,7 +524,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Which-extension-is-outstanding"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Which-extension-is-outstanding" class="headerlink" title="Which extension is outstanding?"></a>Which extension is outstanding?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</span></a></li></ol></div>
             
 
           </div>
