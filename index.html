@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="">
+<html class="theme-next muse use-motion" lang="en">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -79,12 +79,16 @@
 
 
 
+<meta name="description" content="纸上得来终觉浅，绝知此事要躬行">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Yu&#39;s blog">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="Yu&#39;s blog">
+<meta property="og:description" content="纸上得来终觉浅，绝知此事要躬行">
+<meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Yu&#39;s blog">
+<meta name="twitter:description" content="纸上得来终觉浅，绝知此事要躬行">
 
 
 
@@ -132,7 +136,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
 
   
   
@@ -181,7 +185,27 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
           </a>
         </li>
       
@@ -191,7 +215,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -228,10 +252,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/16/DeepMind-Rainbow-Review/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hang (Yohan) Yu, AI民工">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/16/DeepMind-Rainbow-Review/" itemprop="url">DeepMind--Rainbow: Review</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-16T20:16:49-06:00">
+                2017-12-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Since the publication of <a href="https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf" target="_blank" rel="noopener">Playing Atari with Deep Reinforcement Learning</a>, there are sixe extensions (彩虹🌈) further developed by deepmind:</p>
+<ul>
+<li><ol>
+<li><a href="https://arxiv.org/pdf/1509.06461.pdf" target="_blank" rel="noopener">Deep Reinforcement Learning with Double Q-learning - 2015</a></li>
+</ol>
+</li>
+<li><ol>
+<li><a href="https://arxiv.org/pdf/1511.05952.pdf" target="_blank" rel="noopener">Prioritized Experience Replay - 2015</a></li>
+</ol>
+</li>
+<li><ol>
+<li><a href="https://arxiv.org/pdf/1511.06581.pdf" target="_blank" rel="noopener">Dueling Network Architectures for Deep Reinforcement Learnin - 2015</a></li>
+</ol>
+</li>
+<li><ol>
+<li><a href="https://arxiv.org/pdf/1602.01783.pdf" target="_blank" rel="noopener">Asynchronous Methods for Deep Reinforcement Learning 2016</a></li>
+</ol>
+</li>
+<li><ol>
+<li><a href="https://arxiv.org/pdf/1706.10295.pdf" target="_blank" rel="noopener">Noisy Networks for Exploration - 2017</a></li>
+</ol>
+</li>
+<li><ol>
+<li><a href="https://arxiv.org/pdf/1707.06887.pdf" target="_blank" rel="noopener">A Distributional Perspective on Reinforcement Learning - 2017</a></li>
+</ol>
+</li>
+</ul>
+<p>The Oct.6th published article – <a href="https://arxiv.org/pdf/1710.02298.pdf" target="_blank" rel="noopener">Rainbow: Combining Improvements in Deep Reinforcement Learning</a> trys combine the above six method together. It shows promising and expected result. More interestingly, figure 3 revels the marginal improvement offerd by each extension:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1873837-8316481ba05d2bfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Screen Shot 2017-10-11 at 4.03.48 PM.png"></p>
+<p>We can tell from Figure 3.:</p>
+<p>N-step return, prioritized replay and distributional Bellman play the biggest marginal role.<br>Dueling and Double Q offer the smallest improvement among all extensions.<br>We know that:</p>
+<p>Dueling is a method to decompose state-action value in order to the concept of advantage.<br>Double Q is a counter method for overestimating state-action value.<br>Basically Dueling and Double Q are dealing with the same issue – better estimate the Q value with its defined target (i.e. to reduce variance and bias).</p>
+<p>We also know that:</p>
+<p>N-step return helps the RL agent learn from a policy that result in the best future n step return.<br>Prioritized replay tracks rare reward signals that help quicker learning.<br>Distributional Bellman treat the target as an expectation<br>All of them aim to create/select a better target for the action-value function to learn.</p>
+<p>With that said, combining the result of Fig3, we are able to conclude that for a value-based method: Having better target to learn is generally more effective than learning target better.</p>
+<p>Further, adding a final noisy dense layer does help exploring (i.e. finding better target to learn) in general.</p>
+<p><img src="https://drive.google.com/open?id=0B6zgGDAEaICRXzhQUzJGY3U0Y1V3aUhMVDRYSE9XR2xpaWdv" alt="Figure1"></p>
+<p>Also, Figure 1 shows prioritized DQN, and Distributional DQN are about the same level. DDQN aided by Dueling is better than plain DDQN, and DDQN &gt; DQN, meaning Dueling and Double Q (both are learning target better method) are good combination, but Dueling DDQN barely matches prioritized DQN, and Distributional DQN (which are learning better target).</p>
+<p>And going back to Figure3, <strong>it seems like Rainbow only needs one “learning target better” method</strong>. And it would be interesting to see how Rainbow performs without Dueling &amp; Double Q.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/16/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Hang (Yohan) Yu">
+      <meta itemprop="name" content="Hang (Yohan) Yu, AI民工">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpg">
     </span>
@@ -257,7 +439,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-16T19:29:15-06:00">
                 2017-12-16
@@ -380,10 +562,10 @@
             
               <img class="site-author-image" itemprop="image"
                 src="/uploads/me.jpg"
-                alt="Hang (Yohan) Yu" />
+                alt="Hang (Yohan) Yu, AI民工" />
             
-              <p class="site-author-name" itemprop="name">Hang (Yohan) Yu</p>
-              <p class="site-description motion-element" itemprop="description"></p>
+              <p class="site-author-name" itemprop="name">Hang (Yohan) Yu, AI民工</p>
+              <p class="site-description motion-element" itemprop="description">纸上得来终觉浅，绝知此事要躬行</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -393,14 +575,23 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
-                  <span class="site-state-item-name">Artikel</span>
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">posts</span>
                 </a>
               </div>
             
 
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
             
 
           </nav>
@@ -440,13 +631,13 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Hang (Yohan) Yu</span>
+  <span class="author" itemprop="copyrightHolder">Hang (Yohan) Yu, AI民工</span>
 
   
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
 
 
