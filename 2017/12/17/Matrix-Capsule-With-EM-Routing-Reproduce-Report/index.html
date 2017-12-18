@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Author: Hang Yu | Suofei ZhangEmail: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn ##Code of Conduct Participants should produce a Reproducibility report, describing the target questions, expe">
+<meta name="description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
 <meta name="keywords" content="Reproduce">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Matrix Capsule With EM Routing Reproduce Report">
 <meta property="og:url" content="http://yoursite.com/2017/12/17/Matrix-Capsule-With-EM-Routing-Reproduce-Report/index.html">
 <meta property="og:site_name" content="Yu&#39;s blog">
-<meta property="og:description" content="Author: Hang Yu | Suofei ZhangEmail: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn ##Code of Conduct Participants should produce a Reproducibility report, describing the target questions, expe">
+<meta property="og:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2017-12-17T20:31:50.176Z">
+<meta property="og:updated_time" content="2017-12-18T02:39:12.760Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Matrix Capsule With EM Routing Reproduce Report">
-<meta name="twitter:description" content="Author: Hang Yu | Suofei ZhangEmail: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn ##Code of Conduct Participants should produce a Reproducibility report, describing the target questions, expe">
+<meta name="twitter:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
 
 
 
@@ -320,13 +320,44 @@
       
 
       
-        <p>Author: Hang Yu | Suofei Zhang<br>Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn</p>
-<p>##Code of Conduct</p>
+        <p>Author: Hang Yu | Suofei Zhang</p>
+<p>Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn</p>
+<h2 id="Code-of-Conduct"><a href="#Code-of-Conduct" class="headerlink" title="Code of Conduct"></a>Code of Conduct</h2><p>From ICLR 2018 Reproducibility challenge:</p>
+<blockquote>
 <p>Participants should produce a Reproducibility report, describing the target questions, experimental methodology, implementation details, analysis and discussion of findings, conclusions on reproducibility of the paper. This report should be posted as a contributed review on OpenReview.<br>The result of the reproducibility study should NOT be a simple Pass / Fail outcome. The goal should be to identify which parts of the contribution can be reproduced, and at what cost in terms of resources (computation, time, people, development effort, communication with the authors).</p>
 <p>Participants should expect to engage in dialogue with ICLR authors through the OpenReview site. In cases where participants have made significant contributions to the final paper, ICLR should allow adding these participants as co-authors (at the request of the original authors only.)</p>
-<p>##Reproduce Method</p>
-<p>##Reproduce Result</p>
-<p>##Reference</p>
+</blockquote>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Capsule is an extension of perceptron. A capsule is able in take an tensor as input and output an another tensor. The activation of an capsule is usually a non-linear function of the 2-norm of a certain dimension of the output tensor.</p>
+<h2 id="Reproduce-Method"><a href="#Reproduce-Method" class="headerlink" title="Reproduce Method"></a>Reproduce Method</h2><h4 id="Hyperparameters"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a>Hyperparameters</h4><p>smallNORB dataset:</p>
+<ul>
+<li>Samples per epoch: 46800</li>
+<li>Sample dimensions: 96x96x1</li>
+<li>Batch size: 50</li>
+<li>Preprocessing:<ul>
+<li>training:<ol>
+<li>add random brightness with max delta equals 32 / 255.</li>
+<li>add random contrast with lower 0.5 and upper 1.5.</li>
+<li>resize into HxW 48x48 with bilinear method.</li>
+<li>crop into random HxW 32x32 piece.</li>
+<li>apply batch norm to have zero mean and unit variance.</li>
+<li>squash the image from 4 so that each entry has value from 0 to 1. This image is to be compared with the reconstructed image.</li>
+</ol>
+</li>
+<li>testing:<ol>
+<li>resize into HxW 48x48 with bilinear method.</li>
+<li>crop the center HxW 32x32 piece.</li>
+<li>apply batch norm with moving mean and moving variance collected from training data set.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<p>Capsule network reproduced:</p>
+<ul>
+<li>Learning rate: starts from 1e-3, then decays exponentially in a rate of 0.8 for every 46800/50 steps, and ends in 1e-5.</li>
+<li></li>
+</ul>
+<h2 id="Reproduce-Result"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</h2><p>##Reference</p>
 <p>[1] <a href="https://openreview.net/pdf?id=HJWLfGWRb" target="_blank" rel="noopener">MATRIX CAPSULES WITH EM ROUTING</a><br>[2] <a href="https://github.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/" target="_blank" rel="noopener">Matrix-Capsules-EM-Tensorflow (github)</a></p>
 
       
@@ -418,8 +449,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -476,6 +516,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-of-Conduct"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Code-of-Conduct" class="headerlink" title="Code of Conduct"></a>Code of Conduct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduce-Method"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Reproduce-Method" class="headerlink" title="Reproduce Method"></a>Reproduce Method</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hyperparameters"><span class="nav-number">3.0.1.</span> <span class="nav-text"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a>Hyperparameters</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduce-Result"><span class="nav-number">4.</span> <span class="nav-text"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
