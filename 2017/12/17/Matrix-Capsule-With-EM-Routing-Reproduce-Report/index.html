@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Yu&#39;s blog">
 <meta property="og:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2017-12-22T04:13:36.671Z">
+<meta property="og:updated_time" content="2017-12-22T04:43:26.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Matrix Capsule With EM Routing Reproduce Report">
 <meta name="twitter:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
@@ -356,8 +356,20 @@
 </li>
 </ul>
 <p>Capsule network reproduced:</p>
+<ol>
+<li><p>The so called dynamic routing is in analog to the fully-connected layer in CNN. The so called ConvCaps structure extends dynamic routing into convolutional filter structure. The ConvCaps are implemented similarly as the dynamic routing for the whole feature map. The only difference is to tile the feature map into kernel-wise data and treat different kernels as batches. Then EM routing can be implemented within each batch in the same way as dynamic routing.</p>
+</li>
+<li><p>Different initialization strategies are used for convolutional filters. Linear weights are initialized with Xavier method. Biases are initialized with truncated normal distribution. This configuration provide higher numerical stability of input to EM algorithm.</p>
+</li>
+<li><p>The output of ConvCaps2 layer is processed by em routing with kernel size of 1*1. Then a global average pooling is deployed here to results final Class Capsules. Coordinate Addition is also injected during this stage.</p>
+</li>
+<li><p>Equation 2 in E-step of Procedure 1 from original paper is replaced by products of probabilities directly. All the probabilities are normalized into [0, 10] for higher numerical stability in products. Due to the division in Equation 3, this operation will not impact the final result. Exponent and logarithm are also used here for the same purpose.</p>
+</li>
+<li><p>A common l2 regularization of network parameters is considered in the loss function. Beside this, reconstruction loss and spread loss are implemented as the description in the original paper.</p>
+</li>
+</ol>
 <ul>
-<li>Learning rate: starts from 1e-3, then decays exponentially in a rate of 0.8 for every 46800/50 steps, and ends in 1e-5.<br>*</li>
+<li>Learning rate: starts from 1e-3, then decays exponentially in a rate of 0.8 for every 46800/50 steps, and ends in 1e-5.</li>
 </ul>
 <h2 id="Reproduce-Result"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</h2><p>##Reference</p>
 <p>[1] <a href="https://openreview.net/pdf?id=HJWLfGWRb" target="_blank" rel="noopener">MATRIX CAPSULES WITH EM ROUTING</a><br>[2] <a href="https://github.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/" target="_blank" rel="noopener">Matrix-Capsules-EM-Tensorflow (github)</a></p>
