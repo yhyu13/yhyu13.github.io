@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Yu&#39;s blog">
 <meta property="og:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2017-12-18T02:39:12.760Z">
+<meta property="og:updated_time" content="2017-12-22T04:13:36.671Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Matrix Capsule With EM Routing Reproduce Report">
 <meta name="twitter:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
@@ -327,7 +327,10 @@
 <p>Participants should produce a Reproducibility report, describing the target questions, experimental methodology, implementation details, analysis and discussion of findings, conclusions on reproducibility of the paper. This report should be posted as a contributed review on OpenReview.<br>The result of the reproducibility study should NOT be a simple Pass / Fail outcome. The goal should be to identify which parts of the contribution can be reproduced, and at what cost in terms of resources (computation, time, people, development effort, communication with the authors).</p>
 <p>Participants should expect to engage in dialogue with ICLR authors through the OpenReview site. In cases where participants have made significant contributions to the final paper, ICLR should allow adding these participants as co-authors (at the request of the original authors only.)</p>
 </blockquote>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Capsule is an extension of perceptron. A capsule is able in take an tensor as input and output an another tensor. The activation of an capsule is usually a non-linear function of the 2-norm of a certain dimension of the output tensor.</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Capsule can be perceived as an extension of perceptron. A capsule is able in take an tensor as input and output an another tensor. The output tensor is called a pose. The activation of an capsule is usually the norm of a certain dimension of the pose, or it could be generated independently for this pose alone. The activation represents the existence of certain feature. A capsule layer carries both the pose and its activation to the next capsule layer.</p>
+<p>A deeper capsule doesn’t just simply read the output of a previous capsule layer. The poses and activations have to walk through a unsupervised learning procedure called “routing by agreement”. It allows training to learn from the distribution of input values by taking advantage of unsupervised learning methods. So that the training (i.e. supervised learning, e.g. image classification) is not longer dictated by the loss function alone, meaning the loss function (defined by us) and the data (defined by nature, collected by us) together contribute to the learning process.</p>
+<p>However, even though the capsule is a more exciting algorithm than its counterpart CNN. The CNN baseline is well implemented mostly which enables it to train faster in the physical world than the capsule net. We will leave the discussion to expert in<br>this field.</p>
+<p>Abstract, introduction and contribution of [1] can be found in its paper. Details for our implementation can be found in [2].</p>
 <h2 id="Reproduce-Method"><a href="#Reproduce-Method" class="headerlink" title="Reproduce Method"></a>Reproduce Method</h2><h4 id="Hyperparameters"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a>Hyperparameters</h4><p>smallNORB dataset:</p>
 <ul>
 <li>Samples per epoch: 46800</li>
@@ -354,8 +357,7 @@
 </ul>
 <p>Capsule network reproduced:</p>
 <ul>
-<li>Learning rate: starts from 1e-3, then decays exponentially in a rate of 0.8 for every 46800/50 steps, and ends in 1e-5.</li>
-<li></li>
+<li>Learning rate: starts from 1e-3, then decays exponentially in a rate of 0.8 for every 46800/50 steps, and ends in 1e-5.<br>*</li>
 </ul>
 <h2 id="Reproduce-Result"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</h2><p>##Reference</p>
 <p>[1] <a href="https://openreview.net/pdf?id=HJWLfGWRb" target="_blank" rel="noopener">MATRIX CAPSULES WITH EM ROUTING</a><br>[2] <a href="https://github.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/" target="_blank" rel="noopener">Matrix-Capsules-EM-Tensorflow (github)</a></p>
