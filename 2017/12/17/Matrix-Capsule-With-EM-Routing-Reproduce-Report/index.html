@@ -79,18 +79,23 @@
 
 
 
-<meta name="description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
+<meta name="description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Introduction to CapsuleCapsule can be perceived as an extension of perceptron. A capsule is able in take an">
 <meta name="keywords" content="Reproduce">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Matrix Capsule With EM Routing Reproduce Report">
 <meta property="og:url" content="http://yoursite.com/2017/12/17/Matrix-Capsule-With-EM-Routing-Reproduce-Report/index.html">
 <meta property="og:site_name" content="Yu&#39;s blog">
-<meta property="og:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
+<meta property="og:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Introduction to CapsuleCapsule can be perceived as an extension of perceptron. A capsule is able in take an">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2017-12-22T04:43:26.892Z">
+<meta property="og:image" content="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/spread_loss_norb.png">
+<meta property="og:image" content="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/test_accuracy_norb.png">
+<meta property="og:image" content="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/training_loss.png">
+<meta property="og:image" content="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/test_accuracy.png">
+<meta property="og:updated_time" content="2017-12-22T17:23:38.734Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Matrix Capsule With EM Routing Reproduce Report">
-<meta name="twitter:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Code of ConductFrom ICLR 2018 Reproducibility challenge:  Participants should produce a Reproducibility repo">
+<meta name="twitter:description" content="Author: Hang Yu | Suofei Zhang Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn Introduction to CapsuleCapsule can be perceived as an extension of perceptron. A capsule is able in take an">
+<meta name="twitter:image" content="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/spread_loss_norb.png">
 
 
 
@@ -322,15 +327,15 @@
       
         <p>Author: Hang Yu | Suofei Zhang</p>
 <p>Email: hangyu5 at illinois.edu | zhangsuofei at njupt.edu.cn</p>
+<h2 id="Introduction-to-Capsule"><a href="#Introduction-to-Capsule" class="headerlink" title="Introduction to Capsule"></a>Introduction to Capsule</h2><p>Capsule can be perceived as an extension of perceptron. A capsule is able in take an tensor as input and output an another tensor. The output tensor is called a pose. The activation of an capsule is usually the norm of a certain dimension of the pose, or it could be generated independently for this pose alone. The activation represents the existence of certain feature. A capsule layer carries both the pose and its activation to the next capsule layer.</p>
+<p>A deeper capsule doesn’t just simply read the output of a previous capsule layer. The poses and activations have to walk through a unsupervised learning procedure called “routing by agreement”. It allows training to learn from the distribution of input values by taking advantage of unsupervised learning methods. So that the training (i.e. supervised learning, e.g. image classification) is not longer dictated by the loss function alone, meaning the loss function (defined by us) and the data (defined by nature, collected by us) together contribute to the learning process.</p>
+<p>However, even though the capsule is a more exciting algorithm than its counterpart CNN. The CNN baseline is well implemented mostly which enables it to train faster in the physical world than the capsule net. We will leave the discussion to expert in this field.</p>
+<p>Abstract, introduction and contribution of [1] can be found in its paper. Details for our implementation can be found in [2].</p>
 <h2 id="Code-of-Conduct"><a href="#Code-of-Conduct" class="headerlink" title="Code of Conduct"></a>Code of Conduct</h2><p>From ICLR 2018 Reproducibility challenge:</p>
 <blockquote>
 <p>Participants should produce a Reproducibility report, describing the target questions, experimental methodology, implementation details, analysis and discussion of findings, conclusions on reproducibility of the paper. This report should be posted as a contributed review on OpenReview.<br>The result of the reproducibility study should NOT be a simple Pass / Fail outcome. The goal should be to identify which parts of the contribution can be reproduced, and at what cost in terms of resources (computation, time, people, development effort, communication with the authors).</p>
 <p>Participants should expect to engage in dialogue with ICLR authors through the OpenReview site. In cases where participants have made significant contributions to the final paper, ICLR should allow adding these participants as co-authors (at the request of the original authors only.)</p>
 </blockquote>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Capsule can be perceived as an extension of perceptron. A capsule is able in take an tensor as input and output an another tensor. The output tensor is called a pose. The activation of an capsule is usually the norm of a certain dimension of the pose, or it could be generated independently for this pose alone. The activation represents the existence of certain feature. A capsule layer carries both the pose and its activation to the next capsule layer.</p>
-<p>A deeper capsule doesn’t just simply read the output of a previous capsule layer. The poses and activations have to walk through a unsupervised learning procedure called “routing by agreement”. It allows training to learn from the distribution of input values by taking advantage of unsupervised learning methods. So that the training (i.e. supervised learning, e.g. image classification) is not longer dictated by the loss function alone, meaning the loss function (defined by us) and the data (defined by nature, collected by us) together contribute to the learning process.</p>
-<p>However, even though the capsule is a more exciting algorithm than its counterpart CNN. The CNN baseline is well implemented mostly which enables it to train faster in the physical world than the capsule net. We will leave the discussion to expert in<br>this field.</p>
-<p>Abstract, introduction and contribution of [1] can be found in its paper. Details for our implementation can be found in [2].</p>
 <h2 id="Reproduce-Method"><a href="#Reproduce-Method" class="headerlink" title="Reproduce Method"></a>Reproduce Method</h2><h4 id="Hyperparameters"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a>Hyperparameters</h4><p>smallNORB dataset:</p>
 <ul>
 <li>Samples per epoch: 46800</li>
@@ -355,8 +360,7 @@
 </ul>
 </li>
 </ul>
-<p>Capsule network reproduced:</p>
-<ol>
+<h4 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h4><ol>
 <li><p>The so called dynamic routing is in analog to the fully-connected layer in CNN. The so called ConvCaps structure extends dynamic routing into convolutional filter structure. The ConvCaps are implemented similarly as the dynamic routing for the whole feature map. The only difference is to tile the feature map into kernel-wise data and treat different kernels as batches. Then EM routing can be implemented within each batch in the same way as dynamic routing.</p>
 </li>
 <li><p>Different initialization strategies are used for convolutional filters. Linear weights are initialized with Xavier method. Biases are initialized with truncated normal distribution. This configuration provide higher numerical stability of input to EM algorithm.</p>
@@ -367,12 +371,47 @@
 </li>
 <li><p>A common l2 regularization of network parameters is considered in the loss function. Beside this, reconstruction loss and spread loss are implemented as the description in the original paper.</p>
 </li>
+<li><p>Learning rate: starts from 1e-3, then decays exponentially in a rate of 0.8 for every 46800/50 steps, and ends in 1e-5.</p>
+</li>
+<li><p>We use Tensorflow 1.4 API and python programming language.</p>
+</li>
 </ol>
+<h2 id="Reproduce-Result"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</h2><h4 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h4><p>smallNORB dataset test accuracy (our result/proposed result):</p>
 <ul>
-<li>Learning rate: starts from 1e-3, then decays exponentially in a rate of 0.8 for every 46800/50 steps, and ends in 1e-5.</li>
+<li>CNN baseline (4.2M): 88.7%(best)/94.8%</li>
+<li>Matrix Cap with EM routing (310K, 2 iteration): 91.8%(best)/98.6%</li>
 </ul>
-<h2 id="Reproduce-Result"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</h2><p>##Reference</p>
-<p>[1] <a href="https://openreview.net/pdf?id=HJWLfGWRb" target="_blank" rel="noopener">MATRIX CAPSULES WITH EM ROUTING</a><br>[2] <a href="https://github.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/" target="_blank" rel="noopener">Matrix-Capsules-EM-Tensorflow (github)</a></p>
+<p>The experiment on is done by Zhang Suofei. Hardware configuration and total time of training would be proposed soon. Reconstructed image and routing histogram are on their way. We haven’t planned to run AD attack yet.</p>
+<h3 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h3><blockquote>
+<p><strong>Status:</strong><br>According to github commit history, this reproduce project had its init commit on Nov.19th. We started writing this report on Dec.19th. Mainly, it is cost by undedicated code review (doen by Hang Yu&lt;-me:sweat_smile:) so that we have to fix bug and run it again, otherwise the project should be able to finish in a week.</p>
+<p><strong>Current Results on smallNORB:</strong></p>
+<ul>
+<li>Configuration: A=32, B=8, C=16, D=16, batch_size=50, iteration number of EM routing: 2, with Coordinate Addition, spread loss, batch normalization</li>
+<li>Training loss. Variation of loss is suppressed by batch normalization. However there still exists a gap between our best results and the reported results in the original paper.<br><img src="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/spread_loss_norb.png" alt="spread loss"></li>
+</ul>
+</blockquote>
+<ul>
+<li>Test accuracy(current best result is 91.8%)<br><img src="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/test_accuracy_norb.png" alt="test_acc"></li>
+</ul>
+<blockquote>
+<p><strong>Ablation Study on smallNORB:</strong></p>
+<ul>
+<li>Configuration: A=32, B=8, C=16, D=16, batch_size=32, iteration number of EM routing: 2, with Coordinate Addition, spread loss, test accuracy is 79.8%.</li>
+</ul>
+<p><strong>Current Results on MNIST:</strong></p>
+<ul>
+<li>Configuration: A=32, B=8, C=16, D=16, batch_size=50, iteration number of EM routing: 2, with Coordinate Addition, spread loss, batch normalization, reconstruction loss.</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>Training loss.<br><img src="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/training_loss.png" alt="spread loss"></p>
+</li>
+<li><p>Test accuracy(current best result is 99.3%, only 10% samples are used in test)<br><img src="https://cdn.rawgit.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/bd5d2c6d/imgs/test_accuracy.png" alt="test_acc"></p>
+</li>
+</ul>
+<p>##Reference</p>
+<p>[1] <a href="https://openreview.net/pdf?id=HJWLfGWRb" target="_blank" rel="noopener">MATRIX CAPSULES WITH EM ROUTING (paper)</a></p>
+<p>[2] <a href="https://github.com/www0wwwjs1/Matrix-Capsules-EM-Tensorflow/" target="_blank" rel="noopener">Matrix-Capsules-EM-Tensorflow (our github repo: code and comments)</a></p>
 
       
     </div>
@@ -540,7 +579,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-of-Conduct"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Code-of-Conduct" class="headerlink" title="Code of Conduct"></a>Code of Conduct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduce-Method"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Reproduce-Method" class="headerlink" title="Reproduce Method"></a>Reproduce Method</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hyperparameters"><span class="nav-number">3.0.1.</span> <span class="nav-text"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a>Hyperparameters</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduce-Result"><span class="nav-number">4.</span> <span class="nav-text"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-Capsule"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Introduction-to-Capsule" class="headerlink" title="Introduction to Capsule"></a>Introduction to Capsule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-of-Conduct"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Code-of-Conduct" class="headerlink" title="Code of Conduct"></a>Code of Conduct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduce-Method"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Reproduce-Method" class="headerlink" title="Reproduce Method"></a>Reproduce Method</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hyperparameters"><span class="nav-number">3.0.1.</span> <span class="nav-text"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a>Hyperparameters</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Method"><span class="nav-number">3.0.2.</span> <span class="nav-text"><a href="#Method" class="headerlink" title="Method"></a>Method</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduce-Result"><span class="nav-number">4.</span> <span class="nav-text"><a href="#Reproduce-Result" class="headerlink" title="Reproduce Result"></a>Reproduce Result</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Overview"><span class="nav-number">4.0.1.</span> <span class="nav-text"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Notes"><span class="nav-number">4.1.</span> <span class="nav-text"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</span></a></li></ol></li></ol></div>
             
 
           </div>
