@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { QrShare, QrTrigger } from "../components/QrShare";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
 
 const StageWash = lazy(() => import("../components/StageWash"));
@@ -27,6 +28,7 @@ function prefersReducedMotion() {
 export function Library({ openId }: LibraryProps) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [toastShow, setToastShow] = useState(false);
   const selected = openId ? getManual(openId) : undefined;
@@ -75,6 +77,10 @@ export function Library({ openId }: LibraryProps) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
+      if (qrOpen) {
+        setQrOpen(false);
+        return;
+      }
       if (menuOpen) {
         setMenuOpen(false);
         return;
@@ -83,7 +89,7 @@ export function Library({ openId }: LibraryProps) {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [menuOpen, closeDetail]);
+  }, [menuOpen, qrOpen, closeDetail]);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -156,6 +162,7 @@ export function Library({ openId }: LibraryProps) {
           Hang Yu
         </Link>
         <div className="nav-actions">
+          <QrTrigger onClick={() => setQrOpen(true)} />
           <button
             className="icon-button"
             type="button"
@@ -255,6 +262,8 @@ export function Library({ openId }: LibraryProps) {
       <div className="toast" data-show={toastShow ? "true" : "false"} role="status" aria-live="polite">
         {toast}
       </div>
+
+      <QrShare open={qrOpen} onClose={() => setQrOpen(false)} />
     </main>
   );
 }
