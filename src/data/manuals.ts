@@ -1,4 +1,4 @@
-export type ManualId = "identity" | "craft" | "archive";
+export type ManualId = "identity" | "craft" | "archive" | "decks";
 
 export type ManualStep = {
   title: string;
@@ -142,6 +142,34 @@ export const MANUALS: Manual[] = [
       { label: "Open Capsule", href: "/archive/capsule" },
       { label: "Open Rainbow", href: "/archive/rainbow" },
     ],
+  },
+  {
+    id: "decks",
+    kicker: "Field Manual · IV",
+    coverTitle: "Decks",
+    subtitle: "Slides read aloud",
+    footer: "YouTube · Bilibili · 躬行",
+    coverColor: "#4f5b4a",
+    coverInk: "#26301f",
+    year: "2026",
+    description:
+      "Slide decks, mostly adapted from YouTube and Bilibili videos. Each opens in a reader you can page through and download as a PDF.",
+    stepsLabel: "How to read this volume",
+    steps: [
+      {
+        title: "Open a deck",
+        body: "Each handbook is a PDF of the original slides. Arrow keys page through; select thumbnails to jump.",
+      },
+      {
+        title: "Download to keep",
+        body: "Every deck ships with its PDF as a standalone file. Save it, or read on the shelf.",
+      },
+    ],
+    excerptLabel: "Source",
+    excerpt: "Deck → PDF → download, no rebuild needed",
+    reviewLabel: "Before you leave",
+    review: "If a deck does not open on this shelf, it is not yet a deck.",
+    actions: [{ label: "Browse decks", href: "/decks" }],
   },
 ];
 

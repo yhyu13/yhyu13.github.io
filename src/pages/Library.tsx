@@ -4,6 +4,9 @@ import { QrShare, QrTrigger } from "../components/QrShare";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
 
 const StageWash = lazy(() => import("../components/StageWash"));
+const DeckShelf = lazy(() =>
+  import("../components/DeckShelf").then((m) => ({ default: m.DeckShelf })),
+);
 
 const BLOSSOMS = [
   { x: "4%", size: "30px", r: "18deg", duration: "10s", delay: "-4s" },
@@ -208,7 +211,13 @@ export function Library({ openId }: LibraryProps) {
         ))}
       </section>
 
-      <DetailPanel manual={selected} />
+      {openId === "decks" ? (
+        <Suspense fallback={null}>
+          <DeckShelf />
+        </Suspense>
+      ) : (
+        <DetailPanel manual={selected} />
+      )}
 
       <button
         className="close-button"

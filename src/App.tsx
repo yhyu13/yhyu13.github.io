@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Library } from "./pages/Library";
 import { ArticlePage } from "./pages/ArticlePage";
+import { DeckReader } from "./components/DeckReader";
 
 export default function App() {
   return (
@@ -11,6 +12,8 @@ export default function App() {
       <Route path="/archive" element={<Library openId="archive" />} />
       <Route path="/archive/capsule" element={<ArticlePage slug="capsule" />} />
       <Route path="/archive/rainbow" element={<ArticlePage slug="rainbow" />} />
+      <Route path="/decks" element={<Library openId="decks" />} />
+      <Route path="/decks/:slug" element={<DeckReader />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
