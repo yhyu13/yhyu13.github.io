@@ -9,11 +9,13 @@ const INCOMING = join(ROOT, "incoming");
 const OUT_DIR = join(ROOT, "public", "decks");
 
 const PROBE_TIMEOUT_MS = 15000;
+const CONVERT_TIMEOUT_MS = 120000;
 
 // Run `candidate --version` and return true only if it responds quickly with a
-// zero exit code. Runs the child detached so that on timeout we can kill the
-// whole process tree (the "soffice.exe" launcher spawns a "soffice.bin" child);
-// killing only the direct child would orphan that grandchild across runs.
+// zero exit code. The child is NOT spawned detached (detached spawning itself
+// caused the probe to hang under Git Bash); instead it is run with a bounded
+// timeout and, on expiry, the whole process tree is killed via `taskkill /T /F`
+// against the direct child's PID. Killed-on-timeout or non-zero exit means false.
 function probeCandidate(candidate) {
   return new Promise((resolve) => {
     // On Windows `spawn` cannot resolve a backslash absolute path ("soffice.exe"
@@ -78,6 +80,64 @@ function slugify(name) {
     .replace(/^-+|-+$/g, "");
 }
 
+// Run a single LibreOffice headless PDF conversion with a bounded timeout. On
+// expiry the whole process tree is killed via `taskkill /T /F` (the
+// "soffice.exe" launcher spawns a "soffice.bin" grandchild that would otherwise
+// be orphaned), so a hung conversion neither blocks the script nor leaks
+// soffice.bin across runs. The backslash soffice path is normalized to forward
+// slashes for `spawn` (see probeCandidate for why).
+function convertWithSoffice(soffice, src) {
+  return new Promise((resolve, reject) => {
+    const cmd =
+      process.platform === "win32" ? soffice.replace(/\\/g, "/") : soffice;
+    let killed = false;
+    let child;
+    try {
+      child = spawn(
+        cmd,
+        ["--headless", "--convert-to", "pdf", "--outdir", OUT_DIR, join(INCOMING, src)],
+        { stdio: "inherit" },
+      );
+    } catch (err) {
+      reject(err);
+      return;
+    }
+    const timer = setTimeout(() => {
+      killed = true;
+      if (child.pid == null) {
+        reject(new Error(`conversion of ${src} timed out`));
+        return;
+      }
+      if (process.platform === "win32") {
+        try {
+          execFileSync("taskkill", ["/T", "/F", "/PID", String(child.pid)], {
+            stdio: "ignore",
+          });
+        } catch {
+          /* child already gone */
+        }
+      } else {
+        try {
+          process.kill(child.pid, "SIGKILL");
+        } catch {
+          /* child already gone */
+        }
+      }
+      reject(new Error(`conversion of ${src} timed out after ${CONVERT_TIMEOUT_MS}ms`));
+    }, CONVERT_TIMEOUT_MS);
+    child.once("error", (err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+    child.once("exit", (code) => {
+      clearTimeout(timer);
+      if (killed) return; // already rejected on timeout
+      if (code === 0) resolve();
+      else reject(new Error(`conversion of ${src} failed with exit code ${code}`));
+    });
+  });
+}
+
 async function findSoffice() {
   const candidates = [
     "soffice",
@@ -129,11 +189,7 @@ async function main() {
   for (const src of inputs) {
     const slug = slugFlag || slugify(basename(src, `.${ext}`));
     console.log(`converting ${src} -> ${slug}.pdf`);
-    execFileSync(
-      soffice,
-      ["--headless", "--convert-to", "pdf", "--outdir", OUT_DIR, join(INCOMING, src)],
-      { stdio: "inherit" },
-    );
+    await convertWithSoffice(soffice, src);
   }
   console.log("done.");
 }

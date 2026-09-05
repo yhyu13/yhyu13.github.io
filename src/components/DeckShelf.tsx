@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import type { PDFDocumentProxy } from "pdfjs-dist";
 import { DECKS, type Deck } from "../data/decks";
-import { loadPdf, renderPage } from "../lib/pdf";
+import { destroyPdf, loadPdf, renderPage } from "../lib/pdf";
 
 export function DeckShelf() {
   return (
@@ -24,13 +25,15 @@ function DeckCard({ deck }: { deck: Deck }) {
     if (didLoad.current) return;
     didLoad.current = true;
     let cancelled = false;
+    let pdfDoc: PDFDocumentProxy | null = null;
     loadPdf(deck.pdf)
       .then((pdf) => {
+        pdfDoc = pdf;
         if (cancelled || !canvasRef.current) return;
         return renderPage(pdf, 1, canvasRef.current, 210).catch(() => {});
       })
       .catch(() => {});
-    return () => { cancelled = true; didLoad.current = false; };
+    return () => { cancelled = true; didLoad.current = false; destroyPdf(pdfDoc); };
   }, [deck.pdf]);
 
   return (

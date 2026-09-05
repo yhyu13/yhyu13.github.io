@@ -1,4 +1,4 @@
-import { getDocument, GlobalWorkerOptions, type PDFDocumentProxy } from "pdfjs-dist";
+import { getDocument, GlobalWorkerOptions, type PDFDocumentProxy, type PageViewport, type RenderTask } from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
 GlobalWorkerOptions.workerSrc = workerUrl;
@@ -11,12 +11,19 @@ export function getNumPages(pdf: PDFDocumentProxy): number {
   return pdf.numPages;
 }
 
+export function destroyPdf(pdf: PDFDocumentProxy | null | undefined): void {
+  pdf?.loadingTask.destroy().catch(() => {
+    /* already destroyed */
+  });
+}
+
 export async function renderPage(
   pdf: PDFDocumentProxy,
   pageNumber: number,
   canvas: HTMLCanvasElement,
   maxWidth?: number,
-) {
+  onTask?: (task: RenderTask) => void,
+): Promise<PageViewport> {
   const page = await pdf.getPage(pageNumber);
   const base = page.getViewport({ scale: 1 });
   const target = maxWidth ? Math.min(maxWidth, base.width) : base.width;
@@ -25,6 +32,8 @@ export async function renderPage(
   canvas.height = Math.floor(viewport.height);
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas 2D context unavailable");
-  await page.render({ canvas, canvasContext: ctx, viewport }).promise;
+  const task = page.render({ canvas, canvasContext: ctx, viewport });
+  onTask?.(task);
+  await task.promise;
   return viewport;
 }

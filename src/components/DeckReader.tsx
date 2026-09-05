@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import type { PDFDocumentProxy } from "pdfjs-dist";
+import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 import { getDeck } from "../data/decks";
-import { getNumPages, loadPdf, renderPage } from "../lib/pdf";
+import { destroyPdf, getNumPages, loadPdf, renderPage } from "../lib/pdf";
 
 export function DeckReader() {
   const { slug } = useParams();
@@ -11,8 +11,15 @@ export function DeckReader() {
   const [page, setPage] = useState(1);
   const [num, setNum] = useState(0);
   const [error, setError] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backRef = useRef<HTMLAnchorElement>(null);
+  const renderTaskRef = useRef<RenderTask | null>(null);
+
+  const retry = useCallback(() => {
+    setError("");
+    setReloadKey((k) => k + 1);
+  }, []);
 
   useEffect(() => {
     if (!deck) {
@@ -33,16 +40,25 @@ export function DeckReader() {
     return () => {
       cancelled = true;
     };
-  }, [deck]);
+  }, [deck, reloadKey]);
+
+  // Destroy the loaded document when replaced (deck/reload change) or on unmount.
+  useEffect(() => {
+    return () => destroyPdf(pdf);
+  }, [pdf]);
 
   useEffect(() => {
     if (!pdf || !canvasRef.current) return;
     let cancelled = false;
-    renderPage(pdf, page, canvasRef.current).catch(() => {
+    renderPage(pdf, page, canvasRef.current, undefined, (task) => {
+      if (!cancelled) renderTaskRef.current = task;
+    }).catch(() => {
       if (!cancelled) setError("Could not render this page.");
     });
     return () => {
       cancelled = true;
+      renderTaskRef.current?.cancel();
+      renderTaskRef.current = null;
     };
   }, [pdf, page]);
 
@@ -79,7 +95,7 @@ export function DeckReader() {
   }
 
   return (
-    <main className="stage deck-reader" data-mode="detail">
+    <main className="stage deck-reader" data-mode="detail" aria-keyshortcuts="ArrowLeft ArrowRight Space PageUp PageDown Escape">
       <header className="topbar">
         <Link className="brand" to="/decks" ref={backRef}>Decks</Link>
         <div className="nav-actions">
@@ -92,7 +108,12 @@ export function DeckReader() {
         <button className="reader-arrow reader-prev" type="button" aria-label="Previous page" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>‹</button>
         <div className="reader-page">
           <canvas ref={canvasRef} className="reader-canvas" aria-label={`Slide ${page} of ${num}`} />
-          {error ? <p className="qr-error">{error}</p> : null}
+          {error ? (
+            <div className="reader-error">
+              <p className="qr-error">{error}</p>
+              <button className="pill" type="button" onClick={retry}>Retry</button>
+            </div>
+          ) : null}
         </div>
         <button className="reader-arrow reader-next" type="button" aria-label="Next page" disabled={page >= num} onClick={() => setPage((p) => Math.min(num, p + 1))}>›</button>
       </div>
