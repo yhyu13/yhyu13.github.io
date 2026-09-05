@@ -30,7 +30,7 @@ function DeckCard({ deck }: { deck: Deck }) {
         return renderPage(pdf, 1, canvasRef.current, 210).catch(() => {});
       })
       .catch(() => {});
-    return () => { cancelled = true; };
+    return () => { cancelled = true; didLoad.current = false; };
   }, [deck.pdf]);
 
   return (
