@@ -88,7 +88,12 @@ export function DeckReader() {
   if (!deck) {
     return (
       <main className="stage">
-        <header className="topbar"><Link className="brand" to="/decks">Decks</Link></header>
+        <header className="topbar">
+          <Link className="brand" to="/decks">Video Slides</Link>
+          <div className="nav-actions">
+            <Link className="icon-button" to="/decks" aria-label="Back to video slides">×</Link>
+          </div>
+        </header>
         <p className="detail-title">Deck not found.</p>
       </main>
     );
@@ -97,10 +102,10 @@ export function DeckReader() {
   return (
     <main className="stage deck-reader" data-mode="detail" aria-keyshortcuts="ArrowLeft ArrowRight Space PageUp PageDown Escape">
       <header className="topbar">
-        <Link className="brand" to="/decks" ref={backRef}>Decks</Link>
+        <Link className="brand" to="/decks" ref={backRef}>Favorites</Link>
         <div className="nav-actions">
           <a className="pill" href={deck.pdf} download>Download PDF</a>
-          <Link className="icon-button" to="/decks" aria-label="Back to decks">×</Link>
+          <Link className="icon-button" to="/decks" aria-label="Back to video slides">×</Link>
         </div>
       </header>
 

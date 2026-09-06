@@ -4,3 +4,5 @@ dist
 *.local
 .playwright-mcp/
 incoming/
+content/
+ss/

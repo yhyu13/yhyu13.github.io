@@ -146,30 +146,30 @@ export const MANUALS: Manual[] = [
   {
     id: "decks",
     kicker: "Field Manual · IV",
-    coverTitle: "Decks",
+    coverTitle: "Video Slides",
     subtitle: "Slides read aloud",
     footer: "YouTube · Bilibili · 躬行",
     coverColor: "#4f5b4a",
     coverInk: "#26301f",
     year: "2026",
     description:
-      "Slide decks, mostly adapted from YouTube and Bilibili videos. Each opens in a reader you can page through and download as a PDF.",
+      "Beloved video collections from YouTube and Bilibili, as readable slides. Each opens in a reader, links back to the original, and downloads as a PDF.",
     stepsLabel: "How to read this volume",
     steps: [
       {
-        title: "Open a deck",
-        body: "Each handbook is a PDF of the original slides. Arrow keys page through; select thumbnails to jump.",
+        title: "Open a video's slides",
+        body: "Each entry is a PDF of a video's slides. Arrow keys page through; select thumbnails to jump.",
       },
       {
-        title: "Download to keep",
-        body: "Every deck ships with its PDF as a standalone file. Save it, or read on the shelf.",
+        title: "Watch or download",
+        body: "Follow the link to the original video, or download the PDF to keep.",
       },
     ],
     excerptLabel: "Source",
-    excerpt: "Deck → PDF → download, no rebuild needed",
+    excerpt: "Video → PDF → download, no rebuild needed",
     reviewLabel: "Before you leave",
-    review: "If a deck does not open on this shelf, it is not yet a deck.",
-    actions: [{ label: "Browse decks", href: "/decks" }],
+    review: "If a video's slides do not open on this shelf, they are not here yet.",
+    actions: [{ label: "Browse video slides", href: "/decks" }],
   },
 ];
 
