@@ -1,4 +1,4 @@
-export type ManualId = "identity" | "craft" | "archive";
+export type ManualId = "identity" | "craft" | "archive" | "decks";
 
 export type ManualStep = {
   title: string;
@@ -142,6 +142,34 @@ export const MANUALS: Manual[] = [
       { label: "Open Capsule", href: "/archive/capsule" },
       { label: "Open Rainbow", href: "/archive/rainbow" },
     ],
+  },
+  {
+    id: "decks",
+    kicker: "Field Manual · IV",
+    coverTitle: "Video Slides",
+    subtitle: "Slides read aloud",
+    footer: "YouTube · Bilibili · 躬行",
+    coverColor: "#4f5b4a",
+    coverInk: "#26301f",
+    year: "2026",
+    description:
+      "Beloved video collections from YouTube and Bilibili, as readable slides. Each opens in a reader, links back to the original, and downloads as a PDF.",
+    stepsLabel: "How to read this volume",
+    steps: [
+      {
+        title: "Open a video's slides",
+        body: "Each entry is a PDF of a video's slides. Arrow keys page through; select thumbnails to jump.",
+      },
+      {
+        title: "Watch or download",
+        body: "Follow the link to the original video, or download the PDF to keep.",
+      },
+    ],
+    excerptLabel: "Source",
+    excerpt: "Video → PDF → download, no rebuild needed",
+    reviewLabel: "Before you leave",
+    review: "If a video's slides do not open on this shelf, they are not here yet.",
+    actions: [{ label: "Browse video slides", href: "/decks" }],
   },
 ];
 
