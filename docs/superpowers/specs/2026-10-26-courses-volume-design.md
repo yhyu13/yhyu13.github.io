@@ -95,6 +95,22 @@ shell) otherwise — `scripts/copy-404.mjs` already establishes that. A file und
 `/courses/<slug>/files/` can therefore never shadow a route, and a route can never
 shadow a file.
 
+**The trailing slash is not a problem, and this was measured rather than assumed.**
+`public/courses/<slug>/` is a directory, so Pages 301s `/courses/cs2680` →
+`/courses/cs2680/`, and the router has to match the trailing slash or the course
+page is unreachable. The existing `/archive/capsule/` route has exactly the same
+shape, and it was checked on the live site with a headless browser: the article
+renders and the document title becomes the article's title, so react-router does
+match `/route/<param>/`. The same request for `/decks/<slug>/` lands on the
+`DeckReader`.
+
+One consequence worth stating because it looks like a failure and is not: **the
+SPA routes answer HTTP 404**, with the SPA shell as the body. That is this
+repository's existing fallback — `/decks/` answers 404 today and still renders
+the shelf. Verification must therefore check the *body* of a route, not its
+status code, and must not "fix" the 404 by adding an `index.html` under
+`public/courses/`: that is the shadowing trap above.
+
 **Consequence:** a course's interactive pages open as their own pages, exactly like
 the Archive volume's 2017 reports (`/archive/capsule` → `ArticlePage`). The homepage
 never embeds them in an iframe: the study site is full-viewport by design, and

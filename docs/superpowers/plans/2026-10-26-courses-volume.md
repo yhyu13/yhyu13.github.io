@@ -46,6 +46,16 @@ do not export a course that fails it.
    "MP4 没有上传到本站"; that is true there and false here. The export
    regenerates the course-local pages per profile — it does not copy them.
 
+**The trailing slash is not a problem — this was checked on the live site.**
+Because `public/courses/<slug>/` is a directory, Pages will 301
+`/courses/cs2680` → `/courses/cs2680/`, and the router has to match the trailing
+slash or the course page is unreachable. The existing `/archive/capsule/` route
+has the same shape, and it was measured on the live site: the article renders
+and the document title becomes the article's title, so react-router does match
+`/route/<param>/`. The same request for `/decks/<slug>/` lands on the
+`DeckReader`. If a future upgrade of react-router ever changes that, this
+design breaks — the plan's Task 13 verifies it again after deploy.
+
 **Start at Task 0.** The local clone was two months stale and did not contain the
 Vite rewrite the live site is serving, so every assumption in this plan is about
 the tree as of `3fe0cdd`. Task 0 syncs it and records the baseline.
@@ -1092,14 +1102,24 @@ link checker) → uploads the artifact → deploys to Pages.
 - [ ] **Step 3: Verify the live site**
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}\n" https://yhyu13.github.io/courses
-curl -s -o /dev/null -w "%{http_code}\n" https://yhyu13.github.io/courses/cs2680
+# the SPA routes: 404 with the SPA shell as the body (this repo's own
+# scripts/copy-404.mjs fallback), NOT 200
+curl -s https://yhyu13.github.io/courses | grep -c "assets/index-"
+curl -s https://yhyu13.github.io/courses/cs2680 | grep -c "assets/index-"
+
+# the static files: a real 200
 curl -s -o /dev/null -w "%{http_code}\n" https://yhyu13.github.io/courses/cs2680/files/study/index.html
 curl -s -o /dev/null -w "%{http_code}\n" https://yhyu13.github.io/courses/cs2680/files/manifest.json
 ```
 
-Expected: `200` for all four. The second one is the SPA fallback in action — it
-is not a file, so Pages serves `404.html` and the router takes over.
+Expected: the two SPA routes serve the SPA shell (the body contains the
+`assets/index-…` script) — **the status code is 404 and that is correct**: the
+Pages fallback serves `404.html`, which the router then takes over. The two
+static files return `200`.
+
+Do not "fix" the 404 by adding an `index.html` under `public/courses/`. That is
+exactly the shadowing trap in the spec: it would serve the wrong document and
+the route would never reach `CoursePage`.
 
 - [ ] **Step 4: Verify the live release link**
 
