@@ -2,7 +2,7 @@
 
 ## Repo overview
 
-Personal GitHub Pages site for Hang (Yohan) Yu. Vite + React SPA in a Field Manuals (ThreeUI) visual language: three CSS 3D books (Identity, Craft, Archive).
+Personal GitHub Pages site for Hang (Yohan) Yu. Vite + React SPA in a Field Manuals (ThreeUI) visual language: five CSS 3D books (Identity, Craft, Archive, Video Slides, Courses).
 
 Live URL: `https://yhyu13.github.io`
 
@@ -10,31 +10,49 @@ Live URL: `https://yhyu13.github.io`
 
 - `npm install`
 - `npm run dev` — Vite at `/`
-- `npm run build` — typecheck, Vite build, copy `dist/index.html` → `dist/404.html` (SPA fallback)
+- `npm run build` — typecheck, Vite build, copy `dist/index.html` → `dist/404.html` (SPA fallback), then `scripts/check-links.mjs` (fails the build on any internal reference that does not resolve)
 - `npm run preview`
 
 ## Layout
 
-- `src/data/manuals.ts` — the volumes (Identity, Craft, Archive, Video Slides)
+- `src/data/manuals.ts` — the volumes (Identity, Craft, Archive, Video Slides, Courses)
+- `src/data/courses.ts` — the Courses volume's page data (sections per course)
 - `src/data/archivePosts.tsx` — 2017 Capsule and Rainbow reading pages
 - `src/pages/Library.tsx` — gallery / detail shell ported from ThreeUI Field Manuals
-- `src/styles/field-manuals.css` — ported Field Manuals CSS
+- `src/pages/CoursePage.tsx`, `src/components/CourseShelf.tsx` — the Courses volume
+- `src/styles/field-manuals.css` — ported Field Manuals CSS; **each book's shelf position is hand-declared per breakpoint** (`[data-book=…]`, three blocks) — a new volume needs its rule added or the book renders 0×0
+- `public/courses/<slug>/files/` — exported courseware (static; no index.html at the course root — it would shadow the SPA route on Pages)
 - `public/` — favicon, `uploads/me.jpg`, old-URL redirect HTML
 - `.github/workflows/pages.yml` — build and deploy `dist/` to GitHub Pages
 
-## In progress: the Courses volume
+## The Courses volume and its two-repo contract
 
-A fifth volume (`courses`, Field Manual · V) for online-course material is
-**specified and planned but not implemented**. Before touching it, read:
+Implemented. The courseware lives in `C:\Git-repo-AI\CS2680-Courseware`
+(branch `001-cs2680-courseware`); this repo consumes an export of it. Read
+before changing either side:
 
 - Spec — `docs/superpowers/specs/2026-10-26-courses-volume-design.md`
-- Plan — `docs/superpowers/plans/2026-10-26-courses-volume.md` (start at its
-  "Start here" section)
+- Plan — `docs/superpowers/plans/2026-10-26-courses-volume.md` (Definition of
+  done is at its end)
 
-The courseware lives in `C:\Git-repo-AI\CS2680-Courseware`; this repo consumes
-an export of it, so the work spans two repositories. The plan's Task 0 syncs the
-clone — the local clone was two months stale and did not contain the Vite
-rewrite the live site is serving.
+The contract:
+
+1. The courseware repo builds its own site (`tools/build_public_site.py`) and
+   exports it (`tools/export_course_site.py --profile homepage --slug cs2680
+   --release-tag <tag> --dest <this repo>\public\courses\cs2680`). The export
+   is idempotent and asserts its manifest against the files it wrote.
+2. The export writes only `files/` under the course directory. Never add an
+   `index.html` beside it: on Pages a directory request serves that index and
+   shadows the SPA's `/courses/<slug>` route.
+3. The ten narrated clips are **GitHub Release assets**
+   (`releases/download/courseware-v1/…`), not repo files. A re-export without
+   `--release-tag` leaves the video rows as placeholders the page shows as
+   unavailable.
+4. `npm run build` runs the link checker last; it walks `public/**/*.html`
+   plus the site-absolute links in `src/data`, treats extensionless
+   single-segment paths under declared route prefixes as SPA routes, and
+   everything else must exist as a file. SPA routes answer 404 status + the
+   shell — judge them by the body, not the status code.
 
 ## Deploy
 
