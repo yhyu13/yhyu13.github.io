@@ -1,0 +1,134 @@
+/* Courses volume — reuses field-manuals tokens */
+/* CourseShelf replaces DetailPanel in detail mode, so it must occupy the same
+   right-hand slot (clear of the decorative selected book on the left). */
+.course-shelf {
+  position: absolute;
+  z-index: 12;
+  top: 14.5%;
+  right: 4.5%;
+  width: min(47.5%, 650px);
+  max-height: calc(100svh - 210px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 22px 60px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(198, 139, 140, .76) rgba(73, 66, 49, .35);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 76px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 76px), transparent 100%);
+}
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 28px;
+}
+.course-card {
+  border: 1px solid rgba(234, 223, 199, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(234, 223, 199, 0.06);
+  transition: background 240ms var(--ease), border-color 240ms ease;
+}
+.course-card:hover {
+  background: rgba(234, 223, 199, 0.09);
+  border-color: rgba(234, 223, 199, 0.2);
+}
+.course-card-cover {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  aspect-ratio: 4 / 3;
+  padding: 22px;
+  background: var(--cover-color, #3f5b63);
+  color: var(--paper);
+  text-decoration: none;
+}
+.course-card-kicker { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.72; }
+.course-card-title { font-family: var(--serif); font-size: 1.35rem; line-height: 1.2; }
+.course-card-meta { font-size: 0.78rem; opacity: 0.8; }
+.course-card-body { padding: 16px 18px 20px; }
+.course-card-desc { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.course-card-counts { color: var(--muted); font-size: 0.78rem; margin-top: 6px; }
+.course-card-body .action-rail { margin-top: 16px; }
+
+/* Course page sections */
+.course-page .course-section { margin-top: 34px; }
+.course-page .course-section .detail-description { margin-top: 4px; }
+.course-asset-list {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.course-asset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+.course-asset > a:first-child {
+  font-size: 15px;
+  text-underline-offset: 3px;
+}
+.course-asset-meta { color: var(--muted); font-size: 13px; }
+.course-asset-link { font-size: 13px; text-underline-offset: 3px; }
+.course-asset-group { margin-top: 18px; }
+.course-asset-group:first-child { margin-top: 14px; }
+.course-asset-group-label {
+  margin: 0 0 8px;
+  color: var(--pink);
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* Video rows: poster beside the copy */
+.course-asset-video { align-items: flex-start; gap: 16px; }
+.course-asset-poster {
+  width: 200px;
+  height: auto;
+  border: 1px solid rgba(234, 223, 199, 0.14);
+  border-radius: 8px;
+  background: #201d16;
+}
+.course-asset-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.course-asset-label { font-style: italic; font-weight: 550; font-size: 15px; }
+.course-asset-desc { color: var(--muted); font-size: 13px; }
+
+/* Licence block on the course page */
+.course-notice {
+  margin-top: 12px;
+  padding: 14px 18px;
+  border-left: 3px solid var(--pink);
+  background: rgba(234, 223, 199, 0.05);
+  border-radius: 0 10px 10px 0;
+}
+.course-notice p { margin: 0 0 6px; font-size: 14px; line-height: 1.6; }
+.course-notice p:last-child { margin-bottom: 0; color: var(--muted); }
+.course-manifest-error p { margin: 6px 0; }
+
+/* Site entry points render as pills */
+.course-asset .pill { font-size: 13px; }
+
+/* Mobile: drop the shelf below the selected book, mirroring .deck-shelf */
+@media (max-width: 900px) {
+  .course-shelf {
+    top: calc(100svh + 48px);
+    left: 7%;
+    right: 7%;
+    width: auto;
+    max-height: none;
+    padding-bottom: 130px;
+  }
+  .course-grid { grid-template-columns: 1fr; }
+  .course-asset-poster { width: 148px; }
+}

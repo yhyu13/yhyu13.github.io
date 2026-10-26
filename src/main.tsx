@@ -5,6 +5,7 @@ import App from "./App";
 import "./styles/field-manuals.css";
 import "./styles/site.css";
 import "./styles/decks.css";
+import "./styles/courses.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
