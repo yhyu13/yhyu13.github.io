@@ -7,6 +7,9 @@ const StageWash = lazy(() => import("../components/StageWash"));
 const DeckShelf = lazy(() =>
   import("../components/DeckShelf").then((m) => ({ default: m.DeckShelf })),
 );
+const CourseShelf = lazy(() =>
+  import("../components/CourseShelf").then((m) => ({ default: m.CourseShelf })),
+);
 
 const BLOSSOMS = [
   { x: "4%", size: "30px", r: "18deg", duration: "10s", delay: "-4s" },
@@ -214,6 +217,10 @@ export function Library({ openId }: LibraryProps) {
       {openId === "decks" ? (
         <Suspense fallback={null}>
           <DeckShelf />
+        </Suspense>
+      ) : openId === "courses" ? (
+        <Suspense fallback={null}>
+          <CourseShelf />
         </Suspense>
       ) : (
         <DetailPanel manual={selected} />
