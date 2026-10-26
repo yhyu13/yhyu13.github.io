@@ -68,6 +68,20 @@
   align-items: baseline;
   gap: 4px 12px;
 }
+/* Course page links inherit the article treatment (site.css scopes it to
+   .article-body; these rows live outside it). Same literal, same look. */
+.course-asset-list a:not(.pill),
+.course-page .article-meta a {
+  color: #dbc39c;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* The shelf's pills are flex-grow chips; inside a course row they must stay
+   content-sized. */
+.course-asset .pill {
+  flex: 0 0 auto;
+  min-height: 44px;
+}
 .course-asset > a:first-child {
   font-size: 15px;
   text-underline-offset: 3px;
