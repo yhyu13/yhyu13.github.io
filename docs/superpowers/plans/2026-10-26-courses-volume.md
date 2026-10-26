@@ -14,6 +14,47 @@
 
 ---
 
+## Start here (交接须知)
+
+**Read the spec before the plan.** The spec holds the five decisions and the
+reasoning behind them; the plan only turns them into steps. If the two seem to
+disagree, the spec wins.
+
+**Two repositories are involved.**
+
+| Repo | What it owns | Which tasks touch it |
+|---|---|---|
+| `C:\Git-repo-my\yhyu13.github.io` (this one) | the site: the fifth volume, the course page, the styles, the link checker | Tasks 2–14 |
+| `C:\Git-repo-AI\CS2680-Courseware` | the courseware: the built course site, the narration manifests, the clips | Tasks 1, 9 |
+
+The assets the export consumes are at `C:\Git-repo-AI\CS2680-Courseware\deploy\public`
+(211 files, 26.5 MB). If that directory does not exist, run
+`python tools/build_public_site.py` there first. The CS2680 repo's own gate
+(`python tools/verify_deliverables.py --all`, 11 gates) is the upstream contract —
+do not export a course that fails it.
+
+**Three traps, all of which fail quietly.**
+
+1. **No `index.html` anywhere under `public/courses/<slug>/`.** GitHub Pages
+   redirects a request for a directory to that directory's `index.html`, so a
+   course-local index at the course root shadows the SPA route and
+   `/courses/<slug>` never reaches `CoursePage`. The feature would look correct
+   in the source tree and be dead on the live site.
+2. **The 10 MP4s are 89 MB and the Pages site cap is ~100 MB.** They go to a
+   GitHub release and are linked. Not hosted, not embedded.
+3. **The course's own copy is context-bound.** The standalone course site says
+   "MP4 没有上传到本站"; that is true there and false here. The export
+   regenerates the course-local pages per profile — it does not copy them.
+
+**Start at Task 0.** The local clone was two months stale and did not contain the
+Vite rewrite the live site is serving, so every assumption in this plan is about
+the tree as of `3fe0cdd`. Task 0 syncs it and records the baseline.
+
+**Finish at "Definition of done"** at the end of this file. It is the acceptance
+list, not a summary.
+
+---
+
 ## Global Constraints
 
 - **Do not edit the four existing volumes.** `identity`, `craft`, `archive` and `decks` (12 entries) stay byte-identical. The only change to `manuals.ts` is the *addition* of a fifth entry and one string in the `ManualId` union.

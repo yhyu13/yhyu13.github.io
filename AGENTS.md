@@ -15,12 +15,26 @@ Live URL: `https://yhyu13.github.io`
 
 ## Layout
 
-- `src/data/manuals.ts` — the three volumes
+- `src/data/manuals.ts` — the volumes (Identity, Craft, Archive, Video Slides)
 - `src/data/archivePosts.tsx` — 2017 Capsule and Rainbow reading pages
 - `src/pages/Library.tsx` — gallery / detail shell ported from ThreeUI Field Manuals
 - `src/styles/field-manuals.css` — ported Field Manuals CSS
 - `public/` — favicon, `uploads/me.jpg`, old-URL redirect HTML
 - `.github/workflows/pages.yml` — build and deploy `dist/` to GitHub Pages
+
+## In progress: the Courses volume
+
+A fifth volume (`courses`, Field Manual · V) for online-course material is
+**specified and planned but not implemented**. Before touching it, read:
+
+- Spec — `docs/superpowers/specs/2026-10-26-courses-volume-design.md`
+- Plan — `docs/superpowers/plans/2026-10-26-courses-volume.md` (start at its
+  "Start here" section)
+
+The courseware lives in `C:\Git-repo-AI\CS2680-Courseware`; this repo consumes
+an export of it, so the work spans two repositories. The plan's Task 0 syncs the
+clone — the local clone was two months stale and did not contain the Vite
+rewrite the live site is serving.
 
 ## Deploy
 

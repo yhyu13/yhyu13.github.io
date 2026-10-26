@@ -27,6 +27,16 @@ ME = human. YOU = AI. Oldest first. One session = one heading + one two-column t
 |----|-----|
 | 1 update journey；2 mobile fit；3 QR 弹窗，可下载，扫了进站点。 | 追加本表。390px：三本封面进屏（不再裁成只剩中间一本）。详情：书缩小顶在顶栏下，正文紧跟，底栏改相对定位不再压步骤；手机详情关掉花瓣。顶栏加 QR 钮，弹窗码指向 `https://yhyu13.github.io`，Download PNG。`npm run build` 过。未推远程。 |
 
+## 2026-10-26 · Courses 卷：规格与计划
+
+| ME | YOU |
+|----|-----|-----|
+| 想把 CS2680 课件传到个人主页，新开一个专门 host 网课 / AI 笔记 / 视频课 / 交互网页的子页面，原汁原味。出一个 spec plan，用所有 skill，无限 token。 | 先查真身：本地克隆落后两个月（停在 2026-07-11 的 Hexo/NexT 产物），线上早已是 Vite + React 的 Field Manuals SPA（`3fe0cdd`）。`git fetch` + 快进到真 origin 后重读。发现 Decks 卷（Field Manual · IV「Video Slides」，12 条目、pdf.js 阅读器、链回原视频）已经是"放网课类东西"的容器，但承诺太窄：一条 `Deck` 只有一个 `pdf` 字段，装不下一门课。 |
+| — | 写 spec（5 条决策 + 架构 8 节 + 错误处理 / 可访问性 / 验证 / 风险）与 plan（Task 0–14 + 1 个 spike，61 步），落 `docs/superpowers/{specs,plans}/2026-10-26-courses-volume*`。决策：新开第五卷 `courses`（与 Video Slides 平级，不是子类型）；课件以静态文件落 `/courses/<slug>/files/`，不做 SPA 路由；10 段 MP4（89 MB）走 GitHub Release，只链不托管不内嵌；可读形态是 HTML 学习站、权威下载是 PPTX，每讲一份 PDF 留作带待决问题的 spike（本机没装 LibreOffice）。 |
+| — | 自查抓到一个会让功能静默失效的坑：Pages 对目录请求 301 到该目录的 `index.html`，所以 `public/courses/<slug>/` 下任何位置都不能有 index.html，否则 `/courses/<slug>` 这条 SPA 路由永远到不了。规格已写死这条规则，并写进计划的"接手须知"。 |
+| — | 版权判断（用户未明说，由我定，写在 spec 第 5 条并留了改口）：只发课件，不发 Harvard 原站的逐字节镜像 —— 个人主页上再分发第三方课程站最难辩护，官方源一点即达。 |
+| — | 交接：spec/plan 在 `docs/superpowers/`，提交 `3797ec5`；README 加了指针并修掉"三卷"的旧账（实为四卷）；JOURNEY 记本条。实现留给下一个 agent：Task 0 先同步克隆，Task 1 的导出工具写进 CS2680 仓 `tools/export_course_site.py`，assets 在该仓 `deploy/public/`。未推远程。 |
+
 ## Open items
 
 - 你这边若仍白屏：无痕打开 https://yhyu13.github.io/?v=2，或硬刷新。Network 里 `index.html` 应引用 `/assets/index-….js`，不应再请求 `/src/main.tsx`。
