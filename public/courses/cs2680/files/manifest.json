@@ -1,9 +1,9 @@
 {
   "slug": "cs2680",
   "title": "CS2680 · Modern AI Systems",
-  "exportedAt": "2026-10-26T01:24:47+00:00",
+  "exportedAt": "2026-10-26T01:35:21+00:00",
   "source": "C:\\Git-repo-AI\\CS2680-Courseware",
-  "releaseTag": null,
+  "releaseTag": "courseware-v1",
   "groups": {
     "decks": [
       {
@@ -71,70 +71,70 @@
       {
         "label": "The course arc",
         "desc": "课程主线",
-        "href": "files/course-overview.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/course-overview.mp4",
         "poster": "posters/course-overview.png",
         "meta": "85 s · 9 scenes · 19 captions"
       },
       {
         "label": "The stack the course walks down",
         "desc": "垂直栈主线",
-        "href": "files/course-stack.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/course-stack.mp4",
         "poster": "posters/course-stack.png",
         "meta": "157 s · 14 scenes · 32 captions"
       },
       {
         "label": "Course overview and logistics",
         "desc": "课程总览与行政",
-        "href": "files/lecture01.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture01.mp4",
         "poster": "posters/lecture01.png",
         "meta": "73 s · 8 scenes · 15 captions"
       },
       {
         "label": "Agents use I: How Claude Code Works",
         "desc": "智能体使用 I",
-        "href": "files/lecture02.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture02.mp4",
         "poster": "posters/lecture02.png",
         "meta": "74 s · 8 scenes · 16 captions"
       },
       {
         "label": "Agents use II: 100x Engineer with Multi-agents",
         "desc": "智能体使用 II",
-        "href": "files/lecture03.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture03.mp4",
         "poster": "posters/lecture03.png",
         "meta": "74 s · 8 scenes · 15 captions"
       },
       {
         "label": "Agents design I: context management and tool design",
         "desc": "智能体设计 I",
-        "href": "files/lecture04.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture04.mp4",
         "poster": "posters/lecture04.png",
         "meta": "91 s · 10 scenes · 19 captions"
       },
       {
         "label": "Agents design II: multi-agent architecture, coordination, and communication",
         "desc": "智能体设计 II",
-        "href": "files/lecture05.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture05.mp4",
         "poster": "posters/lecture05.png",
         "meta": "82 s · 9 scenes · 14 captions"
       },
       {
         "label": "Agents design III: agent memory and reliability",
         "desc": "智能体设计 III",
-        "href": "files/lecture06.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture06.mp4",
         "poster": "posters/lecture06.png",
         "meta": "73 s · 8 scenes · 14 captions"
       },
       {
         "label": "Agent design IV: agent evaluation",
         "desc": "智能体设计 IV",
-        "href": "files/lecture07.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture07.mp4",
         "poster": "posters/lecture07.png",
         "meta": "84 s · 9 scenes · 15 captions"
       },
       {
         "label": "Advanced agent design I: Cost and performance",
         "desc": "高级智能体设计 I",
-        "href": "files/lecture08.mp4",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-v1/lecture08.mp4",
         "poster": "posters/lecture08.png",
         "meta": "89 s · 10 scenes · 19 captions"
       }
