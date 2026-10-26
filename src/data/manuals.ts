@@ -1,4 +1,4 @@
-export type ManualId = "identity" | "craft" | "archive" | "decks";
+export type ManualId = "identity" | "craft" | "archive" | "decks" | "courses";
 
 export type ManualStep = {
   title: string;
@@ -170,6 +170,39 @@ export const MANUALS: Manual[] = [
     reviewLabel: "Before you leave",
     review: "If a video's slides do not open on this shelf, they are not here yet.",
     actions: [{ label: "Browse video slides", href: "/decks" }],
+  },
+  {
+    id: "courses",
+    kicker: "Field Manual · V",
+    coverTitle: "Courses",
+    subtitle: "网课 · 课件 · 交互页",
+    footer: "CS2680 · Notes · Clips",
+    coverColor: "#3f5b63",
+    coverInk: "#1c2c31",
+    year: "2026",
+    description:
+      "网课的完整学习包：可交互的学习站、可下载的讲义、带旁白与字幕的导览视频，以及课程的文字层。CS2680 是第一门。",
+    stepsLabel: "How to read this volume",
+    steps: [
+      {
+        title: "打开一门课",
+        body: "每门课是一份打包的档案：学习站、讲义、视频、文字与摘要，各归其位。",
+      },
+      {
+        title: "先读，再下载",
+        body: "学习站是阅读的地方——有概念索引和全文搜索；讲义是拿走的东西。",
+      },
+      {
+        title: "视频带旁白",
+        body: "每段视频都有旁白与字幕，字幕由画面自己渲染，所以缺字也不会变豆腐块。",
+      },
+    ],
+    excerptLabel: "First course",
+    excerpt: "CS2680 · Modern AI Systems · Harvard SEAS · Fall 2026",
+    reviewLabel: "Before you leave",
+    review:
+      "课程材料版权归 Harvard SEAS 与授课教师所有；这里是个人学习的整理，不是原站的分发。",
+    actions: [{ label: "Browse courses", href: "/courses" }],
   },
 ];
 
