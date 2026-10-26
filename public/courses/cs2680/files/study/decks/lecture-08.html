@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Lecture 8 - Cost and performance</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Lecture 8 · 8_agent_design_5.pdf &middot; Source: https://cs2680.seas.harvard.edu/slides/8_agent_design_5.pdf</span>
+    <span class="slide-number" data-current="1" data-total="17"></span>
+  </div>
+
+  <section class="slide" data-title="Advanced agent design I: cost and performance">
+
+  <p class="kicker">Lecture 8 · Oct 7, 2026 · 54 slides</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">Advanced agent design I: cost and performance</h1>
+  <p class="lede">Every lever is a term in one equation - and every lever has a counter-cost.</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">Cost equation</span><span class="pill ">6 levers</span><span class="pill ">Budget caps</span><span class="pill ">Speculative actions</span><span class="pill ">3 harness architectures</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">slides/8_agent_design_5.pdf</p>
+    <div class="notes">The stated scope of the lecture: it focuses on LLM cost while ignoring other compute costs. The official schedule attaches two decks to this date - this one and the Assignment 3 briefing.</div>
+  </section>
+  <section class="slide" data-title="The cost equation">
+
+  <p class="kicker">The spine</p>
+  <h2 class="h2">The cost equation</h2>
+  <p class="lede mb-l">Adoption and engagement grow the first two factors; agent trajectories and unit price are the shrinkable ones.</p>
+  <div class="flow anim-stagger-list" data-anim-target>
+    <div class="node"><h4>Users</h4><p>factor 1</p></div><div class="arr">&rarr;</div><div class="node"><h4>Sessions / User</h4><p>factor 2</p></div><div class="arr">&rarr;</div><div class="node"><h4>Turns / Session</h4><p>factor 3</p></div><div class="arr">&rarr;</div><div class="node"><h4>Steps / Turn</h4><p>factor 4</p></div><div class="arr">&rarr;</div><div class="node hl"><h4>Tokens / Step</h4><p>factor 5</p></div><div class="arr">&rarr;</div><div class="node hl"><h4>Price / Token</h4><p>factor 6</p></div>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Cost = Users x Sessions/User x Turns/Session x Steps/Turn x Tokens/Step x Price/Token. A session is many turns and a turn is many steps: one user turn is multiple LLM and tool steps.</p>
+    <div class="notes">Every lever slide after this one moves exactly one factor, and repeats the progress bar so students can see which one they are moving.</div>
+  </section>
+  <section class="slide" data-title="What the class's own agents actually did">
+
+  <p class="kicker">The measured instance</p>
+  <h2 class="h2">What the class's own agents actually did</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Quantity</th><th>Assignment 1</th><th>Assignment 2</th></tr></thead>
+      <tbody>
+        <tr><td>Single-prompt sessions</td><td>68%</td><td>75%</td></tr><tr><td>Median steps per turn</td><td>3</td><td>4</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Marathons reach 100+ turns. Some turns run almost 1,000 steps, mostly because effort is set to medium or high.</p>
+    <div class="notes">The numbers come from the students' own runs in the first two assignments, which is why the class is unusually well placed to talk about cost.</div>
+  </section>
+  <section class="slide" data-title="Where the tokens go">
+
+  <p class="kicker">Tokens</p>
+  <h2 class="h2">Where the tokens go</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Quantity</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Main agent tokens per step</td><td>Median 200K-300K (chart medians 208K for Assignment 1, 301K for Assignment 2); p90 600K-700K</td></tr><tr><td>Subagent tokens per step</td><td>Median ~80K; p90 ~200K</td></tr><tr><td>Context at step ~500</td><td>670K (Assignment 1); 650K (Assignment 2)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">A 300K-token context on every step is the reason the context work in Lecture 4 is a cost lever and not only a quality lever.</div>
+  </section>
+  <section class="slide" data-title="Turns cost quadratically">
+
+  <p class="kicker">Lever 1 · Turns</p>
+  <h2 class="h2">Turns cost quadratically</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The fact</h3>
+      <p class="dim">Turn k re-reads turns 1..k-1, so total cost grows with the square of the turn count.</p>
+      
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The levers</h3>
+      
+      <ul class="clean "><li>Front-load planning</li><li>Structured task decomposition, with a done check per subtask</li><li>Self-verification before handoff</li><li>The goal: finish autonomously with no user check-ins</li></ul>
+    </div>
+  </div>
+    <div class="notes">The quadratic property is what makes turn reduction the most valuable lever: it is not a constant-factor win.</div>
+  </section>
+  <section class="slide" data-title="Fewer model calls for the same work">
+
+  <p class="kicker">Lever 2 · Steps</p>
+  <h2 class="h2">Fewer model calls for the same work</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The example on the slide</h3>
+      <p class="dim">One call per action is 4 model calls. Plan-then-batch is 2 model calls, with 3 tools run in parallel.</p>
+      
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>How to get there</h3>
+      
+      <ul class="clean "><li>Batch independent calls</li><li>Reuse plans and skills</li><li>Load context up front, because every model call re-reads the full context, so fewer calls cost less</li></ul>
+    </div>
+  </div>
+    <div class="notes">This is the same batching idea as the parallel-agent work in Lecture 3, applied inside one agent.</div>
+  </section>
+  <section class="slide" data-title="Shrink what enters, and reduce what comes out">
+
+  <p class="kicker">Lever 3 · Tokens</p>
+  <h2 class="h2">Shrink what enters, and reduce what comes out</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Shrink what enters</h4><ul class="clean "><li>Drop stale results</li><li>Compact history into state</li><li>Compress observations, keeping errors not full logs</li><li>Offload big outputs to files</li><li>Retrieve selectively</li><li>Isolate exploration in a sub-agent that returns a summary</li></ul></div><div class="card "><h4>Reduce the output</h4><ul class="clean "><li>Prompt-level constraints: &quot;Answer in &lt;= 100 words.&quot;, &quot;Return only JSON.&quot;, &quot;One sentence. Top 3 items.&quot;</li><li>Output-token caps: max_tokens=300 / max_output_tokens=300, though reasoning can use up the cap</li><li>Structured output schemas</li><li>Adaptive reasoning effort: lookup uses effort=&quot;low&quot;, debug uses effort=&quot;high&quot;</li></ul></div>
+  </div>
+    <div class="notes">Related work named on the slides: ACON (2025) cut peak context by 26-54%; Active Context Compression (2026) 23% fewer tokens; TRACE (2026) on summaries causing rework; MemGPT (2023) on context as fast memory; Scroll (2026) as a lossless external log; LLMLingua (2023) up to 20x fewer tokens, with LongLLMLingua and LLMLingua-2 (2024); and Prompt Compression in the Wild (2026), which pays off only on long prompts. On tool data out of context: code execution with MCP (2025) 150K to 2K tokens, Tool Search (2025) 85% fewer tool tokens, and Programmatic Tool Calling at 37% fewer.</div>
+  </section>
+  <section class="slide" data-title="Cache reads dominate the bill">
+
+  <p class="kicker">The token economics</p>
+  <h2 class="h2">Cache reads dominate the bill</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Relation</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Output against fresh prefill</td><td>Output is 5x smaller</td></tr><tr><td>Fresh prefill against cache reads</td><td>Fresh prefill is 100x smaller</td></tr><tr><td>Typical price ratio</td><td>cache read : input : output = 1 : 10 : 50</td></tr><tr><td>Share of tokens that were cache reads</td><td>97.6% (Assignment 1)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Tokens that stay in context are paid for again on every later step. A stable prefix is worth more than a shorter prompt.</p>
+    <div class="notes">This is the &quot;students get this wrong&quot; point of the lecture: cost is dominated by things other than raw output length.</div>
+  </section>
+  <section class="slide" data-title="Three shapes of price reduction">
+
+  <p class="kicker">Lever 4 · Price</p>
+  <h2 class="h2">Three shapes of price reduction</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Caching and batching</h3>
+      
+      <ul class="clean "><li>Maintain stable prefixes</li><li>Batch what can wait</li><li>Batch plus cached input: 0.05x the base input price</li><li>Cached input: 0.1x; batch input: 0.5x; base input token: 1x; output token: 5x</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Routing and later-lecture levers</h3>
+      
+      <ul class="clean "><li>Model routing: choose up front, escalate on failure, re-route each step</li><li>Model optimization: MoE and sparsity, quantization, pruning, distillation, workload-targeted fine-tuning</li><li>Serving engine: speculative decoding, KV-cache optimization, better request scheduling</li><li>Hardware: faster kernels, better kernel scheduling, specialized accelerators</li></ul>
+    </div>
+  </div>
+    <div class="notes">The price ratios are the Claude API prices as printed on the slide; they are the shape, not a promise about any particular model.</div>
+  </section>
+  <section class="slide" data-title="quote">
+
+  <div style="max-width:1040px;margin:0 auto">
+    <div class="serif" style="font-size:120px;line-height:.9;color:var(--accent);opacity:.6">"</div>
+    <blockquote class="serif anim-fade-up" data-anim="fade-up" style="font-size:46px;line-height:1.25;margin:-34px 0 20px;font-style:italic;font-weight:600">Net saving = gross saving - counter-cost, and both must be measured on the same tasks.</blockquote>
+    <p class="dim" style="font-size:19px;letter-spacing:.06em">Lecture 8, PDF page 25</p>
+  </div>
+    <div class="notes">The counter-costs the deck lists: compaction against reconstruction, routing against longer failures, subagents against duplicated context, speculation against wasted work.</div>
+  </section>
+  <section class="slide" data-title="Cap the task, and know when to stop">
+
+  <p class="kicker">Budgets</p>
+  <h2 class="h2">Cap the task, and know when to stop</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The caps</h4><ul class="clean "><li>Cap each task: dollars, model calls, tool time, retries per step</li><li>Set limits from traced runs, for example 2x the p95 of successful tasks</li><li>The illustrative per-task budget on the slide: $10, 80 calls, 15 min tool time, 2 retries per step</li></ul></div><div class="card "><h4>The stop conditions</h4><ul class="clean "><li>The verifier passes</li><li>No new passing test appears in N steps</li><li>The same error repeats</li><li>A limit is hit - then hand off with a summary</li></ul></div>
+  </div>
+    <div class="notes">This is the Lecture 6 lesson operationalised: bound every run. It is also the mechanic Assignment 3 enforces with its own limits.</div>
+  </section>
+  <section class="slide" data-title="Does this step need reasoning at all?">
+
+  <p class="kicker">Before the LLM</p>
+  <h2 class="h2">Does this step need reasoning at all?</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Replace the model with code</h4><ul class="clean "><li>Same steps every time - write a script</li><li>Fixed input format - parse with rules</li><li>Narrow label or score - train a small classifier</li><li>Fixed workflow with little reasoning - script the workflow and call the LLM only at the steps that need it</li></ul></div><div class="card "><h4>The measurement that follows</h4><p class="dim">One of the slides on this topic carries the string &quot;GBM or Jev!&quot; for the small-classifier alternative. It is almost certainly a garbled extraction of a classifier name; it is reproduced as extracted and is not guessed at here.</p></div>
+  </div>
+    <div class="notes">The most effective cost lever is often deleting the model call. The point of the slide is to make students check before they spend.</div>
+  </section>
+  <section class="slide" data-title="Completion time is the critical path">
+
+  <p class="kicker">Speed</p>
+  <h2 class="h2">Completion time is the critical path</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The distinction</h4><p class="dim">Serial execution costs about the sum of the steps; parallel execution costs about the critical path. Cheaper can be slower - small models may take more steps, and parallelism costs more tokens for less waiting.</p></div><div class="card "><h4>Four speed levers</h4><ul class="clean "><li>Speed up LLM serving - every cost technique also cuts latency</li><li>Improve orchestration: async execution, persistent sessions, stream and pipeline, colocate services</li><li>Speed up tool calls: cache tool results, faster hardware, better tools, fail fast. Measure tool time per step before tuning the model</li><li>Parallelize work - the same work in a third of the wait</li></ul></div>
+  </div>
+    <div class="notes">Measure tool time per step before tuning the model. That ordering is the deck's advice and it is the one students most often get wrong.</div>
+  </section>
+  <section class="slide" data-title="Guess early, verify later">
+
+  <p class="kicker">Speculative actions</p>
+  <h2 class="h2">Guess early, verify later</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The mechanism</h4><ul class="clean "><li>Predict the next action with a cheap model</li><li>Run it early while the main model thinks</li><li>Compare: a match skips the wait, a miss costs one wasted call</li><li>It pays off when guesses are often right and actions can be undone</li></ul></div><div class="card "><h4>The design space</h4><ul class="clean "><li>What can be speculated, from tool intent to tool call with arguments, to next action, to branches, to a whole multi-step trajectory</li><li>Predictions come from a model, from an early fork of the same model, or from past traces</li><li>Can be lossless (always verify) or lossy</li></ul></div>
+  </div>
+    <div class="notes">The SPORK example shows the shape: spend a little on a probe to avoid a much larger wait.</div>
+  </section>
+  <section class="slide" data-title="The optimization loop">
+
+  <p class="kicker">The method</p>
+  <h2 class="h2">The optimization loop</h2>
+  <p class="lede mb-l">Four steps, and the same tasks every time.</p>
+  <div class="steps anim-stagger-list" data-anim-target>
+    <div class="step"><div class="num">1</div><h4>Run and profile</h4><p>Find the expensive path.</p></div><div class="step"><div class="num">2</div><h4>Measure</h4><p>Success, spend, p95 latency.</p></div><div class="step"><div class="num">3</div><h4>Change one thing</h4><p>One lever at a time.</p></div><div class="step"><div class="num">4</div><h4>Re-evaluate</h4><p>On the same tasks.</p></div>
+  </div>
+    <div class="notes">Change one thing, re-evaluate on the same tasks. This is the cheapest and the most-skipped discipline in the course.</div>
+  </section>
+  <section class="slide" data-title="Three harness architectures">
+
+  <p class="kicker">Architecture</p>
+  <h2 class="h2">Three harness architectures</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th></th><th>Monolithic</th><th>Modular</th><th>Agent microkernel</th></tr></thead>
+      <tbody>
+        <tr><td>Design principle</td><td>The agent owns everything, in one runtime</td><td>One controller delegates through interfaces</td><td>A small runtime keeps state, coordination, scheduling and security</td></tr><tr><td>Central controller</td><td>Inside the agent</td><td>The controller</td><td>The runtime coordinates</td></tr><tr><td>Component replacement</td><td>Rewriting the agent</td><td>Swap the provider</td><td>Swap the service</td></tr><tr><td>Execution isolation</td><td>In-process</td><td>A sandbox provider such as DockerSandbox, with a Docker to Firecracker swap</td><td>An execution service owns allocation, isolation and sandbox lifecycle</td></tr><tr><td>Component deployment</td><td>Together</td><td>Providers RedisMemory, MCPTools, SlidingWindowContext, DockerSandbox</td><td>External services provide memory, tools and execution</td></tr><tr><td>Fit</td><td>Standalone agents</td><td>Swappable providers under fixed evaluation</td><td>Multi-agent infrastructure</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The shift is responsibility moving out of the agent: from code, to interfaces, to services. The trade is simplicity and low overhead for isolation, sharing and scale. The comparison also tracks: central controller, component replacement, execution isolation, component deployment, independent scaling, communication cost, typical use case.</p>
+    <div class="notes">The one-Python-snippet test on the slides makes the trade-off concrete: monolithic executes locally, modular calls SandboxProvider.run(code), and the microkernel sends an execution request to an execution service that owns allocation, isolation and sandbox lifecycle.</div>
+  </section>
+  <section class="slide" data-title="Eight real harnesses">
+
+  <p class="kicker">The gallery</p>
+  <h2 class="h2">Eight real harnesses</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Harness</th><th>Language</th><th>The distinctive idea</th></tr></thead>
+      <tbody>
+        <tr><td>Claude Code</td><td>Anthropic / TypeScript (closed)</td><td>A policy layer and typed hooks</td></tr><tr><td>Codex CLI</td><td>OpenAI / Rust</td><td>A sandbox with no network access, and approval only to go out of the sandbox; a Lark patch grammar with hunks matched in four passes</td></tr><tr><td>DeepSeek Harness</td><td>DeepSeek AI / TypeScript</td><td>The loop is a plugin; compare-and-swap edits</td></tr><tr><td>OpenCode</td><td>Anomaly (SST) / TypeScript + Bun</td><td>The harness is a server - the TUI, SDKs and web app use the same OpenAPI HTTP server; nine replacers from exact to anchor match; a shadow git repository for /undo</td></tr><tr><td>Pi</td><td>Mario Zechner / Earendil / TypeScript</td><td>A minimal core with four tools and no MCP, sub-agents or approvals; keep-alive requests only when the expected saving is $0.05 or more; pi-ai supports 42 providers on 10 wire APIs</td></tr><tr><td>oh-my-pi</td><td>Can Boluk / Stencil Labs / TypeScript + Rust</td><td>A 4-hex file tag plus line numbers per edit; one shell stays open for all calls; snapcompact changes old history into images; TTSR stops and tries again when a regex matches</td></tr><tr><td>OpenClaw</td><td>OpenClaw Foundation / TypeScript</td><td>A chat gateway with 27 channels and queue lanes, memory before compaction, and fences, taint and sentinels</td></tr><tr><td>Hermes Agent</td><td>Nous Research / Python</td><td>A background fork edits the memory and the skills; compaction starts at 50% of the window, the earliest of the eight; tool-call rows are written to the session database before any side effect</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Three other projects use Pi code. Hermes Agent's threshold is described as the earliest of the eight, but the slides give no comparison values for the other seven.</p>
+    <div class="notes">Read this table as design vocabulary, not as a ranking. Each harness solves one problem differently, and Assignment 3 asks you to build your own.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/slides/8_agent_design_5.pdf">https://cs2680.seas.harvard.edu/slides/8_agent_design_5.pdf</a> &mdash; Lecture 8 slide deck - 54 pages</li><li><a href="https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html">https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html</a> &mdash; the reference note on cost-effective agents</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/slides/8_agent_design_5.pdf.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Reference note - Agent evaluation and benchmarks</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Reference note · agent-evaluation &middot; Source: https://cs2680.seas.harvard.edu/notes/agent-evaluation.html</span>
+    <span class="slide-number" data-current="1" data-total="14"></span>
+  </div>
+
+  <section class="slide" data-title="Agent evaluation and benchmarks">
+
+  <p class="kicker">Reference note · curated by the instructor, reviewed by the instructor and the TFs</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">Agent evaluation and benchmarks</h1>
+  <p class="lede">A method guide in one half, a directory of 48 benchmarks in eight themes in the other.</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">14 evaluation dimensions</span><span class="pill ">pass@k vs pass^k</span><span class="pill ">48 benchmarks</span><span class="pill ">8 themes</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">notes/agent-evaluation.html</p>
+    <div class="notes">The note states that its examples are invented illustrations, not released test items, and that the directory is a reference for task formats and scoring rules - not a ranking of increasingly intelligent systems.</div>
+  </section>
+  <section class="slide" data-title="Two halves, one argument">
+
+  <p class="kicker">Scope</p>
+  <h2 class="h2">Two halves, one argument</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Part one - a method guide</h3>
+      
+      <ul class="clean "><li>What an agent evaluation measures, versus a model evaluation</li><li>The anatomy of one episode: task, trial, trajectory, outcome, with conceptual pseudocode</li><li>Benchmark selection, grader types, the metrics table</li><li>Cost and latency accounting, uncertainty</li><li>METR time horizons</li><li>A five-step design process</li><li>Contamination versus grader gaming, and a reporting checklist</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Part two - the directory</h3>
+      <p class="dim">48 numbered entries grouped into eight themes, each giving a representative task, scoring, what it measures, and source links.</p>
+      <ul class="clean "><li>Text prediction</li><li>Language understanding</li><li>Knowledge and reasoning</li><li>Assistant quality</li><li>Interactive agents</li><li>Harder or fresher test sets</li><li>Agent capabilities in isolation</li><li>Workplace workflows</li></ul>
+    </div>
+  </div>
+    <div class="notes">The directory is deliberately ordered by task format rather than by difficulty, which supports the course's thesis that a suite choice is an evaluation-design decision.</div>
+  </section>
+  <section class="slide" data-title="Outcomes, cost and latency">
+
+  <p class="kicker">Evaluation dimensions · 1 of 2</p>
+  <h2 class="h2">Outcomes, cost and latency</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Dimension</th><th>What it measures</th><th>Notes and caveats</th></tr></thead>
+      <tbody>
+        <tr><td>Task success / resolution rate</td><td>Fraction of tasks or runs meeting the benchmark's completion checks</td><td>Report the denominator and the budget; checks may miss regressions</td></tr><tr><td>Outcome vs. procedural compliance</td><td>Final state versus required process - for example confirmation before a write</td><td>A correct end state cannot prove consent came first; it needs trajectory evidence</td></tr><tr><td>Cost per successful task</td><td>Total runtime cost including failed attempts, divided by successful task trials</td><td>Undefined when no trial succeeds; do not divide by distinct task IDs solved at least once</td></tr><tr><td>Cost per attempted task</td><td>Total runtime cost divided by attempted trials</td><td>A low cost-per-success can hide poor task coverage; grading expense is reported separately</td></tr><tr><td>Latency and parallelism</td><td>Wall-clock to a usable final result, and elapsed time against aggregate compute</td><td>Distinguish time-to-first-token; record timeouts and failures. Parallel agents cut elapsed time while raising total cost</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The cost definitions are deliberately strict: dividing by distinct task IDs solved at least once is called out as wrong, because it hides the retries that made the solve possible.</div>
+  </section>
+  <section class="slide" data-title="Consistency, tools, memory, safety and the graders themselves">
+
+  <p class="kicker">Evaluation dimensions · 2 of 2</p>
+  <h2 class="h2">Consistency, tools, memory, safety and the graders themselves</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Dimension</th><th>What it measures</th><th>Notes and caveats</th></tr></thead>
+      <tbody>
+        <tr><td>pass@k vs. pass^k</td><td>Probability at least one of k attempts succeeds, against the probability all k repeated trials succeed</td><td>Different events; pass@k needs a deployable selector, pass^k measures consistency</td></tr><tr><td>Tool-call correctness and efficiency</td><td>Function selection, argument grounding, call structure, turn count, milestones</td><td>A well-formed call can still be wrong; turn count is separate from task success (BFCL, ToolSandbox)</td></tr><tr><td>Memory recall and query latency</td><td>Answer correctness from retrieved evidence, and the cost of the memory system at that accuracy</td><td>Retrieving an answer-bearing session is intermediate, not correctness; V2 measures an accuracy-latency frontier</td></tr><tr><td>Safety under attack</td><td>Benign utility, utility under attack, and targeted attack success rate</td><td>Refusing everything can cut attack success while making the agent useless</td></tr><tr><td>Coordination</td><td>Team task outcome plus a separate coordination score</td><td>Many messages do not imply useful division of work</td></tr><tr><td>Grader (judge) quality</td><td>Whether the automatic judge is right</td><td>Hand audit: the original judge was wrong in 96.4% of disagreements on Omni-MATH (the optional transformers note carries this figure)</td></tr><tr><td>Contamination and prompt sensitivity</td><td>Whether a task or solution was visible to training or to the run, and how much of a score belongs to the harness</td><td>A date after a claimed cutoff reduces one risk only; MMLU-Pro cut prompt sensitivity from 4-5% to 2% across 24 prompt styles</td></tr><tr><td>Uncertainty and calibration</td><td>Variability across trials against task coverage; whether stated confidence tracks actual correctness</td><td>Use paired per-task differences - overlap of two score intervals is not a test. Accuracy and calibration are different measurements (HLE)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The judge-quality row is the one that changes how you run a benchmark: if the judge is wrong in 96.4% of expert-audited disagreements, the judge is a component with its own failure rate, and it can saturate before the task does.</div>
+  </section>
+  <section class="slide" data-title="pass@k and pass^k are different events">
+
+  <p class="kicker">The technical core</p>
+  <h2 class="h2">pass@k and pass^k are different events</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Population definitions</h3>
+      <p class="dim">pass@k = 1 - (1 - p)^k ; pass^k = p^k</p>
+      <ul class="clean "><li>pass@k - at least one of k attempts succeeds</li><li>pass^k - all k repeated trials succeed</li><li>The definitions are the HumanEval and tau-bench ones</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Finite-sample estimators</h3>
+      <p class="dim">Estimated pass@k = 1 - C(n-c, k)/C(n, k) ; Estimated pass^k = C(c, k)/C(n, k)</p>
+      <ul class="clean "><li>Requires n &gt;= k</li><li>C(a,k) = 0 when a &lt; k</li></ul>
+    </div>
+  </div>
+    <div class="notes">This is the most teachable technical core on the page: it shows how to get consistency out of repeated trials without inventing new tasks.</div>
+  </section>
+  <section class="slide" data-title="What the two formulas give you">
+
+  <p class="kicker">Worked examples</p>
+  <h2 class="h2">What the two formulas give you</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Example (a)</h3>
+      <p class="dim">p = 0.8, k = 3</p>
+      <ul class="clean "><li>pass@3 = 99.2%</li><li>pass^3 = 51.2%</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Example (b)</h3>
+      <p class="dim">3 successes in 5 trials</p>
+      <ul class="clean "><li>Estimated pass@2 = 1 - 1/10 = 90%</li><li>Estimated pass^2 = 3/10 = 30%</li><li>The plug-in formulas would give 84% and 36%</li></ul>
+    </div>
+  </div>
+    <div class="notes">Example (b) is the one to use on the board. The plug-in numbers differ from the finite-sample ones, which is exactly why the note insists on the estimator.</div>
+  </section>
+  <section class="slide" data-title="A against B, run on the same tasks">
+
+  <p class="kicker">Paired comparison</p>
+  <h2 class="h2">A against B, run on the same tasks</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th></th><th>A</th><th>B</th></tr></thead>
+      <tbody>
+        <tr><td>Both succeed</td><td>65</td><td>65</td></tr><tr><td>Only A succeeds</td><td>5</td><td>-</td></tr><tr><td>Only B succeeds</td><td>-</td><td>10</td></tr><tr><td>Both fail</td><td>20</td><td>20</td></tr><tr><td>Success rate</td><td>70%</td><td>75%</td></tr><tr><td>Total spend</td><td>$100</td><td>$150</td></tr><tr><td>Cost per attempt</td><td>$1.00</td><td>$1.50</td></tr><tr><td>Cost per success</td><td>~$1.43</td><td>$2.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">$10 per net additional completion. The table is designed to stop the &quot;one system dominates&quot; reflex: B is better on the headline rate, worse on every cost measure, and the comparison only makes sense per task, paired.</p>
+    <div class="notes">Use paired per-task differences. A single unpaired average hides the five tasks where A wins and B loses.</div>
+  </section>
+  <section class="slide" data-title="Text prediction and language understanding">
+
+  <p class="kicker">Benchmark directory · 1 of 6</p>
+  <h2 class="h2">Text prediction and language understanding</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Benchmark</th><th>Task family</th><th>What it probes</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>PTB (Penn Treebank)</td><td>Language modeling</td><td>Next-word probability in a narrow domain</td><td>Perplexity; WSJ-based processed split; corpus dates from 1993</td></tr><tr><td>WikiText</td><td>Language modeling</td><td>Prediction with article context retained</td><td>Perplexity; WikiText-2 and -103; structure and punctuation preserved</td></tr><tr><td>LAMBADA</td><td>Language modeling</td><td>Recovering the final word from discourse context</td><td>Final-word accuracy; 2016</td></tr><tr><td>SQuAD / SQuAD 2.0</td><td>Reading comprehension</td><td>Span extraction from supplied evidence</td><td>Exact match + token F1; 2.0 adds unanswerable questions and abstention</td></tr><tr><td>GLUE</td><td>Transfer across 9 short-text tasks</td><td>Sentence understanding transfer</td><td>Per-task metrics aggregated; a composite, not a percentage of questions</td></tr><tr><td>SuperGLUE</td><td>8 harder contextual tasks</td><td>Contextual reasoning with few labels</td><td>Task-average score; not one homogeneous success rate</td></tr><tr><td>HellaSwag</td><td>Commonsense</td><td>Choosing a plausible next event (4 options)</td><td>Adversarially filtered distractors; still a recognition task</td></tr><tr><td>WinoGrande</td><td>Commonsense coreference</td><td>Winograd-style reference resolution</td><td>~44,000 items; binary choice permits guessing</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The note says explicitly that a composite is not a percentage of questions, and that a binary choice permits guessing. Both caveats matter when you quote a headline.</div>
+  </section>
+  <section class="slide" data-title="Knowledge and reasoning">
+
+  <p class="kicker">Benchmark directory · 2 of 6</p>
+  <h2 class="h2">Knowledge and reasoning</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Benchmark</th><th>Task family</th><th>What it probes</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>AI2 ARC</td><td>School science QA</td><td>Knowledge and reasoning in exam format</td><td>7,787 questions, Easy/Challenge; unrelated to ARC-AGI despite the acronym</td></tr><tr><td>MMLU</td><td>Knowledge breadth</td><td>57 academic/professional subjects</td><td>Answer accuracy; the aggregate hides uneven subject performance</td></tr><tr><td>BIG-bench</td><td>Diverse task suite</td><td>Capabilities across 204 heterogeneous tasks</td><td>Task-dependent metrics; aggregation is not a universal reasoning percentage</td></tr><tr><td>BBH</td><td>Constrained reasoning</td><td>23 tasks models had not passed at introduction</td><td>The direct against chain-of-thought protocol must be named</td></tr><tr><td>GSM8K</td><td>Math word problems</td><td>Multi-step arithmetic</td><td>7,473 train / 1,319 test; final-answer accuracy</td></tr><tr><td>MATH</td><td>Competition math</td><td>Technique selection and symbolic manipulation</td><td>12,500 problems (7,500/5,000); the full test split is not MATH-500</td></tr><tr><td>HumanEval</td><td>Code generation</td><td>Executable correctness of 164 Python problems</td><td>pass@k against pass@1; finite tests are not full correctness</td></tr><tr><td>HELM</td><td>Evaluation framework</td><td>7 dimensions over 16 core scenarios</td><td>Efficiency is one of the seven metrics; no universal task-success percentage</td></tr><tr><td>TruthfulQA</td><td>Truthfulness</td><td>Reproducing tempting misconceptions</td><td>Generated-answer and multiple-choice variants are different measurements</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">Note the care needed: ARC and ARC-AGI share an acronym and nothing else, and the full MATH test split is not MATH-500.</div>
+  </section>
+  <section class="slide" data-title="Assistant quality">
+
+  <p class="kicker">Benchmark directory · 3 of 6</p>
+  <h2 class="h2">Assistant quality</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Benchmark</th><th>Task family</th><th>What it probes</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>MT-Bench</td><td>Multi-turn assistant</td><td>Multi-turn conversation quality</td><td>80 two-turn conversations; LLM judge on a 1-10 scale; verbosity and position biases</td></tr><tr><td>Chatbot Arena</td><td>User preference</td><td>Live pairwise votes</td><td>The rating is not a correctness or completion rate</td></tr><tr><td>AlpacaEval</td><td>Automated preference</td><td>Pairwise win rate against a reference model</td><td>Raw against length-controlled; report version, reference and judge</td></tr><tr><td>IFEval</td><td>Instruction compliance</td><td>Programmatically checkable constraints</td><td>Instruction-level and prompt-level, strict and loose</td></tr><tr><td>LongBench</td><td>Long context</td><td>Long-context handling</td><td>21 datasets, 6 categories, English and Chinese; F1/ROUGE/accuracy/code similarity; not a single success percentage</td></tr><tr><td>MMMU</td><td>Multimodal reasoning</td><td>Multimodal questions across subjects</td><td>~11,500 questions over 30 subjects; some questions are answerable from text alone</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">Every judge-based benchmark carries its judge's biases with it. The MT-Bench row names verbosity and position bias explicitly; the Chatbot Arena row says a rating is not a correctness rate.</div>
+  </section>
+  <section class="slide" data-title="Interactive agents">
+
+  <p class="kicker">Benchmark directory · 4 of 6</p>
+  <h2 class="h2">Interactive agents</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Benchmark</th><th>Task family</th><th>What it probes</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>AgentBench</td><td>Multi-environment acting</td><td>Acting across environments</td><td>8 environments: OS, DB, KG, card game, puzzles, household, shopping, browsing; weighted rescale by reciprocal historical means; AgentBench FC (Oct 2025) is a different suite</td></tr><tr><td>WebArena</td><td>Web workflow</td><td>Realistic web task completion</td><td>812 self-hosted website tasks; the Verified variant replaces model-judge with deterministic type-aware checks; 258-task Hard subset</td></tr><tr><td>GAIA</td><td>Research assistant</td><td>Reasoning, browsing, files and computation</td><td>466 questions; type-dependent answer normalization; Gaia2 is a separate suite</td></tr><tr><td>BrowseComp</td><td>Open-web search</td><td>Hard information search</td><td>1,266 hard information-search questions; LLM grader for answer equivalence; a short answer says little about report quality</td></tr><tr><td>SWE-bench</td><td>Repo repair</td><td>Fixing real issues in real repositories</td><td>2,294 issues across 12 Python repositories; FAIL_TO_PASS + PASS_TO_PASS; Verified 500-instance subset; Lite/Multilingual/Multimodal variants</td></tr><tr><td>SWE-Bench Pro</td><td>Larger repo changes</td><td>Larger, harder repository changes</td><td>Public, held-out and commercial splits; Public V2 (Sep 22, 2026) has 642 tasks, 11 repos, 50 min/task, web-fetch disabled, replacing the 731-task split; HARD-51 subset</td></tr><tr><td>Terminal-Bench</td><td>Terminal task completion</td><td>Software engineering, config, data processing, scientific computing</td><td>2.0 = 89 tasks; 4.0.0 (Aug 2026) recalibrates limits, with an 8-hour agent timeout, and requires new runs</td></tr><tr><td>OSWorld</td><td>Desktop operation</td><td>Real desktop tasks in real applications</td><td>369 original tasks; execution-based evaluators; OSWorld 2.0 (June 2026) = 108 longer workflows; 2.1 (Sep 16, 2026) recommended</td></tr><tr><td>tau-bench</td><td>Customer dialogue and API</td><td>Tool use under a policy with a simulated user</td><td>Retail and airline policy work; DB outcome plus required response information; tau^2 (2025) adds telecom dual control; tau^3 (Mar 2026) adds banking and full-duplex voice</td></tr><tr><td>ARC-AGI-3</td><td>Rule discovery</td><td>Learning an unfamiliar environment by acting</td><td>2025 preview, 2026 full release; action efficiency against human baselines</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">This is the theme the course actually uses for Assignment 2 and 3. SWE-bench Pro is the one Assignment 2 runs against, and tau-bench is the one that introduced Pass^k.</div>
+  </section>
+  <section class="slide" data-title="Harder and fresher sets, and capabilities in isolation">
+
+  <p class="kicker">Benchmark directory · 5 of 6</p>
+  <h2 class="h2">Harder and fresher sets, and capabilities in isolation</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Benchmark</th><th>Task family</th><th>What it probes</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>MMLU-Pro</td><td>Harder academic MCQ</td><td>Knowledge with less guessing</td><td>4 options expanded toward 10; less guessing; no guarantee of absence from training</td></tr><tr><td>LiveBench</td><td>Freshness</td><td>Regularly refreshed, objectively checkable questions</td><td>Snapshot-to-snapshot difficulty differs; not permanent contamination protection</td></tr><tr><td>LiveCodeBench</td><td>Fresh code</td><td>New contest problems</td><td>LeetCode, AtCoder, Codeforces; pass rate or pass@k by scenario; the date window is part of the benchmark</td></tr><tr><td>MMMU-Pro</td><td>Vision dependence</td><td>Whether the question actually needs the image</td><td>Filtering text-answerable items, vision-only setting; the score must name the input setting</td></tr><tr><td>GPQA</td><td>Expert science QA</td><td>Expert-level science questions</td><td>448-question main set with a Diamond subset; &quot;Google-proof&quot; describes validator difficulty, not immunity to help</td></tr><tr><td>FrontierMath</td><td>Expert math</td><td>Auto-checkable expert-written problems</td><td>Answer checking is not proof verification</td></tr><tr><td>Humanity's Last Exam</td><td>Broad academic difficulty</td><td>Breadth and difficulty</td><td>2,500 questions across many fields; accuracy and calibration reported separately; tool-enabled and tool-free differ</td></tr><tr><td>BFCL</td><td>Tool calling</td><td>Selection, arguments, parallel calls, withholding</td><td>V3 multi-turn; V4 (Jul 17, 2025) adds web search, memory and format sensitivity</td></tr><tr><td>ToolSandbox</td><td>Stateful tool use</td><td>Dependencies between tools and recovery</td><td>Milestone similarity, with a forbidden minefield scored 0; MM-ToolSandBox (Jul 2026) adds 511 tools, 258 scenarios and 50 UI variants</td></tr><tr><td>LongMemEval</td><td>Memory</td><td>Memory over long chat histories</td><td>500 questions; LLM judge; V2 (May 2026) = 451 questions over recorded agent experience, with query latency</td></tr><tr><td>AgentDojo</td><td>Injection robustness</td><td>Robustness to prompt injection</td><td>97 user tasks, 629 security test cases; package v0.1.35 and task revision v1.2.2 are separate version axes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The &quot;fresher&quot; half of the directory exists because of saturation: a benchmark that nobody has seen is worth more than a benchmark everybody has trained on.</div>
+  </section>
+  <section class="slide" data-title="Workplace workflows">
+
+  <p class="kicker">Benchmark directory · 6 of 6</p>
+  <h2 class="h2">Workplace workflows</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Benchmark</th><th>Task family</th><th>What it probes</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>MultiAgentBench</td><td>Team coordination</td><td>Team work</td><td>Proposal writing, Minecraft, DB diagnosis, coding, bargaining, Werewolf; task score and coordination score are separate; compare with a single agent at matched cost</td></tr><tr><td>TheAgentCompany</td><td>Enterprise workflow</td><td>Long-horizon work across company tools</td><td>175 tasks over GitLab, Plane, ownCloud and RocketChat; weighted checkpoints plus full completion; the partial score is a distinct number</td></tr><tr><td>GDPval</td><td>Professional deliverable</td><td>Real professional work products</td><td>44 occupations, 9 sectors; 1,320 tasks (220 gold); blind expert preference; automated grading is a separate setup; one-shot</td></tr><tr><td>KernelBench</td><td>GPU kernels</td><td>Kernel correctness and speed</td><td>250 core workloads; the fastp metric; v0.1 changes problem sizes and numerics</td></tr><tr><td>MLE-bench</td><td>ML engineering</td><td>End-to-end ML engineering</td><td>75 offline Kaggle competitions; bronze-medal threshold fraction; v2 described as upcoming (Sep 2026); submissions paused since Apr 24, 2026</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The directory has 49 rows because the note's 48 numbered entries include SWE-Bench Pro as a named sub-entry under SWE-bench; both are listed because the note names both.</p>
+    <div class="notes">The workplace-workflow theme is the closest match to the final project, and MultiAgentBench is the only benchmark in the note that scores coordination separately from the task.</div>
+  </section>
+  <section class="slide" data-title="Graders, time horizons, and what to report together">
+
+  <p class="kicker">Method</p>
+  <h2 class="h2">Graders, time horizons, and what to report together</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Graders and metrics</h4><p class="dim">Metrics: perplexity, accuracy or exact match or F1, preference or win rate, task success or resolution rate, pass@k, pass^k.</p><ul class="clean "><li>Graders: code and execution, model judge, human review</li></ul></div><div class="card "><h4>METR time horizons</h4><ul class="clean "><li>Time Horizon 1.1 is the current suite as of Sep 27, 2026</li><li>Released Jan 29, 2026; expanded 170 to 228 tasks</li><li>Infrastructure moved from Vivaria to Inspect</li><li>50% and 80% horizons; a March 2026 regularization correction</li><li>Horizons above 16 human-hours are flagged unreliable</li></ul></div><div class="card "><h4>Contamination versus grader gaming</h4><p class="dim">The note separates the two: contamination is what the task or solution exposes the run to, while grader gaming is the run exploiting the scorer. Both are reported, never just one.</p></div><div class="card "><h4>A reporting checklist</h4><p class="dim">Report the verified success rate, total spend divided by verified successful trials, cost per attempted trial, p50 and p95 time to a usable result, and the cost distribution across tasks - together, or the numbers do not mean anything.</p></div>
+  </div>
+    <div class="notes">The reporting checklist is the practical takeaway: publish the six numbers together, or a reader cannot tell whether a cheaper run is a better one.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/notes/agent-evaluation.html">https://cs2680.seas.harvard.edu/notes/agent-evaluation.html</a> &mdash; the reference note</li><li><a href="https://cs2680.seas.harvard.edu/slides/7_agent_design_4.pdf">https://cs2680.seas.harvard.edu/slides/7_agent_design_4.pdf</a> &mdash; Lecture 7 - the lecture built on this note</li><li><a href="https://cs2680.seas.harvard.edu/notes/transformers.html">https://cs2680.seas.harvard.edu/notes/transformers.html</a> &mdash; the optional transformers note - the source of the 96.4% judge-audit figure</li><li><a href="https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html">https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html</a> &mdash; the cost-effective agents note - the source of the report-together checklist</li><li><a href="https://arxiv.org/abs/2507.02825">https://arxiv.org/abs/2507.02825</a> &mdash; Agentic Benchmark Checklist, one of the note's method references</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/notes/agent-evaluation.html.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>

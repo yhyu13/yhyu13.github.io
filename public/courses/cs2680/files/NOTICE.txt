@@ -1,0 +1,66 @@
+NOTICE
+======
+
+This repository is a PERSONAL STUDY MIRROR of publicly published course material
+for:
+
+    CS2680 - Modern AI Systems: Agents and System Optimizations
+    Harvard John A. Paulson School of Engineering and Applied Sciences
+    Fall 2026 - Instructor: Juncheng Yang
+    Official course site: https://cs2680.seas.harvard.edu/
+    (also served at the vanity domain https://cs2680.com)
+
+WHAT IS MIRRORED
+----------------
+`course/` contains a byte-for-byte mirror of the material the course publishes on
+its own website: the lecture slide decks, the reference notes, the assignment
+specifications, the final project specification, and the policy and computing-setup
+pages. Each file's source URL and SHA-256 checksum is recorded in
+`course/MANIFEST.json`, and the mirror was captured on 2026-10-20.
+
+`courseware/` contains STUDY COURSEWARE that was generated from that mirror:
+PowerPoint decks, HTML study pages, and Remotion video compositions. These are
+derivative teaching aids produced by an independent learner. They are not the
+instructor's slides and are not reviewed or endorsed by Harvard SEAS or by
+Juncheng Yang.
+
+OWNERSHIP AND LICENSING
+-----------------------
+All source material in `course/` is the property of Harvard SEAS and of the
+course instructor. It is reproduced here for the personal study use of the
+repository's owner. It is NOT licensed for redistribution, and nothing in this
+repository grants a licence to re-publish it. If you want to share the material,
+share the OFFICIAL URL, not this mirror.
+
+The generated courseware in `courseware/` inherits the same restriction, because
+it is derived from the source material and quotes it extensively.
+
+No claim is made that the repository owner is enrolled in or auditing the course.
+The course's own policy page states that auditing is permitted subject to school
+policy and classroom space, and that no computing resources are provided to
+auditors.
+
+THIRD-PARTY COMPONENTS
+----------------------
+The HTML study pages use the `html-ppt` skill's asset library (MIT licensed,
+Copyright (c) 2026 lewis <sudolewis@gmail.com>), vendored under
+`courseware/html/assets/`. The PPTX decks use `pptxgenjs`; the Remotion project
+uses `remotion`, `react` and `react-dom`. See each project's `package.json` for
+its dependency list and versions.
+
+WHAT IS NOT IN HERE
+-------------------
+- No exam (the course has none), no grading, no leaderboard data, no submission
+  infrastructure, no course credentials.
+- No assignment detail for Assignments 4 and 5, which the instructor has not
+  published; the index page's published one-line summaries are reproduced.
+- No published slide decks for the Part II lectures from 2026-10-19 onward; the
+  course posts slides as the term runs.
+- The instructor's personal research papers, which live on a separate site and
+  are not course material, are deliberately excluded from the mirror.
+
+UPSTREAM AUTHORITY
+------------------
+If this mirror and the official site ever disagree, the official site wins. Every
+page and slide in this repository names its upstream source URL so the
+authoritative version is always one click away.

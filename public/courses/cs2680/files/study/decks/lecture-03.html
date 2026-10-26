@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Lecture 3 - Multi-agent and best practice</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Lecture 3 · 3_agent_use_2.pdf &middot; Source: https://cs2680.seas.harvard.edu/slides/3_agent_use_2.pdf</span>
+    <span class="slide-number" data-current="1" data-total="17"></span>
+  </div>
+
+  <section class="slide" data-title="Agent from a user's perspective II: multi-agent and best practice">
+
+  <p class="kicker">Lecture 3 · Sep 14, 2026 · 72 slides</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">Agent from a user's perspective II: multi-agent and best practice</h1>
+  <p class="lede">Two real plugin case studies, then the three independent axes you can scale on - and what the field evidence says about delegating work to agents.</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">Superpowers</span><span class="pill ">Caveman</span><span class="pill ">Parallel agents</span><span class="pill ">Subagents</span><span class="pill ">Agent teams</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">slides/3_agent_use_2.pdf</p>
+    <div class="notes">Lecture 2 taught the four extension mechanisms in the abstract. Lecture 3 shows real teams shipping them, and then asks what multi-agent actually buys.</div>
+  </section>
+  <section class="slide" data-title="Same model, different workflow">
+
+  <p class="kicker">The hinge of the lecture</p>
+  <h2 class="h2">Same model, different workflow</h2>
+  <p class="lede mb-l">Two agents sharing the same model and the same tools behave differently, because only the instructions differ.</p>
+  <div class="vs">
+    <div class="card bad-side side anim-fade-left" data-anim="fade-left">
+      <h3>The default workflow</h3>
+      
+      <ul class="clean vs-li"><li>Feature request</li><li>Start coding</li><li>Fix by iteration</li></ul>
+    </div>
+    <div class="mid">&rarr;</div>
+    <div class="card good-side side anim-fade-right" data-anim="fade-right">
+      <h3>The Superpowers workflow</h3>
+      
+      <ul class="clean vs-li"><li>PLAN</li><li>BUILD</li><li>SHIP</li><li>With a HUMAN at step 0</li></ul>
+    </div>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The instructions are the design surface. A plugin is the distribution container; skills and hooks supply the behaviour.</p>
+    <div class="notes">The Superpowers case: a software-development plugin, obra/superpowers, installed with /plugin install superpowers@claude-plugins-official.</div>
+  </section>
+  <section class="slide" data-title="Six stages, nine skills">
+
+  <p class="kicker">Case study 1 · Superpowers</p>
+  <h2 class="h2">Six stages, nine skills</h2>
+  <p class="lede mb-l">The plugin puts a human approval gate at the front of a six-stage pipeline.</p>
+  <div class="steps anim-stagger-list" data-anim-target>
+    <div class="step"><div class="num">1</div><h4>Clarify</h4><p>Clarify the problem.</p></div><div class="step"><div class="num">2</div><h4>Approve</h4><p>Approve a design.</p></div><div class="step"><div class="num">3</div><h4>Plan</h4><p>Write a detailed plan.</p></div><div class="step"><div class="num">4</div><h4>Build</h4><p>Test-driven build.</p></div><div class="step"><div class="num">5</div><h4>Review</h4><p>Review and verify.</p></div><div class="step"><div class="num">6</div><h4>Finish</h4><p>Finish or integrate the branch.</p></div>
+  </div>
+    <div class="notes">The layout is superpowers/ with .claude-plugin/plugin.json, hooks/hooks.json (session-start), skills/ and tests/.</div>
+  </section>
+  <section class="slide" data-title="Front matter, body, and the six components">
+
+  <p class="kicker">Skill anatomy</p>
+  <h2 class="h2">Front matter, body, and the six components</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>A SKILL.md</h3>
+      
+      <ul class="clean "><li>Front matter: metadata - name and description</li><li>Body: the procedure</li><li>The brainstorming skill: inspect project, classify scope, clarify requirements, compare approaches, present a design, wait for user approval, invoke writing-plans</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Six components a skill file can define</h3>
+      
+      <ul class="clean "><li>Entry conditions</li><li>Required actions</li><li>Prohibited actions</li><li>Human approval gates</li><li>Verification requirements</li><li>Next applicable skill</li></ul>
+    </div>
+  </div>
+    <div class="notes">The seven-step brainstorming procedure is printed on the deck; the six components are what a skill file may define. Both are shown here so students can read a real skill file against the template.</div>
+  </section>
+  <section class="slide" data-title="Skills alone are not enough">
+
+  <p class="kicker">The &quot;students get this wrong&quot; slide</p>
+  <h2 class="h2">Skills alone are not enough</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Availability is not compliance</h4><p class="dim">A skill being present does not guarantee the agent checks it. Skills have to be invoked.</p></div><div class="card "><h4>The SessionStart hook</h4><p class="dim">A hook with matcher &quot;startup|clear|compact&quot;, type &quot;command&quot;, async false guarantees deterministic timing: it runs before the agent acts and re-runs after clear and compaction.</p></div><div class="card "><h4>How it injects</h4><p class="dim">The session-start script locates the plugin, reads the bootstrap SKILL.md, escapes the Markdown for JSON and returns it as additionalContext for Claude Code to add to context.</p></div><div class="card "><h4>Why it matters</h4><p class="dim">Hooks and skills solve different problems. A skill decides how; a hook enforces.</p></div>
+  </div>
+    <div class="notes">This is the mechanism distinction Lecture 2 introduced, now in a working repository. The hook is the part that makes the behaviour deterministic.</div>
+  </section>
+  <section class="slide" data-title="Compress the context you have to pay for">
+
+  <p class="kicker">Case study 2 · Caveman</p>
+  <h2 class="h2">Compress the context you have to pay for</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Why it exists</h3>
+      
+      <ul class="clean "><li>Context fills up</li><li>Every turn costs</li><li>Compaction loses detail</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The worked example</h3>
+      <p class="dim">BEFORE: 786 lines, reading &quot;... 776 more lines ... 3 failed, 214 passed&quot;.</p>
+      <ul class="clean "><li>AFTER: &quot;3 tests fail: ETIMEDOUT at client.ts:88&quot;</li><li>The original stays available for retrieval</li></ul>
+    </div>
+  </div>
+    <div class="notes">Caveman is a second case study with five extension mechanisms plus a local proxy. The point is that the compressed form is what the model sees, and the byte-exact original is still retrievable.</div>
+  </section>
+  <section class="slide" data-title="Compression in two directions">
+
+  <p class="kicker">Caveman</p>
+  <h2 class="h2">Compression in two directions</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>What it saves</h3>
+      <p class="dim">Reported: 65% fewer output tokens.</p>
+      <ul class="clean "><li>The skill itself adds input tokens, so whole-session savings are lower</li><li>Seven-step flow, ending with MCP retrieving the original on demand</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>What it preserves</h3>
+      <p class="dim">A response skill preserves technical terms, commands, paths, code, errors, numbers, units and negation, while removing filler, repetition, pleasantries and hedging.</p>
+      <ul class="clean "><li>Eight commands from /caveman to /caveman-help</li><li>SessionStart and UserPromptSubmit hooks make a prompt-time choice persistent</li></ul>
+    </div>
+  </div>
+    <div class="notes">The reported 65% figure was checked against the rendered PDF and is genuine, but it is an output-token figure, not a whole-session one. The lecture says so on the slide.</div>
+  </section>
+  <section class="slide" data-title="The only mechanism that can rewrite what the model reads">
+
+  <p class="kicker">The proxy</p>
+  <h2 class="h2">The only mechanism that can rewrite what the model reads</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Why a proxy is required</h4><p class="dim">Hooks intercept requests but cannot rewrite the request to the LLM. A proxy is required unless you write your own harness.</p></div><div class="card "><h4>Where it sits</h4><p class="dim">The proxy sits between the agent and the model provider, while MCP sits beside it. It applies type-aware compression per content type: logs, code, diffs, JSON, search, HTML/text.</p></div>
+  </div>
+    <div class="notes">This is the literal implementation of the Transformation stage of context management in Lecture 4: the same goal, at a different layer. It is also the architecture that a custom harness buys you.</div>
+  </section>
+  <section class="slide" data-title="Three independent axes">
+
+  <p class="kicker">Scaling</p>
+  <h2 class="h2">Three independent axes</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Axis</th><th>What it buys</th><th>Shape</th></tr></thead>
+      <tbody>
+        <tr><td>Parallel agents</td><td>Breadth - wall-clock throughput, not answer quality</td><td>Independent tasks, each in an isolated working tree</td></tr><tr><td>Subagents</td><td>Breadth and depth - throughput and focus</td><td>A bounded task in fresh context returning a summary</td></tr><tr><td>Long-running agent</td><td>Duration - scope</td><td>A larger job carried across many steps</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Agent teams and dynamic workflow combine them.</p>
+    <div class="notes">The rule to remember: scale has three independent axes, and each multi-agent mechanism buys a different one at a different cost.</div>
+  </section>
+  <section class="slide" data-title="One task per session, in its own worktree">
+
+  <p class="kicker">Parallel agents by hand</p>
+  <h2 class="h2">One task per session, in its own worktree</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The setup</h3>
+      
+      <ul class="clean "><li>One task per session in its own git worktree</li><li>A separate working directory and branch sharing the repository history</li><li>For example claude -w feature-payments, claude -w bugfix-auth</li><li>../repo-main (main), ../feat-auth (feature/auth), ../fix-flaky (fix/flaky-test)</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Where it breaks down</h3>
+      
+      <ul class="clean "><li>You hold the plan</li><li>Sessions cannot see each other</li><li>You reconcile the branches</li><li>It does not repeat, because nothing is written down to rerun</li><li>3 sessions you can hold the plan; 20 sessions you need a clone</li></ul>
+    </div>
+  </div>
+    <div class="notes">Hand-run parallelism is where most teams start, and where the coordination cost first shows up. The &quot;3 sessions vs 20 sessions&quot; line is the deck's own way of putting a number on it.</div>
+  </section>
+  <section class="slide" data-title="A specialized assistant with its own window">
+
+  <p class="kicker">Subagents</p>
+  <h2 class="h2">A specialized assistant with its own window</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Why</h4><ul class="clean "><li>Preserve context</li><li>Enforce constraints</li><li>Reuse anywhere</li><li>Parallelize - the slowest subtask sets the total time</li><li>Control cost by routing to a cheaper model such as Haiku</li></ul></div><div class="card "><h4>How</h4><ul class="clean "><li>Built-ins: Explore, Plan and General-purpose. Explore and Plan skip CLAUDE.md and git status.</li><li>A subagent is a Markdown file with YAML frontmatter whose body becomes the system prompt</li><li>Example: .claude/agents/code-reviewer.md with tools Read/Glob/Grep, model sonnet</li><li>Nesting requires Agent in the tools list; up to 5 levels are allowed, 2 to 3 the sweet spot</li><li>A nested example: my-orchestrator, tools Read/Grep/Agent, model claude-sonnet-5-0</li></ul></div>
+  </div>
+    <div class="notes">Routing to a cheaper model is the first cost lever a student can pull: model: haiku in the subagent frontmatter.</div>
+  </section>
+  <section class="slide" data-title="A coordination-cost decision, not a capability decision">
+
+  <p class="kicker">Subagents vs agent teams</p>
+  <h2 class="h2">A coordination-cost decision, not a capability decision</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th></th><th>Subagents</th><th>Agent teams</th></tr></thead>
+      <tbody>
+        <tr><td>Context</td><td>Own window; result to caller</td><td>Own window; independent</td></tr><tr><td>Communication</td><td>Back to the caller only</td><td>Teammate to teammate</td></tr><tr><td>Coordination</td><td>Lead</td><td>Shared task list</td></tr><tr><td>Token cost</td><td>Lower</td><td>Higher</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Agent teams are several Claude Code sessions working together - one lead, several teammates - for review, independent modules, debugging and cross-layer work. They are experimental and off by default, and they cost more tokens, so they are worth it only when the work needs discussion. Wiring: team lead, teammates, task list, and a mailbox (a JSON inbox per agent). Docs: code.claude.com/docs/en/agent-teams</p>
+    <div class="notes">The lecture explicitly names this as one of the things students get wrong: teams are not a capability upgrade, they are a coordination purchase.</div>
+  </section>
+  <section class="slide" data-title="Dynamic workflow and long-running agents">
+
+  <p class="kicker">Beyond hand-run parallelism</p>
+  <h2 class="h2">Dynamic workflow and long-running agents</h2>
+  
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Dynamic workflow</h4><p class="dim">A JavaScript script orchestrating many subagents in the background. Entered by typing &quot;ultracode&quot; or running /effort ultracode. The deck's example is a 500-file migration.</p></div><div class="card "><h4>/goal</h4><p class="dim">Runs until a verifiable end state holds - for example /goal &quot;npm run lint exits with zero errors&quot; - and stops when it is met or when --max-tries runs out.</p></div><div class="card "><h4>/loop</h4><p class="dim">Re-runs a prompt on a schedule until you stop it - for example /loop 5m &quot;check CI, fix whatever broke&quot;, with the default prompt in .claude/loop.md. Press Esc to end.</p></div>
+  </div>
+    <div class="notes">The distinction between amplifying (many) and sustaining (one long run) is the practical takeaway of this slide.</div>
+  </section>
+  <section class="slide" data-title="The 16-agent C compiler">
+
+  <p class="kicker">Field case</p>
+  <h2 class="h2">The 16-agent C compiler</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Scale</h3>
+      
+      <ul class="clean "><li>16 agents, ~2,000 sessions over two weeks</li><li>2B input / 140M output tokens, just under $20,000 API cost</li><li>~100,000 lines of code</li><li>Linux 6.9 on x86, ARM and RISC-V</li><li>QEMU, FFmpeg, Postgres, Redis, Doom</li><li>~99% pass rate on major test suites</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Limits</h3>
+      
+      <ul class="clean "><li>Merge conflicts were frequent</li><li>Parallelism stopped helping on a shared kernel failure</li><li>It still leaned on GCC for part of the 16-bit x86</li><li>Generated code was less efficient than GCC output</li></ul>
+    </div>
+  </div>
+    <div class="notes">The lecture spends as much space on the limitations as on the results. This is a cost-and-limit case, not a victory lap.</div>
+  </section>
+  <section class="slide" data-title="Programming 3.0, and how to live with it">
+
+  <p class="kicker">The uncertainty argument</p>
+  <h2 class="h2">Programming 3.0, and how to live with it</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The vocabulary</h3>
+      
+      <ul class="clean "><li>Programming 1.0 - programming hardware; 2.0 - programming the language; 3.0 - expressing the goal</li><li>Programming 3.0 is the lecturer's own coinage, explicitly different from Andrej Karpathy's definition</li><li>Software 3.0 is attributed to Andrej Karpathy, &quot;Software Is Changing (Again)&quot;</li><li>Uncertainty is not new: Programming 2.0 already had 32-bit vs 64-bit architecture, endianness, concurrency, unreliable networks, compiler versions and dependency drift</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The best-practice groups</h3>
+      
+      <ul class="clean "><li>DEFINE - state assumptions up front; have the model confirm anything ambiguous before it executes</li><li>CONTROL - separate proposal from execution; manage context explicitly, owning memory, provenance and retrieval, and expiring stale information; specify outcomes, not prompts</li><li>VERIFY &amp; GOVERN - tighten the generate-verify loop; measure one level deeper</li></ul>
+    </div>
+  </div>
+    <div class="notes">Programming 2.0 problems were solved with fixed-width types, cross-compilation, virtualization, a memory consistency model, idempotent APIs and comprehensive testing. The 3.0 answer is the same discipline, pointed at a nondeterministic collaborator.</div>
+  </section>
+  <section class="slide" data-title="What the adoption numbers say">
+
+  <p class="kicker">Field evidence</p>
+  <h2 class="h2">What the adoption numbers say</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Observation</th><th>Figure</th></tr></thead>
+      <tbody>
+        <tr><td>Codex active users</td><td>Grew more than 5x in the first half of 2026</td></tr><tr><td>Delegated tasks of at least 1 human-hour</td><td>35.4% (December 2025) to 70.2% (May 2026)</td></tr><tr><td>Delegated tasks of at least 8 human-hours</td><td>2.1% (December 2025) to 25.6% (May 2026) - a 12x rise in users tackling full-day tasks</td></tr><tr><td>Users running 5+ agents at once in a week</td><td>28.6% of OpenAI users</td></tr><tr><td>Agent-hours per day</td><td>~2.5 for the median OpenAI employee; ~71 at the 99th percentile (+88% since April)</td></tr><tr><td>Agent work vs human work</td><td>An agent does 3.14x more work than a human; engineers are shipping almost 8x faster</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The Delegation Ladder has five rungs: Chatbot, Assistant, Agent, Multi-agent worker, Systematized workflows. OpenAI's workforce sits near the bottom.</p>
+    <div class="notes">The digest notes that most researchers have 4+ concurrent workflows, and that this is not shown on the slides - so do not put it on a slide either.</div>
+  </section>
+  <section class="slide" data-title="CLI coding agents, mid-2026">
+
+  <p class="kicker">The landscape</p>
+  <h2 class="h2">CLI coding agents, mid-2026</h2>
+  
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Five axes</h4><ul class="clean "><li>Open vs closed</li><li>Locked vs BYOK</li><li>Sandbox vs prompt</li><li>Local vs cloud</li><li>Maximal vs minimal</li></ul></div><div class="card "><h4>Model labs</h4><p class="dim">Claude Code, Codex CLI, Antigravity CLI, Grok Build, Mistral Vibe, Kimi Code, Qwen Code.</p></div><div class="card "><h4>Platform CLIs</h4><p class="dim">Copilot CLI, Cursor CLI, Amp, Auggie, Droid, Junie CLI, Qoder, CodeBuddy.</p></div><div class="card "><h4>Open source and minimal cores</h4><p class="dim">OpenCode, Crush, Goose, Aider, Cline, Kilo, Continue, OpenHands, Reasonix, Codebuff; minimal cores such as Deepseek Harness, Pi, oh-my-pi, mini-SWE-agent, gptme, Open Interpreter. OpenCode 75+ providers, Kilo 500+ models, mini-SWE-agent ~100 lines of Python. Source: &quot;State of CLI Coding Agents, Mid-2026 (July 2026)&quot;.</p></div>
+  </div>
+    <div class="notes">This slide is a survey, not a recommendation. It is useful for the project: pick a base that fits the claim you want to make.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/slides/3_agent_use_2.pdf">https://cs2680.seas.harvard.edu/slides/3_agent_use_2.pdf</a> &mdash; Lecture 3 slide deck - 72 pages</li><li><a href="https://github.com/obra/superpowers">https://github.com/obra/superpowers</a> &mdash; the Superpowers plugin used as case study 1</li><li><a href="https://www.anthropic.com/engineering/building-c-compiler">https://www.anthropic.com/engineering/building-c-compiler</a> &mdash; the 16-agent C compiler case, the stated source of its figures</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/slides/3_agent_use_2.pdf.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>

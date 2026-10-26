@@ -1,0 +1,5362 @@
+{
+  "schema": "mavis.ppt_element_map.v1",
+  "artifact": {
+    "fileName": "assignment-03-briefing.pptx",
+    "filePath": "./output/assignment-03-briefing.pptx",
+    "createdAtMs": 1792431602995,
+    "generator": "cs2680-courseware/tools/make_element_maps.py"
+  },
+  "layout": {
+    "name": "LAYOUT_16x9",
+    "widthIn": 10.0,
+    "heightIn": 5.625
+  },
+  "slides": [
+    {
+      "slideNumber": 1,
+      "slideId": "assignment-3-madsopt",
+      "title": "Assignment 3: MadsOpt",
+      "elements": [
+        {
+          "elementId": "assignment-3-madsopt.shape-01",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.3,
+            "y": 0.0,
+            "w": 3.7,
+            "h": 5.625
+          },
+          "normalizedRect": {
+            "x": 0.63,
+            "y": 0.0,
+            "w": 0.37,
+            "h": 1.0
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-02",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.95,
+            "y": 1.35,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.24,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-01",
+          "kind": "text",
+          "role": "body",
+          "text": "x",
+          "rectIn": {
+            "x": 6.95,
+            "y": 1.35,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.24,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-03",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.7,
+            "y": 1.35,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.24,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-02",
+          "kind": "text",
+          "role": "body",
+          "text": "x",
+          "rectIn": {
+            "x": 7.7,
+            "y": 1.35,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.24,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-04",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.45,
+            "y": 1.35,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.24,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-03",
+          "kind": "text",
+          "role": "body",
+          "text": "x",
+          "rectIn": {
+            "x": 8.45,
+            "y": 1.35,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.24,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-05",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.95,
+            "y": 2.07,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.368,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-04",
+          "kind": "text",
+          "role": "body",
+          "text": "x",
+          "rectIn": {
+            "x": 6.95,
+            "y": 2.07,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.368,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-06",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.7,
+            "y": 2.07,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.368,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-05",
+          "kind": "text",
+          "role": "body",
+          "text": "x",
+          "rectIn": {
+            "x": 7.7,
+            "y": 2.07,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.368,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-07",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.45,
+            "y": 2.07,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.368,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-06",
+          "kind": "text",
+          "role": "body",
+          "text": "x",
+          "rectIn": {
+            "x": 8.45,
+            "y": 2.07,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.368,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-08",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.95,
+            "y": 2.79,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.496,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-07",
+          "kind": "text",
+          "role": "body",
+          "text": "x",
+          "rectIn": {
+            "x": 6.95,
+            "y": 2.79,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.496,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-09",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.7,
+            "y": 2.79,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.496,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-10",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.7,
+            "y": 2.79,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.496,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-11",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.45,
+            "y": 2.79,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.496,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-12",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.45,
+            "y": 2.79,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.496,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-13",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.95,
+            "y": 3.51,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.624,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-14",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.95,
+            "y": 3.51,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.624,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-15",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.7,
+            "y": 3.51,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.624,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-16",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.7,
+            "y": 3.51,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.77,
+            "y": 0.624,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-17",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.45,
+            "y": 3.51,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.624,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-18",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.45,
+            "y": 3.51,
+            "w": 0.6,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.845,
+            "y": 0.624,
+            "w": 0.06,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-08",
+          "kind": "text",
+          "role": "body",
+          "text": "Capability, cost and time",
+          "rectIn": {
+            "x": 6.95,
+            "y": 4.35,
+            "w": 2.4,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.695,
+            "y": 0.7733,
+            "w": 0.24,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-09",
+          "kind": "text",
+          "role": "body",
+          "text": "CS2680 / Harvard SEAS / Juncheng Yang",
+          "rectIn": {
+            "x": 0.6,
+            "y": 1.15,
+            "w": 5.4,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.2044,
+            "w": 0.54,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.title-01",
+          "kind": "text",
+          "role": "title",
+          "text": "Assignment 3: MadsOpt",
+          "rectIn": {
+            "x": 0.6,
+            "y": 1.55,
+            "w": 5.4,
+            "h": 0.9
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.2756,
+            "w": 0.54,
+            "h": 0.16
+          },
+          "style": {
+            "fontSize": 36.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-10",
+          "kind": "text",
+          "role": "body",
+          "text": "Harness Competition",
+          "rectIn": {
+            "x": 0.6,
+            "y": 2.5,
+            "w": 5.3,
+            "h": 0.7
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.4444,
+            "w": 0.53,
+            "h": 0.1244
+          },
+          "style": {
+            "fontSize": 17.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-11",
+          "kind": "text",
+          "role": "body",
+          "text": "Briefing  .  2026-10-07  .  worth 20% of the grade",
+          "rectIn": {
+            "x": 0.6,
+            "y": 3.3,
+            "w": 5.3,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.5867,
+            "w": 0.53,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.body-12",
+          "kind": "text",
+          "role": "body",
+          "text": "Source deck: course/site/slides/8_assignment3.pdf",
+          "rectIn": {
+            "x": 0.6,
+            "y": 3.68,
+            "w": 5.3,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.6542,
+            "w": 0.53,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.shape-19",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.2,
+            "w": 8.5,
+            "h": 0.012
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.9244,
+            "w": 0.85,
+            "h": 0.0021
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "assignment-3-madsopt.caption-01",
+          "kind": "text",
+          "role": "caption",
+          "text": "Source: https://cs2680.seas.harvard.edu/assignments/assignment3.html",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.22,
+            "w": 8.5,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.928,
+            "w": 0.85,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        }
+      ]
+    },
+    {
+      "slideNumber": 2,
+      "slideId": "a-harness-competition-not-a-prompt-writing-exerc",
+      "title": "A harness competition, not a prompt-writing exercise",
+      "elements": [
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-01",
+          "kind": "text",
+          "role": "body",
+          "text": "WHAT YOU SHIP, AND WHERE IT RUNS",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.34,
+            "w": 9.0,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.0604,
+            "w": 0.9,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.title-01",
+          "kind": "text",
+          "role": "title",
+          "text": "A harness competition, not a prompt-writing exercise",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.6,
+            "w": 9.0,
+            "h": 0.62
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.1067,
+            "w": 0.9,
+            "h": 0.1102
+          },
+          "style": {
+            "fontSize": 27.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-02",
+          "kind": "text",
+          "role": "body",
+          "text": "You ship an agent runtime that solves tasks, and you are scored on capability, cost and time simultaneously.",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.28,
+            "w": 9.0,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2276,
+            "w": 0.9,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-01",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.6,
+            "y": 1.78,
+            "w": 3.1,
+            "h": 1.15
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.3164,
+            "w": 0.31,
+            "h": 0.2044
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-03",
+          "kind": "text",
+          "role": "body",
+          "text": "Agent container",
+          "rectIn": {
+            "x": 0.78,
+            "y": 1.86,
+            "w": 2.74,
+            "h": 0.26
+          },
+          "normalizedRect": {
+            "x": 0.078,
+            "y": 0.3307,
+            "w": 0.274,
+            "h": 0.0462
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-04",
+          "kind": "text",
+          "role": "body",
+          "text": "Your src/ is mounted here. Its only egress is a proxy to the course API at api.cs2680.com.",
+          "rectIn": {
+            "x": 0.78,
+            "y": 2.14,
+            "w": 2.74,
+            "h": 0.72
+          },
+          "normalizedRect": {
+            "x": 0.078,
+            "y": 0.3804,
+            "w": 0.274,
+            "h": 0.128
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-02",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 3.95,
+            "y": 2.18,
+            "w": 1.7,
+            "h": 0.34
+          },
+          "normalizedRect": {
+            "x": 0.395,
+            "y": 0.3876,
+            "w": 0.17,
+            "h": 0.0604
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-05",
+          "kind": "text",
+          "role": "body",
+          "text": "HTTP requests",
+          "rectIn": {
+            "x": 3.95,
+            "y": 2.56,
+            "w": 1.7,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.395,
+            "y": 0.4551,
+            "w": 0.17,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-03",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.9,
+            "y": 1.78,
+            "w": 3.5,
+            "h": 1.15
+          },
+          "normalizedRect": {
+            "x": 0.59,
+            "y": 0.3164,
+            "w": 0.35,
+            "h": 0.2044
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-06",
+          "kind": "text",
+          "role": "body",
+          "text": "Task container",
+          "rectIn": {
+            "x": 6.08,
+            "y": 1.86,
+            "w": 3.14,
+            "h": 0.26
+          },
+          "normalizedRect": {
+            "x": 0.608,
+            "y": 0.3307,
+            "w": 0.314,
+            "h": 0.0462
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-07",
+          "kind": "text",
+          "role": "body",
+          "text": "The repository lives at /app. A small HTTP server (src/sandbox_server.py) exposes /health, /exec, /read, /write on port 8000. Task containers have no network at all.",
+          "rectIn": {
+            "x": 6.08,
+            "y": 2.14,
+            "w": 3.14,
+            "h": 0.72
+          },
+          "normalizedRect": {
+            "x": 0.608,
+            "y": 0.3804,
+            "w": 0.314,
+            "h": 0.128
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-04",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 3.12,
+            "w": 2.9,
+            "h": 1.35
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.5547,
+            "w": 0.29,
+            "h": 0.24
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-05",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 3.12,
+            "w": 0.055,
+            "h": 1.35
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.5547,
+            "w": 0.0055,
+            "h": 0.24
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.title-02",
+          "kind": "text",
+          "role": "title",
+          "text": "26",
+          "rectIn": {
+            "x": 0.7,
+            "y": 3.28,
+            "w": 2.54,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.5831,
+            "w": 0.254,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": 32.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-08",
+          "kind": "text",
+          "role": "body",
+          "text": "tasks on the leaderboard, numbered 1 to 26 - you choose how many to grade",
+          "rectIn": {
+            "x": 0.7,
+            "y": 3.88,
+            "w": 2.54,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.6898,
+            "w": 0.254,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-06",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 3.55,
+            "y": 3.12,
+            "w": 2.9,
+            "h": 1.35
+          },
+          "normalizedRect": {
+            "x": 0.355,
+            "y": 0.5547,
+            "w": 0.29,
+            "h": 0.24
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-07",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 3.55,
+            "y": 3.12,
+            "w": 0.055,
+            "h": 1.35
+          },
+          "normalizedRect": {
+            "x": 0.355,
+            "y": 0.5547,
+            "w": 0.0055,
+            "h": 0.24
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.title-03",
+          "kind": "text",
+          "role": "title",
+          "text": "3",
+          "rectIn": {
+            "x": 3.75,
+            "y": 3.28,
+            "w": 2.54,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.375,
+            "y": 0.5831,
+            "w": 0.254,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": 32.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-09",
+          "kind": "text",
+          "role": "body",
+          "text": "types of container",
+          "rectIn": {
+            "x": 3.75,
+            "y": 3.88,
+            "w": 2.54,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.375,
+            "y": 0.6898,
+            "w": 0.254,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-08",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.6,
+            "y": 3.12,
+            "w": 2.9,
+            "h": 1.35
+          },
+          "normalizedRect": {
+            "x": 0.66,
+            "y": 0.5547,
+            "w": 0.29,
+            "h": 0.24
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-09",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.6,
+            "y": 3.12,
+            "w": 0.055,
+            "h": 1.35
+          },
+          "normalizedRect": {
+            "x": 0.66,
+            "y": 0.5547,
+            "w": 0.0055,
+            "h": 0.24
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.title-04",
+          "kind": "text",
+          "role": "title",
+          "text": "3",
+          "rectIn": {
+            "x": 6.8,
+            "y": 3.28,
+            "w": 2.54,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.68,
+            "y": 0.5831,
+            "w": 0.254,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": 32.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-10",
+          "kind": "text",
+          "role": "body",
+          "text": "model tiers: Expert, Standard, Starter",
+          "rectIn": {
+            "x": 6.8,
+            "y": 3.88,
+            "w": 2.54,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.68,
+            "y": 0.6898,
+            "w": 0.254,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-11",
+          "kind": "text",
+          "role": "body",
+          "text": "The task environment has 26 tasks in 3 types of containers, with the agent and the task in separate containers accessed over HTTP requests. Evaluation is offline and sandboxed.",
+          "rectIn": {
+            "x": 0.5,
+            "y": 4.42,
+            "w": 9.0,
+            "h": 0.4
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.7858,
+            "w": 0.9,
+            "h": 0.0711
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.body-12",
+          "kind": "text",
+          "role": "body",
+          "text": "The count of 3 is the briefing slide's. The Assignment 3 spec page heads the same section \"Two kinds of containers\" and its own diagram shows the agent container, the task container and a grading container.",
+          "rectIn": {
+            "x": 0.5,
+            "y": 4.76,
+            "w": 9.0,
+            "h": 0.34
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.8462,
+            "w": 0.9,
+            "h": 0.0604
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-10",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.pageNumber-01",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "2",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.shape-11",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.2,
+            "w": 8.5,
+            "h": 0.012
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.9244,
+            "w": 0.85,
+            "h": 0.0021
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "a-harness-competition-not-a-prompt-writing-exerc.caption-01",
+          "kind": "text",
+          "role": "caption",
+          "text": "Source: https://cs2680.seas.harvard.edu/slides/8_assignment3.pdf",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.22,
+            "w": 8.5,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.928,
+            "w": 0.85,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        }
+      ]
+    },
+    {
+      "slideNumber": 3,
+      "slideId": "the-runtime-contract",
+      "title": "The runtime contract",
+      "elements": [
+        {
+          "elementId": "the-runtime-contract.body-01",
+          "kind": "text",
+          "role": "body",
+          "text": "FIXED HARNESS, YOUR AGENT LOGIC",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.34,
+            "w": 9.0,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.0604,
+            "w": 0.9,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.title-01",
+          "kind": "text",
+          "role": "title",
+          "text": "The runtime contract",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.6,
+            "w": 9.0,
+            "h": 0.62
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.1067,
+            "w": 0.9,
+            "h": 0.1102
+          },
+          "style": {
+            "fontSize": 27.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-01",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.3,
+            "w": 2.1,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2311,
+            "w": 0.21,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-02",
+          "kind": "text",
+          "role": "body",
+          "text": "The dispatcher passes the task info to your agent",
+          "rectIn": {
+            "x": 0.6,
+            "y": 1.3,
+            "w": 1.9,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.2311,
+            "w": 0.19,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-02",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 2.61,
+            "y": 1.56,
+            "w": 0.16,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.261,
+            "y": 0.2773,
+            "w": 0.016,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-03",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 2.8,
+            "y": 1.3,
+            "w": 2.1,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.28,
+            "y": 0.2311,
+            "w": 0.21,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-03",
+          "kind": "text",
+          "role": "body",
+          "text": "Your agent works on the task and generates a patch",
+          "rectIn": {
+            "x": 2.9,
+            "y": 1.3,
+            "w": 1.9,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.29,
+            "y": 0.2311,
+            "w": 0.19,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-04",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 4.91,
+            "y": 1.56,
+            "w": 0.16,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.491,
+            "y": 0.2773,
+            "w": 0.016,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-05",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.1,
+            "y": 1.3,
+            "w": 2.1,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.51,
+            "y": 0.2311,
+            "w": 0.21,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-04",
+          "kind": "text",
+          "role": "body",
+          "text": "The patch is evaluated",
+          "rectIn": {
+            "x": 5.2,
+            "y": 1.3,
+            "w": 1.9,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.52,
+            "y": 0.2311,
+            "w": 0.19,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-06",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.21,
+            "y": 1.56,
+            "w": 0.16,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.721,
+            "y": 0.2773,
+            "w": 0.016,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-07",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.4,
+            "y": 1.3,
+            "w": 2.1,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.74,
+            "y": 0.2311,
+            "w": 0.21,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-05",
+          "kind": "text",
+          "role": "body",
+          "text": "The result is sent back to the agent",
+          "rectIn": {
+            "x": 7.5,
+            "y": 1.3,
+            "w": 1.9,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.75,
+            "y": 0.2311,
+            "w": 0.19,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-08",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 2.3,
+            "w": 4.35,
+            "h": 1.3
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.4089,
+            "w": 0.435,
+            "h": 0.2311
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-09",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 2.3,
+            "w": 0.055,
+            "h": 1.3
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.4089,
+            "w": 0.0055,
+            "h": 0.2311
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-06",
+          "kind": "text",
+          "role": "body",
+          "text": "What you own",
+          "rectIn": {
+            "x": 0.7,
+            "y": 2.46,
+            "w": 3.99,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.4373,
+            "w": 0.399,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-07",
+          "kind": "text",
+          "role": "body",
+          "text": "src/ holds the agent logic and the sandbox requests. Zipped, it is the ONLY file uploaded to the leaderboard: src.zip.",
+          "rectIn": {
+            "x": 0.7,
+            "y": 2.78,
+            "w": 3.99,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.4942,
+            "w": 0.399,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-10",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.15,
+            "y": 2.3,
+            "w": 4.35,
+            "h": 1.3
+          },
+          "normalizedRect": {
+            "x": 0.515,
+            "y": 0.4089,
+            "w": 0.435,
+            "h": 0.2311
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-11",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.15,
+            "y": 2.3,
+            "w": 0.055,
+            "h": 1.3
+          },
+          "normalizedRect": {
+            "x": 0.515,
+            "y": 0.4089,
+            "w": 0.0055,
+            "h": 0.2311
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-08",
+          "kind": "text",
+          "role": "body",
+          "text": "What you may not touch",
+          "rectIn": {
+            "x": 5.35,
+            "y": 2.46,
+            "w": 3.99,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.4373,
+            "w": 0.399,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-09",
+          "kind": "text",
+          "role": "body",
+          "text": "dispatcher and evaluation_scripts are the same code used on the leaderboard. Do not modify them for local testing.",
+          "rectIn": {
+            "x": 5.35,
+            "y": 2.78,
+            "w": 3.99,
+            "h": 0.8
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.4942,
+            "w": 0.399,
+            "h": 0.1422
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-10",
+          "kind": "text",
+          "role": "body",
+          "text": "The dispatcher API",
+          "rectIn": {
+            "x": 0.5,
+            "y": 3.72,
+            "w": 9.0,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.6613,
+            "w": 0.9,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-12",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 3.98,
+            "w": 9.0,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.7076,
+            "w": 0.9,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-11",
+          "kind": "text",
+          "role": "body",
+          "text": "next_task . extract_patch(k) / submit_patch(k, text) . evaluate(k) -> {\"tests_failed\": F, \"tests_total\": T, \"attempt\": a} . continue_task(k) . done(k, reason, iterations) . logger(k)",
+          "rectIn": {
+            "x": 0.64,
+            "y": 3.98,
+            "w": 8.72,
+            "h": 0.6
+          },
+          "normalizedRect": {
+            "x": 0.064,
+            "y": 0.7076,
+            "w": 0.872,
+            "h": 0.1067
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.body-12",
+          "kind": "text",
+          "role": "body",
+          "text": "At most 5 tasks run in parallel. init.sh and package_claude_sessions.py generate the session logs, which carry no points of their own.",
+          "rectIn": {
+            "x": 0.5,
+            "y": 4.68,
+            "w": 9.0,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.832,
+            "w": 0.9,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 10.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-13",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.pageNumber-01",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "3",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.shape-14",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.2,
+            "w": 8.5,
+            "h": 0.012
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.9244,
+            "w": 0.85,
+            "h": 0.0021
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "the-runtime-contract.caption-01",
+          "kind": "text",
+          "role": "caption",
+          "text": "Source: https://cs2680.seas.harvard.edu/slides/8_assignment3.pdf",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.22,
+            "w": 8.5,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.928,
+            "w": 0.85,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        }
+      ]
+    },
+    {
+      "slideNumber": 4,
+      "slideId": "budgets-tiers-and-the-submission-queue",
+      "title": "Budgets, tiers, and the submission queue",
+      "elements": [
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-01",
+          "kind": "text",
+          "role": "body",
+          "text": "THE LIMITS ARE ENFORCED BY THE RUNTIME",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.34,
+            "w": 9.0,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.0604,
+            "w": 0.9,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.title-01",
+          "kind": "text",
+          "role": "title",
+          "text": "Budgets, tiers, and the submission queue",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.6,
+            "w": 9.0,
+            "h": 0.62
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.1067,
+            "w": 0.9,
+            "h": 0.1102
+          },
+          "style": {
+            "fontSize": 27.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-01",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.3,
+            "w": 4.35,
+            "h": 2.3
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2311,
+            "w": 0.435,
+            "h": 0.4089
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-02",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.3,
+            "w": 0.055,
+            "h": 2.3
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2311,
+            "w": 0.0055,
+            "h": 0.4089
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-02",
+          "kind": "text",
+          "role": "body",
+          "text": "Time and cost limits",
+          "rectIn": {
+            "x": 0.7,
+            "y": 1.46,
+            "w": 3.99,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.2596,
+            "w": 0.399,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-03",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.7,
+            "y": 1.72,
+            "w": 1.95,
+            "h": 0.7
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.3058,
+            "w": 0.195,
+            "h": 0.1244
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.heading-01",
+          "kind": "text",
+          "role": "heading",
+          "text": "35 min",
+          "rectIn": {
+            "x": 0.82,
+            "y": 1.76,
+            "w": 1.71,
+            "h": 0.36
+          },
+          "normalizedRect": {
+            "x": 0.082,
+            "y": 0.3129,
+            "w": 0.171,
+            "h": 0.064
+          },
+          "style": {
+            "fontSize": 17.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-03",
+          "kind": "text",
+          "role": "body",
+          "text": "per evaluate() call",
+          "rectIn": {
+            "x": 0.82,
+            "y": 2.12,
+            "w": 1.71,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.082,
+            "y": 0.3769,
+            "w": 0.171,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-04",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 2.74,
+            "y": 1.72,
+            "w": 1.95,
+            "h": 0.7
+          },
+          "normalizedRect": {
+            "x": 0.274,
+            "y": 0.3058,
+            "w": 0.195,
+            "h": 0.1244
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.heading-02",
+          "kind": "text",
+          "role": "heading",
+          "text": "4 h",
+          "rectIn": {
+            "x": 2.86,
+            "y": 1.76,
+            "w": 1.71,
+            "h": 0.36
+          },
+          "normalizedRect": {
+            "x": 0.286,
+            "y": 0.3129,
+            "w": 0.171,
+            "h": 0.064
+          },
+          "style": {
+            "fontSize": 17.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-04",
+          "kind": "text",
+          "role": "body",
+          "text": "total for the run",
+          "rectIn": {
+            "x": 2.86,
+            "y": 2.12,
+            "w": 1.71,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.286,
+            "y": 0.3769,
+            "w": 0.171,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-05",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.7,
+            "y": 2.52,
+            "w": 1.95,
+            "h": 0.7
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.448,
+            "w": 0.195,
+            "h": 0.1244
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.heading-03",
+          "kind": "text",
+          "role": "heading",
+          "text": "$30",
+          "rectIn": {
+            "x": 0.82,
+            "y": 2.56,
+            "w": 1.71,
+            "h": 0.36
+          },
+          "normalizedRect": {
+            "x": 0.082,
+            "y": 0.4551,
+            "w": 0.171,
+            "h": 0.064
+          },
+          "style": {
+            "fontSize": 17.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-05",
+          "kind": "text",
+          "role": "body",
+          "text": "per day",
+          "rectIn": {
+            "x": 0.82,
+            "y": 2.92,
+            "w": 1.71,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.082,
+            "y": 0.5191,
+            "w": 0.171,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-06",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 2.74,
+            "y": 2.52,
+            "w": 1.95,
+            "h": 0.7
+          },
+          "normalizedRect": {
+            "x": 0.274,
+            "y": 0.448,
+            "w": 0.195,
+            "h": 0.1244
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.heading-04",
+          "kind": "text",
+          "role": "heading",
+          "text": "$10",
+          "rectIn": {
+            "x": 2.86,
+            "y": 2.56,
+            "w": 1.71,
+            "h": 0.36
+          },
+          "normalizedRect": {
+            "x": 0.286,
+            "y": 0.4551,
+            "w": 0.171,
+            "h": 0.064
+          },
+          "style": {
+            "fontSize": 17.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-06",
+          "kind": "text",
+          "role": "body",
+          "text": "per run",
+          "rectIn": {
+            "x": 2.86,
+            "y": 2.92,
+            "w": 1.71,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.286,
+            "y": 0.5191,
+            "w": 0.171,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-07",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.15,
+            "y": 1.3,
+            "w": 4.35,
+            "h": 2.3
+          },
+          "normalizedRect": {
+            "x": 0.515,
+            "y": 0.2311,
+            "w": 0.435,
+            "h": 0.4089
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-08",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.15,
+            "y": 1.3,
+            "w": 0.055,
+            "h": 2.3
+          },
+          "normalizedRect": {
+            "x": 0.515,
+            "y": 0.2311,
+            "w": 0.0055,
+            "h": 0.4089
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-07",
+          "kind": "text",
+          "role": "body",
+          "text": "Three model tiers",
+          "rectIn": {
+            "x": 5.35,
+            "y": 1.46,
+            "w": 3.99,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.2596,
+            "w": 0.399,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-08",
+          "kind": "text",
+          "role": "body",
+          "text": "tier",
+          "rectIn": {
+            "x": 5.35,
+            "y": 1.7,
+            "w": 0.95,
+            "h": 0.26
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.3022,
+            "w": 0.095,
+            "h": 0.0462
+          },
+          "style": {
+            "fontSize": 8.5,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-09",
+          "kind": "text",
+          "role": "body",
+          "text": "input",
+          "rectIn": {
+            "x": 6.3,
+            "y": 1.7,
+            "w": 0.95,
+            "h": 0.26
+          },
+          "normalizedRect": {
+            "x": 0.63,
+            "y": 0.3022,
+            "w": 0.095,
+            "h": 0.0462
+          },
+          "style": {
+            "fontSize": 8.5,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-10",
+          "kind": "text",
+          "role": "body",
+          "text": "cached input",
+          "rectIn": {
+            "x": 7.25,
+            "y": 1.7,
+            "w": 1.05,
+            "h": 0.26
+          },
+          "normalizedRect": {
+            "x": 0.725,
+            "y": 0.3022,
+            "w": 0.105,
+            "h": 0.0462
+          },
+          "style": {
+            "fontSize": 8.5,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-11",
+          "kind": "text",
+          "role": "body",
+          "text": "output",
+          "rectIn": {
+            "x": 8.3,
+            "y": 1.7,
+            "w": 0.95,
+            "h": 0.26
+          },
+          "normalizedRect": {
+            "x": 0.83,
+            "y": 0.3022,
+            "w": 0.095,
+            "h": 0.0462
+          },
+          "style": {
+            "fontSize": 8.5,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-09",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.35,
+            "y": 1.98,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.352,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-12",
+          "kind": "text",
+          "role": "body",
+          "text": "Expert",
+          "rectIn": {
+            "x": 5.41,
+            "y": 1.98,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.541,
+            "y": 0.352,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-10",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.3,
+            "y": 1.98,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.63,
+            "y": 0.352,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-13",
+          "kind": "text",
+          "role": "body",
+          "text": "$2.00",
+          "rectIn": {
+            "x": 6.36,
+            "y": 1.98,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.636,
+            "y": 0.352,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-11",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.25,
+            "y": 1.98,
+            "w": 0.99,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.725,
+            "y": 0.352,
+            "w": 0.099,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-14",
+          "kind": "text",
+          "role": "body",
+          "text": "$0.10",
+          "rectIn": {
+            "x": 7.31,
+            "y": 1.98,
+            "w": 0.87,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.731,
+            "y": 0.352,
+            "w": 0.087,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-12",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.3,
+            "y": 1.98,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.83,
+            "y": 0.352,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-15",
+          "kind": "text",
+          "role": "body",
+          "text": "$10.00",
+          "rectIn": {
+            "x": 8.36,
+            "y": 1.98,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.836,
+            "y": 0.352,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-13",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.35,
+            "y": 2.32,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.4124,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-16",
+          "kind": "text",
+          "role": "body",
+          "text": "Standard",
+          "rectIn": {
+            "x": 5.41,
+            "y": 2.32,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.541,
+            "y": 0.4124,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-14",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.3,
+            "y": 2.32,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.63,
+            "y": 0.4124,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-17",
+          "kind": "text",
+          "role": "body",
+          "text": "$0.08",
+          "rectIn": {
+            "x": 6.36,
+            "y": 2.32,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.636,
+            "y": 0.4124,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-15",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.25,
+            "y": 2.32,
+            "w": 0.99,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.725,
+            "y": 0.4124,
+            "w": 0.099,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-18",
+          "kind": "text",
+          "role": "body",
+          "text": "$0.004",
+          "rectIn": {
+            "x": 7.31,
+            "y": 2.32,
+            "w": 0.87,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.731,
+            "y": 0.4124,
+            "w": 0.087,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-16",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.3,
+            "y": 2.32,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.83,
+            "y": 0.4124,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-19",
+          "kind": "text",
+          "role": "body",
+          "text": "$0.28",
+          "rectIn": {
+            "x": 8.36,
+            "y": 2.32,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.836,
+            "y": 0.4124,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-17",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.35,
+            "y": 2.66,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.4729,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-20",
+          "kind": "text",
+          "role": "body",
+          "text": "Starter",
+          "rectIn": {
+            "x": 5.41,
+            "y": 2.66,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.541,
+            "y": 0.4729,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-18",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.3,
+            "y": 2.66,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.63,
+            "y": 0.4729,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-21",
+          "kind": "text",
+          "role": "body",
+          "text": "$0.01",
+          "rectIn": {
+            "x": 6.36,
+            "y": 2.66,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.636,
+            "y": 0.4729,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-19",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 7.25,
+            "y": 2.66,
+            "w": 0.99,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.725,
+            "y": 0.4729,
+            "w": 0.099,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-22",
+          "kind": "text",
+          "role": "body",
+          "text": "$0.0005",
+          "rectIn": {
+            "x": 7.31,
+            "y": 2.66,
+            "w": 0.87,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.731,
+            "y": 0.4729,
+            "w": 0.087,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-20",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 8.3,
+            "y": 2.66,
+            "w": 0.89,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.83,
+            "y": 0.4729,
+            "w": 0.089,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-23",
+          "kind": "text",
+          "role": "body",
+          "text": "$0.04",
+          "rectIn": {
+            "x": 8.36,
+            "y": 2.66,
+            "w": 0.77,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.836,
+            "y": 0.4729,
+            "w": 0.077,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-24",
+          "kind": "text",
+          "role": "body",
+          "text": "Prices per 1M tokens. You may use any of the three, as many of them as you like, in one run.",
+          "rectIn": {
+            "x": 5.35,
+            "y": 3.06,
+            "w": 3.99,
+            "h": 0.44
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.544,
+            "w": 0.399,
+            "h": 0.0782
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-21",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 3.76,
+            "w": 9.0,
+            "h": 0.86
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.6684,
+            "w": 0.9,
+            "h": 0.1529
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-25",
+          "kind": "text",
+          "role": "body",
+          "text": "Leaderboard: log in with the Canvas email and the password \"Cs2680-<your 8-digit student ID>\". Submit src.zip. Only one submission is queued at a time, so cancel a submission that does not look promising - a cancelled submission still counts and consumes the daily budget.",
+          "rectIn": {
+            "x": 0.68,
+            "y": 3.76,
+            "w": 8.64,
+            "h": 0.86
+          },
+          "normalizedRect": {
+            "x": 0.068,
+            "y": 0.6684,
+            "w": 0.864,
+            "h": 0.1529
+          },
+          "style": {
+            "fontSize": 10.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.body-26",
+          "kind": "text",
+          "role": "body",
+          "text": "The budget is part of the task definition, not a courtesy: the first time you must trade success against cost.",
+          "rectIn": {
+            "x": 0.5,
+            "y": 4.72,
+            "w": 9.0,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.8391,
+            "w": 0.9,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 10.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-22",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.pageNumber-01",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "4",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.shape-23",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.2,
+            "w": 8.5,
+            "h": 0.012
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.9244,
+            "w": 0.85,
+            "h": 0.0021
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "budgets-tiers-and-the-submission-queue.caption-01",
+          "kind": "text",
+          "role": "caption",
+          "text": "Source: https://cs2680.seas.harvard.edu/slides/8_assignment3.pdf",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.22,
+            "w": 8.5,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.928,
+            "w": 0.85,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        }
+      ]
+    },
+    {
+      "slideNumber": 5,
+      "slideId": "how-you-are-graded",
+      "title": "How you are graded",
+      "elements": [
+        {
+          "elementId": "how-you-are-graded.body-01",
+          "kind": "text",
+          "role": "body",
+          "text": "THREE METRICS, ONE SKYLINE",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.34,
+            "w": 9.0,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.0604,
+            "w": 0.9,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.title-01",
+          "kind": "text",
+          "role": "title",
+          "text": "How you are graded",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.6,
+            "w": 9.0,
+            "h": 0.62
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.1067,
+            "w": 0.9,
+            "h": 0.1102
+          },
+          "style": {
+            "fontSize": 27.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-01",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.3,
+            "w": 2.9,
+            "h": 0.95
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2311,
+            "w": 0.29,
+            "h": 0.1689
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-02",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.3,
+            "w": 0.055,
+            "h": 0.95
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2311,
+            "w": 0.0055,
+            "h": 0.1689
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-02",
+          "kind": "text",
+          "role": "body",
+          "text": "tasks solved",
+          "rectIn": {
+            "x": 0.7,
+            "y": 1.46,
+            "w": 2.54,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.2596,
+            "w": 0.254,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-03",
+          "kind": "text",
+          "role": "body",
+          "text": "the number of tasks your run solved",
+          "rectIn": {
+            "x": 0.7,
+            "y": 1.78,
+            "w": 2.54,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.3164,
+            "w": 0.254,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-03",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 3.55,
+            "y": 1.3,
+            "w": 2.9,
+            "h": 0.95
+          },
+          "normalizedRect": {
+            "x": 0.355,
+            "y": 0.2311,
+            "w": 0.29,
+            "h": 0.1689
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-04",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 3.55,
+            "y": 1.3,
+            "w": 0.055,
+            "h": 0.95
+          },
+          "normalizedRect": {
+            "x": 0.355,
+            "y": 0.2311,
+            "w": 0.0055,
+            "h": 0.1689
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-04",
+          "kind": "text",
+          "role": "body",
+          "text": "cost per solved task",
+          "rectIn": {
+            "x": 3.75,
+            "y": 1.46,
+            "w": 2.54,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.375,
+            "y": 0.2596,
+            "w": 0.254,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-05",
+          "kind": "text",
+          "role": "body",
+          "text": "what the course API account was charged, divided by tasks solved",
+          "rectIn": {
+            "x": 3.75,
+            "y": 1.78,
+            "w": 2.54,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.375,
+            "y": 0.3164,
+            "w": 0.254,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-05",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.6,
+            "y": 1.3,
+            "w": 2.9,
+            "h": 0.95
+          },
+          "normalizedRect": {
+            "x": 0.66,
+            "y": 0.2311,
+            "w": 0.29,
+            "h": 0.1689
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-06",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.6,
+            "y": 1.3,
+            "w": 0.055,
+            "h": 0.95
+          },
+          "normalizedRect": {
+            "x": 0.66,
+            "y": 0.2311,
+            "w": 0.0055,
+            "h": 0.1689
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-06",
+          "kind": "text",
+          "role": "body",
+          "text": "time per solved task",
+          "rectIn": {
+            "x": 6.8,
+            "y": 1.46,
+            "w": 2.54,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.68,
+            "y": 0.2596,
+            "w": 0.254,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-07",
+          "kind": "text",
+          "role": "body",
+          "text": "end-to-end host clock, from the first task opened to the last task done",
+          "rectIn": {
+            "x": 6.8,
+            "y": 1.78,
+            "w": 2.54,
+            "h": 0.5
+          },
+          "normalizedRect": {
+            "x": 0.68,
+            "y": 0.3164,
+            "w": 0.254,
+            "h": 0.0889
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-07",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 2.36,
+            "w": 4.35,
+            "h": 1.82
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.4196,
+            "w": 0.435,
+            "h": 0.3236
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-08",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 2.36,
+            "w": 0.055,
+            "h": 1.82
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.4196,
+            "w": 0.0055,
+            "h": 0.3236
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-08",
+          "kind": "text",
+          "role": "body",
+          "text": "The ranking rule",
+          "rectIn": {
+            "x": 0.7,
+            "y": 2.52,
+            "w": 3.99,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.448,
+            "w": 0.399,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-09",
+          "kind": "text",
+          "role": "body",
+          "text": "Ranked in skyline layers over the three metrics.\nAt least solve 7 tasks to enter the skyline; fewer than 7 rank below all of them, ordered by tasks solved alone.\nA dominates B if it is at least as good on all three metrics and better on one.\nRanks count everyone ahead of it: 1, 1, 1, 4, ...",
+          "rectIn": {
+            "x": 0.7,
+            "y": 2.84,
+            "w": 3.99,
+            "h": 1.2
+          },
+          "normalizedRect": {
+            "x": 0.07,
+            "y": 0.5049,
+            "w": 0.399,
+            "h": 0.2133
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-09",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.15,
+            "y": 2.36,
+            "w": 4.35,
+            "h": 1.82
+          },
+          "normalizedRect": {
+            "x": 0.515,
+            "y": 0.4196,
+            "w": 0.435,
+            "h": 0.3236
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-10",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.15,
+            "y": 2.36,
+            "w": 0.055,
+            "h": 1.82
+          },
+          "normalizedRect": {
+            "x": 0.515,
+            "y": 0.4196,
+            "w": 0.0055,
+            "h": 0.3236
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-10",
+          "kind": "text",
+          "role": "body",
+          "text": "The score",
+          "rectIn": {
+            "x": 5.35,
+            "y": 2.52,
+            "w": 3.99,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.448,
+            "w": 0.399,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-11",
+          "kind": "text",
+          "role": "body",
+          "text": "score = max(81 - r, 50) if any submission achieves the baseline, otherwise 81 - r",
+          "rectIn": {
+            "x": 5.35,
+            "y": 2.84,
+            "w": 3.99,
+            "h": 0.36
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.5049,
+            "w": 0.399,
+            "h": 0.064
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-12",
+          "kind": "text",
+          "role": "body",
+          "text": "The baseline solves 16 tasks in 4 hours within a limit of $10, and credit is given if any submission achieves it. Examples: rank 1 scores 80, rank 12 scores 69, rank 40 scores 50 with the baseline and 41 without.",
+          "rectIn": {
+            "x": 5.35,
+            "y": 3.26,
+            "w": 3.99,
+            "h": 0.7
+          },
+          "normalizedRect": {
+            "x": 0.535,
+            "y": 0.5796,
+            "w": 0.399,
+            "h": 0.1244
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-11",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 4.28,
+            "w": 2.1,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.7609,
+            "w": 0.21,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-13",
+          "kind": "text",
+          "role": "body",
+          "text": "leaderboard: 80 points",
+          "rectIn": {
+            "x": 0.6,
+            "y": 4.28,
+            "w": 1.9,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.06,
+            "y": 0.7609,
+            "w": 0.19,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-12",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 2.8,
+            "y": 4.28,
+            "w": 2.1,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.28,
+            "y": 0.7609,
+            "w": 0.21,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-14",
+          "kind": "text",
+          "role": "body",
+          "text": "writeup: 10 points",
+          "rectIn": {
+            "x": 2.9,
+            "y": 4.28,
+            "w": 1.9,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.29,
+            "y": 0.7609,
+            "w": 0.19,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-13",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 5.1,
+            "y": 4.28,
+            "w": 2.1,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.51,
+            "y": 0.7609,
+            "w": 0.21,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-15",
+          "kind": "text",
+          "role": "body",
+          "text": "video: 10 points",
+          "rectIn": {
+            "x": 5.2,
+            "y": 4.28,
+            "w": 1.9,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.52,
+            "y": 0.7609,
+            "w": 0.19,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-16",
+          "kind": "text",
+          "role": "body",
+          "text": "Assignment 3 is worth 20% of the grade.",
+          "rectIn": {
+            "x": 7.4,
+            "y": 4.28,
+            "w": 2.1,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.74,
+            "y": 0.7609,
+            "w": 0.21,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.body-17",
+          "kind": "text",
+          "role": "body",
+          "text": "Formula as published on the Assignment 3 spec page; the course policy page states a different form, and the two published pages do not agree.",
+          "rectIn": {
+            "x": 0.5,
+            "y": 4.76,
+            "w": 9.0,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.8462,
+            "w": 0.9,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.5,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-14",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.pageNumber-01",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "5",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.shape-15",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.2,
+            "w": 8.5,
+            "h": 0.012
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.9244,
+            "w": 0.85,
+            "h": 0.0021
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "how-you-are-graded.caption-01",
+          "kind": "text",
+          "role": "caption",
+          "text": "Source: https://cs2680.seas.harvard.edu/assignments/assignment3.html",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.22,
+            "w": 8.5,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.928,
+            "w": 0.85,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        }
+      ]
+    },
+    {
+      "slideNumber": 6,
+      "slideId": "takeaways",
+      "title": "Takeaways",
+      "elements": [
+        {
+          "elementId": "takeaways.body-01",
+          "kind": "text",
+          "role": "body",
+          "text": "MADSOPT WRAP-UP",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.34,
+            "w": 9.0,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.0604,
+            "w": 0.9,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.title-01",
+          "kind": "text",
+          "role": "title",
+          "text": "Takeaways",
+          "rectIn": {
+            "x": 0.5,
+            "y": 0.6,
+            "w": 9.0,
+            "h": 0.62
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.1067,
+            "w": 0.9,
+            "h": 0.1102
+          },
+          "style": {
+            "fontSize": 27.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-01",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.4,
+            "w": 0.42,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2489,
+            "w": 0.042,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.pageNumber-01",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "1",
+          "rectIn": {
+            "x": 0.5,
+            "y": 1.4,
+            "w": 0.42,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.2489,
+            "w": 0.042,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.body-02",
+          "kind": "text",
+          "role": "body",
+          "text": "You are graded on capability, cost and time at once - the skyline, not the top score, is the objective.",
+          "rectIn": {
+            "x": 1.08,
+            "y": 1.36,
+            "w": 5.25,
+            "h": 0.72
+          },
+          "normalizedRect": {
+            "x": 0.108,
+            "y": 0.2418,
+            "w": 0.525,
+            "h": 0.128
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-02",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 2.35,
+            "w": 0.42,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.4178,
+            "w": 0.042,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.pageNumber-02",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "2",
+          "rectIn": {
+            "x": 0.5,
+            "y": 2.35,
+            "w": 0.42,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.4178,
+            "w": 0.042,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.body-03",
+          "kind": "text",
+          "role": "body",
+          "text": "The runtime contract is fixed: 26 tasks, offline-only, 5-way parallel, 35 min per evaluate(), $10 per run.",
+          "rectIn": {
+            "x": 1.08,
+            "y": 2.31,
+            "w": 5.25,
+            "h": 0.72
+          },
+          "normalizedRect": {
+            "x": 0.108,
+            "y": 0.4107,
+            "w": 0.525,
+            "h": 0.128
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-03",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 3.3,
+            "w": 0.42,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.5867,
+            "w": 0.042,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.pageNumber-03",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "3",
+          "rectIn": {
+            "x": 0.5,
+            "y": 3.3,
+            "w": 0.42,
+            "h": 0.42
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.5867,
+            "w": 0.042,
+            "h": 0.0747
+          },
+          "style": {
+            "fontSize": 13.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.body-04",
+          "kind": "text",
+          "role": "body",
+          "text": "Clear the 16-task baseline, then win on efficiency; a cancelled submission still burns budget.",
+          "rectIn": {
+            "x": 1.08,
+            "y": 3.26,
+            "w": 5.25,
+            "h": 0.72
+          },
+          "normalizedRect": {
+            "x": 0.108,
+            "y": 0.5796,
+            "w": 0.525,
+            "h": 0.128
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-04",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.6,
+            "y": 1.32,
+            "w": 2.9,
+            "h": 2.9
+          },
+          "normalizedRect": {
+            "x": 0.66,
+            "y": 0.2347,
+            "w": 0.29,
+            "h": 0.5156
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-05",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 6.6,
+            "y": 1.32,
+            "w": 0.055,
+            "h": 2.9
+          },
+          "normalizedRect": {
+            "x": 0.66,
+            "y": 0.2347,
+            "w": 0.0055,
+            "h": 0.5156
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.body-05",
+          "kind": "text",
+          "role": "body",
+          "text": "The dates",
+          "rectIn": {
+            "x": 6.8,
+            "y": 1.48,
+            "w": 2.54,
+            "h": 0.28
+          },
+          "normalizedRect": {
+            "x": 0.68,
+            "y": 0.2631,
+            "w": 0.254,
+            "h": 0.0498
+          },
+          "style": {
+            "fontSize": 12.0,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.body-06",
+          "kind": "text",
+          "role": "body",
+          "text": "Out: Mon Oct 5\nDue: Tue Oct 20, 11:59pm, and no late days.\nEffort estimate: 10-15 hours.\nMissing the deadline scores 0 for the leaderboard.",
+          "rectIn": {
+            "x": 6.8,
+            "y": 1.8,
+            "w": 2.54,
+            "h": 1.6
+          },
+          "normalizedRect": {
+            "x": 0.68,
+            "y": 0.32,
+            "w": 0.254,
+            "h": 0.2844
+          },
+          "style": {
+            "fontSize": 10.5,
+            "bold": true
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.body-07",
+          "kind": "text",
+          "role": "body",
+          "text": "The writeup must be your own work; the video is 3 minutes, with your face and your own voice.",
+          "rectIn": {
+            "x": 6.8,
+            "y": 3.4,
+            "w": 2.54,
+            "h": 0.64
+          },
+          "normalizedRect": {
+            "x": 0.68,
+            "y": 0.6044,
+            "w": 0.254,
+            "h": 0.1138
+          },
+          "style": {
+            "fontSize": 10.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-06",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 4.42,
+            "w": 9.0,
+            "h": 0.52
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.7858,
+            "w": 0.9,
+            "h": 0.0924
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.body-08",
+          "kind": "text",
+          "role": "body",
+          "text": "This is the applied form of the last three lectures: build the harness, measure it, and win on the skyline.",
+          "rectIn": {
+            "x": 0.68,
+            "y": 4.42,
+            "w": 8.6,
+            "h": 0.52
+          },
+          "normalizedRect": {
+            "x": 0.068,
+            "y": 0.7858,
+            "w": 0.86,
+            "h": 0.0924
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-07",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.pageNumber-04",
+          "kind": "text",
+          "role": "pageNumber",
+          "text": "6",
+          "rectIn": {
+            "x": 9.28,
+            "y": 5.08,
+            "w": 0.46,
+            "h": 0.3
+          },
+          "normalizedRect": {
+            "x": 0.928,
+            "y": 0.9031,
+            "w": 0.046,
+            "h": 0.0533
+          },
+          "style": {
+            "fontSize": 11.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.shape-08",
+          "kind": "text",
+          "role": "shape",
+          "text": "",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.2,
+            "w": 8.5,
+            "h": 0.012
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.9244,
+            "w": 0.85,
+            "h": 0.0021
+          },
+          "style": {
+            "fontSize": null,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        },
+        {
+          "elementId": "takeaways.caption-01",
+          "kind": "text",
+          "role": "caption",
+          "text": "Source: https://cs2680.seas.harvard.edu/assignments/assignment3.html",
+          "rectIn": {
+            "x": 0.5,
+            "y": 5.22,
+            "w": 8.5,
+            "h": 0.24
+          },
+          "normalizedRect": {
+            "x": 0.05,
+            "y": 0.928,
+            "w": 0.85,
+            "h": 0.0427
+          },
+          "style": {
+            "fontSize": 9.0,
+            "bold": false
+          },
+          "source": {
+            "file": "courseware/pptx/decks/assignment-03-briefing",
+            "method": "addText"
+          }
+        }
+      ]
+    }
+  ]
+}

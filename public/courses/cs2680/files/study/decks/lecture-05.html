@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Lecture 5 - Multi-agent architecture, coordination, and communication</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Lecture 5 · 5_agent_design_2.pdf &middot; Source: https://cs2680.seas.harvard.edu/slides/5_agent_design_2.pdf</span>
+    <span class="slide-number" data-current="1" data-total="16"></span>
+  </div>
+
+  <section class="slide" data-title="Agents design II: multi-agent architecture, coordination, and communication">
+
+  <p class="kicker">Lecture 5 · Sep 23, 2026 · 46 slides</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">Agents design II: multi-agent architecture, coordination, and communication</h1>
+  <p class="lede">When to split work across agents, which topologies exist, how they talk - and what each one costs.</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">3 graphs</span><span class="pill ">8 architectures</span><span class="pill ">Decomposition</span><span class="pill ">A2A vs MCP</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">slides/5_agent_design_2.pdf</p>
+    <div class="notes">The lecture opens by saying multi-agent has decades of research history which it will not get into, and closes by asking whether it is really necessary. Multi-agent is presented as a cost, not a default.</div>
+  </section>
+  <section class="slide" data-title="Four stated reasons">
+
+  <p class="kicker">Why split at all</p>
+  <h2 class="h2">Four stated reasons</h2>
+  
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Specialization</h4><p class="dim">Different models, prompts and tools.</p></div><div class="card "><h4>Isolation</h4><p class="dim">Different privileges per agent.</p></div><div class="card "><h4>Parallelism</h4><p class="dim">Independent subtasks run concurrently.</p></div><div class="card "><h4>Context management</h4><p class="dim">Do not give every agent the whole trajectory.</p></div>
+  </div>
+    <div class="notes">If none of the four apply, the closing question - &quot;is multi-agent really necessary?&quot; - usually answers itself.</div>
+  </section>
+  <section class="slide" data-title="Three graphs describe any multi-agent system">
+
+  <p class="kicker">The vocabulary</p>
+  <h2 class="h2">Three graphs describe any multi-agent system</h2>
+  <p class="lede mb-l">Every architecture slide in the deck ends with the same three-field tag line: Task, Control, Comms.</p>
+  <div class="flow anim-stagger-list" data-anim-target>
+    <div class="node hl"><h4>Control graph</h4><p>Who coordinates: one supervisor, a hierarchy, or nobody - possibly changing at runtime via handoff</p></div><div class="arr">&rarr;</div><div class="node"><h4>Communication graph</h4><p>How they communicate: direct messages, broadcast, or a shared workspace</p></div><div class="arr">&rarr;</div><div class="node"><h4>Task graph</h4><p>How work is decomposed: up front by a planner, by bidding, or emergently from local rules</p></div>
+  </div>
+  
+    <div class="notes">Students are taught to read any multi-agent diagram with this vocabulary. The three graphs are the spine of the lecture.</div>
+  </section>
+  <section class="slide" data-title="Eight architectures">
+
+  <p class="kicker">The gallery</p>
+  <h2 class="h2">Eight architectures</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Architecture</th><th>Shape</th><th>Named weakness</th></tr></thead>
+      <tbody>
+        <tr><td>Supervisor-worker</td><td>One agent plans, delegates and integrates; workers see only their subtask</td><td>The supervisor bottleneck - it re-reads every result and its context grows fastest</td></tr><tr><td>Hierarchical</td><td>Supervisor-worker applied recursively</td><td>Where decomposition happens, and how much context crosses each boundary</td></tr><tr><td>Pipeline / DAG</td><td>Fixed stages with a typed contract at each boundary</td><td>No path backwards: stage four cannot ask stage one for a better source</td></tr><tr><td>Blackboard / shared memory</td><td>Agents coordinate through shared state</td><td>Consistency, concurrency control, provenance, versioning, garbage collection</td></tr><tr><td>Committee / debate</td><td>Agents propose and discuss; a judge or vote resolves</td><td>Agreement without independence - same model and context means the same blind spot</td></tr><tr><td>Market / auction</td><td>Agents bid for announced tasks on capability, cost and latency</td><td>Bids are self-reported, so an agent can win by overstating what it can do</td></tr><tr><td>Swarm</td><td>No permanent coordinator</td><td>Communication complexity is O(n^2); rarely used in products</td></tr><tr><td>Dynamic topology</td><td>Agents are added, removed or rewired while the task runs</td><td>Capacity scales with difficulty, but failures are hard to reproduce</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The summary table classifies architectures as Centralized, Decentralized or Hybrid. Supervisor-worker, Hierarchical and Pipeline/DAG sit clearly under Centralized, and Blackboard, Committee/debate and Swarm under Decentralized; the position of Market / auction relative to the Decentralized label is ambiguous in the extracted text and is not guessed here.</p>
+    <div class="notes">The deck maxim for the pipeline case: &quot;one retry edge beats one more agent&quot;. Every architecture ships with a named weakness - that pairing is the point of the slide.</div>
+  </section>
+  <section class="slide" data-title="Centralized, mostly">
+
+  <p class="kicker">Three topologies in detail</p>
+  <h2 class="h2">Centralized, mostly</h2>
+  
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Supervisor-worker</h4><p class="dim">Best when subtasks are independent and parallelizable. The supervisor plans, delegates and integrates; workers see only their subtask.</p></div><div class="card "><h4>Hierarchical</h4><p class="dim">Fits tasks that already decompose hierarchically - storage, query engine, testing. The open question is where decomposition happens and how much context crosses each boundary.</p></div><div class="card "><h4>Pipeline / DAG</h4><p class="dim">The cheapest topology to debug, because errors localise to a stage. But there is no path backwards.</p></div>
+  </div>
+    <div class="notes">The hybrid example is the one to quote when students ask what to actually build.</div>
+  </section>
+  <section class="slide" data-title="Blackboard architecture">
+
+  <p class="kicker">Shared state</p>
+  <h2 class="h2">Blackboard architecture</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>What it gives you</h3>
+      
+      <ul class="clean "><li>Agents coordinate through shared state instead of direct messages</li><li>The workspace may be a database, vector store, filesystem, Git repo or task graph</li><li>Agents can join or leave without rewiring</li><li>Shared state is durable and inspectable</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>What it costs</h3>
+      
+      <ul class="clean "><li>Consistency</li><li>Concurrency control</li><li>Provenance</li><li>Versioning</li><li>Garbage collection</li></ul>
+    </div>
+  </div>
+    <div class="notes">The blackboard is the storage half of the memory stack, and it reappears in Lecture 8 as a provider inside a modular harness.</div>
+  </section>
+  <section class="slide" data-title="Two ways to resolve without a planner">
+
+  <p class="kicker">Markets and committees</p>
+  <h2 class="h2">Two ways to resolve without a planner</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Market / auction</h3>
+      <p class="dim">Agents bid for announced tasks on capability, cost and latency, so work lands on the cheapest capable agent with no central planner.</p>
+      <ul class="clean "><li>Worked example: A100 node $0.20, ETA 3s; T4 node $0.05, ETA 10s; H100 node $0.40, ETA 1s</li><li>Rule: cheapest bid under 5s wins - the job goes to the A100 node</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Committee / debate</h3>
+      <p class="dim">Agents propose and discuss, then a judge or vote resolves.</p>
+      <ul class="clean "><li>Failure mode: agreement without independence - same model and context means the same blind spot</li><li>Market failure mode: bids are self-reported, so an agent can win by overstating what it can do</li></ul>
+    </div>
+  </div>
+    <div class="notes">Both are named as &quot;this is the thing students get wrong&quot;: committees converge on the wrong answer for the same reason, and markets reward dishonest bids.</div>
+  </section>
+  <section class="slide" data-title="Swarm, dynamic topology, and the hybrid that is real">
+
+  <p class="kicker">The extremes</p>
+  <h2 class="h2">Swarm, dynamic topology, and the hybrid that is real</h2>
+  
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Swarm</h4><p class="dim">No permanent coordinator, so it needs protocols for discovery, addressing, synchronization, termination and trust. Communication complexity is O(n^2) and it is rarely used in products.</p></div><div class="card "><h4>Dynamic topology</h4><p class="dim">Adds, removes or rewires agents while the task runs - a support bot adding billing and log agents only on escalation. Capacity scales with difficulty, but failures are hard to reproduce.</p></div><div class="card "><h4>The hybrid</h4><p class="dim">Planner agent + Coder/Researcher/Tester/Reviewer + Shared Git + dynamic task DAG. It combines hierarchy, shared memory, pipeline and re-planning.</p></div>
+  </div>
+    <div class="notes">A dense mesh is rarely the best default: more communication can increase context pressure without increasing useful information.</div>
+  </section>
+  <section class="slide" data-title="Axes, specs, and modes">
+
+  <p class="kicker">Decomposition</p>
+  <h2 class="h2">Axes, specs, and modes</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Six axes to split on</h3>
+      <p class="dim">Example: a 200-file PR split by data (files), then by expertise (security, perf).</p>
+      <ul class="clean "><li>Data</li><li>Expertise</li><li>Stage</li><li>Hypothesis</li><li>Tool</li><li>Authority</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Eight fields a sub-task spec needs</h3>
+      
+      <ul class="clean "><li>Objective</li><li>Inputs and relevant context</li><li>Boundaries and exclusions</li><li>Available tools and permissions</li><li>Expected output schema</li><li>Completion test</li><li>Budget and deadline</li><li>Dependencies</li></ul>
+    </div>
+  </div>
+    <div class="notes">Decomposition needs spawning limits, budgets, depth limits and termination conditions, or delegation explodes. That is the warning the slide carries.</div>
+  </section>
+  <section class="slide" data-title="Parallelism has to pay for itself">
+
+  <p class="kicker">Granularity</p>
+  <h2 class="h2">Parallelism has to pay for itself</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Quantity</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>T_multi ~= T_planning + T_critical_path + T_communication + T_merge</td><td>Parallelization only helps when the saved sequential work exceeds planning, communication and integration cost</td></tr><tr><td>Batching example</td><td>20 one-line lookups batched into 4 subtasks</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Named decomposition failures: 01 Overlap, 02 Gap, 03 Hidden dependency, 04 Unmergeable outputs, 05 Lost global context, 06 Straggler. A gap example: &quot;2020-2023&quot; plus &quot;2025-2026&quot; skips 2024. A straggler example: six agents finish in 20s, 25s, 4 min - and one straggler sets the total.</p>
+    <div class="notes">The straggler example is the one that connects to Lecture 3: the slowest subtask sets the total time, which is why subagent parallelism buys elapsed time and not answer quality.</div>
+  </section>
+  <section class="slide" data-title="Four dimensions, three media, six channels">
+
+  <p class="kicker">Communication</p>
+  <h2 class="h2">Four dimensions, three media, six channels</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Dimension</th><th>Values</th></tr></thead>
+      <tbody>
+        <tr><td>Dimensions</td><td>Topology, medium, format and semantics, channel</td></tr><tr><td>Media</td><td>Message passing, shared memory, files and artifacts including a database</td></tr><tr><td>Channels</td><td>p2p, broadcast, pub-sub, shared blackboard, request-response, artifact passing</td></tr><tr><td>Formats</td><td>Natural language - flexible but ambiguous; structured - easy to validate, less expressive</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">A worked message: task_id &quot;T17&quot;, type &quot;result&quot;, status &quot;complete&quot;, confidence 0.82, evidence [&quot;log:2391&quot;, &quot;commit:X&quot;], artifact &quot;analysis/T17.json&quot;.</p>
+    <div class="notes">Messages should carry semantics: natural language for content, structured protocol for coordination, so the runtime can route, retry and stop without asking an LLM what the message meant.</div>
+  </section>
+  <section class="slide" data-title="Nine runtime operations, and the failure they must survive">
+
+  <p class="kicker">Control messages</p>
+  <h2 class="h2">Nine runtime operations, and the failure they must survive</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The nine operations</h3>
+      
+      <ul class="clean "><li>DELEGATE, QUERY, REPORT, HANDOFF, UPDATE, CANCEL, ACK, ERROR, COMPLETE</li><li>A worked control message: id &quot;msg-381&quot;, task_id &quot;t-17&quot;, from &quot;planner&quot;, to &quot;researcher&quot;, type &quot;DELEGATE&quot;</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The failure scenario</h3>
+      <p class="dim">The task is to &quot;purchase 8 GPU instances&quot;. The network times out and no reply comes back.</p>
+      <ul class="clean "><li>At-most-once, at-least-once - and &quot;is exactly-once even available here?&quot;</li><li>The answer is an idempotency key on the task_id</li></ul>
+    </div>
+  </div>
+    <div class="notes">This is taught as a distributed-systems problem, not an NLP problem. The timeout asks about exactly-once semantics and compensation, and structured control fields are what let the runtime act on its own.</div>
+  </section>
+  <section class="slide" data-title="What multi-agent inherits, and what black-box LLMs add">
+
+  <p class="kicker">Inherited problems</p>
+  <h2 class="h2">What multi-agent inherits, and what black-box LLMs add</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>From distributed systems</h3>
+      
+      <ul class="clean "><li>Partial failure</li><li>Concurrency and non-determinism</li><li>Consistency</li><li>No global clock</li><li>Unreliable network</li><li>Debugging and observability</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>From the LLM layer</h3>
+      
+      <ul class="clean "><li>Scheduling, state management and resource allocation on top</li><li>Information loss</li><li>Context pollution</li><li>Stale information</li><li>Conflicting beliefs</li><li>Lost ownership and communication loops</li></ul>
+    </div>
+  </div>
+    <div class="notes">The L6 memory deck names the same disease - information loss and context pollution - from the other side.</div>
+  </section>
+  <section class="slide" data-title="The agent-to-agent protocol">
+
+  <p class="kicker">A2A</p>
+  <h2 class="h2">The agent-to-agent protocol</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The shape</h4><ul class="clean "><li>A machine-readable agent card at a well-known path - for example GET /.well-known/agent-card.json</li><li>Three abstractions: Message, Task, Artifact</li><li>A stateful task lifecycle with eight states: Submitted, Working, Input required, Auth required, Completed, Failed, Rejected, Canceled</li><li>Three tracking modes: polling for short jobs, streaming for interactive, push notification for hours-long jobs</li></ul></div><div class="card "><h4>Worked example</h4><ul class="clean "><li>Task: &quot;Analyze whether company X should move its inference stack to GPUs Y.&quot;</li><li>Peers: Research Agent, Finance Agent, Search Agent, Coding Agent</li><li>Agent card: &quot;Travel Agent&quot;, skill id &quot;book-flight&quot;, capabilities streaming: true</li><li>Task-42 moves working to completed; a follow-up &quot;Which date?&quot; is answered &quot;Oct 3&quot;</li></ul></div>
+  </div>
+    <div class="notes">The memorable claim: one A2A remote agent may itself call twenty MCP servers. A2A is service-to-service RPC; MCP is device-to-API.</div>
+  </section>
+  <section class="slide" data-title="Two different boundaries">
+
+  <p class="kicker">MCP vs A2A</p>
+  <h2 class="h2">Two different boundaries</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th></th><th>MCP</th><th>A2A</th></tr></thead>
+      <tbody>
+        <tr><td>Primary abstraction</td><td>Tools, resources, prompts</td><td>Message, Task, Artifact</td></tr><tr><td>Relationship</td><td>One client speaks to many servers</td><td>Agent-to-agent</td></tr><tr><td>Discovery</td><td>The host, not the model, decides what is exposed</td><td>Agent card at a well-known path</td></tr><tr><td>Unit of work</td><td>A capability call</td><td>A task with a stateful lifecycle</td></tr><tr><td>Internal state</td><td>The host holds it</td><td>The agent holds it</td></tr><tr><td>Analogy</td><td>Device / API</td><td>Service-to-service RPC</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">MCP is the agent-to-capability boundary; A2A is the agent-to-agent boundary. The two compose: an A2A remote agent may itself call twenty MCP servers.</p>
+    <div class="notes">This is the direct ancestor of the Lecture 8 harness comparison: MCP becomes one of the modular harness's providers, and the microkernel is the &quot;A2A with services&quot; shape.</div>
+  </section>
+  <section class="slide" data-title="Four design principles">
+
+  <p class="kicker">Closing</p>
+  <h2 class="h2">Four design principles</h2>
+  
+  <ul class="grid g1 anim-stagger-list" style="list-style:none;padding:0;margin:0;gap:12px" data-anim-target>
+    <li class="card card-accent"><h4>1. Is multi-agent really necessary?</h4></li><li class="card card-accent"><h4>2. Decide the topology.</h4></li><li class="card card-accent"><h4>3. Identify the information-loss points.</h4><p class="dim">A supervisor aggregating four workers' results is where detail drops.</p></li><li class="card card-accent"><h4>4. Identify the failure-containment boundaries.</h4><p class="dim">&quot;A dense mesh is rarely the best default. More communication can increase context pressure without increasing useful information.&quot;</p></li>
+  </ul>
+    <div class="notes">The deck closes on these four questions, and the next class is &quot;Agent design III, Agent memory, Agent reliability, Agent evaluation&quot;.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/slides/5_agent_design_2.pdf">https://cs2680.seas.harvard.edu/slides/5_agent_design_2.pdf</a> &mdash; Lecture 5 slide deck - 46 pages</li><li><a href="https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html">https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html</a> &mdash; reference note - cost-effective agents</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/slides/5_agent_design_2.pdf.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>

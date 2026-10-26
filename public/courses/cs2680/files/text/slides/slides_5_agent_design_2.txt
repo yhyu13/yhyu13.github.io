@@ -1,0 +1,853 @@
+----- page 1 -----
+Modern AI systems: agents 
+and system optimizations
+Juncheng Yang
+Agent Design II: Multi-Agent Systems
+
+----- page 2 -----
+2
+Harvard MaDSys ·   course.agentic-system.org
+2
+Logistics
+• Claude Code Premium seat
+• Assignment 1 
+• Canvas
+• repo url
+• mini product
+• Assignment 2 is waiting for you, due in ~two weeks
+• Office hour next Thursday 3:30-5pm SEC 4.308
+• Pre-proposal
+
+----- page 3 -----
+3
+Harvard MaDSys ·   course.agentic-system.org
+3
+Plan for today
+• Multi-agent design
+• Architecture
+• Coordination: task decomposition
+• Communication 
+• Agent memory
+
+----- page 4 -----
+4
+Harvard MaDSys ·   course.agentic-system.org
+4
+
+----- page 5 -----
+5
+Harvard MaDSys ·   course.agentic-system.org
+5
+From one agent to many
+• Architecture
+• Coordination
+• Communication
+Multi-agent is not new, it has decades of research history which we will not get into
+
+----- page 6 -----
+6
+Harvard MaDSys ·   course.agentic-system.org
+6
+When and why split work across agents?
+specialization
+different models, prompts and 
+tools
+isolation
+give different agents different 
+privileges
+parallelism
+independent subtasks execute 
+concurrently
+context management
+don't give every agent the entire 
+trajectory
+Hands up
+
+----- page 7 -----
+7
+Harvard MaDSys ·   course.agentic-system.org
+7
+Three questions / graphs behind every architecture
+Control graph: Who coordinates?
+One supervisor, a hierarchy, or nobody at all, does it change during runtime (handoff)
+Communication graph: How do they communicate?
+Direct messages, broadcast, or a shared workspace
+Task graph: How is work decomposed?
+Up front by a planner, by bidding, or emergently from local rules
+
+----- page 8 -----
+8
+Harvard MaDSys ·   course.agentic-system.org
+8
+Multi-agent architecture
+1 Supervisor–worker
+2 Hierarchical
+3 Pipeline / DAG
+4 Blackboard
+5 Committee
+6 Market
+7 Swarm
+8 Dynamic topology
+
+----- page 9 -----
+9
+Harvard MaDSys ·   course.agentic-system.org
+9
+1. Supervisor–worker
+• One agent plans, delegates and integrates; workers see only their subtask
+Supervisor
+Researcher
+Coder
+Reviewer
+Best when subtasks are independent and can run in parallel
+Weakness: the supervisor bottlenecks: it re-reads every result and its context grows fastest.
+Task: supervisor splits up front ·   Control: one supervisor ·   Comms: star, via supervisor
+
+----- page 10 -----
+10
+Harvard MaDSys ·   course.agentic-system.org
+10
+2. Hierarchical agents
+• Supervisor–worker applied recursively: supervisors manage sub-supervisors
+Fits tasks that already decompose hierarchically — storage, query engine, testing
+Challenge: where does decomposition happen, and how much context crosses each boundary?
+Task: split again at each level ·   Control: nested supervisors ·   Comms: tree, parent–child only
+Feature manager
+Backend lead
+Frontend lead
+API
+Database
+UI
+E2E tests
+Example: feature build
+
+----- page 11 -----
+11
+Harvard MaDSys ·   course.agentic-system.org
+11
+3. Pipeline / DAG
+• Fixed stages with a typed contract at each boundary
+Cheapest topology to debug — errors localize to a stage
+Weakness: no path backwards; stage four cannot ask stage one for a better source.
+OCR
+Extract fields
+Match to PO
+Approve
+Post to ledger
+one retry edge beats one more agent
+Example: invoice processing
+Task: stages fixed at design time ·   Control: the order is the control ·   Comms: stage to stage
+
+----- page 12 -----
+12
+Harvard MaDSys ·   course.agentic-system.org
+12
+4. Blackboard and shared memory
+• Agents coordinate through shared state instead of direct messages
+• The workspace may be a database, vector store, filesystem, Git repo or task graph
+Task: emerges from shared state ·   Control: none central ·   Comms: indirect, via workspace
+Agents can join or leave without rewiring; the shared state is durable and inspectable
+Challenges: consistency, concurrency control, provenance, versioning, garbage collection.
+Git repository
+task list, commits, history
+Feature agent
+Refactor agent
+Test agent
+Example: agents sharing a Git repo
+
+----- page 13 -----
+13
+Harvard MaDSys ·   course.agentic-system.org
+13
+5. Committee / debate
+• Agents propose and discuss, then a judge or vote resolves the disagreement
+Judge
+Grader A
+Grader B
+Example: essay grading
+Task: one task, repeated in parallel ·   Control: the judge decides ·   Comms: peers, then to judge
+Improves accuracy on judgment-heavy tasks
+Failure mode — agreement without independence: same model and context, same blind spot.
+
+----- page 14 -----
+14
+Harvard MaDSys ·   course.agentic-system.org
+14
+6. Market and auction
+• Agents bid for announced tasks based on capability, cost and latency
+• Heterogeneous agents differ in models, tools, machines, cost and expertise
+“Who can run this training job?”
+A100 node
+$0.20 · ETA 3s
+T4 node
+$0.05 · ETA 10s
+H100 node
+$0.40 · ETA 1s
+Job goes to A100 node
+Example: GPU job router — cheapest bid under 5s wins
+Task: announced, claimed by bid ·   Control: auctioneer clears ·   Comms: broadcast, bids back
+Work lands on the cheapest capable agent with no central planner
+Weakness: bids are self-reported, so an agent can win by overstating what it can do
+
+----- page 15 -----
+15
+Harvard MaDSys ·   course.agentic-system.org
+15
+7. Swarm
+• No permanent coordinator, agents negotiate and exchange findings directly
+• Needs protocols for discovery, addressing, synchronization, termination, trust
+Picker 1
+Picker 2
+Picker 3
+Picker 4
+Example: warehouse robots negotiating who picks which order
+No coordinator to bottleneck or fail; work continues as peers drop in and out
+Weakness: communication complexity O(n²); conflict resolution are hard. Rarely used in products. 
+Task: negotiated locally ·   Control: no permanent coordinator ·   Comms: all-to-all, O(n²)
+
+----- page 16 -----
+16
+Harvard MaDSys ·   course.agentic-system.org
+16
+8. Dynamic topology
+• Agents are added, removed or rewired while the task is running
+Example: support bot adds billing and log agents only when a ticket escalates.
+Routine ticket
+Support bot
+ticket escalates
+After escalation
+Support bot
+Billing agent
+Log agent
+Task: re-split as work gets hard ·   Control: shifts as agents join ·   Comms: dynamic at runtime
+Capacity scales with difficulty; simple tickets stay cheap
+Weakness: every run takes a different shape, so failures are hard to reproduce
+
+----- page 17 -----
+17
+Harvard MaDSys ·   course.agentic-system.org
+17
+Real systems are hybrids
+Supervisor
+Planner agent
+Dynamic task DAG
+Coder
+Researcher
+Tester
+Shared Git
+Reviewer
+Combines
+hierarchy
+shared memory
+pipeline
+re-plan if 
+needed
+
+----- page 18 -----
+18
+Harvard MaDSys ·   course.agentic-system.org
+18
+Eight architectures
+Category
+Architecture
+Core idea
+Best for
+Weakness
+Centralized
+Supervisor–worker
+One planner, many workers
+Separable subtasks
+Planner bottleneck
+Hierarchical
+Supervisors of supervisors
+Recursive splits
+Errors amplify
+Pipeline / DAG
+Each stage feeds the next
+Clear ordered stages
+Errors propagate
+Market / auction
+Agents bid for tasks
+Dynamic allocation
+Bad bids
+Decentralized
+Blackboard
+Shared workspace
+One shared artifact
+Stale state
+Committee / debate
+Answer, then reconcile
+Judgment calls
+Groupthink
+Swarm
+Direct talk, no controller
+Local negotiation
+O(n²) messages
+Hybrid
+Dynamic topology
+Rewires as work proceeds
+Unknown structure
+Hard to debug
+
+----- page 19 -----
+19
+Harvard MaDSys ·   course.agentic-system.org
+19
+Task decomposition
+Complex task
+Sub-task 1
+Sub-task 2
+Sub-task 3
+Merged result
+
+----- page 20 -----
+20
+Harvard MaDSys ·   course.agentic-system.org
+20
+Task decomposition
+Data
+Each agent handles a subset of documents or records
+Expertise
+Security, performance, correctness, legal analysis
+Stage
+Plan, implement, test and review
+Hypothesis
+Agents investigate competing explanations
+Tool
+Web, database, code execution or internal documents
+Authority
+Agents act in different administrative domains
+Example: a 200-file PR split by data (files), then by expertise (security, perf).
+
+----- page 21 -----
+21
+Harvard MaDSys ·   course.agentic-system.org
+21
+Things to consider when creating sub-tasks
+Objective
+Inputs and relevant context
+Boundaries and exclusions
+Available tools and permissions
+Expected output schema
+Completion test
+Budget and deadline
+Dependencies
+Poor sub-task
+“Research storage systems”
+Better sub-task
+“Identify storage-related papers published in 
+2026; return title, date, system contribution, 
+evaluation scale and primary-source URL; 
+exclude database query optimization”
+
+----- page 22 -----
+22
+Harvard MaDSys ·   course.agentic-system.org
+22
+Granularity tradeoff
+Tasks too large
+Little parallelism; the work stays 
+sequential
+Tasks too small
+Scheduling and communication overhead 
+dominates
+Tmulti ≈ Tplanning + Tcritical path + Tcommunication + Tmerge
+Parallelization helps only when the saved sequential work exceeds the planning, 
+communication and integration costs.
+Example: 20 one-line lookups batched into 4 subtasks to keep overhead below the gain.
+
+----- page 23 -----
+23
+Harvard MaDSys ·   course.agentic-system.org
+23
+Static versus dynamic decomposition
+Static
+Known before execution; predictable and 
+easy to evaluate
+Example: summarize each of five uploaded PDFs
+Dynamic
+Agents create new tasks in response to 
+discoveries
+Example: a dead link spawns a lookup task
+Recursive
+Workers may themselves delegate
+Example: a review agent spins up one sub-
+agent per subfield
+Opportunistic
+Idle agents claim newly available tasks
+Example: an idle agent picks up the next 
+unlabeled document
+Decomposition needs spawning limits, budgets, depth limits and termination conditions
+Without them, delegation explodes recursively.
+
+----- page 24 -----
+24
+Harvard MaDSys ·   course.agentic-system.org
+24
+Common decomposition failures
+01  Overlap
+Agent A
+Agent B
+Two agents summarize the same paper
+02  Gap
+2020–23
+2024
+2025–26
+“2020–2023” plus “2025–2026” skips 2024
+03  Hidden dependency
+Sizing
+Pricing
+Pricing needs sizing, found only at run time
+04  Unmergeable outputs
+Unstructured
+JSON
+Merge fails
+One agent returns free-form text, another returns 
+JSON
+
+----- page 25 -----
+25
+Harvard MaDSys ·   course.agentic-system.org
+25
+Common decomposition failures, continued
+06  Straggler
+20s
+25s
+4 min
+Six agents finish in 20s, one takes 4 minutes
+05  Lost global context
+§1 ✓
+§2 ✓
+§3 ✓
+Whole report ✗
+Every section is fine; the report contradicts itself
+
+----- page 26 -----
+26
+Harvard MaDSys ·   course.agentic-system.org
+26
+Agent communication
+User
+Research Agent
+Web Agent
+Coding Agent
+Data Agent
+Final answer
+
+----- page 27 -----
+27
+Harvard MaDSys ·   course.agentic-system.org
+27
+Four dimensions of multi-agent communication
+Topology
+Who can talk to whom?
+supervisor–worker, peer-to-peer
+determined by architecture (discussed earlier)
+Medium
+How is information exchanged?
+messages, shared memory, files, database
+Format and Semantics
+How is a message structured and how to 
+express information? 
+delegate, report, ask, handoff, cancel
+Channel
+How is information passed?
+p2p, broadcast, pub–sub, shared state, request-resp
+
+----- page 28 -----
+28
+Harvard MaDSys ·   course.agentic-system.org
+28
+Communication medium
+Message passing
+Agents send explicit messages over a queue or bus
+e.g. coder posts a result to the orchestrator’s inbox
+Shared memory
+One in-process state object every agent reads and writes
+e.g. a shared task list updated as work completes
+Files and artifacts (including DB)
+Work products handed over through a file store
+e.g. researcher writes notes.md; the writer opens it
+
+----- page 29 -----
+29
+Harvard MaDSys ·   course.agentic-system.org
+29
+Communication channels
+Direct point-to-point messages
+Planner hands a task spec to the coder 
+agent
+Broadcast
+Orchestrator tells every agent the build 
+failed
+Publish–subscribe
+Agents subscribe to a “new ticket” topic 
+and react
+Shared blackboard
+Agents read and write one shared 
+findings scratchpad
+Request–response
+Agent queries a retrieval agent and 
+waits for documents
+Artifact passing
+One agent writes report.md; the next 
+reads it
+
+----- page 30 -----
+30
+Harvard MaDSys ·   course.agentic-system.org
+30
+Message format
+Natural language
+Flexible, but ambiguous
+Structured messages
+Easy to validate, less expressive
+A practical design uses both:
+{
+"task_id": "T17",
+"type": "result",
+"status": "complete",
+"claim": "The regression began after commit X",
+"confidence": 0.82,
+"evidence": ["log:2391", "commit:X"],
+"artifact": "analysis/T17.json",
+"requires_response": false
+}
+
+----- page 31 -----
+31
+Harvard MaDSys ·   course.agentic-system.org
+31
+Messages should carry semantics
+Natural language for content, structured protocol for coordination.
+Separate control from content
+Everything in one string
+{"message": "some text"}
+{"id": "msg-381",
+"task_id": "t-17",
+"from": "planner",
+"to": "researcher",
+"type": "DELEGATE",
+"payload": { ... } }
+Operations the runtime knows
+DELEGATE
+QUERY
+REPORT
+HANDOFF
+UPDATE
+CANCEL
+ACK
+ERROR
+COMPLETE
+The runtime can route, retry and stop without 
+asking an LLM what the message meant.
+
+----- page 32 -----
+Communication: the design space
+Dimension
+Options
+Rule of thumb
+Topology
+supervisor–worker, peer-to-peer, mesh
+Mirror the task's dependencies
+Medium
+messages, shared memory, files
+One medium per link
+Channel
+p2p, broadcast, pub–sub, request–reply
+Broadcast only when all must know
+Format
+natural language + control fields
+Route on the fields, not the prose
+Every choice trades latency, context or reliability.
+
+----- page 33 -----
+35
+Harvard MaDSys ·   course.agentic-system.org
+35
+Communication is a hard distributed systems problem
+Agent A
+Agent B
+“purchase 8 GPU instances”
+network timeout — no reply
+Did B execute the action?
+• retry, or give up?
+• at-most-once or at-least-once?
+• is exactly-once even available here?
+• idempotency key on the task_id
+• compensation / rollback path
+• and who pays for a double purchase?
+
+----- page 34 -----
+36
+Harvard MaDSys ·   course.agentic-system.org
+36
+Distributed systems are hard
+Partial failure
+You cannot tell a slow 
+agent from a dead one
+Concurrency and 
+non-determinism
+Many machines modify 
+state simultaneously
+Consistency among 
+replicated states
+Tradeoff between consistency, 
+availability, partition, and latency
+No global clock
+Clocks on different 
+machines disagree
+Unreliable network
+Packet delay, drop, 
+reordered, duplicated…
+Multi-agent systems inherit the common distributed systems problems.
+Debugging and 
+observability
+Many requests, distributed 
+logs with clock drift
+
+----- page 35 -----
+37
+Harvard MaDSys ·   course.agentic-system.org
+37
+More challenges when the system runs multiple agents
+Scheduling
+Who runs next, and for 
+how long
+State management
+Checkpoints, memory, 
+provenance, and 
+versioning
+Resource allocation
+Models, CPU, and other 
+shared resources
+No predetermined request flow
+The system can't know who needs to run, for how long, or how many resources each agent 
+will consume.
+
+----- page 36 -----
+38
+Harvard MaDSys ·   course.agentic-system.org
+38
+Even harder when you consider the black-box LLMs!
+Context
+Information loss
+Summaries drop 
+what the worker 
+knew
+Context 
+pollution
+What matters gets 
+buried
+Stale 
+information
+B still acts on X=3 
+after X=5
+Conflicting 
+beliefs
+A says safe, B says 
+vulnerable
+Coordination and communication
+Observability and 
+failure diagnosis
+Why did it fail? 
+Lost ownership
+Each agent thinks another 
+owns it
+Communication loops
+A asks B, B asks C, C asks A
+
+----- page 37 -----
+39
+Harvard MaDSys ·   course.agentic-system.org
+39
+A2A: agent 
+agent
+Agent A
+Agent B
+discover capabilities
+send message, create task
+progress updates
+return artifact
+Example
+“Analyze whether company X should move its 
+inference stack to GPUs Y.”
+Research Agent
+Finds peers via their 
+Agent Cards
+Finance Agent
+Estimate GPU cost
+Search Agent
+Find benchmark data
+Coding Agent
+Run these benchmarks
+
+----- page 38 -----
+40
+Harvard MaDSys ·   course.agentic-system.org
+40
+A2A agent card
+Each A2A server publishes a machine-readable card: discovery plus a capability description.
+{
+"name": "Travel Agent",
+"description": "Plans business travel",
+"skills": [{ "id": "book-flight" }],
+"supportedInterfaces": [ ... ],
+"capabilities": { "streaming": true },
+"securitySchemes": { ... }
+}
+GET /.well-known/agent-card.json
+What a caller learns
+Identity — who the agent is
+Skills — what it claims it can do
+Endpoints — where and how to call
+Capabilities — streaming, push
+Auth — which security scheme to satisfy
+
+----- page 39 -----
+41
+Harvard MaDSys ·   course.agentic-system.org
+41
+Three A2A abstractions
+A message starts a task; the task returns its results as artifacts.
+Message
+One turn between client 
+and agent
+Example
+“Book a flight to Boston”
+Task
+Stateful unit of work with 
+an ID and a lifecycle
+Example
+task-42: working → 
+completed
+Artifact
+Output the task 
+produces
+Example
+Itinerary PDF and 
+booking data
+starts
+returns
+Follow-ups join the same task: “Which date?” → “Oct 3”
+
+----- page 40 -----
+42
+Harvard MaDSys ·   course.agentic-system.org
+42
+A2A task lifecycle
+A2A is a stateful task protocol: work can pause for input or auth, then resume.
+Submitted
+Working
+Input required
+Auth required
+Completed
+Failed
+Rejected
+Canceled
+Example
+“Book a flight” → Input required: “Which date?” → 
+“Oct 3” → Working again
+
+----- page 41 -----
+43
+Harvard MaDSys ·   course.agentic-system.org
+43
+Following a long-running task
+Tasks can run for seconds or hours; the caller picks how to track them.
+Polling
+Client re-checks until done
+Use for: Short jobs
+Streaming
+Streams live updates
+Use for: Interactive output
+Push notification
+Webhook fires when done
+Use for: Hours-long jobs
+A2A standardizes communication, not orchestration: delegation, splitting and stopping stay 
+with the harness.
+
+----- page 42 -----
+44
+Harvard MaDSys ·   course.agentic-system.org
+44
+MCP: agent 
+capability
+MCP is the agent
+service boundary: one tool call, one result.
+filesystem
+database
+GitHub
+browser
+Agent
+MCP
+What MCP standardizes
+• tools — callable, typed capabilities
+• resources — readable data the host may 
+attach
+• prompts — reusable interaction templates
+• one client speaks to many servers
+• the host, not the model, decides what is 
+exposed
+
+----- page 43 -----
+45
+Harvard MaDSys ·   course.agentic-system.org
+45
+MCP vs. A2A
+One A2A remote agent may itself call twenty MCP servers.
+MCP
+A2A
+Primary abstraction
+capability / tool
+agent / task
+Relationship
+agent → service
+agent → agent
+Discovery
+tools, resources, prompts
+agent capabilities
+Unit of work
+one tool invocation
+long-running task
+Internal state
+capability interface
+ideally opaque
+Analogy
+device / API interface
+service-to-service RPC
+
+----- page 44 -----
+47
+Harvard MaDSys ·   course.agentic-system.org
+47
+Design principles 
+1  Is multi-agent really necessary?
+Single agent is sufficient, multiple agents 
+often only adds overhead and complexity
+2  Decide topology
+reflect task dependencies, minimize 
+communication
+3  Identify information-loss points
+treat aggregation nodes as places where 
+detail drops
+4  Identify failure-containment 
+boundaries
+Make sure the system does not stall
+A dense mesh is rarely the best default. More communication can 
+increase context pressure without increasing useful information.
+
+----- page 45 -----
+48
+Harvard MaDSys ·   course.agentic-system.org
+48
+Next class
+• Agent design III
+• Agent memory
+• Agent reliability
+• Agent evaluation
+
+----- page 46 -----
+49
+Harvard MaDSys ·   course.agentic-system.org
+49

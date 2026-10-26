@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Reference note - Transformers and LLM foundations</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Reference note · transformers &middot; Source: https://cs2680.seas.harvard.edu/notes/transformers.html</span>
+    <span class="slide-number" data-current="1" data-total="9"></span>
+  </div>
+
+  <section class="slide" data-title="Transformers and LLM foundations">
+
+  <p class="kicker">Reference note · explicitly optional background</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">Transformers and LLM foundations</h1>
+  <p class="lede">A systems reading list, not a model list. Every entry answers: what does this change about the forward pass, the cache, or the bill?</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">10 groups</span><span class="pill ">Read it for shapes</span><span class="pill ">Optional background</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">notes/transformers.html</p>
+    <div class="notes">The note is assembled from the former October 19 LLM lecture and its stated reading rule is &quot;read it for shapes, not for BLEU scores&quot;. The October 19 schedule row lists no readings link for it.</div>
+  </section>
+  <section class="slide" data-title="Ten groups of entries">
+
+  <p class="kicker">Scope</p>
+  <h2 class="h2">Ten groups of entries</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Group</th><th>Key ideas</th></tr></thead>
+      <tbody>
+        <tr><td>Foundations</td><td>Transformer (2017) replaces recurrence and convolution with self-attention plus a position-wise FFN; Illustrated and Annotated Transformer for shapes and mechanics; GPT-1 pretrain-then-fine-tune, GPT-2 one set of weights for many tasks, GPT-3 in-context learning; BERT bidirectional encoder; T5 unified text-to-text interface</td></tr><tr><td>Tokenization</td><td>BPE merges frequent adjacent pairs; SentencePiece keeps whitespace in the vocabulary; Dolma releases 3T tokens with curation decisions; SuperBPE crosses word boundaries; BLT moves to byte patches; H-Net learns segmentation jointly. Fertility - tokens per word - is the conversion factor between text and served sequence length</td></tr><tr><td>Architecture</td><td>RoPE encodes relative position by rotation and is embedded in KV entries; ALiBi extrapolates with a linear penalty and no position embedding; RMSNorm is a memory-bound op worth fusing; SwiGLU changes the MLP to three projections; MQA collapses KV heads; GQA makes group count a dial; DeepSeek-V2/MLA caches a low-rank latent; YaRN extends context by uneven frequency interpolation; Gated DeltaNet combines decay and delta rule for a fixed-size state</td></tr><tr><td>Sparse and alternative architectures</td><td>GShard (MoE plus automatic sharding), Switch Transformer (top-1 routing, load-balancing loss, capacity factor), DeepSeekMoE (fine-grained experts plus shared experts), DeepSeek-V3 (671B/37B, FP8, auxiliary-loss-free balancing, MTP), Mamba (selective state spaces, no KV cache), MiniMax-01 (lightning attention plus 32-expert mixture), DeepSeek-V4 (1.6T and 284B previews, compressed hybrid attention, hyper-connections, Muon)</td></tr><tr><td>The scaling-law argument</td><td>Kaplan-style power laws, Chinchilla's correction and its replication, over-training, data limits, precision as a scaling variable, test-time compute, observational scaling laws, ScaleRL, plus practitioner posts on fitting discipline and on post-training as the dial with slack</td></tr><tr><td>Data</td><td>The Pile (825 GiB, 22 sources), C4 analysis (audit the artifact, not the filter), DataComp-LM (hold the recipe fixed, vary the data), OLMo (open the whole pipeline), Pythia (16 models, 154 checkpoints each), FineWeb and FineWeb-Edu, Nemotron-CC, Common Pile (8TB, license-clean), Olmo 3 (open post-training flow)</td></tr><tr><td>Post-training</td><td>FLAN instruction tuning, T0 multitask prompted training, InstructGPT RLHF, Constitutional AI, DPO, GRPO, Tulu 3 (including methods that did not reliably help)</td></tr><tr><td>Reasoning</td><td>Chain-of-thought, self-consistency, STaR, DeepSeek-R1, Qwen3's caller-set thinking budget, s1 budget forcing, and a 2026 post on exploitation - not exploration - as the test-time-scaling bottleneck</td></tr><tr><td>Evaluation</td><td>MMLU, HELM, emergent abilities and the mirage critique, Chatbot Arena, benchmark contamination, LongBench, MMLU-Pro, RULER, HELMET, and &quot;judges saturate first&quot;</td></tr><tr><td>Representative model reports</td><td>GPT-4 (withholds architecture, size, hardware, compute, dataset, method), LLaMA, Llama 2, Llama 3 (16K-GPU run and failure rates), Mistral 7B, Gemma 3, gpt-oss (harmony chat format), Kimi K2, GLM-4.5, GLM-5, Kimi K3, Gemma 4, Qwen3.5, MiniMax-M2.5, Claude Opus 4.6</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The note closes by saying the evaluation and model-report groups must be read together, and that the DeepSeek and Qwen3 reports sit with the mechanisms they introduced.</div>
+  </section>
+  <section class="slide" data-title="The lineage and the conversion factor">
+
+  <p class="kicker">Foundations and tokenization</p>
+  <h2 class="h2">The lineage and the conversion factor</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Foundations</h3>
+      
+      <ul class="clean "><li>The Transformer (2017) scored 28.4 BLEU on WMT 2014 En-De, more than 2 BLEU above the previous best including ensembles, and 41.8 BLEU En-Fr after 3.5 days on eight GPUs</li><li>BERT (2018), T5 (2019), GPT-1 (2018), GPT-2 (2019) and GPT-3 (2020) map the decoder-only, encoder-only and encoder-decoder lineages</li><li>No autoregressive decode means no KV cache for encoders</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Tokenization</h3>
+      
+      <ul class="clean "><li>Byte-level BPE is the tokenizer for GPT-2 to GPT-4 and Llama 3; SentencePiece ships with T5, Llama 1/2, Mistral and Gemma</li><li>Dolma releases 3 trillion tokens with 50,280 vocabulary entries, of which 223 never occur - about 0.4% - and fertility is highest on code</li><li>SuperBPE (2025): a fixed 200k vocabulary, up to 33% fewer tokens than BPE, and an 8B model gaining 4.0 points across 30 downstream tasks at 27% less inference compute</li><li>BLT (2024) is the first FLOP-controlled byte-level scaling study, to 8B parameters and 4T training bytes; H-Net (2025) is ~4x more data-efficient on DNA</li></ul>
+    </div>
+  </div>
+    <div class="notes">Tokenization, architecture and data are the three inputs that set the workload Part II must serve; fertility, KV entry shape and cache placement are the three levers that follow.</div>
+  </section>
+  <section class="slide" data-title="What the model report changes in the serving stack">
+
+  <p class="kicker">Architecture</p>
+  <h2 class="h2">What the model report changes in the serving stack</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Normalisation, MLP, attention</h4><ul class="clean "><li>RMSNorm replaced LayerNorm in Llama, Qwen, Mistral, Gemma and DeepSeek</li><li>SwiGLU appears in PaLM, Llama, Qwen, Mistral and Gemma</li><li>MQA is the KV layout in PaLM, Falcon-7B and StarCoder</li><li>GQA (2023) uses eight key/value groups with 5% of the original pretraining steps, keeps a seven-task score of 47.1 against 47.2, and cuts time per sample from 1.51s to 0.28s; it is used by Llama 2 70B, Llama 3, Qwen 2.5 and Mistral</li></ul></div><div class="card "><h4>Context extension and alternative state</h4><ul class="clean "><li>DeepSeek-V2 / MLA (2024): a 93.3% smaller KV cache and 5.76x higher maximum generation throughput against DeepSeek 67B, with 236B total and 21B activated per token</li><li>YaRN (2023) reaches the target context with 10x fewer tokens and 2.5x fewer training steps, and ships in Qwen 2.5 and DeepSeek-V3</li><li>Gated DeltaNet (2024) beats Mamba2 and DeltaNet on in-context retrieval, and is interleaved by Qwen3-Next</li></ul></div>
+  </div>
+    <div class="notes">This is the &quot;read it for shapes&quot; instruction in practice: the question is never &quot;how good is the model&quot; but &quot;what does this do to the cache and the forward pass&quot;.</div>
+  </section>
+  <section class="slide" data-title="Three dense problems and three sparse answers">
+
+  <p class="kicker">Sparse and alternative architectures</p>
+  <h2 class="h2">Three dense problems and three sparse answers</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Routing</h4><ul class="clean "><li>Top-2 routing: Mixtral, Grok-1</li><li>Top-1 routing with a load-balancing loss and a capacity factor: Megatron-LM, DeepSpeed-MoE</li><li>Fine-grained experts plus shared experts: DeepSeekMoE</li><li>DeepSeek-V3 is 671B total and 37B activated over 14.8T tokens and 2.788M H800 GPU hours, with MTP heads that became a speculative-decoding path in vLLM and SGLang, and kernels released as DeepGEMM and DeepEP</li></ul></div><div class="card "><h4>Fixed-size state</h4><ul class="clean "><li>Mamba (2023) is a linear-time selective state space with a fixed-size state, so there is no KV cache to page, evict or share</li><li>MiniMax-01 (2025) is 456B total and 45.9B activated with a 32-expert mixture and a 1M-token training context extrapolating to 4M at inference, with the team reverting to full attention for M2</li><li>DeepSeek-V4 (2026) previews at 1.6T total and 49B activated and 284B and 13B, both 1M context over more than 32T tokens, reporting 27% of DeepSeek-V3.2 per-token inference FLOPs and 10% of its KV-cache footprint</li></ul></div>
+  </div>
+    <div class="notes">Mamba is the clearest statement of the cache problem: a model with no KV cache changes the serving stack from memory management into something else.</div>
+  </section>
+  <section class="slide" data-title="The argument, and the corpus">
+
+  <p class="kicker">Scaling and data</p>
+  <h2 class="h2">The argument, and the corpus</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The scaling-law argument</h4><ul class="clean "><li>Loss falls as a power law in parameters, data and compute; Chinchilla says the model should be much smaller and see far more data</li><li>The roughly 20-tokens-per-parameter ratio survives replication, but the stated precision does not</li><li>Loss stays predictable past the Chinchilla budget, and downstream error stays predictable as a function of loss</li><li>One of the three scaling terms has a floor and the other two do not; adding bits per weight makes precision a budget variable</li><li>Spending compute at generation can beat spending it on a larger model</li><li>ScaleRL (2025) used more than 400,000 GPU-hours of controlled runs, found RL compute-performance curves to be sigmoidal, and extrapolated to a single 100,000 GPU-hour run</li><li>The 2026 posts frame the disagreement as 5.5x the model for 10x the compute against doubling both, with GLM-5.3 as the controlled post-training test</li></ul></div><div class="card "><h4>Data</h4><ul class="clean "><li>The Pile (2020) is 825 GiB from 22 sources, used by Cerebras-GPT; the C4 audit finds machine-generated text and evaluation examples inside the corpus, and disproportionate blocklist removal of minority-group text</li><li>DataComp-LM holds the recipe fixed and varies the data; OLMo 2 and SmolLM2 use the DCLM baseline; OLMo releases weights, data, code and eval code; Pythia is 16 models from 70M to 12B with 154 checkpoints per model</li><li>FineWeb (2024) is 15T tokens from 96 Common Crawl snapshots with every filter ablated, with a 1.3T-token FineWeb-Edu subset; aggressive filtering removes about 90% of data, but the full 6.3T-token set matches DCLM on MMLU with 4x more unique real tokens, and an 8B model trained on 15T tokens beats Llama 3.1 8B by 5 points on MMLU</li><li>The Common Pile (2025) is 8TB from 30 openly licensed sources, with 7B models trained on 1T and 2T tokens performing near Llama 1 and Llama 2 7B at comparable compute</li></ul></div>
+  </div>
+    <div class="notes">The scaleRL and practitioner-post entries are the ones that matter for Part II: test-time compute is what turns a training-time argument into a serving-time problem.</div>
+  </section>
+  <section class="slide" data-title="Where the bill moves">
+
+  <p class="kicker">Post-training and reasoning</p>
+  <h2 class="h2">Where the bill moves</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Post-training</h4><ul class="clean "><li>FLAN (2021) fine-tunes a 137B model on more than 60 instruction tasks, beating zero-shot 175B GPT-3 on 20 of 25 tasks</li><li>T0 beats zero-shot systems up to 16x its size on held-out task types</li><li>InstructGPT is SFT plus a reward model plus policy optimization with a KL penalty (TRL, DeepSpeed-Chat, OpenRLHF, verl)</li><li>Constitutional AI replaces human harmlessness labels with AI feedback, so the training job consumes generated tokens in bulk</li><li>DPO makes preference training a classification loss with no reward model and no RL loop - Llama 3 and Zephyr used it instead of PPO</li><li>GRPO removes PPO's value network; Tulu 3 writes out the whole pipeline including the methods that did not reliably help</li></ul></div><div class="card "><h4>Reasoning</h4><ul class="clean "><li>Chain-of-thought (2022) is the first prompting technique to move the serving bill visibly, and it is paid for in decode tokens</li><li>With PaLM-540B, self-consistency adds 17.9 points on GSM8K, 11.0 on SVAMP, 12.2 on AQuA, 6.4 on StrategyQA and 3.9 on ARC-Challenge</li><li>STaR matches fine-tuning a model 30x larger on CommonsenseQA</li><li>DeepSeek-R1 uses RL against checkable answers, and its long traces shift every Part II trade-off toward decode</li><li>Qwen3 (2025) carries thinking and non-thinking modes in one model with a dense and MoE ladder from 0.6B to 235B and a caller-set thinking budget</li><li>s1 fine-tunes on 1,000 curated questions, then budget-forces AIME24 from 50% to 57% on the same weights; in the 2026 study reward models correlate at about 0.12 with true quality and cross-candidate synthesis recovers about 40% of the pool's quality</li></ul></div>
+  </div>
+    <div class="notes">The evaluation group and the model-report group are the ones to read together. A reasoning model that reports more tokens per answer is a different serving problem, and the note makes that point explicitly for R1.</div>
+  </section>
+  <section class="slide" data-title="The same skill the course grades">
+
+  <p class="kicker">Evaluation</p>
+  <h2 class="h2">The same skill the course grades</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>MMLU, HELM and the mirage critique</h4><ul class="clean "><li>MMLU is one multiple-choice test over 57 subjects with one aggregate accuracy</li><li>HELM fixes 7 metrics over 16 core scenarios for 30 models; models had been evaluated on 17.9% of scenarios on average against 96.0% under HELM</li><li>Discontinuous jumps can be produced by exact-match scoring, and a continuous metric smooths them away</li><li>The Arena paper reports over 240K votes at the time of writing</li></ul></div><div class="card "><h4>Contamination, length and judges</h4><ul class="clean "><li>Decontamination is now a routine pretraining step, and the Llama 3 and Qwen reports publish contamination analyses</li><li>LongBench has 21 datasets over 6 categories in English and Chinese, averaging 6,711 words for English tasks</li><li>MMLU-Pro accuracy falls 16-33% against MMLU and prompt sensitivity drops from 4-5% to 2% across 24 prompt styles</li><li>In RULER all 17 evaluated models claim 32K tokens or more, but only about half still perform acceptably at that length</li><li>HELMET uses 7 application-centric categories, controllable lengths to 128K, and 59 models</li><li>On Omni-MATH the original automatic judge is wrong in 96.4% of expert-audited disagreements, well before benchmark saturation</li></ul></div>
+  </div>
+    <div class="notes">The recurring hinge: a number means nothing without its protocol, and the judge is a component that can saturate before the task does.</div>
+  </section>
+  <section class="slide" data-title="What a report discloses, and what it withholds">
+
+  <p class="kicker">Model reports</p>
+  <h2 class="h2">What a report discloses, and what it withholds</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Disclosure</h4><ul class="clean "><li>GPT-4 (2023) states that it withholds architecture, model size, hardware, training compute, dataset construction and training method</li><li>The open-weight line the assignments run on: LLaMA (2023), Llama 2 (2023) and Llama 3 (2024); Llama 3 Section 3 documents a 16K-GPU training run and its failure rates</li><li>Mistral 7B (2023) uses a sliding-window attention with a fixed-size rolling cache, in the exact size range Assignment 4 targets</li><li>Gemma 3 (2025) runs 1B to 27B, multimodal, at least 128K tokens, with interleaved local and global attention layers to cap per-layer cache</li><li>gpt-oss-120b and gpt-oss-20b under Apache 2.0 ship tool environments, tokenizers and the harmony chat format written down</li><li>Kimi K2 is 1T total and 32B activated, and its 15.5T-token pretraining run completed with zero loss spikes using MuonClip QK-clip</li></ul></div><div class="card "><h4>Recent reports</h4><ul class="clean "><li>GLM-4.5 (2025) is 355B total and 32B activated over 23T tokens plus a 106B Air variant, reporting 70.1% on TAU-Bench, 91.0% on AIME 24 and 64.2% on SWE-bench Verified, with the RL infrastructure shipped as slime</li><li>GLM-5 (2026) uses an asynchronous RL stack, async agent RL for long-horizon interaction, and sparse attention descending from DeepSeek NSA, implemented in verl, slime and AReaL</li><li>Kimi K3 (2026) is 2.8T total and 104B activated, routes 16 of 896 experts per token, uses Kimi Delta Attention, and attributes roughly 2.5x scaling efficiency over Kimi K2 to co-design</li><li>Gemma 4 (2026) spans 2.3B to 31B, dense and MoE, natively multimodal, with a thinking mode, an encoder-free 12B variant and the Gemma 3n on-device line continued</li><li>Qwen3.5 (2026), MiniMax-M2.5 (2026) and Claude Opus 4.6 (2026) are release and system reports whose usable content is the deployment and prompting contract, and the request shape: long interaction histories and tool use</li></ul></div>
+  </div>
+    <div class="notes">Reading several model reports side by side is presented as the fastest way to see what a report discloses and what it withholds - GPT-4 against Llama 3 against DeepSeek-V3.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/notes/transformers.html">https://cs2680.seas.harvard.edu/notes/transformers.html</a> &mdash; the reference note - optional background readings</li><li><a href="https://cs2680.seas.harvard.edu/index.html">https://cs2680.seas.harvard.edu/index.html</a> &mdash; course home - the October 19 schedule row</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/notes/transformers.html.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>

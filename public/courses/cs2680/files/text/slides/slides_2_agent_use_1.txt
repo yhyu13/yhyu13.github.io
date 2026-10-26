@@ -1,0 +1,915 @@
+----- page 1 -----
+Modern AI Systems: Agents 
+and System Optimizations
+Juncheng Yang
+Agent From a User’s Perspective I: How Claude Code Works
+
+----- page 2 -----
+2
+Harvard Madsys   ·   course.agentic-system.org
+Schedule update
+LLM background moves later
+• Treat the LLM as a magic reasoning box for 
+now
+• You don't need the internals to learn agent
+More agent, less GPU
+• Most of you are more interested in agents
+• Two extra lectures on agent design
+• Fewer GPU lectures — less overlap with 
+other courses
+What changed on the schedule
+• No mandatory paper presentation
+• Score goes to participation and project
+• Assignment 1 sharing is now a bonus
+• A few bonus paper discussions — TBA
+
+----- page 3 -----
+3
+Harvard Madsys   ·   course.agentic-system.org
+A few more logistics
+Hands up = score
+OPTIONAL — extra reading, not required
+ADVANCED — skim, or read more on your own
+New TF: Advaith Ravishankar
+Participation score: ask / answer question in class
+Up to 1 point each class, find TF after class
+Extra reading: optional
+
+----- page 4 -----
+4
+Harvard Madsys   ·   course.agentic-system.org
+Plan for today
+• How Claude Code works
+• Claude Code: from stateless LLM to an agent
+• Memory 
+• Tools, skills, hooks, plugins
+
+----- page 5 -----
+5
+Harvard Madsys   ·   course.agentic-system.org
+What happens when you type a prompt into 
+Claude Code?
+Hands up = score
+
+----- page 6 -----
+6
+Harvard Madsys   ·   course.agentic-system.org
+The Agentic Loop
+1  Gather context
+prompt, files, tool results
+2  Generate action
+run a tool: bash, read, edit
+3  Run tool
+tests, output, re-read state
+repeat — every step conditioned on what the last one returned
+One user prompt = many model calls and many tool executions, not a single request.
+harness
+model
+your machine
+
+----- page 7 -----
+7
+Harvard Madsys   ·   course.agentic-system.org
+Context Before You Type
+Before your first keystroke, the context size is already 10+k tokens
+SYSTEM   Claude Code instructions
+PROJECT   environment
+MEMORY   persistent project / user notes / CLAUDE.md
+TOOLS   Read, Edit, Bash, Glob, Grep, Web, Agent
+SKILLS / MCP   names and descriptions
+USER   “Fix the failing auth test”
+Skill and MCP entries start as names only 
+— the full text loads when Claude actually 
+reaches for them.
+
+----- page 8 -----
+8
+Harvard Madsys   ·   course.agentic-system.org
+It Doesn't Send Your Repository
+The repo stays on disk. Claude pulls slices of it on demand.
+Your repository
+thousands of files, on disk
+Claude: “what do I need?”
+Grep(“authentication”)
+a handful of lines come back
+that slice enters the context
+
+----- page 9 -----
+9
+Harvard Madsys   ·   course.agentic-system.org
+Model Proposes and then Harness Executes
+The model proposes for an action and the harness executes it
+Claude model
+emits a request:  Bash(“pytest”)
+Claude Code harness
+resolves it, checks permissions, executes
+Your machine
+pytest actually runs → stdout / stderr
+tool_result
+goes back into 
+the model’s 
+context
+
+----- page 10 -----
+10
+Harvard Madsys   ·   course.agentic-system.org
+One User Prompt Triggers Many LLM Inferences
+One user turn expands into an alternating chain of inference and tool execution.
+U
+prompt
+M₁
+inference
+T₁
+tool
+M₂
+inference
+T₂
+tool
+Mₙ
+inference
+A
+answer
+What that looked like in practice
+pytest
+read 
+session.py
+grep create_session
+edit 
+session.py
+pytest
+all green
+Every request is conditioned on the previous inference and the previous tool result.
+
+----- page 11 -----
+11
+Harvard Madsys   ·   course.agentic-system.org
+Permissions Sit Between Intent and Execution
+A tool request is a proposal that needs your or another model’s approval.
+Claude asks for
+Bash(“rm -rf build/”)
+Permission layer
+Manual 
+Accept Edits
+Bypass permission
+Auto (a small model 
+checks it)
+allowed  — command runs
+ask  —  you confirm first
+denied  —  nothing happens
+
+----- page 12 -----
+12
+Harvard Madsys   ·   course.agentic-system.org
+Context Grows — Then Gets Compacted
+Each step adds tokens: model replies, file contents, command output.
+Request 1
+Request 2
+Request 3
+Request N
+Request N+1
+COMPACTION
+summarize the old 
+trajectory, re-inject 
+CLAUDE.md and 
+memory
+Context management is an important component of harness design (discuss next week).
+Typical context size: 1M tokens (Sonnet / Opus / Fable, GPT 5.6); 256K was common earlier this year
+Context is not free: prefix-cache reads account for most of the cost
+
+----- page 13 -----
+16
+Harvard Madsys   ·   course.agentic-system.org
+Summary: The Agentic Loop
+Prompt +
+context
+Model
+proposes
+Harness
+executes
+Result folds
+into context
+The loop repeats until the task is done
+
+----- page 14 -----
+17
+Harvard Madsys   ·   course.agentic-system.org
+Tools and Memory Enable Agentic Capability
+Memory
+LLM
+Reasoning & Planning
+Agent
+Tool / Action
+Observation
+Environment
+
+----- page 15 -----
+18
+Harvard Madsys   ·   course.agentic-system.org
+Agent Memory
+LLM (stateless)
+Tools (act)
+State (context + memory)
+
+----- page 16 -----
+19
+Harvard Madsys   ·   course.agentic-system.org
+Context Is One Type of Memory
+• Agents are stateless between runs — every session starts from zero
+• In practice, “memory” is just files loaded at session startup
+Every memory creation is a decision about what gets re-read forever.
+Context: Working Memory
+What the model can see right now — it 
+dies with the session.
+Persistent Memory
+What survives the session and is 
+reloaded next time.
+
+----- page 17 -----
+20
+Harvard Madsys   ·   course.agentic-system.org
+Why Agents Need Memory
+Memory is how instruction becomes convention.
+Repeated instructions
+The same setup explained every session
+Lost decisions / assumptions
+The “why” disappears when the window 
+compacts
+Repeated discovery
+The agent re-reads the same files to 
+relearn the layout
+Inconsistent behavior
+Different sessions make different choices
+
+----- page 18 -----
+21
+Harvard Madsys   ·   course.agentic-system.org
+Two Systems Carry Knowledge Forward
+Both load at the start of every session into context.
+CLAUDE.md files
+Auto memory
+Who writes it
+You
+Claude
+What it contains
+Instructions and rules
+Learnings and patterns
+Scope
+Project, user, or org
+Per repository, shared across worktrees
+Loaded into
+Every session
+Every session (first 200 lines / 25KB)
+Use for
+Standards, workflows, 
+architecture
+Your preferences, corrections, project 
+context
+
+----- page 19 -----
+22
+Harvard Madsys   ·   course.agentic-system.org
+Two Systems Carry Knowledge Forward
+Both load at the start of every session into context.
+CLAUDE.md files
+Auto memory
+Who writes it
+You
+Claude
+What it contains
+Instructions and rules
+Learnings and patterns
+Scope
+Project, user, or org
+Per repository, shared across worktrees
+Loaded into
+Every session
+Every session (first 200 lines / 25KB)
+Use for
+Standards, workflows, 
+architecture
+Your preferences, corrections, project 
+context
+
+----- page 20 -----
+23
+Harvard Madsys   ·   course.agentic-system.org
+Where CLAUDE.md Lives
+Files load broadest-scope first; the closest file is read last.
+1
+Managed policy
+…/ClaudeCode/CLAUDE.md  ·  org-wide, cannot be excluded
+2
+User instructions
+~/.claude/CLAUDE.md  ·  your preferences, every project
+3
+Project instructions
+./CLAUDE.md or ./.claude/CLAUDE.md  ·  team-shared through source control
+4
+Local instructions
+./CLAUDE.local.md  ·  personal, gitignored
+
+----- page 21 -----
+24
+Harvard Madsys   ·   course.agentic-system.org
+What Belongs in CLAUDE.md
+Context is rented, memory is owned — choose deliberately what you own.
+Size
+Under 200 lines per file
+Structure
+Markdown headers and 
+bullets
+Specificity
+Concrete rules, not 
+vague ones
+Consistency
+No contradictory or 
+stale rules
+Belongs
+• Commands: how to run the tests, the 
+build, the linter
+• Hard constraints: never commit to 
+main, never edit generated files
+• Facts the agent cannot cheaply infer: 
+layout, ownership, gotchas
+Doesn’t belong
+• Anything the model already knows 
+about the language or framework
+• Style preferences a linter or formatter 
+already enforces
+• Long prose, changelogs, and anything 
+secret
+
+----- page 22 -----
+25
+Harvard Madsys   ·   course.agentic-system.org
+Getting Too Long? Split It Into .claude/rules/
+One topic per file — and each rule loads only when it is relevant.
+One topic per file
+Each rule file covers a single concern, so it stays 
+short and specific
+Add a paths: frontmatter
+Loads only when Claude touches matching files 
+(no paths: every session)
+Example
+.claude/rules/
+├── testing.md
+├── api-style.md
+└── db-migrations.md
+The lesson
+• Scoped rules keep the context window small
+• Only rules matching the work get loaded
+• CLAUDE.md stays short; detail lives in rules
+
+----- page 23 -----
+26
+Harvard Madsys   ·   course.agentic-system.org
+Auto Memory: Claude's Own Notes
+user
+Your role, expertise 
+and working 
+preferences
+feedback
+Corrections you give, 
+approaches you 
+confirm
+project
+Ongoing work, 
+decisions not in the 
+code
+reference
+Information lives 
+outside the project
+~/.claude/projects/<project>/memory/
+├── MEMORY.md
+├── user_role.md
+├── feedback_testing.md
+└── other-topic-files.md
+How it behaves
+• A type field tags every file
+• MEMORY.md is the index — first 200 lines 
+(25KB) load each session
+• Machine-local; worktrees share the directory
+• On by default; disable with /memory
+
+----- page 24 -----
+27
+Harvard Madsys   ·   course.agentic-system.org
+Retrieval Uses an Index
+The index is always loaded; topic files are read only when they are relevant.
+1
+Session starts
+2
+Load 
+MEMORY.md 
+index
+3
+Identify 
+relevant topic
+4
+Read topic 
+file on 
+demand
+5
+Apply 
+memory to 
+the task
+Memory.md
+The index keeps the context window small — only the topic file the task needs gets read.
+
+----- page 25 -----
+28
+Harvard Madsys   ·   course.agentic-system.org
+Inspecting and Controlling Memory
+Four commands for seeing — and steering — what Claude remembers.
+/memory  —  Browse, edit, delete, or disable memory
+/context  —  See which instruction files loaded
+/init  —  Generate a starter CLAUDE.md
+/doctor  —  Identify content that may not belong in CLAUDE.md
+
+----- page 26 -----
+29
+Harvard Madsys   ·   course.agentic-system.org
+The Cost of Remembering
+Every permanent token is rent — 
+paid at the start of every session
+Memory competes with the task for 
+the same window
+Stale memory is worse than none: 
+it actively misleads
+Treat memory like code — review it, 
+prune it, keep it in version control
+Limited context size + you pay for every token you send to Anthropic
+
+----- page 27 -----
+31
+Harvard Madsys   ·   course.agentic-system.org
+Tools and Memory Enable Agentic Capability
+Memory
+LLM
+Reasoning & Planning
+Agent
+Tool / Action
+Observation
+Environment
+
+----- page 28 -----
+32
+Harvard Madsys   ·   course.agentic-system.org
+Become an Actionable Agent: The Core Tools
+Read
+open a file, inspect state — the 
+most used tool
+Search
+grep and glob — find it without 
+reading everything
+Fetch
+pull a page or doc — brings 
+untrusted text inside
+Edit / Write
+change files — the first tool with 
+consequences
+Shell
+build, test, git — the whole 
+machine unless sandboxed
+Delegate
+spawn a subagent — a tool that 
+returns a summary
+Model will decide which tools to use, not much you need to do
+You will build these tools yourself in Assignment 2
+
+----- page 29 -----
+33
+Harvard Madsys   ·   course.agentic-system.org
+Extending an Agent: 
+Skills, MCP, Hooks and Plugins
+
+----- page 30 -----
+34
+Harvard Madsys   ·   course.agentic-system.org
+Extending an Agent
+Four mechanisms, four different problems — and they are not interchangeable.
+Skill
+How the agent should 
+perform a task
+MCP
+Which external data 
+and actions it can 
+reach
+Hook
+What happens 
+automatically at a 
+lifecycle event
+Four layers: a skill decides how, MCP reaches outside, a hook enforces, a plugin 
+distributes
+Plugin
+How the extensions 
+are packaged and 
+distributed
+
+----- page 31 -----
+35
+Harvard Madsys   ·   course.agentic-system.org
+Extension Points in the Agent Loop
+Each mechanism attaches at a different point in the loop.
+User request
+Model reasoning
+Skill provides the knowledge and procedure
+Tool selection
+MCP provides the external tools
+Tool execution
+Hook can inspect, block or react at any stage of the loop
+Plugin packages skills, MCP servers and hooks into one installable unit
+
+----- page 32 -----
+36
+Harvard Madsys   ·   course.agentic-system.org
+Release Workflow Example
+Prepare a release, validate it, publish it to GitHub, notify the team.
+Follow the release procedure
+Skill
+Create the GitHub release
+MCP
+Prevent publishing when tests fail
+Hook
+Share the complete setup
+Plugin
+
+----- page 33 -----
+37
+Harvard Madsys   ·   course.agentic-system.org
+Skills as Reusable Procedures
+Knowledge and procedure the agent loads when the task calls for it.
+What a skill carries
+Domain 
+knowledge
+Reference 
+material
+Repeatable 
+workflows
+Model- and user-
+invoked
+Reasoning at run 
+time
+Think about it as context engineering
+Example: /release 2.4.0
+
+----- page 34 -----
+38
+Harvard Madsys   ·   course.agentic-system.org
+Skill Structure
+A folder, a description that controls discovery, and a body that holds the procedure.
+.claude/skills/release/
+├── SKILL.md
+├── references/
+└── scripts/
+ 
+name: release
+description: Prepare a release
+How it works
+• The description controls discovery
+• The body holds the procedure
+• Supporting files add references and 
+scripts
+• Users can also run it directly: /release
+1 Read the release notes · 2 Confirm the version · 3 Run the tests · 4 Prepare the commit · 5 Ask before 
+publishing
+
+----- page 35 -----
+39
+Harvard Madsys   ·   course.agentic-system.org
+Skill Invocation and Context Cost
+Two invocation modes — and two different costs in context.
+Model-invoked
+Claude loads the skill when its 
+description matches the task
+User-invoked
+The user explicitly runs /<skill-name>
+What it costs
+• Descriptions loaded during session start; the full body loads only when the skill runs
+• Side-effecting workflows should usually require explicit invocation
+• Clear, distinct descriptions reduce incorrect skill selection
+
+----- page 36 -----
+40
+Harvard Madsys   ·   course.agentic-system.org
+MCP as an External Capability Layer
+Model Context Protocol connects agent to external services through a standard Protocol.
+Read and update GitHub 
+issues
+Query a database
+Retrieve monitoring data
+Access Figma designs
+Post a message to Slack
+Control a browser
+MCP gives Claude capabilities that exist neither in the model nor in local files
+
+----- page 37 -----
+41
+Harvard Madsys   ·   course.agentic-system.org
+How an MCP Tool Call Works
+Six steps from intent to structured result.
+1  Claude identifies a needed action
+2  The MCP client uses a tool
+3  The MCP server handles the connection
+4  The external service performs the operation
+5  Structured results return to Claude
+6  Claude evaluates the result
+Almost identical to a 
+local tool
+• Same name, description 
+and typed schema
+• Same call-and-return 
+contract
+• It just runs in another 
+process
+The protocol carries the call; the agent still decides whether to make it
+
+----- page 38 -----
+42
+Harvard Madsys   ·   course.agentic-system.org
+Hooks as Lifecycle Automation
+A session runs left to right; a hook can fire at each marked event.
+Session start
+User prompt
+Model 
+reasoning
+Tool call
+Tool result
+Stop
+Session start
+load context, 
+log
+User prompt
+validate or add
+Before tool 
+use
+inspect or 
+block
+After tool use
+format, test, 
+log
+Before 
+stopping
+verify tests
+No hook
+reasoning is 
+not an event
+Hooks fire on events, can run commands, HTTP requests, MCP tools, prompts or subagents
+
+----- page 39 -----
+43
+Harvard Madsys   ·   course.agentic-system.org
+Plugins as the Packaging Layer
+One installable unit that carries skills, hooks, agents and MCP configuration.
+plugin/
+├── skills/
+├── hooks/
+├── agents/
+├── .mcp.json
+├── .lsp.json
+└── .claude-plugin/plugin.json
+What packaging gives you
+• Installation — one command
+• Versioning — pinned releases
+• Namespacing — no name clashes
+• Team reuse — one setup for everyone
+• Distribution — share via marketplace
+A plugin is how a working setup becomes something other people can install
+
+----- page 40 -----
+45
+Harvard Madsys   ·   course.agentic-system.org
+How the Four Mechanisms Fit Together
+Judgment, capability, enforcement — and the package that ships all three.
+Skill
+knowledge and 
+procedure
+Claude
+reasoning and tool use
+MCP
+GitHub · Slack · 
+databases
+Hook  fires at lifecycle events — before and after every tool call
+Plugin  packages the skill, the MCP configuration and the hooks for install elsewhere
+
+----- page 41 -----
+46
+Harvard Madsys   ·   course.agentic-system.org
+Inside .claude/
+.claude/
+  CLAUDE.md
+  settings.json
+  settings.local.json
+  commands/
+  skills/
+  agents/
+  hooks/
+  plugins/
+Memory   CLAUDE.md, rules/
+Configuration   permissions, hooks, env
+Workflows   skills/, commands/
+Delegation & guardrails   agents/, hooks/
+The same layout exists at ~/.claude/ for user scope. Project settings win over user settings.
+
+----- page 42 -----
+49
+Harvard Madsys   ·   course.agentic-system.org
+Design Exercise
+Classify each requirement — and say why the others do not fit.
+Apply the company API conventions
+Skill
+Read an issue from Jira
+MCP
+Run formatting after every edit
+Hook
+Guide a multi-step deployment
+Skill
+Send a completion notification
+Hook plus MCP
+Block writes to production
+Hook or policy
+Share everything across repositories
+Plugin
+Skill knowledge and procedure · MCP external access · Hook event automation · Plugin packaging and distribution
+Hands up = score
+
+----- page 43 -----
+50
+Harvard Madsys   ·   course.agentic-system.org
+Next class
+• Agent from a user’s perspective II
+
+----- page 44 -----
+51
+Harvard Madsys   ·   course.agentic-system.org
+Optional slides
+
+----- page 45 -----
+52
+Harvard Madsys   ·   course.agentic-system.org
+MCP: What and Why
+Why MCP exists: access to external tools and services
+• Before MCP exists: NxM implementations
+• It avoids building a unique integration for every AI client
+An open protocol (stateless) that lets an AI application discover and 
+use capabilities exposed by external servers.
+https://modelcontextprotocol.io
+What if I need to access external services? Gmail, GitHub, …
+
+----- page 46 -----
+53
+Harvard Madsys   ·   course.agentic-system.org
+MCP Architecture
+Host
+Claude Code — the app you talk 
+to.
+External system
+GitHub, Slack, PostgreSQL, a 
+local service.
+MCP
+protocol
+MCP client
+One connection per server, 
+run by the host.
+MCP server
+Exposes a system's 
+capabilities as tools.
+
+----- page 47 -----
+54
+Harvard Madsys   ·   course.agentic-system.org
+MCP: Three Core Primitives
+Tools
+Actions Claude can call
+create_issue(…)
+Resources
+Readable data — an issue, 
+a schema
+github://issues/123
+Prompts
+Reusable prompt 
+templates a server exposes
+triage_issue(…)
+A prompt returns instructions
+• Review issue #123.
+• Determine whether it is reproducible.
+• Assess its severity as high.
+• Recommend an owner and next action.
+Prompts are user-controlled
+Apps surface them as commands or menu choices. 
+In Claude Code, as namespaced slash commands:
+/mcp__github__triage_issue 123 high
+
+----- page 48 -----
+55
+Harvard Madsys   ·   course.agentic-system.org
+How They Work Together
+Suppose you ask:
+“Triage issue #123 and assign it if it is a critical authentication bug.”
+The three primitives might cooperate like this:
+Prompt
+triage_issue
+Supplies the organization’s 
+triage procedure
+Resource
+github://issues/123
+Supplies the issue’s 
+content
+Tool
+get_related_errors
+Retrieves current 
+diagnostic information
+
+----- page 49 -----
+56
+Harvard Madsys   ·   course.agentic-system.org
+MCP Security: The Essential Part
+A connected server can see what you send it and act with your credentials.
+Least privilege  — scope the token to the repo, table or channel you actually need.
+Read vs. write  — separate reads from writes; keep mutations behind approval.
+Distrust tool output  — never trust returned content as instructions. 
+Vet before installing  — third-party servers can carry prompt injection; review them.
+Ask before connecting: what can this server read, and what can it change?
+
+----- page 50 -----
+57
+Harvard Madsys   ·   course.agentic-system.org
+What an MCP Gateway Is
+A control layer between an AI client 
+and one or more MCP servers.
+Like an API gateway — but it speaks MCP: 
+tools/list, tools/call, resources, prompts, 
+schemas, protocol versions.
+An architectural pattern, to client it just 
+looks like another MCP server.
+Claude Code / agent
+MCP gateway
+auth · policy · logging · routing · rate limits
+GitHub MCP
+Jira MCP
+Database 
+MCP
+
+----- page 51 -----
+58
+Harvard Madsys   ·   course.agentic-system.org
+What a Gateway Does
+1 · Aggregate
+One connection, one 
+namespaced catalog: github.*, 
+jira.*, postgres.*
+2 · Route
+Forwards each call to the 
+owning server; Mcp-Method 
+headers route without reading 
+the body.
+3 · Enforce policy
+Who may connect, which tools 
+are visible, callable, or need 
+human approval.
+4 · Broker identity
+Client authenticates once; 
+upstream credentials stay 
+behind the gateway.
+5 · Observe
+Central audit trail: identity, tool, 
+decision, latency, outcome, 
+cost.
+6 · Scale
+Load balancing, retries, circuit 
+breakers, catalog caching, 
+quotas.
+Worth it when…
+many users, agents, servers, credentials or 
+compliance rules must be governed consistently.
+But it is a trust boundary
+broad credentials, lost end-user identity, name 
+collisions, secrets in logs, one point of failure.
+OPTIONAL — extra reading, not required
+
+----- page 52 -----
+59
+Harvard Madsys   ·   course.agentic-system.org
+What is new?
+Spec 2026-07-28 — the largest revision of MCP since launch
+Stateless core
+No sessions to hold. Any 
+request can land on any 
+instance, behind a plain 
+load balancer.
+Routing
+Mcp-Method headers let 
+gateways route without 
+reading the body; list 
+results are cacheable 
+with a TTL.
+Extensions
+Tasks for long-running 
+work and MCP Apps for 
+server-rendered UIs now 
+ship as extensions.
+OPTIONAL — extra reading, not required
+
+----- page 53 -----
+60
+Harvard Madsys   ·   course.agentic-system.org

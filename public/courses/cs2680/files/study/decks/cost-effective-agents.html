@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Reference note - Cost-effective agents</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Reference note · cost-effective-agents &middot; Source: https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html</span>
+    <span class="slide-number" data-current="1" data-total="8"></span>
+  </div>
+
+  <section class="slide" data-title="Cost-effective agents">
+
+  <p class="kicker">Reference note · an organised design guide, not a paper list</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">Cost-effective agents</h1>
+  <p class="lede">The relevant unit is the complete task - planning, tool use, retries, verification, human correction - and every technique has a second-order cost.</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">13 techniques</span><span class="pill ">Measure, then lever</span><span class="pill ">Break-even arithmetic</span><span class="pill ">A six-step experiment protocol</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">notes/cost-effective-agents.html</p>
+    <div class="notes">The note is organised by &quot;the cost it removes and the new costs it introduces&quot;, so every technique should be taught with its second-order cost, not only its saving.</div>
+  </section>
+  <section class="slide" data-title="Measure the episode, not the call">
+
+  <p class="kicker">The thesis</p>
+  <h2 class="h2">Measure the episode, not the call</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The unit of cost</h3>
+      <p class="dim">Episode cost = all model calls + tools + memory services + execution + human review.</p>
+      <ul class="clean "><li>Model calls include the main agent, planners, routers, compressors, workers and verifiers</li><li>Priced as uncached input, cached input, output or reasoning tokens</li><li>Plus tool fees, execution, memory storage and retrieval, and human review</li><li>Self-hosted models use provisioned infrastructure cost</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Two ledgers</h3>
+      <p class="dim">The deployed policy ledger and the offline ledger are separate.</p>
+      <ul class="clean "><li>The deployed ledger is what a user experiences</li><li>The offline ledger is teacher trajectories, fine-tuning, workflow search, evaluation and refresh</li><li>Keeping them apart is what makes a cost claim honest</li></ul>
+    </div>
+  </div>
+    <div class="notes">The note also warns that the five measurements - token reduction, peak-context reduction, throughput, latency and dollars - are different, and that published savings cannot be compared without naming which one is meant.</div>
+  </section>
+  <section class="slide" data-title="Measurement and routing">
+
+  <p class="kicker">Techniques · 1 of 4</p>
+  <h2 class="h2">Measurement and routing</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Technique</th><th>What it optimises</th><th>Mechanism</th><th>Cost or latency impact</th></tr></thead>
+      <tbody>
+        <tr><td>Measure the whole episode</td><td>Making cost attributable</td><td>A cost ledger over all model calls, priced uncached and cached input and output or reasoning tokens, plus tool fees, execution, memory storage and retrieval, and human review</td><td>Adds bookkeeping; separates the deployed policy ledger from the offline ledger</td></tr><tr><td>Find the expensive path</td><td>Targeting effort</td><td>A per-step trace of model, role, input and output tokens, cache hits, tool calls, elapsed time, retries and outcome; group traces into successful, failed and timed-out</td><td>Diagnostic only; the longest, most expensive and typical traces can have different bottlenecks</td></tr><tr><td>Route model calls by expected value</td><td>Model price</td><td>A prompt-only router, a cascade with verifier or confidence escalation, or a budget-aware controller that sees trajectory state and remaining spend</td><td>Charge the router, the failed cheap attempts and the recovery work; estimate incremental benefit, not difficulty labels; swapped-answer evaluation can misprice a trajectory</td></tr><tr><td>Small-model specialists</td><td>Cost of repeated narrow work</td><td>Train a smaller model on verified trajectories for a stable role - classify the next tool, extract fields, summarize, plan a subgoal; a small orchestrator calls strong models for exceptions</td><td>Setup costs: teacher calls, filtering, training, evaluation, hosting and refresh; break-even is lifetime per-call savings against setup, and mistakes can shift into later steps</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The two decision tables on the page - observed cost to first lever, and store to cost avoided to check before use - are the most slide-ready objects in it, because they give a lookup rather than a principle.</div>
+  </section>
+  <section class="slide" data-title="Reasoning budget and context">
+
+  <p class="kicker">Techniques · 2 of 4</p>
+  <h2 class="h2">Reasoning budget and context</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Technique</th><th>What it optimises</th><th>Mechanism</th><th>Cost or latency impact</th></tr></thead>
+      <tbody>
+        <tr><td>Budget reasoning, sampling and search</td><td>Token and tool spend</td><td>Set deliberation, candidate or search expansion from task and evidence; stop sampling when candidates will not change the decision; give the agent a remaining budget for tokens and tools</td><td>A hard cap only ends work at the cap; more reasoning tokens can coexist with lower success; rerun on full tool-using trajectories before claiming savings</td></tr><tr><td>Remove model turns from routine control</td><td>Model calls per task</td><td>Put deterministic decisions in code; let plans refer to future tool outputs so independent branches run together; code actions combine several tool operations; fixed pipelines for stable phases; smaller tool menus</td><td>Parallel work shortens the critical path only for independent branches and need not reduce total compute; blind batching can hide failures and force an expensive restart</td></tr><tr><td>Selective context (compression)</td><td>Repeated prompt tokens</td><td>Filter tool output to needed fields, retrieve instead of pasting, summarize finished branches, keep durable facts structured; preserve constraints, identifiers, unresolved errors, live state and original evidence</td><td>Peak active context and cumulative billed input are different measures; discarded facts cost reacquisition calls; shortening a cached prefix can destroy a discount; the compressor's own calls belong in the ledger</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">Selective context is the same ladder Lecture 4 teaches, now with the prices attached. The caveat about shortening a cached prefix is the one students miss: a &quot;shorter&quot; prompt can be a more expensive one.</div>
+  </section>
+  <section class="slide" data-title="Reuse and collaboration">
+
+  <p class="kicker">Techniques · 3 of 4</p>
+  <h2 class="h2">Reuse and collaboration</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Technique</th><th>What it optimises</th><th>Mechanism</th><th>Cost or latency impact</th></tr></thead>
+      <tbody>
+        <tr><td>Reuse facts, plans, executable skills</td><td>Repeated work</td><td>Choose the reusable object before the cache: a fact, a plan template, an executable skill or a cached answer, each with preconditions and freshness checks</td><td>Memory writes, indexing, retrieval, consolidation and invalidation are real work; a long skill loaded every turn can cost more than on-demand retrieval; hit rate alone does not show correctness or payback</td></tr><tr><td>Pay only for useful collaboration</td><td>Multi-agent overhead</td><td>Reduce agents, messages or edges; narrow what each role receives; use a cheaper model for routine roles; invoke a specialist only when its contribution is distinct</td><td>Fewer agents removes whole calls and sparse communication shortens prompts, but role assignment changes the per-call price; prune a role only after checking unique observation, independent check or needed action</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The &quot;Pay only for useful collaboration&quot; row is the multi-agent cost argument from Lecture 5, priced. The condition on pruning - check for a unique observation, an independent check or a needed action first - is what keeps it from becoming a blind trim.</div>
+  </section>
+  <section class="slide" data-title="Serving, latency and rework">
+
+  <p class="kicker">Techniques · 4 of 4</p>
+  <h2 class="h2">Serving, latency and rework</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Technique</th><th>What it optimises</th><th>Mechanism</th><th>Cost or latency impact</th></tr></thead>
+      <tbody>
+        <tr><td>Amortize workflow and prompt optimization</td><td>Development cost</td><td>Search over prompts, demonstrations, tool interfaces and executable workflows on development tasks</td><td>Break-even is setup divided by net savings per deployed task: a $2,000 setup saving $0.02 per task needs roughly 100,000 tasks; keep optimization-set and final-test results separate</td></tr><tr><td>Lower serving cost</td><td>Infrastructure cost</td><td>API: a stable cached prefix, no timestamps or per-run state in it. Self-hosted: prefix and KV reuse, batching and scheduling, phase-aware serving, a retention policy for multi-turn tool gaps</td><td>Quantization and speculative decoding improve throughput or latency but do not reduce logical tool calls; quantization can change decisions; a self-hosted speedup may not pass through to an API customer</td></tr><tr><td>Reduce waiting with a separate money budget</td><td>Latency</td><td>Run independent tools concurrently and schedule by dependency; speculate a likely next action and validate the draft before use</td><td>Shortens the critical path but can raise total work; read-only or idempotent work is easier to cancel; 20% faster at 30% more expensive has bought latency, not saved cost</td></tr><tr><td>Prevent expensive rework</td><td>Failure cost</td><td>Clear task specs and model-facing tool interfaces; targeted verifiers catch cheap-to-fix errors before more work is built on them</td><td>Verification pays when the expected cost of caught errors exceeds the cost of the check; count human minutes, waiting and review errors in the same ledger</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">This is the technique set that maps one-to-one onto the four assignments: routing and specialists for Assignment 2, budget and compaction for Assignment 3, serving for Assignment 4, and the whole stack for Assignment 5.</div>
+  </section>
+  <section class="slide" data-title="Three worked examples">
+
+  <p class="kicker">The arithmetic</p>
+  <h2 class="h2">Three worked examples</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Break-even</h3>
+      <p class="dim">Approximate break-even tasks = setup and refresh cost / net savings per deployed task.</p>
+      <ul class="clean "><li>A $2,000 discovery cost saving $0.02 per task needs roughly 100,000 tasks to repay</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The ineligible candidate</h3>
+      <p class="dim">The same 100 tasks: a baseline at $120 with 80 successes gives $1.50 per success; a candidate at $90 with 75 successes gives $1.20 per success.</p>
+      <ul class="clean "><li>The candidate loses five completions</li><li>And is ineligible at a 80% minimum success requirement</li><li>20% faster but 30% more expensive has purchased latency rather than reduced cost</li></ul>
+    </div>
+  </div>
+    <div class="notes">The middle example is the one that decides Assignment 3: a better cost-per-success number is worthless if the candidate drops below the success floor.</div>
+  </section>
+  <section class="slide" data-title="A six-step protocol for a fair cost experiment">
+
+  <p class="kicker">Method</p>
+  <h2 class="h2">A six-step protocol for a fair cost experiment</h2>
+  <p class="lede mb-l">The note ends with this, because a cost claim is only as good as the protocol behind it.</p>
+  <div class="steps anim-stagger-list" data-anim-target>
+    <div class="step"><div class="num">1</div><h4>Fix the outcome</h4><p>The task and its success test stay put.</p></div><div class="step"><div class="num">2</div><h4>Trace the baseline</h4><p>Per-step trace of the current policy.</p></div><div class="step"><div class="num">3</div><h4>Use simple comparators</h4><p>No clever baselines.</p></div><div class="step"><div class="num">4</div><h4>Run the changed policy</h4><p>Through the same environment.</p></div><div class="step"><div class="num">5</div><h4>Compare several budgets</h4><p>Not one point on the curve.</p></div><div class="step"><div class="num">6</div><h4>Hold out final tasks</h4><p>Keep the final tasks out of the loop.</p></div>
+  </div>
+    <div class="notes">The closing caveat on the page: published savings are demonstrations under particular models, prices, workloads and baselines. Reproduce the protocol before you reproduce the claim.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html">https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html</a> &mdash; the reference note</li><li><a href="https://cs2680.seas.harvard.edu/slides/8_agent_design_5.pdf">https://cs2680.seas.harvard.edu/slides/8_agent_design_5.pdf</a> &mdash; Lecture 8 - cost and performance</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/notes/cost-effective-agents.html.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>

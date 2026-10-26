@@ -1,0 +1,382 @@
+{
+  "slug": "cs2680",
+  "title": "CS2680 · Modern AI Systems",
+  "exportedAt": "2026-10-26T01:24:47+00:00",
+  "source": "C:\\Git-repo-AI\\CS2680-Courseware",
+  "releaseTag": null,
+  "groups": {
+    "decks": [
+      {
+        "label": "assignment-03-briefing.pptx",
+        "href": "downloads/assignment-03-briefing.pptx",
+        "bytes": 209459,
+        "slides": 6
+      },
+      {
+        "label": "lecture-01-course-overview.pptx",
+        "href": "downloads/lecture-01-course-overview.pptx",
+        "bytes": 431777,
+        "slides": 15
+      },
+      {
+        "label": "lecture-02-agent-use-1.pptx",
+        "href": "downloads/lecture-02-agent-use-1.pptx",
+        "bytes": 400643,
+        "slides": 13
+      },
+      {
+        "label": "lecture-03-agent-use-2.pptx",
+        "href": "downloads/lecture-03-agent-use-2.pptx",
+        "bytes": 393261,
+        "slides": 13
+      },
+      {
+        "label": "lecture-04-agent-design-1.pptx",
+        "href": "downloads/lecture-04-agent-design-1.pptx",
+        "bytes": 421974,
+        "slides": 13
+      },
+      {
+        "label": "lecture-05-agent-design-2.pptx",
+        "href": "downloads/lecture-05-agent-design-2.pptx",
+        "bytes": 423953,
+        "slides": 13
+      },
+      {
+        "label": "lecture-06-agent-design-3.pptx",
+        "href": "downloads/lecture-06-agent-design-3.pptx",
+        "bytes": 406077,
+        "slides": 13
+      },
+      {
+        "label": "lecture-07-agent-design-4.pptx",
+        "href": "downloads/lecture-07-agent-design-4.pptx",
+        "bytes": 475403,
+        "slides": 13
+      },
+      {
+        "label": "lecture-08-agent-design-5.pptx",
+        "href": "downloads/lecture-08-agent-design-5.pptx",
+        "bytes": 432243,
+        "slides": 14
+      },
+      {
+        "label": "overview.pptx",
+        "href": "downloads/overview.pptx",
+        "bytes": 588974,
+        "slides": 12
+      }
+    ],
+    "videos": [
+      {
+        "label": "The course arc",
+        "desc": "课程主线",
+        "href": "files/course-overview.mp4",
+        "poster": "posters/course-overview.png",
+        "meta": "85 s · 9 scenes · 19 captions"
+      },
+      {
+        "label": "The stack the course walks down",
+        "desc": "垂直栈主线",
+        "href": "files/course-stack.mp4",
+        "poster": "posters/course-stack.png",
+        "meta": "157 s · 14 scenes · 32 captions"
+      },
+      {
+        "label": "Course overview and logistics",
+        "desc": "课程总览与行政",
+        "href": "files/lecture01.mp4",
+        "poster": "posters/lecture01.png",
+        "meta": "73 s · 8 scenes · 15 captions"
+      },
+      {
+        "label": "Agents use I: How Claude Code Works",
+        "desc": "智能体使用 I",
+        "href": "files/lecture02.mp4",
+        "poster": "posters/lecture02.png",
+        "meta": "74 s · 8 scenes · 16 captions"
+      },
+      {
+        "label": "Agents use II: 100x Engineer with Multi-agents",
+        "desc": "智能体使用 II",
+        "href": "files/lecture03.mp4",
+        "poster": "posters/lecture03.png",
+        "meta": "74 s · 8 scenes · 15 captions"
+      },
+      {
+        "label": "Agents design I: context management and tool design",
+        "desc": "智能体设计 I",
+        "href": "files/lecture04.mp4",
+        "poster": "posters/lecture04.png",
+        "meta": "91 s · 10 scenes · 19 captions"
+      },
+      {
+        "label": "Agents design II: multi-agent architecture, coordination, and communication",
+        "desc": "智能体设计 II",
+        "href": "files/lecture05.mp4",
+        "poster": "posters/lecture05.png",
+        "meta": "82 s · 9 scenes · 14 captions"
+      },
+      {
+        "label": "Agents design III: agent memory and reliability",
+        "desc": "智能体设计 III",
+        "href": "files/lecture06.mp4",
+        "poster": "posters/lecture06.png",
+        "meta": "73 s · 8 scenes · 14 captions"
+      },
+      {
+        "label": "Agent design IV: agent evaluation",
+        "desc": "智能体设计 IV",
+        "href": "files/lecture07.mp4",
+        "poster": "posters/lecture07.png",
+        "meta": "84 s · 9 scenes · 15 captions"
+      },
+      {
+        "label": "Advanced agent design I: Cost and performance",
+        "desc": "高级智能体设计 I",
+        "href": "files/lecture08.mp4",
+        "poster": "posters/lecture08.png",
+        "meta": "89 s · 10 scenes · 19 captions"
+      }
+    ],
+    "text": [
+      {
+        "label": "assignments_assignment1.md",
+        "href": "text/notes/assignments_assignment1.md",
+        "bytes": 20326,
+        "group": "notes"
+      },
+      {
+        "label": "assignments_assignment2.md",
+        "href": "text/notes/assignments_assignment2.md",
+        "bytes": 26687,
+        "group": "notes"
+      },
+      {
+        "label": "assignments_assignment3.md",
+        "href": "text/notes/assignments_assignment3.md",
+        "bytes": 22749,
+        "group": "notes"
+      },
+      {
+        "label": "assignments_index.md",
+        "href": "text/notes/assignments_index.md",
+        "bytes": 5411,
+        "group": "notes"
+      },
+      {
+        "label": "computing_api.md",
+        "href": "text/notes/computing_api.md",
+        "bytes": 7501,
+        "group": "notes"
+      },
+      {
+        "label": "computing_aws.md",
+        "href": "text/notes/computing_aws.md",
+        "bytes": 6897,
+        "group": "notes"
+      },
+      {
+        "label": "computing_claude-code.md",
+        "href": "text/notes/computing_claude-code.md",
+        "bytes": 12946,
+        "group": "notes"
+      },
+      {
+        "label": "computing_cloudlab.md",
+        "href": "text/notes/computing_cloudlab.md",
+        "bytes": 4106,
+        "group": "notes"
+      },
+      {
+        "label": "computing_cluster.md",
+        "href": "text/notes/computing_cluster.md",
+        "bytes": 22842,
+        "group": "notes"
+      },
+      {
+        "label": "computing_index.md",
+        "href": "text/notes/computing_index.md",
+        "bytes": 4593,
+        "group": "notes"
+      },
+      {
+        "label": "discussion.md",
+        "href": "text/notes/discussion.md",
+        "bytes": 9843,
+        "group": "notes"
+      },
+      {
+        "label": "header.md",
+        "href": "text/notes/header.md",
+        "bytes": 176,
+        "group": "notes"
+      },
+      {
+        "label": "home.md",
+        "href": "text/notes/home.md",
+        "bytes": 13014,
+        "group": "notes"
+      },
+      {
+        "label": "notes_agent-evaluation.md",
+        "href": "text/notes/notes_agent-evaluation.md",
+        "bytes": 119732,
+        "group": "notes"
+      },
+      {
+        "label": "notes_cost-effective-agents.md",
+        "href": "text/notes/notes_cost-effective-agents.md",
+        "bytes": 20505,
+        "group": "notes"
+      },
+      {
+        "label": "notes_transformers.md",
+        "href": "text/notes/notes_transformers.md",
+        "bytes": 110589,
+        "group": "notes"
+      },
+      {
+        "label": "policy.md",
+        "href": "text/notes/policy.md",
+        "bytes": 14982,
+        "group": "notes"
+      },
+      {
+        "label": "project.md",
+        "href": "text/notes/project.md",
+        "bytes": 20532,
+        "group": "notes"
+      },
+      {
+        "label": "readings.md",
+        "href": "text/notes/readings.md",
+        "bytes": 364209,
+        "group": "notes"
+      },
+      {
+        "label": "readings_index.md",
+        "href": "text/notes/readings_index.md",
+        "bytes": 1180,
+        "group": "notes"
+      },
+      {
+        "label": "readings_oct-14.md",
+        "href": "text/notes/readings_oct-14.md",
+        "bytes": 33191,
+        "group": "notes"
+      },
+      {
+        "label": "readings_sep-09.md",
+        "href": "text/notes/readings_sep-09.md",
+        "bytes": 15558,
+        "group": "notes"
+      },
+      {
+        "label": "readings_sep-14.md",
+        "href": "text/notes/readings_sep-14.md",
+        "bytes": 17452,
+        "group": "notes"
+      },
+      {
+        "label": "readings_sep-16.md",
+        "href": "text/notes/readings_sep-16.md",
+        "bytes": 22041,
+        "group": "notes"
+      },
+      {
+        "label": "readings_sep-23.md",
+        "href": "text/notes/readings_sep-23.md",
+        "bytes": 7989,
+        "group": "notes"
+      },
+      {
+        "label": "readings_sep-28.md",
+        "href": "text/notes/readings_sep-28.md",
+        "bytes": 9021,
+        "group": "notes"
+      },
+      {
+        "label": "to_release.md",
+        "href": "text/notes/to_release.md",
+        "bytes": 1612,
+        "group": "notes"
+      },
+      {
+        "label": "slides_1_intro.txt",
+        "href": "text/slides/slides_1_intro.txt",
+        "bytes": 19023,
+        "group": "slides"
+      },
+      {
+        "label": "slides_2_agent_use_1.txt",
+        "href": "text/slides/slides_2_agent_use_1.txt",
+        "bytes": 23292,
+        "group": "slides"
+      },
+      {
+        "label": "slides_3_agent_use_2.txt",
+        "href": "text/slides/slides_3_agent_use_2.txt",
+        "bytes": 34867,
+        "group": "slides"
+      },
+      {
+        "label": "slides_4_agent_design_1.txt",
+        "href": "text/slides/slides_4_agent_design_1.txt",
+        "bytes": 24541,
+        "group": "slides"
+      },
+      {
+        "label": "slides_5_agent_design_2.txt",
+        "href": "text/slides/slides_5_agent_design_2.txt",
+        "bytes": 20495,
+        "group": "slides"
+      },
+      {
+        "label": "slides_6_agent_design_3.txt",
+        "href": "text/slides/slides_6_agent_design_3.txt",
+        "bytes": 14638,
+        "group": "slides"
+      },
+      {
+        "label": "slides_7_agent_design_4.txt",
+        "href": "text/slides/slides_7_agent_design_4.txt",
+        "bytes": 21665,
+        "group": "slides"
+      },
+      {
+        "label": "slides_8_agent_design_5.txt",
+        "href": "text/slides/slides_8_agent_design_5.txt",
+        "bytes": 28065,
+        "group": "slides"
+      },
+      {
+        "label": "slides_8_assignment3.txt",
+        "href": "text/slides/slides_8_assignment3.txt",
+        "bytes": 2025,
+        "group": "slides"
+      }
+    ],
+    "digest": [
+      {
+        "label": "part1.md",
+        "href": "text/digest/part1.md",
+        "bytes": 65470,
+        "scope": "讲义 1–4：课程总览、智能体使用 I–II、智能体设计 I"
+      },
+      {
+        "label": "part2.md",
+        "href": "text/digest/part2.md",
+        "bytes": 67982,
+        "scope": "讲义 5–8 与 Assignment 3：智能体设计 II–IV、高级设计、作业 3 规范"
+      },
+      {
+        "label": "part3.md",
+        "href": "text/digest/part3.md",
+        "bytes": 89016,
+        "scope": "参考笔记、作业与项目、政策、课程表、阅读清单"
+      }
+    ]
+  },
+  "notice": "课程材料版权归 Harvard SEAS 与授课教师所有；本站仅供个人学习，课件为学习整理，未获授权再分发。"
+}

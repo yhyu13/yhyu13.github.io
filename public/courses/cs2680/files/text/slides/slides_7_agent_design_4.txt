@@ -1,0 +1,979 @@
+----- page 1 -----
+Modern AI systems: agents 
+and system optimizations
+Juncheng Yang
+Agent design IV: evaluation
+
+----- page 2 -----
+2
+Harvard MaDSys   ·   course.agentic-system.org
+2
+Logistics
+• Office hour this Thursday 3:30pm SEC 4.308
+• Final project poster presentation: 9am-1pm Dec 7 
+• please reach out before end of this week if the time does not work for you
+• Assignment 2 due this Sunday (start early!)
+
+----- page 3 -----
+3
+Harvard MaDSys   ·   course.agentic-system.org
+3
+Logistics: Claude Code session log
+• Package everything related (missing part of full session log will incur penalty from Assignment 2)
+• ~/.claude/projects/ (MacOS and Linux), C:\Users\<YourUsername>\.claude\projects\ (Windows)
+•
+ok to upload more 
+• You are not penalized on AI usage, however, certain parts of your assignment should be your work
+•
+17 students used Claude to help with writeup
+•
+6 used to polish writing ☺
+•
+a few created bullet points and ask Claude to write ☺
+•
+7 wrote a draft and edited it (not encouraged), a few pasted from other places (ChatGPT?)
+•
+4 have almost exact output from Claude, 2 have TODOs from Claude Code in the writeup
+•
+A short write up: a reflection for you 
+• Do NOT manipulate your session logs! This will be treated as a violation of academic 
+integrity
+•
+three students tried to erase the history 
+•
+AI-generated writing is easy to detect (even without history)
+•
+perfectly hiding all your history is harder than your assignments.  
+
+----- page 4 -----
+4
+Harvard MaDSys   ·   course.agentic-system.org
+4
+Plan for today
+• Agent evaluation
+• Cost-effective agents
+
+----- page 5 -----
+5
+Harvard MaDSys   ·   course.agentic-system.org
+5
+How do you evaluate an agent’s capability?
+• History and trend
+• Metrics 
+• Representative benchmarks
+• Challenges
+
+----- page 6 -----
+6
+Harvard MaDSys   ·   course.agentic-system.org
+6
+Different ways to evaluate an agent
+Component-level evaluation
+End-to-end evaluation
+Inside the agent
+Planning
+Task decomposition
+Tool use
+Discovery, selection, 
+parameterization
+Memory
+Extraction, 
+consolidation, 
+retrieval
+Error recovery
+Success rate
+Did the task get done?
+Cost
+Spend per task
+Latency
+Time to finish the task
+
+----- page 7 -----
+7
+Harvard MaDSys   ·   course.agentic-system.org
+7
+A bit of history
+Before 2018
+Language modeling, narrow tasks
+Penn Treebank, WikiText, LAMBADA, SQuAD
+2018–2019
+Transfer learning, general NLU
+GLUE, SuperGLUE, ARC, HellaSwag, WinoGrande
+2020–2022
+Foundation-model capability
+MMLU, BIG-bench, GSM8K, MATH, HumanEval, TruthfulQA, HELM
+2023–2024
+Agents and tool use, context, 
+modalities
+MT-Bench, Chatbot Arena, AlpacaEval, IFEval, LongBench, MMMU, 
+GPQA, AgentBench, WebArena, GAIA, SWE-bench, OSWorld, τ-bench
+2024–2025
+Difficulty, robustness, freshness
+MMLU-Pro, LiveBench, LiveCodeBench, MMMU-Pro, FrontierMath, 
+Humanity’s Last Exam
+2025–2026
+Larger scope, less specific 
+instructions, more realistic use 
+cases, newer problems
+GDPval, BrowseComp, Terminal-Bench, ARC-AGI-3…
+https://cs2680.com/notes/agent-evaluation
+
+----- page 8 -----
+8
+Harvard MaDSys   ·   course.agentic-system.org
+8
+Evaluation objectives
+Evaluation objective
+Representative benchmarks
+What success means
+Predict text
+PTB, WikiText
+Assign high probability to observed 
+text
+Produce a correct answer
+MMLU, GSM8K, GPQA, HLE
+Match a known answer
+Produce a preferred response
+Arena, AlpacaEval, MT-Bench
+Receive favorable human or model 
+judgments
+Produce functioning code
+HumanEval, LiveCodeBench, 
+SWE-bench
+Pass executable tests
+Complete an interactive task
+WebArena, OSWorld, τ-bench, 
+Terminal-Bench
+Achieve the required environment 
+state
+
+----- page 9 -----
+9
+Harvard MaDSys   ·   course.agentic-system.org
+9
+Evaluation objectives
+Evaluation objective
+Representative benchmarks
+What success means
+Predict text
+PTB, WikiText
+Assign high probability to observed 
+text
+Produce a correct answer
+MMLU, GSM8K, GPQA, HLE
+Match a known answer
+Produce a preferred response
+Arena, AlpacaEval, MT-Bench
+Receive favorable human or model 
+judgments
+Produce functioning code
+HumanEval, LiveCodeBench, 
+SWE-bench
+Pass executable tests
+Complete an interactive task
+WebArena, OSWorld, τ-bench, 
+Terminal-Bench
+Achieve the required environment 
+state
+
+----- page 10 -----
+10
+Harvard MaDSys   ·   course.agentic-system.org
+10
+Metrics
+• Earlier benchmarks
+• Perplexity: exponentiated average negative log-likelihood on held-out text (lower is better)
+• Accuracy or F1 score
+• Preference or win rate
+• Capability
+• Pass@k: at least one out of k solutions passes
+• Pass^k: all k solution passes (introduced by τ-bench)
+• Cost
+• Mostly LLM cost
+• Overlooked: tool calls and others (e.g., LLM cache miss)
+• Latency/duration
+• Not just LLM
+
+----- page 11 -----
+11
+Harvard MaDSys   ·   course.agentic-system.org
+11
+Benchmark evaluation loop
+for task in benchmark:
+    environment = reset_to_task_initial_state(task)
+    while not terminated and within_budget:
+        observation = environment.observe()
+        action = agent(task_instruction, observation, history, tools)
+        environment.execute(action)
+    
+    score = task_evaluator(
+ 
+ agent_final_answer,
+ 
+ final_environment_state,
+ 
+ trajectory
+    )
+
+----- page 12 -----
+12
+Harvard MaDSys   ·   course.agentic-system.org
+12
+GAIA: General AI Assistant
+• 466 human-written questions
+• web browsing, spreadsheets, PDFs, 
+images, audio, calculation
+• Short answers: a number, string or list
+• e.g. 17.4 or 4,381
+• No fixed tool API
+• each agent brings its own search, browser, 
+Python, shell
+• Tests the whole agent system, not just 
+the LLM
+Difficulty levels
+Level 1
+≤ 5 steps, zero or one tool
+Level 2
+5–10 steps, multiple tools
+Level 3
+arbitrarily long, many tools
+Source: Mialon et al., GAIA, arXiv 2023
+
+----- page 13 -----
+13
+Harvard MaDSys   ·   course.agentic-system.org
+13
+GAIA: can an assistant research and return the right answer?
+Example task: An attached spreadsheet contains a list of films. Identify the film satisfying 
+two conditions, look up its director, and report the director’s birthplace.
+What the agent did
+Search
+Open 
+webpage
+Download 
+PDF
+Extract 
+table
+Run Python
+4,381
+Answer
+discarded by the evaluator
+scored
+Scoring: Only the final answer is scored:  
+score = (1/N) Σi 1[ normalize(ŷ) = normalize(y) ]
+Measures
+reasoning, retrieval, tool selection and 
+synthesis, with clean grading
+Does not measure: actions
+send email, book a flight, modify a 
+database, submit a form, update an issue
+
+----- page 14 -----
+14
+Harvard MaDSys   ·   course.agentic-system.org
+14
+BFCL: is the model’s tool interface reliable?
+The prompt
+User
+Book the cheapest flight from 
+Boston to Chicago next Monday.
+Available tools
+search_flights(...)
+book_flight(flight_id,
+  passenger_id)
+get_weather(...)
+➔
+Which calls does the model make?
+Correct: search, pick the cheapest, then book
+search_flights(origin="BOS",
+  destination="CHI", date=...)
+book_flight(flight_id=...,
+  passenger_id=...)
+Invents an ID
+should ask the user for 
+passenger_id
+Irrelevant call
+get_weather(...)
+not needed to book
+Scoring: AST or execution checks; multi-turn checks state + reply every turn
+V4 adds: web search, memory; read category scores, not the composite
+Source: Patil et al., Berkeley Function Calling Leaderboard, ICML 2025
+
+----- page 15 -----
+15
+Harvard MaDSys   ·   course.agentic-system.org
+15
+WebArena: can the agent complete a web workflow?
+Example task:  In GitLab, create the issue “Update onboarding documentation,” assign it to Alex, and add the 
+documentation label
+What the agent does
+grey: observation (accessibility tree)     teal: action (click, type, stop)
+Accessibility 
+tree
+click [Projects]
+Accessibility 
+tree
+click [project]
+type issue title
+click [Create 
+issue], stop
+…
+How a task is scored
+reset snapshot
+trajectory τ
+final state sT
+functional checks
+success 1 / 0
+inspected
+812 tasks
+self-hosted 
+shopping, admin, 
+Reddit, GitLab, 
+maps, Wikipedia
+Text observations
+accessibility tree; 
+click or type on 
+element IDs
+Issue task checks
+the issue exists with 
+the right assignee 
+and label
+Other tasks check
+final URL, page 
+content, backend 
+state, text answer
+WebArena-Verified
+Structured output; 
+Remove LLM-as-a-
+judge, deterministic 
+checks on HTTP traces
+Source: Zhou et al., WebArena, ICLR 2024; WebArena-Verified, ServiceNow, 2025
+
+----- page 16 -----
+16
+Harvard MaDSys   ·   course.agentic-system.org
+16
+OSWorld: can the agent operate an actual computer?
+Example task:  add a computed column, sort, save as result.xlsx
+What the agent does
+grey: observation (pixels)     teal: action (mouse, keyboard)
+Screenshot
+click 
+LibreOffice
+Screenshot
+click cell
+type formula
+save file
+…
+How a task is scored
+setup logic
+trajectory τ
+final state sT
+evaluator f
+reward R
+not scored
+inspected
+369 tasks
+browser, office, file, 
+system apps
+Cross-application
+workflows span apps
+Pixel observations
+screenshots
+Spreadsheets
+cells, formulas, file 
+location
+Other checks
+settings, files, app 
+config
+OSWorld 2.0 (2026):  108 long workflows (often 1 hr+), hundreds of steps, ~27 checkpoints for partial credit
+Source: Xie et al., OSWorld, NeurIPS 2024; os-world.github.io
+
+----- page 17 -----
+17
+Harvard MaDSys   ·   course.agentic-system.org
+17
+SWE-bench: can the agent fix a real repository issue?
+What the agent does
+grep 
+repository
+inspect 
+implementation
+inspect 
+tests
+run tests
+modify file
+run tests
+debug
+produce 
+patch
+How the patch is scored
+agent patch
+apply to repo
+run the tests
+resolved or not
+Verified
+human-checked
+Lite
+300-task subset
+Multilingual
+9 languages
+Multimodal
+image issues
+Pro
+harder, multi-file
+Sources: Jimenez et al., 2024; OpenAI, 2024; Deng et al., 2025; swebench.com
+Example task:  Calling a library function with an empty index incorrectly raises an exception. Make it return an 
+empty result while preserving existing behavior.
+
+----- page 18 -----
+18
+Harvard MaDSys   ·   course.agentic-system.org
+18
+τ-bench: can an agent interact with user, obey policy, 
+and change backend state?
+Two interactive actors with a policy
+Simulated user
+an LLM playing the customer
+Agent
+bound by airline policy
+Tools + airline DB
+API calls change real state
+Airline policy
+• basic economy can’t be 
+modified
+Example task:
+“I need to change my flight tomorrow to the evening flight.”
+Source: Yao et al., τ-bench, arXiv 2024
+ask identity
+look up 
+reservation
+search flights
+explain fare 
+difference
+get confirmation
+change_booking
+(…)
+reservation 
+updated
+grey: talk to the user
+teal: call a tool
+Evaluate the final 
+DB state
+
+----- page 19 -----
+19
+Harvard MaDSys   ·   course.agentic-system.org
+19
+τ-bench scores end state and consistency
+Scoring
+The original reward is
+r = raction × routput
+raction = 1
+only if the final database matches the 
+annotated goal state.
+routput = 1
+only if the user-facing response includes 
+required information.
+Read-only calls may vary, but unintended 
+writes cause failure.
+The benchmark also introduced passk
+passk
+the probability that all k independent runs of the 
+same scenario succeed
+pass@k
+only one successful run is needed
+4 of 4 runs succeed
+1 is enough
+passk is deliberately stricter than pass@k
+Source: Yao et al., τ-bench, arXiv 2024
+τ³-bench implementation now includes corrected tasks, more domains, knowledge retrieval, and voice 
+evaluation
+
+----- page 20 -----
+20
+Harvard MaDSys   ·   course.agentic-system.org
+20
+Terminal-Bench: can an agent finish a real task through a shell?
+Task domains: end-to-end work, not only repo bug fixes
+programming
+sysadmin + server config
+data processing
+model training
+security
+scientific workflows
+How a task is packaged and scored
+task 
+instruction
+Docker 
+container
+agent shell 
+trajectory
+final system 
+state
+test suite: 
+pass or fail
+not scored
+instruction.md
+Dockerfile
+tests/test.sh
+inspected by tests
+89 tasks in TB 2.0 → 66 in TB 4.0
+hidden human solutions; v4.0 prunes 
+saturated tasks, 8-hour timeout
+Representative task
+new protocol on a live KV service: no 
+dropped connections, latency held
+
+----- page 21 -----
+21
+Harvard MaDSys   ·   course.agentic-system.org
+21
+Terminal-Bench: Between SWE-bench and OSWorld
+SWE-bench
+Terminal-Bench
+OSWorld
+Agent acts by
+editing files in one 
+repo
+shell commands in a 
+container
+mouse clicks and 
+keystrokes
+Agent observes
+code and test output
+terminal output
+screenshots
+Task scope
+fix one GitHub issue
+configure, debug, 
+repair, build
+operate any desktop 
+app
+Scored by
+the repo's tests
+tests on final system 
+state
+checks on final state
+No GUI grounding: tests long-horizon reasoning and system interaction without 
+mouse-coordinate prediction
+Source: Merrill et al., Terminal-Bench 2.0, arXiv 2026
+
+----- page 22 -----
+22
+Harvard MaDSys   ·   course.agentic-system.org
+22
+TheAgentCompany: mimicking a company
+Company environment
+GitLab
+code
+Plane
+tickets
+ownCloud
+documents
+RocketChat
+team chat
+Coworkers
+LLM-simulated
+One job, end to end
+read ticket
+Plane
+ask 
+coworker
+RocketChat
+inspect 
+repo
+GitLab
+write code
+workspace
+run tests
+terminal
+update 
+issue
+Plane
+report 
+result
+RocketChat
+175 tasks
+software, PM, 
+data science, HR, 
+finance
+Partial credit
+checkpoints score 
+each step of the 
+job
+Source: Xu et al., TheAgentCompany, arXiv 2024; the-agent-company.com
+Spartial = 0.5 · earned/total + 0.5 · Sfull
+Score by progress
+4/8, incomplete
+0.25
+7/8, incomplete
+0.44
+8/8, complete
+1.00
+
+----- page 23 -----
+23
+Harvard MaDSys   ·   course.agentic-system.org
+23
+Agent benchmarks
+Benchmark
+Agent operates in
+Typical actions
+What is graded
+GAIA
+Web/files/code tools
+Search, inspect files, 
+calculate
+Short final answer
+WebArena
+Self-hosted websites
+Click, type, navigate
+Website or backend state
+OSWorld
+Full desktop VM
+Mouse, keyboard, app 
+interaction
+Files, app state, system 
+state
+SWE-bench
+Software repository
+Inspect, edit, run tests
+Patch passes tests
+BFCL
+Function/API interface
+Structured function calls
+Calls, arguments, and 
+resulting state
+τ-bench
+Customer-service APIs and 
+dialogue
+Talk to user, call APIs
+Database state and 
+response
+Terminal-Bench
+Isolated terminal container
+Arbitrary shell commands
+Task-specific verifier tests
+TheAgentCompany
+Simulated software company
+Use web apps, code, files, 
+talk to co-workers
+workflow checkpoints and 
+final system state
+
+----- page 24 -----
+24
+Harvard MaDSys   ·   course.agentic-system.org
+24
+Agent Evaluation is Challenging and Evolving
+• Challenges
+• Evolution
+
+----- page 25 -----
+25
+Harvard MaDSys   ·   course.agentic-system.org
+25
+Data Leakage: four layers, not just training
+task or its human fix was in the training data
+Training leakage
+agent web-searches and copies the future fix
+Eval-time leakage
+sandbox exposes future commits or hidden tests
+Environment leakage
+prompts and scaffold tuned on the public test set
+Benchmark overfitting
+realistic tools
+⟺
+larger leakage surface
+required for agent eval
+benchmark may be searchable
+
+----- page 26 -----
+26
+Harvard MaDSys   ·   course.agentic-system.org
+26
+Leakage can occur through the whole agent stack
+Modern “agent” performance is roughly a function of
+𝑃 =  𝑓(LLM, prompt, scaffold, tools, retriever, memory, environment)
+Component
+Possible leakage
+Base model
+Benchmark examples in pretraining
+Fine-tuning
+Benchmark solutions used as agent-training trajectories
+Prompt
+Few-shot examples derived from test tasks
+Retrieval
+Benchmark answers indexed in RAG corpus
+Memory
+Previous benchmark attempts stored
+Web search
+Published task solutions retrieved
+Environment
+Future Git commits / hidden artifacts exposed
+Scaffold
+Hand-coded heuristics tuned to benchmark
+Agent development
+Researchers repeatedly inspect test failures and tune the system
+Any one of these can contain benchmark information. Therefore saying “the model was not trained 
+on the test set” is nowhere near sufficient for agent evaluation.
+
+----- page 27 -----
+27
+Harvard MaDSys   ·   course.agentic-system.org
+27
+Challenges with Agent Evaluation: a single user turn
+• Most benchmarks hand the agent one fully-specified instruction
+• prompt in, final state out — no user in the loop
+• Real work is ambiguous, revised and interrupted
+• missing constraints, mid-task corrections, shifting goals
+• Single-turn scoring rewards confident guessing
+• asking a clarifying question costs steps and earns no credit
+
+----- page 28 -----
+28
+Harvard MaDSys   ·   course.agentic-system.org
+28
+Challenges with Agent Evaluation: a single user turn
+This is how you used Claude Code in Assignment 1
+
+----- page 29 -----
+29
+Harvard MaDSys   ·   course.agentic-system.org
+29
+Challenges with Agent Evaluation: a single user turn
+
+----- page 30 -----
+30
+Harvard MaDSys   ·   course.agentic-system.org
+30
+Challenges with Agent Evaluation: a single user turn
+• Most benchmarks hand the agent one fully-specified instruction
+• prompt in, final state out — no user in the loop
+• Real work is ambiguous, revised and interrupted
+• missing constraints, mid-task corrections, shifting goals
+• Single-turn scoring rewards confident guessing
+• asking a clarifying question costs steps and earns no credit
+Clarification
+does it ask when the goal is 
+underspecified?
+Recovery
+does it re-plan after a mid-
+task correction?
+Memory
+does it carry constraints 
+across turns?
+
+----- page 31 -----
+31
+Harvard MaDSys   ·   course.agentic-system.org
+31
+Challenges with Agent Evaluation: there are more
+Success rate is not sufficient: a 200-step, $40 run vs. a 12-
+step, $0.30 run? 
+Cost and latency
+same agent, same task, different outcome: single-run 
+scores are noise, not signal
+Non-determinism
+nothing penalises deleted files, sent emails or money 
+spent en route to a pass
+Safety and side effects
+outcome-only scoring passes lucky or unsafe runs; 
+trajectory matching fails valid ones
+Metrics
+Get involved: MaDSys group is building a research platform for agent evaluation that uses real 
+traffic — contact me if you are interested and have 20+ hours each week to help out.
+
+----- page 32 -----
+32
+Harvard MaDSys   ·   course.agentic-system.org
+32
+How fast the frontier caught up
+GLUE ·  2018
+Human level (87.1) in 14 months
+91.1
+0
+50
+100
+0 yr
+1 yr
+2 yr
+3 yr
+4 yr
+MMLU ·  2020
+Expert level (89.8) in 39 months
+92.3
+0
+50
+100
+0 yr
+1 yr
+2 yr
+3 yr
+4 yr
+GPQA Diamond ·  2023
+PhD experts (69.7) in 10 months
+96.0
+0
+50
+100
+0 yr
+1 yr
+2 yr
+3 yr
+4 yr
+SWE-bench Verified ·  2024
+33% → 95% in 22 months
+95.0
+0
+50
+100
+0 yr
+1 yr
+2 yr
+3 yr
+4 yr
+ARC-AGI-2 ·  2025
+Average human (60) in 11 months
+95.0
+0
+50
+100
+0 yr
+1 yr
+2 yr
+3 yr
+4 yr
+ARC-AGI-3 ·  2026
+0.5% → 62.7% in 6 months*
+62.7
+0
+50
+100
+0 yr
+1 yr
+2 yr
+3 yr
+4 yr
+Before 2018
+2018–2019
+2020–2022
+2023–2024
+2024–2025
+2025–2026
+
+----- page 33 -----
+33
+Harvard MaDSys   ·   course.agentic-system.org
+33
+Benchmarks saturate quickly
+2016
+2017
+2018
+2019
+2020
+2021
+2022
+2023
+2024
+2025
+Sep 2026
+SQuAD 1.1
+GLUE
+SuperGLUE
+ARC-AGI-1
+MMLU
+MATH
+HumanEval
+Chatbot Arena
+MT-Bench
+WebArena
+SWE-bench → Verified
+GPQA Diamond
+MMMU
+OSWorld
+FrontierMath
+Humanity’s Last Exam
+ARC-AGI-2
+Terminal-Bench
+GDPval
+SWE-bench Pro
+Remote Labor Index
+ARC-AGI-3
+OSWorld 2.0
+Narrow tasks
+NLU suites
+Knowledge & reasoning
+Assistants
+Agents
+Still open
+Saturated
+Saturated = frontier reached the human baseline or top models stopped separating. .
+
+----- page 34 -----
+34
+Harvard MaDSys   ·   course.agentic-system.org
+34
+Agent evaluation is still evolving 
+Dimension
+Earlier evaluation
+Current frontier
+Objective evaluated
+Base model
+Model + prompt + tools + agent harness
+Interaction
+Static, single-turn
+Stateful and long-horizon
+Grader
+Exact match or 
+likelihood
+Tests, environment state, humans, or judge models
+Dataset
+Fixed and public
+Fresh, hidden, dynamic, or contamination-aware
+Main metric
+Average accuracy
+System efficiency besides task success, reliability, 
+quality, cost, and latency
+Primary concern
+Generalization across 
+examples
+Robust completion under realistic constraints, 
+safety requirements
+
+----- page 35 -----
+36
+Harvard MaDSys   ·   course.agentic-system.org
+36
+Capability
+Cost
+Speed
+Agent usability
+More dimensions to consider for a real-world agent
+Assignment 3: You will be evaluated on all 
+three metrics
+Capability (higher is better)
+Cost (lower is better)
+Better
+A dominates B if A is no worse on any metric and 
+better on at least one.
+Rank 1
+Rank 2
+Rank 3
+Rank 1 is the Pareto frontier; speed is not drawn
+
+----- page 36 -----
+37
+Harvard MaDSys   ·   course.agentic-system.org
+37
+Next class
+• Cost-effective agent
+• Case study
+• Different types of agents
+• Agentic frameworks
+
+----- page 37 -----
+38
+Harvard MaDSys   ·   course.agentic-system.org
+38

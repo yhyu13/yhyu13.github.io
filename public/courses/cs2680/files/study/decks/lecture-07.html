@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Lecture 7 - Agent evaluation</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Lecture 7 · 7_agent_design_4.pdf &middot; Source: https://cs2680.seas.harvard.edu/slides/7_agent_design_4.pdf</span>
+    <span class="slide-number" data-current="1" data-total="20"></span>
+  </div>
+
+  <section class="slide" data-title="Agent design IV: agent evaluation">
+
+  <p class="kicker">Lecture 7 · Sep 30, 2026 · 37 slides</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">Agent design IV: agent evaluation</h1>
+  <p class="lede">What a benchmark actually grades, where the numbers come from, and why a suite of six months old is a moving target.</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">Component and end-to-end</span><span class="pill ">8 benchmark families</span><span class="pill ">Leakage</span><span class="pill ">Saturation</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">slides/7_agent_design_4.pdf</p>
+    <div class="notes">The lecture in one line: evaluation is an economics-of-time problem, and benchmarks are a consumable that has to be retired.</div>
+  </section>
+  <section class="slide" data-title="Two levels of evaluation">
+
+  <p class="kicker">Scope</p>
+  <h2 class="h2">Two levels of evaluation</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Component-level</h3>
+      <p class="dim">Inside the agent.</p>
+      <ul class="clean "><li>Planning</li><li>Task decomposition</li><li>Tool use: discovery, selection, parameterization</li><li>Memory</li><li>Error recovery</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>End-to-end</h3>
+      <p class="dim">Outside the agent.</p>
+      <ul class="clean "><li>Success rate</li><li>Cost</li><li>Latency</li></ul>
+    </div>
+  </div>
+    <div class="notes">The Lecture 5 decomposition vocabulary is reused here: the same agent that Lecture 5 says should be decomposed gets evaluated at component level and end to end.</div>
+  </section>
+  <section class="slide" data-title="Six eras of benchmarks">
+
+  <p class="kicker">History</p>
+  <h2 class="h2">Six eras of benchmarks</h2>
+  
+  <div class="tl">
+    <div class="row anim-stagger-list" data-anim-target>
+      <div class="item"><div class="year">Before 2018</div><div class="dot"></div><h4>Language modeling</h4><p>Narrow tasks</p></div><div class="item"><div class="year">2018-2019</div><div class="dot"></div><h4>Transfer learning</h4><p>General NLU</p></div><div class="item"><div class="year">2020-2022</div><div class="dot"></div><h4>Foundation models</h4><p>Capability</p></div><div class="item"><div class="year">2023-2024</div><div class="dot"></div><h4>Agents and tools</h4><p>Context, modalities</p></div><div class="item"><div class="year">2024-2025</div><div class="dot"></div><h4>Difficulty and freshness</h4><p>Robustness</p></div><div class="item"><div class="year">2025-2026</div><div class="dot"></div><h4>Larger scope</h4><p>Less specific instructions, more realistic use cases</p></div>
+    </div>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Benchmarks named per era: before 2018 - Penn Treebank, WikiText, LAMBADA, SQuAD; 2018-2019 - GLUE, SuperGLUE, ARC, HellaSwag, WinoGrande; 2020-2022 - MMLU, BIG-bench, GSM8K, MATH, HumanEval, TruthfulQA, HELM; 2023-2024 - MT-Bench, Chatbot Arena, AlpacaEval, IFEval, LongBench, MMMU, GPQA, AgentBench, WebArena, GAIA, SWE-bench, OSWorld, tau-bench; 2024-2025 - MMLU-Pro, LiveBench, LiveCodeBench, MMMU-Pro, FrontierMath, Humanity's Last Exam; 2025-2026 - GDPval, BrowseComp, Terminal-Bench, ARC-AGI-3.</p>
+    <div class="notes">Six eras, and each era adds a demand rather than replacing the last. The era list is the reason the evaluation note is organised by task format rather than by difficulty.</div>
+  </section>
+  <section class="slide" data-title="Five evaluation objectives">
+
+  <p class="kicker">What we measure</p>
+  <h2 class="h2">Five evaluation objectives</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Objective</th><th>Representative benchmarks</th><th>Definition of success</th></tr></thead>
+      <tbody>
+        <tr><td>Predict text</td><td>PTB, WikiText</td><td>Perplexity</td></tr><tr><td>Produce a correct answer</td><td>MMLU, GSM8K, GPQA, HLE</td><td>Answer accuracy</td></tr><tr><td>Produce a preferred response</td><td>Arena, AlpacaEval, MT-Bench</td><td>Preference or win rate</td></tr><tr><td>Produce functioning code</td><td>HumanEval, LiveCodeBench, SWE-bench</td><td>Tests pass</td></tr><tr><td>Complete an interactive task</td><td>WebArena, OSWorld, tau-bench, Terminal-Bench</td><td>Task success</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">Five objectives, each with its own definition of success. A number without a definition of success is not a measurement.</div>
+  </section>
+  <section class="slide" data-title="Four metric families">
+
+  <p class="kicker">Metrics</p>
+  <h2 class="h2">Four metric families</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Family</th><th>Metrics</th><th>Caveat on the slide</th></tr></thead>
+      <tbody>
+        <tr><td>Earlier benchmarks</td><td>Perplexity, accuracy or F1, preference or win rate</td><td>A composite hides uneven subject performance</td></tr><tr><td>Capability</td><td>Pass@k, and Pass^k - all k solutions pass</td><td>Pass^k was introduced by tau-bench</td></tr><tr><td>Cost</td><td>Mostly LLM cost</td><td>Tool calls and other overheads, such as an LLM cache miss, are &quot;overlooked&quot;</td></tr><tr><td>Latency / duration</td><td>Not just the LLM</td><td>Tool time counts</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The reference note for this lecture is https://cs2680.com/notes/agent-evaluation, curated by the instructor and reviewed by the instructor and the TFs.</div>
+  </section>
+  <section class="slide" data-title="How a benchmark scores a run">
+
+  <p class="kicker">The generic loop</p>
+  <h2 class="h2">How a benchmark scores a run</h2>
+  <p class="lede mb-l">The same loop underlies most of the suites in the landscape.</p>
+  <div class="steps anim-stagger-list" data-anim-target>
+    <div class="step"><div class="num">1</div><h4>Reset</h4><p>Reset the environment to the task's initial state.</p></div><div class="step"><div class="num">2</div><h4>Observe</h4><p>The agent observes the environment.</p></div><div class="step"><div class="num">3</div><h4>Act and execute</h4><p>Repeat while not terminated and within budget.</p></div><div class="step"><div class="num">4</div><h4>Score</h4><p>Score the final answer, the final environment state and the trajectory.</p></div>
+  </div>
+    <div class="notes">What gets scored is the thing that distinguishes the benchmarks: final answer, call sequence, database state, patch tests, final system state, or checkpoints.</div>
+  </section>
+  <section class="slide" data-title="Research-and-answer agents, end to end">
+
+  <p class="kicker">GAIA</p>
+  <h2 class="h2">Research-and-answer agents, end to end</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The setup</h3>
+      
+      <ul class="clean "><li>466 human-written questions over web browsing, spreadsheets, PDFs, images, audio and calculation</li><li>No fixed tool API - each agent brings its own search, browser, Python and shell, so it tests the whole agent system rather than the LLM</li><li>Only the final answer is scored</li><li>Three difficulty levels scale steps and tool count: Level 1 is 5 steps or fewer with zero or one tool; Level 2 is 5-10 steps with multiple tools; Level 3 is arbitrarily long with many tools</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The scoring rule</h3>
+      <p class="dim">score = (1/N) * sum_i 1[ normalize(y_hat) = normalize(y) ]</p>
+      <ul class="clean "><li>Short answers: a number, a string or a list - for example 17.4 or 4,381</li><li>It does not measure: send email, book a flight, modify a database, submit a form, update an issue</li><li>Source: Mialon et al., GAIA, arXiv 2023</li></ul>
+    </div>
+  </div>
+    <div class="notes">The &quot;does not measure&quot; list is the point of the slide: GAIA is an answer benchmark, so every task that requires a side effect is out of scope.</div>
+  </section>
+  <section class="slide" data-title="Berkeley Function Calling Leaderboard">
+
+  <p class="kicker">BFCL</p>
+  <h2 class="h2">Berkeley Function Calling Leaderboard</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>What it probes</h3>
+      
+      <ul class="clean "><li>Whether the model picks the right calls</li><li>Whether it avoids irrelevant ones</li><li>Whether it asks for a missing parameter instead of inventing one</li><li>Example tools: search_flights(origin=&quot;BOS&quot;, destination=&quot;CHI&quot;, date=...), book_flight(flight_id=..., passenger_id=...), get_weather(...)</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>How it scores</h3>
+      
+      <ul class="clean "><li>AST or execution based</li><li>Multi-turn checks on state plus reply</li><li>V4 adds web search and memory</li><li>Read category scores individually, not the composite</li><li>Source: Patil et al., Berkeley Function Calling Leaderboard, ICML 2025</li></ul>
+    </div>
+  </div>
+    <div class="notes">This is the tool-interface benchmark, and it is the one that most directly tests the tool-design rules from Lecture 4.</div>
+  </section>
+  <section class="slide" data-title="Web workflows">
+
+  <p class="kicker">WebArena</p>
+  <h2 class="h2">Web workflows</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The setup</h3>
+      
+      <ul class="clean "><li>812 tasks</li><li>Self-hosted shopping, admin, Reddit, GitLab, maps and Wikipedia sites</li><li>An accessibility tree observation, with click, type and stop actions</li><li>A reset snapshot and a trajectory are recorded</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The scoring</h3>
+      
+      <ul class="clean "><li>Functional checks</li><li>Binary success, 1 or 0</li><li>WebArena-Verified replaces LLM-as-a-judge with deterministic checks on HTTP traces</li><li>Source: Zhou et al., WebArena, ICLR 2024; WebArena-Verified, ServiceNow, 2025</li></ul>
+    </div>
+  </div>
+    <div class="notes">The Verified variant is the important development: it removes the judge from the loop, which removes a whole class of measurement error.</div>
+  </section>
+  <section class="slide" data-title="Desktop operation in pixels">
+
+  <p class="kicker">OSWorld</p>
+  <h2 class="h2">Desktop operation in pixels</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The setup</h3>
+      
+      <ul class="clean "><li>369 tasks in real applications</li><li>Pixel observations - screenshots - and mouse and keyboard actions</li><li>A setup logic, a trajectory, a final state and an evaluator producing a reward</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>OSWorld 2.0</h3>
+      
+      <ul class="clean "><li>108 long workflows, often 1 hour or more</li><li>Hundreds of steps per workflow</li><li>About 27 checkpoints, giving partial credit</li><li>Source: Xie et al., OSWorld, NeurIPS 2024; os-world.github.io</li></ul>
+    </div>
+  </div>
+    <div class="notes">The move from an accessibility tree to pixels is what makes this a perception problem as well as a control problem.</div>
+  </section>
+  <section class="slide" data-title="A patch is scored by running the tests">
+
+  <p class="kicker">SWE-bench</p>
+  <h2 class="h2">A patch is scored by running the tests</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The rule</h3>
+      <p class="dim">Score a patch by applying it to the repo and running the tests.</p>
+      
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The variants</h3>
+      
+      <ul class="clean "><li>Verified - human-checked</li><li>Lite - a 300-task subset</li><li>Multilingual - 9 languages</li><li>Multimodal - image issues</li><li>Pro - harder, multi-file</li></ul>
+    </div>
+  </div>
+    <div class="notes">This is the benchmark Lecture 4 uses to argue the harness doubles accuracy - the same kind of measurement, so the comparison is like for like.</div>
+  </section>
+  <section class="slide" data-title="A simulated user, a policy, and a database">
+
+  <p class="kicker">tau-bench</p>
+  <h2 class="h2">A simulated user, a policy, and a database</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The setup</h3>
+      
+      <ul class="clean "><li>A simulated user - an LLM playing the customer</li><li>The agent is bound by the airline policy: basic economy cannot be modified</li><li>Tools and an airline database whose state really changes</li><li>Source: Yao et al., tau-bench, arXiv 2024</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The scoring</h3>
+      <p class="dim">r = r_action * r_output</p>
+      <ul class="clean "><li>The action term: the final database matches the annotated goal state</li><li>The output term: the user-facing response includes the required information</li><li>Read-only calls may vary, but unintended writes cause failure</li><li>Pass^k is deliberately stricter than Pass@k</li></ul>
+    </div>
+  </div>
+    <div class="notes">tau-bench is where the multiplicative reward and Pass^k come from. It is also the clearest example of a benchmark that grades process and outcome together.</div>
+  </section>
+  <section class="slide" data-title="Two suites that grade something other than an answer">
+
+  <p class="kicker">Terminal-Bench and TheAgentCompany</p>
+  <h2 class="h2">Two suites that grade something other than an answer</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Terminal-Bench</h3>
+      
+      <ul class="clean "><li>A task is packaged as instruction.md, Dockerfile and tests/test.sh inside a container</li><li>The final system state is graded with a test suite</li><li>Domains: programming, sysadmin and server config, data processing, model training, security, scientific workflows</li><li>89 tasks in TB 2.0, and 66 in TB 4.0</li><li>Hidden human solutions, and an 8-hour timeout</li><li>Positioned between SWE-bench and OSWorld: no GUI grounding</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>TheAgentCompany</h3>
+      
+      <ul class="clean "><li>A simulated company: GitLab, Plane tickets, ownCloud, RocketChat, and LLM-simulated coworkers</li><li>175 tasks across software, PM, data science, HR and finance</li><li>Partial progress is scored across a job with checkpoints, not just the final state</li><li>S_partial = 0.5 <i> earned/total + 0.5 </i> S_full, so 4/8 incomplete is 0.25, 7/8 incomplete is 0.44, and 8/8 complete is 1.00</li><li>Source: Xu et al., TheAgentCompany, arXiv 2024; the-agent-company.com</li></ul>
+    </div>
+  </div>
+    <div class="notes">Both suites exist because single-outcome scoring is not enough for long, multi-application work. That is the argument the next slides make in general terms.</div>
+  </section>
+  <section class="slide" data-title="Eight benchmarks, by what they grade">
+
+  <p class="kicker">The landscape</p>
+  <h2 class="h2">Eight benchmarks, by what they grade</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Benchmark</th><th>Environment</th><th>Typical actions</th><th>What is graded</th></tr></thead>
+      <tbody>
+        <tr><td>GAIA</td><td>Web, spreadsheets, PDFs, images, audio</td><td>Search, browse, compute</td><td>The final answer only</td></tr><tr><td>WebArena</td><td>Self-hosted web sites</td><td>Click, type, stop</td><td>Functional checks; binary success</td></tr><tr><td>OSWorld</td><td>Real desktop applications</td><td>Mouse and keyboard on pixels</td><td>Final state via an evaluator, with reward</td></tr><tr><td>SWE-bench</td><td>A repository</td><td>Read, edit, run tests</td><td>The patch, scored by running the tests</td></tr><tr><td>BFCL</td><td>A tool interface</td><td>Call, or ask for a missing argument</td><td>AST or execution based, per category</td></tr><tr><td>tau-bench</td><td>An airline database and a simulated user</td><td>Talk, then call APIs that change state</td><td>Database state and the response, multiplied</td></tr><tr><td>Terminal-Bench</td><td>A container</td><td>Shell in a sandbox</td><td>The final system state, via a test suite</td></tr><tr><td>TheAgentCompany</td><td>A simulated company</td><td>Work across apps</td><td>Weighted checkpoints plus full completion</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">Read the suite as a matrix: the observation modality and the graded artifact are what actually differ. That is the same reading the reference note uses for its 48-entry directory.</div>
+  </section>
+  <section class="slide" data-title="Four layers, not one">
+
+  <p class="kicker">Leakage</p>
+  <h2 class="h2">Four layers, not one</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The four layers</h4><ul class="clean "><li>Training leakage</li><li>Eval-time leakage</li><li>Environment leakage</li><li>Benchmark overfitting</li></ul></div><div class="card "><h4>Why the surface is bigger than it looks</h4><p class="dim">Realistic tools enlarge the leakage surface, and a benchmark may be searchable.</p></div>
+  </div>
+    <div class="notes">This is the first of the two &quot;students get this wrong&quot; points in the lecture. A model that never saw the test set can still be reading a leaked file, a cached tool result, or a web page.</div>
+  </section>
+  <section class="slide" data-title="Any component can carry benchmark information">
+
+  <p class="kicker">Leakage across the stack</p>
+  <h2 class="h2">Any component can carry benchmark information</h2>
+  <p class="lede mb-l">Modern agent performance is roughly P = f(LLM, prompt, scaffold, tools, retriever, memory, environment).</p>
+  <div class="flow anim-stagger-list" data-anim-target>
+    <div class="node"><h4>LLM</h4><p>base model, fine-tuning</p></div><div class="arr">&rarr;</div><div class="node"><h4>Prompt</h4><p>the task text</p></div><div class="arr">&rarr;</div><div class="node"><h4>Scaffold</h4><p>the harness</p></div><div class="arr">&rarr;</div><div class="node"><h4>Tools</h4><p>and the retriever</p></div><div class="arr">&rarr;</div><div class="node"><h4>Memory</h4><p>and web search</p></div><div class="arr">&rarr;</div><div class="node hl"><h4>Environment</h4><p>and agent development</p></div>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Nine leakage entry points are marked on the components: base model, fine-tuning, prompt, retrieval, memory, web search, environment, scaffold and agent development. &quot;The model was not trained on the test set&quot; is nowhere near sufficient.</p>
+    <div class="notes">Scaffold and agent development are the two that catch people out, and they are exactly the parts this course asks students to build.</div>
+  </section>
+  <section class="slide" data-title="What single-turn scoring rewards">
+
+  <p class="kicker">Challenges</p>
+  <h2 class="h2">What single-turn scoring rewards</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The single user turn</h3>
+      <p class="dim">Most benchmarks give one fully-specified instruction, with no user in the loop, while real work is ambiguous, revised and interrupted.</p>
+      <ul class="clean "><li>Single-turn scoring rewards confident guessing, because asking a clarifying question costs steps and earns no credit</li><li>The three questions to ask instead: clarification, recovery and memory</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Other weaknesses</h3>
+      
+      <ul class="clean "><li>Success rate alone is insufficient: a 200-step, $40 run against a 12-step, $0.30 run</li><li>Non-determinism makes single-run scores noise rather than signal</li><li>Outcome-only scoring passes lucky or unsafe runs, while trajectory matching fails valid ones</li></ul>
+    </div>
+  </div>
+    <div class="notes">The $40 run is the same argument the Assignment 3 leaderboard forces students to live with: capability, cost and time at once.</div>
+  </section>
+  <section class="slide" data-title="How fast the frontier reaches the human baseline">
+
+  <p class="kicker">Saturation</p>
+  <h2 class="h2">How fast the frontier reaches the human baseline</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t ">
+      <thead><tr><th>Benchmark</th><th>Baseline</th><th>Months to reach it</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>GLUE (2018)</td><td>Human level (87.1)</td><td>14</td><td>91.1</td></tr><tr><td>MMLU (2020)</td><td>Expert level (89.8)</td><td>39</td><td>92.3</td></tr><tr><td>GPQA Diamond (2023)</td><td>PhD experts (69.7)</td><td>10</td><td>96.0</td></tr><tr><td>SWE-bench Verified (2024)</td><td>-</td><td>22</td><td>33% to 95%</td></tr><tr><td>ARC-AGI-2 (2025)</td><td>Average human (60)</td><td>11</td><td>95.0</td></tr><tr><td>ARC-AGI-3 (2026)</td><td>-</td><td>6*</td><td>0.5% to 62.7%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The ARC-AGI-3 row is marked &quot;6 months*&quot; on the slide, but the asterisk footnote is not present in the extracted text, so it is reproduced as printed and not reconstructed.</p>
+    <div class="notes">The asterisk is a loose end in the source. The saturation timeline runs from 2016 to 2025 plus &quot;Sep 2026&quot;.</div>
+  </section>
+  <section class="slide" data-title="What a saturated benchmark list looks like">
+
+  <p class="kicker">Retirement</p>
+  <h2 class="h2">What a saturated benchmark list looks like</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Saturated</h4><p class="dim">SQuAD 1.1, GLUE, SuperGLUE, ARC-AGI-1, MMLU, MATH, HumanEval, Chatbot Arena, MT-Bench, WebArena, SWE-bench -&gt; Verified, GPQA Diamond, MMMU, OSWorld, FrontierMath, Humanity's Last Exam, ARC-AGI-2, Terminal-Bench, GDPval, SWE-bench Pro, Remote Labor Index, ARC-AGI-3, OSWorld 2.0.</p></div><div class="card "><h4>The definition, and the shift</h4><p class="dim">A benchmark is saturated when the frontier reached the human baseline or top models stopped separating.</p><ul class="clean "><li>Evaluation is still evolving toward stateful, long-horizon, multi-grader, contamination-aware measurement</li><li>Six dimensions are tracked: objective evaluated, interaction, grader, dataset, main metric, primary concern</li></ul></div>
+  </div>
+    <div class="notes">The saturated list is a reading of the slide, not a judgement of the benchmarks. Keep it as a shopping list for what to avoid as a headline number.</div>
+  </section>
+  <section class="slide" data-title="A real agent has more than three dimensions">
+
+  <p class="kicker">The real objective</p>
+  <h2 class="h2">A real agent has more than three dimensions</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>Capability, cost, speed, and usability</h3>
+      
+      <ul class="clean "><li>Capability - higher is better</li><li>Cost - lower is better</li><li>Speed</li><li>Agent usability</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Pareto dominance</h3>
+      <p class="dim">A dominates B if A is no worse on any metric and better on at least one.</p>
+      <ul class="clean "><li>Rank 1 is the Pareto frontier</li><li>Speed is not drawn on the slide</li><li>Assignment 3 is evaluated on all three metrics, using this rule</li></ul>
+    </div>
+  </div>
+    <div class="notes">This is the hinge into Assignment 3: the leaderboard ranks on capability, cost and time at once, with Pareto-style ranks.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/slides/7_agent_design_4.pdf">https://cs2680.seas.harvard.edu/slides/7_agent_design_4.pdf</a> &mdash; Lecture 7 slide deck - 37 pages</li><li><a href="https://cs2680.seas.harvard.edu/notes/agent-evaluation.html">https://cs2680.seas.harvard.edu/notes/agent-evaluation.html</a> &mdash; the reference note this lecture is built on</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/slides/7_agent_design_4.pdf.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>

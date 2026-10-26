@@ -1,0 +1,1017 @@
+----- page 1 -----
+Modern AI Systems: Agents 
+and System Optimizations
+Juncheng Yang
+Agent Design I: context management and tool design 
+
+----- page 2 -----
+2
+Harvard Madsys   ·   course.agentic-system.org
+Logistics
+• Assignment 1 due this Sunday
+• Share your repo 
+• Fill in Google form
+• Assignment 1 sharing sign up this Thursday
+
+----- page 3 -----
+3
+Harvard Madsys   ·   course.agentic-system.org
+Plan for today
+• Agent loop (ReACT)
+• Tool designs
+• Context management
+• prompt engineering
+• context engineering
+
+----- page 4 -----
+4
+Harvard Madsys   ·   course.agentic-system.org
+The ReAct loop
+Reason and Act in one loop
+Thought
+What do I know, what is 
+missing, what next?
+Action
+Emit a structured call the 
+environment can run.
+Observation
+The environment answers 
+with facts.
+Reason only
+Nothing ever checks the reasoning; small errors compound into confident 
+hallucination.
+Act only
+Tool calls with no plan behind them; the model repeats itself.
+ReAct
+Thoughts steer the next action; observations correct the next thought.
+Repeat until the observations answer the question — or a stopping rule ends the run.
+https://arxiv.org/pdf/2210.03629
+
+----- page 5 -----
+The agent loop
+messages = [
+    {"role": "system", "content":
+        "Solve the task using the tools."},
+    {"role": "user", "content": user_request},
+]
+for step in range(MAX_STEPS):
+    response = call_model(messages, tools)
+    messages.append(response.message)
+    if response.final_answer:
+        return response.final_answer
+    for call in response.tool_calls:
+        args = validate(call.arguments)
+        result = execute_tool(call.name, args)
+        messages.append({
+            "role": "tool",
+            "tool_call_id": call.id,
+            "content": serialize(result),
+        })
+raise RuntimeError(
+    "Agent exceeded its step limit")
+User request
+Model
+Next action?
+Execute tool
+Return tool result
+Return 
+answer
+final answer
+tool call
+
+----- page 6 -----
+The agent loop
+Assemble the context
+What you will do as an 
+agent harness designer
+Validate request, check 
+permission and run it
+Optionally process the result 
+and manage context
+User request
+Model
+Next action?
+Execute tool
+Return tool result
+Return 
+answer
+final answer
+tool call
+Write tool definitions
+
+----- page 7 -----
+7
+Harvard Madsys   ·   course.agentic-system.org
+Components of a coding agent
+Three components, one context window — design them together
+01
+Model + agent loop
+The LLM proposes an action, sees the result, and repeats 
+until done.
+→ An agent is a model plus a loop
+02
+Tools and guardrails
+Search, read, edit, run tests and shell — behind 
+permissions, sandboxing and approval.
+→ Tools set capability; guardrails keep it safe
+03
+State: context and memory
+What is in the window now, plus what the agent carries 
+forward between steps.
+→ Assemble it; keep what outlives the turn
+
+----- page 8 -----
+8
+Harvard Madsys   ·   course.agentic-system.org
+What Tools Should We Provide 
+to Agents?
+• Search / Read
+• Edit / Write
+• Execution
+• Others
+Hands up = score
+
+----- page 9 -----
+9
+Harvard Madsys   ·   course.agentic-system.org
+How Should An Agent Find 
+Relevant Code?
+Hands up = score
+
+----- page 10 -----
+10
+Harvard Madsys   ·   course.agentic-system.org
+Tool search and read: glob and grep
+•
+Agent loops over ls, glob and grep — nothing to build or keep in sync
+•
+Always reflects the live repo
+•
+Cost: burns turns and context; lexical matching misses paraphrase
+Example — “fix the login timeout”
+1 · grep
+grep -rn "timeout" src/
+37 hits in 12 files
+2 · glob
+glob src/**/auth/*.ts
+narrows to auth/retry.ts
+3 · read + patch
+read auth/retry.ts
+RETRY_MS = 500 → patched
+
+----- page 11 -----
+11
+Harvard Madsys   ·   course.agentic-system.org
+Tool search and read: semantic search
+•
+Semantic: embed code chunks, retrieve by meaning
+•
+Structural: file tree plus ranked symbols (Aider’s repo map)
+•
+Fast at query time; cost is building and re-syncing the index
+Example — “where do we rate-limit?” returns throttle.ts on the first query
+Embedding search
+query
+nearest chunks
+Same meaning, different words — vectors land close
+Structural search — repo map
+aider/coders/base_coder.py:
+  class Coder:
+    def apply_updates(self)
+aider/commands.py: class Commands
+Ranked outline of files, classes and signatures
+
+----- page 12 -----
+12
+Harvard Madsys   ·   course.agentic-system.org
+Tool search and read: extrinsic signals
+•
+Evidence outside the source: stack traces, failing tests, git history
+•
+Highest-precision signal when debugging
+•
+Only helps when such a signal exists
+Example — crash report on checkout
+1 · read the signal
+stack trace: cart.ts:88
+3 frames named
+2 · open those frames
+read tax.ts:20-60
+rounding in applyTax
+3 · patch + re-run
+pytest tests/tax.py
+green, no search used
+
+----- page 13 -----
+13
+Harvard Madsys   ·   course.agentic-system.org
+Tool search and read: language server (LSP)
+•
+Queries the compiler’s index: definitions, references, symbols, types
+•
+Resolves imports, overloads and renames that grep only guesses at
+•
+Cost: a live server per language; slow cold start
+Example — rename charge() to capture()
+1 · find references
+textDocument/references
+42 call sites, 7 files
+2 · rename the symbol
+textDocument/rename
+aliased imports included
+3 · verify
+type check
+no unresolved symbols
+
+----- page 14 -----
+Search and read: a comparison
+Approach
+Finds code by
+Best when
+Main cost
+glob / grep
+literal names and paths
+the name is known or 
+guessable
+turns and context per 
+search
+Semantic index
+meaning of embedded 
+chunks
+wording won't match the 
+code
+building and re-syncing 
+the index
+Extrinsic signals
+traces, failing tests, git 
+history
+a report already points at 
+code
+only exists for some 
+tasks
+Language server
+the compiler's symbol 
+graph
+edits must follow 
+references
+a live server per 
+language
+In practice — start with grep; reach for an index or LSP when names run out
+
+----- page 15 -----
+Search and read: a comparison
+Approach
+Finds code by
+Best when
+Main cost
+glob / grep
+literal names and paths
+the name is known or 
+guessable
+turns and context per 
+search
+Semantic index
+meaning of embedded 
+chunks
+wording won't match the 
+code
+building and re-syncing 
+the index
+Extrinsic signals
+traces, failing tests, git 
+history
+a report already points at 
+code
+only exists for some 
+tasks
+Language server
+the compiler's symbol 
+graph
+edits must follow 
+references
+a live server per 
+language
+In practice — start with grep; reach for an index or LSP when names run out
+
+----- page 16 -----
+16
+Harvard Madsys   ·   course.agentic-system.org
+How Should An Agent Edit Code?
+Hands up = score
+
+----- page 17 -----
+17
+Harvard Madsys   ·   course.agentic-system.org
+Tool edit: whole-file rewrite
+•
+Model regenerates the whole file; the tool overwrites it
+•
+No patch syntax to get wrong — every edit applies cleanly
+•
+Cost: output scales with file size; untouched code can drift
+Example — add a retry to the API client
+1 · read the file
+read client.ts
+120 lines into context
+2 · regenerate
+write client.ts
+full file, 4 lines changed
+3 · result
+diff vs previous
+applies on the first try
+
+----- page 18 -----
+18
+Harvard Madsys   ·   course.agentic-system.org
+Tool edit: unified diff / patch
+•
+Model emits a patch; a separate tool applies it
+•
+Compact, reviewable, the format humans and CI already use
+•
+Cost: hunks fail when line numbers or context drift
+Example — bump the retry limit in two files
+1 · read for anchors
+read client.ts, api.ts
+line numbers in hand
+2 · emit the patch
+@@ -41,3 +41,3 @@
+6 lines, two hunks
+3 · apply
+git apply patch.diff
+both hunks applied
+
+----- page 19 -----
+19
+Harvard Madsys   ·   course.agentic-system.org
+Tool edit: search and replace
+•
+Model emits an exact anchor string plus its replacement
+•
+Output is proportional to the change, not the file
+•
+Cost: fails on ambiguous, stale or whitespace-off anchors
+Example — raise the retry count
+1 · locate the anchor
+grep -n "retries = 3"
+one unique match
+2 · replace the block
+retries = 3 → 5
+one call, no rewrite
+3 · verify
+read back the block
+rest of file untouched
+
+----- page 20 -----
+20
+Harvard Madsys   ·   course.agentic-system.org
+Tool edit: structured / AST edits
+•
+Model names an operation on a symbol: rename, add parameter
+•
+Immune to formatting; cannot produce invalid syntax
+•
+Cost: per-language tooling; limited set of expressible edits
+Abstract syntax trees https://www.youtube.com/watch?v=lCrC-qojPpU
+https://pierce.dev/notes/how-language-servers-work
+Example — add a timeout parameter to fetchUser()
+1 · name the operation
+add_param(fetchUser)
+timeout, default 5s
+2 · tooling applies it
+rewrite signature
+and all 18 callers
+3 · verify
+parse + type check
+valid by construction
+
+----- page 21 -----
+21
+Harvard Madsys   ·   course.agentic-system.org
+How agents apply edits
+Token cost
+Robustness — does the edit land where it was meant to?
+Whole-file rewrite
+drifts on long files
+Unified diff
+breaks on stale lines
+Search / replace block
+needs an exact, unique match
+Structured / AST edit
+limited language coverage
+Hands up = score
+
+----- page 22 -----
+22
+Harvard Madsys   ·   course.agentic-system.org
+Tool execution: effectively a shell
+The most powerful but also the most dangerous tool. 
+Composition — one call can chain, filter, loop and retry
+Reach — filesystem, network, package managers, installed binaries
+Persistence — files and processes outlive the individual call
+Blast radius — whatever the shell can do, the agent can do
+
+----- page 23 -----
+23
+Harvard Madsys   ·   course.agentic-system.org
+Tool execution: things you have to think about
+Failure signal — errors the agent can actually act on
+Output — enough but not too many
+Duration — long-running and background processes
+Budgets — when to stop retrying and hand back
+Isolation — where the code runs, and what it can reach
+
+----- page 24 -----
+24
+Harvard Madsys   ·   course.agentic-system.org
+Five more tools that are commonly used
+D. Browser and visual feedback — screenshot the render and feed it back
+A. Memory and notes — write findings to a file; plans survive compaction
+E. Asking the user — one cheap question beats a confident wrong patch
+B. Subagents and delegation — exploration returns a shortlist, not 40 file reads
+C. Web search and fetch — read the installed source first, then the web
+
+----- page 25 -----
+25
+Harvard Madsys   ·   course.agentic-system.org
+Tool design best practices
+Few, orthogonal tools  Overlapping tools make the model dither between them.
+Purpose-built, not generic  search_orders(customer_id) beats a raw run_sql tool.
+Token-cheap output  Truncate, paginate, summarize (tool design is context design).
+Errors that teach  Return the fix hint, not just “invalid argument”.
+Idempotent by default  Safe to retry whenever possible.
+
+----- page 26 -----
+26
+Harvard Madsys   ·   course.agentic-system.org
+Can we just provide the shell tool?
+Find out when you work on the assignment! 
+10.3%
+11.0%
+12.7%
+15.0%
+18.0%
+No specialized editor
+Shell only
+Full-file view
+Full interaction history
+Purpose-built SWE-agent…
+No on GPT-4
+
+----- page 27 -----
+27
+Harvard Madsys   ·   course.agentic-system.org
+Context Management
+Prompt engineering
+Context engineering
+
+----- page 28 -----
+28
+Harvard Madsys   ·   course.agentic-system.org
+From Prompts to Agent Systems
+2023–2024
+Prompt 
+Engineering
+“How should we 
+instruct the 
+model?”
+Wording, 
+examples, output 
+formats
+2025-2026
+Context 
+Engineering
+“What should the 
+model see?”
+Retrieval, 
+memory, history, 
+compaction
+2026
+Harness 
+Engineering
+“How should the 
+agent operate?”
+Loop, tools, 
+sandbox, retries, 
+stopping
+Now -> Next
+Goal 
+Engineering
+“What counts as 
+success?”
+Objectives, 
+criteria, 
+constraints, 
+tradeoffs
+People love coining terms. I use them so you’ll know what they mean 
+when you encounter them, but that doesn’t mean I agree or like them.
+
+----- page 29 -----
+29
+Harvard Madsys   ·   course.agentic-system.org
+Prompting Engineering
+Zero-shot
+Few-shot
+Role & persona
+Chain-of-thought
+Tree-of-thoughts
+Self-consistency
+Prompt chaining
+Meta prompting
+
+----- page 30 -----
+30
+Harvard Madsys   ·   course.agentic-system.org
+Zero-Shot Prompting: Instruction Only
+Example
+You are a support triage assistant.
+Classify the ticket as one of:
+billing | bug | feature | other
+Reply with JSON only: {"label": ...}
+If unclear, use "other".
+Ticket: "Crashes when I export a PDF."
+→ {"label": "bug"}
+Instruction only
+Use it when
+• The task is common and well known
+• The format fits in words
+Move on when
+• The rule is tacit → few-shot
+
+----- page 31 -----
+31
+Harvard Madsys   ·   course.agentic-system.org
+Few-Shot Prompting: Instruction + Examples
+Example
+Classify the ticket. Reply with JSON 
+only.
+"Charged twice this month."
+→ {"label": "billing"}
+"Can you add dark mode?"
+→ {"label": "feature"}
+"asdfgh"
+→ {"label": "other"}
+"Crashes when I export a PDF."
+→  ?
+Instruction plus a few worked 
+examples.
+Use it when
+• The output shape is unusual
+• The rule is easier shown than said
+Move on when
+• The task needs steps → chain-of-
+thought
+
+----- page 32 -----
+32
+Harvard Madsys   ·   course.agentic-system.org
+Role & Persona Prompting: Give It a Role
+Use a role to guide the behavior.
+Use it when
+• Tone or judgement matters
+• The audience is specific
+Move on when
+• Needs steps → chain-of-thought
+Example
+You are a senior SRE reviewing a
+postmortem for an exec audience.
+Flag evidence gaps; never speculate.
+Be direct: at most five bullets.
+→ "Timeline omits the 04:12 alert
+   ack — evidence gap, not a cause."
+
+----- page 33 -----
+33
+Harvard Madsys   ·   course.agentic-system.org
+Chain-of-Thought: Make the Steps Explicit
+Example
+Work through it in numbered steps,
+then end with: ANSWER: <value>
+Q: 3 features/week for 4 weeks,
+then 5/week for 2 weeks. Total?
+1. 3 × 4 = 12
+2. 5 × 2 = 10
+3. 12 + 10 = 22
+ANSWER: 22
+Reasoning steps first, answer last.
+Use it when
+• The task genuinely has steps
+• Errors come from skipped work
+Move on when
+• Several paths exist → tree-of-thought
+
+----- page 34 -----
+34
+Harvard Madsys   ·   course.agentic-system.org
+Tree-of-Thought: Branch, Score, Prune
+Branch, score, prune the paths.
+Use it when
+• Several routes are plausible
+• You can score them cheaply
+Move on when
+• One right answer → self-consistency
+Example
+Propose 3 ways to cut checkout
+latency. Score each 1-5 on impact
+and effort, then expand the best.
+A cache warm-up   impact 3 effort 2
+B drop 3rd-party  impact 5 effort 4
+C lazy-load asset impact 4 effort 1
+Expand C, then B. Prune A.
+
+----- page 35 -----
+35
+Harvard Madsys   ·   course.agentic-system.org
+Self-Consistency: Sample, Then Vote
+Sample several times, majority 
+voting.
+Use it when
+• One right answer exists
+• A wrong call is expensive
+Move on when
+• Separable stages → chaining
+Example
+Same prompt, 5 samples, T = 0.7
+"Is this invoice a duplicate?"
+yes | yes | no | yes | yes
+→ majority: yes  (4/5 = 0.8)
+Floor 0.8 → answer.
+If 3/5, route to a human instead.
+
+----- page 36 -----
+36
+Harvard Madsys   ·   course.agentic-system.org
+Prompt Chaining: One Job per Call
+Example
+Stage 1  extract
+  in: email text
+  out: {vendor, amount, date}
+Stage 2  validate + enrich
+  out: {..., vendor_id}
+Stage 3  draft reply
+  out: {subject, body}
+Fails schema → retry that stage only
+One job per call, validated hand-
+offs.
+Use it when
+• The work splits into stages
+• You can validate each output
+Move on when
+• Tuning the prompt → meta prompting
+
+----- page 37 -----
+37
+Harvard Madsys   ·   course.agentic-system.org
+Meta Prompting: Let the Model Write the Prompt
+Example
+Here is my prompt, 10 test cases
+and the 3 it fails.
+Rewrite the prompt to fix those 3
+without breaking the other 7.
+Return only the new prompt.
+→ v2 adds an explicit refusal rule
+   8/10 → 10/10 on the eval set
+The model rewrites its own prompt.
+Use it when
+• You have an eval set to score on
+• The prompt is what you are tuning
+Move on when
+• Gains stall → revisit your choice
+
+----- page 38 -----
+38
+Harvard Madsys   ·   course.agentic-system.org
+Choosing the Right Technique
+Start simple
+Zero-shot — the baseline for any common task
+Few-shot — unusual output shape or tacit rule
+Role & persona — tone or judgement matters
+Add reasoning
+Chain-of-thought — the task needs several steps of reasoning
+Tree-of-thought — several paths worth scoring
+Self-consistency — ask multiple times and take the majority vote
+Engineer the system
+Prompt chaining — separable stages, validated hand-offs
+Meta prompting — the prompt is the artifact
+
+----- page 39 -----
+39
+Harvard Madsys   ·   course.agentic-system.org
+Some of the techniques are 
+already expired  
+• Find out yourself in assignment!
+
+----- page 40 -----
+41
+Harvard Madsys   ·   course.agentic-system.org
+Designing Prompts: Four Best Practices
+EXAMPLE PROMPT
+### Instruction ###
+Translate the text below to 
+Spanish:
+Text: "hello!"
+MODEL OUTPUT
+¡Hola!
+Instruction, delimiter, data — in that order.
+1
+Start simple, then iterate
+Add context only when you need it
+2
+Partition into sections
+Context, instructions, tools, output spec
+3
+Be specific and concise
+Clever phrasing buys nothing
+4
+Split big tasks into subtasks
+Don’t front-load complexity
+Prompting advice is model-specific — re-tune whenever you switch 
+
+----- page 41 -----
+42
+Harvard Madsys   ·   course.agentic-system.org
+Context Engineering
+Context engineering is the delicate art and science of filling the 
+context window with just the right information for the next step
+-- Andrej Karpathy
+Karpathy, X (2025) — x.com/karpathy/status/1937902205765607626
+
+----- page 42 -----
+43
+Harvard Madsys   ·   course.agentic-system.org
+Context is a finite resource
+Cost
+Every step re-sends the 
+whole window.
+→ Every turn pays again
+Latency
+Bigger prompts take longer 
+to prefill and decode.
+→ A slower loop, every turn
+Attention
+Recall fades as the window 
+fills; the middle gets 
+missed.
+→ More context is not 
+better answers
+Hands up = score
+
+----- page 43 -----
+44
+Harvard Madsys   ·   course.agentic-system.org
+Length and position both cost accuracy
+Accuracy decays as input grows, and  it also depends on where in the window the 
+answer sits.
+73%
+46%
+40%
+60%
+80%
+100%
+Input tokens in context
+Simple lookup
+With distractors
+Context Rot (Chroma); Liu et al., “Lost in the Middle,” TACL 12 (2024)
+76%
+61% 55% 59%
+71%
+40%
+60%
+80%
+1st
+5th
+10th
+15th
+20th
+Position among 20 documents
+Answer accuracy
+
+----- page 44 -----
+45
+Harvard Madsys   ·   course.agentic-system.org
+Anatomy of the context window
+System prompt
+Tool definitions
+Retrieved context
+Message history
+User + LLM + tool-call result
+Project environment
+Hands up = score
+What to do when context becomes too large?
+~2K
+~6K
+~25K
+~8K
+~80K and growing
+Illustrative token budget for a single agent turn
+
+----- page 45 -----
+46
+Harvard Madsys   ·   course.agentic-system.org
+Managing the context window
+Admission
+Offloading
+Transformation
+Compaction
+Preventive and lossless  →  lossy and irreversible
+
+----- page 46 -----
+48
+Harvard Madsys   ·   course.agentic-system.org
+Admission: guard what enters the context window
+Targeted retrieval
+Query narrowly; fetch fields, not docs
+Tool output shaping
+Drop the DOM, keep the extract
+Truncation
+Cap size only when shaping cannot
+Isolation
+Hand the raw payload to a subagent
+Before: raw DOM passed through — 48,000 tokens
+Prefix
+Raw DOM
+Task work
+Shape at the door
+After: prices and headings only — 900 tokens
+Prefix
+Extract
+Work
+Headroom
+98% smaller, same answer
+Hands up = score
+
+----- page 47 -----
+49
+Harvard Madsys   ·   course.agentic-system.org
+Offloading: do not load until need
+Keep it retrievable, not resident
+Progressive tool definition
+Load schemas only when needed
+Tool search
+Keep an index; fetch on demand
+Tool output offload
+Return a handle, load on demand
+Externalised task list
+Keep the plan on disk
+Persistent memory
+Write notes out; keep a small index
+Before: 60 schemas resident — 42,000 tokens
+Prefix
+60 tool schemas
+Task work
+Fetch on demand
+After: index plus 3 schemas — 3,100 tokens
+Prefix
+Index + 3
+Work
+Headroom
+93% smaller, all 60 reachable
+Hands up = score
+
+----- page 48 -----
+50
+Harvard Madsys   ·   course.agentic-system.org
+Transformation: selectively drop the history
+Deduplication
+Keep the newest state of each object
+Observation masking
+Strip tool results older than N steps
+Sliding window
+Only keep the recent turns and head
+Before: every result kept — 96,000 tokens
+System prefix
+Stale snapshots
+Recent
+Mask & dedup
+After: newest state kept — 24,000 tokens
+System prefix
+Kept
+Recent
+Headroom
+75% smaller, nothing summarized
+Hands up = score
+
+----- page 49 -----
+51
+Harvard Madsys   ·   course.agentic-system.org
+Compaction: LLM as the last resort
+Rolling summary
+Summarize old tool results as you go
+Full summary
+Rewrite the whole history at the limit
+WARNING
+• Reserve headroom for output
+• Preserve the system prefix
+• Re-inject critical facts after
+At the limit: history fills the window
+System prefix
+Old tool results
+Recent
+LLM compaction
+After compaction: headroom restored
+System prefix
+Summary
+Recent
+Headroom
+Auto memory
+Persist key facts outside the window
+
+----- page 50 -----
+52
+Harvard Madsys   ·   course.agentic-system.org
+Five ways context fails
+Poisoning
+A hallucination enters the window and is later cited as fact
+Distraction
+History grows until the agent imitates its own past actions
+Confusion
+Irrelevant tools and documents steer the answer off course
+Clash
+New information contradicts old; both stay unresolved
+Drift
+The real goal is buried and swapped for a nearby subgoal
+Breunig, “How Contexts Fail and How to Fix Them” (2025)
+Name the failure and the fix becomes obvious.
+
+----- page 51 -----
+53
+Harvard Madsys   ·   course.agentic-system.org
+Agent = Model x Harness
+Model capability sets the ceiling; 
+Harness determines realized performance
+
+----- page 52 -----
+54
+Harvard Madsys   ·   course.agentic-system.org
+Changing the Harness Improves Accuracy by 2×
+Benchmark
+Basic harness
+Improved 
+harness
+SWE-bench Verified
+43 / 169
+72 / 169
+SWE-bench Pro
+31 / 316
+72 / 316
+What changed
+• Old tool outputs 
+compacted
+• Recent observations kept 
+visible
+• Repetition and stalls 
+detected
+• Interventions when stuck
+Some apparent “model failures” are actually context- and control-loop failures.
+Lewis, S., “Same Model, Different Harness: Different Coding-Agent Results” (arXiv:2608.26218, 2026)
+
+----- page 53 -----
+55
+Harvard Madsys   ·   course.agentic-system.org
+Agent = Model x Harness
+Experiment yourself in assignment 
+Agent loop, prompt, tool, context 
+management, failure handling all matter!
+
+----- page 54 -----
+56
+Harvard Madsys   ·   course.agentic-system.org
+Next class
+• Agent design II
+• Agent (persistent) memory
+• Cost-effective agents
+• Safety and security 
+• Multi-agent designs
+
+----- page 55 -----
+57
+Harvard Madsys   ·   course.agentic-system.org
+Optional Reading
+
+----- page 56 -----
+Beyond ReAct Loop
+ReAct
+loops every step
+Thought
+Act
+Observe
+Reflexion
+loops after a failure
+Attempt
+Evaluate
+Critique
+Retry
+Plan-and-execute
+loops on deviation
+Plan
+Execute steps
+Re-plan
+Tree search
+no loop — one pass, wide
+State
+Branch A · B · C
+Keep best
+branches explored in parallel — only one survives
+model call
+app / tool action
+chosen outcome

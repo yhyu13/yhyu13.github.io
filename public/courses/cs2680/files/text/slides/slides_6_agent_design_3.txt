@@ -1,0 +1,772 @@
+----- page 1 -----
+Modern AI systems: agents 
+and system optimizations
+Juncheng Yang
+Agent design III: memory, and reliabiltiy
+
+----- page 2 -----
+2
+Harvard MaDSys   ·   course.agentic-system.org
+2
+Logistics
+• Office hour this Thursday 3:30pm SEC 4.308
+• Final project poster presentation: 9am-1pm Dec 7 
+• please reach out this week if the time does not work for you
+• AI-generated reference materials
+• https://cs2680.com/notes/agent-evaluation 
+• notes in the reading (the list is curated by me)
+• reviewed by me and TFs
+
+----- page 3 -----
+3
+Harvard MaDSys   ·   course.agentic-system.org
+3
+Plan for today
+• Multi-agent design (cont from last lecture)
+• Agent memory
+• Agent reliability
+
+----- page 4 -----
+4
+Harvard MaDSys   ·   course.agentic-system.org
+4
+
+----- page 5 -----
+5
+Harvard MaDSys   ·   course.agentic-system.org
+5
+Agent memory
+Persistent state beyond the context window
+User
+Agent Harness
+LLM
+Memory Store
+Context window
+temporary working state
+Memory store
+persistent state across interactions
+
+----- page 6 -----
+6
+Harvard MaDSys   ·   course.agentic-system.org
+6
+Agent memory design questions
+Who owns the memory?
+Is it worth keeping?
+WRITE OR SKIP
+decision
+What should it become?
+ENCODE / ORGANIZE
+format
+Does this task need it?
+RETRIEVE
+task
+What broader lesson follows?
+REFLECT / GENERALIZE
+lesson
+Is it still valid?
+KEEP / UPDATE / DELETE
+status
+Where should it live?
+STORE
+backend
+
+----- page 7 -----
+7
+Harvard MaDSys   ·   course.agentic-system.org
+7
+Decision: when should something become 
+memory?
+Writing every interaction raises recall and noise
+Explicit user request
+Deterministic rules (heuristics)
+Small classifier
+Periodic LLM review
+high recall
+high precision
+write every interaction
+selective writing
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+
+----- page 8 -----
+8
+Harvard MaDSys   ·   course.agentic-system.org
+8
+How to organize the memory?
+Raw events / episodes
+“We moved serving from vLLM to 
+SGLang.”
+High fidelity; large and 
+redundant
+Unstructured summaries
+“Uses SGLang for model serving.”
+Compact, but may lose 
+context
+Structured state
+{"serving_engine":"SGLang”…}
+Queryable; schema 
+constrains
+Knowledge graph
+Project → USES → SGLang
+Linked entities and 
+change over time
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+Hands up
+
+----- page 9 -----
+9
+Harvard MaDSys   ·   course.agentic-system.org
+9
+How to store the memory?
+Plain files
+CLAUDE.md, scratchpad
+Simple to inspect, diff, 
+and search
+Key-value or 
+relational database
+Redis, SQLite, Postgres JSONB
+Exact lookup, filtering, and 
+transactions
+Vector store
+pgvector, Chroma, Pinecone
+Exact or approximate 
+similarity search
+Graph database
+Neo4j, FalkorDB (Graphiti)
+Relationship queries and 
+multi-hop traversal
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+Hands up
+
+----- page 10 -----
+10
+Harvard MaDSys   ·   course.agentic-system.org
+10
+When memory should be used?
+Automatic
+Every turn:
+search → LLM → add
++  Predictable and simple
+–  Adds latency and irrelevant 
+context
+Runtime-controlled
+if memory_needed:
+    search()
+if memorable:
+    add()
++  Selective and efficient
+–  Need rules or a classifier
+Model-controlled
+search_memory()
+add_memory()
+update_memory()
+forget_memory()
++  Demand-driven; the LLM 
+decides when to invoke
+–  May miss useful reads or 
+writes
+Many systems use a hybrid approach; read and write policy may differ
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+
+----- page 11 -----
+11
+Harvard MaDSys   ·   course.agentic-system.org
+11
+How to retrieve the memory?
+Semantic relevance is only one retrieval signal
+Basic pipeline
+Query
+Vector search
+Top-k memories
+Prompt
+Semantic 
+match
+Meaning 
+matches the 
+query
+Scope
+Same user, 
+project, entity, 
+or task
+Importance
+Cost of missing 
+or including it
+Validity
+True for this 
+task at this time
+Provenance
+Source, 
+confidence, 
+and evidence
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+
+----- page 12 -----
+12
+Harvard MaDSys   ·   course.agentic-system.org
+12
+How to generalize from observations?
+Asked about vLLM
+Asked about SGLang
+Asked about TRT-LLM
+Asked about LLM scheduling
+reflection
+Hypothesis: frequent interest 
+in LLM inference systems
+Confidence: medium
+When should consolidation happen?
+• After enough new evidence, e.g., every N 
+events or context fill
+• When facts conflict or repeat
+• In a background job when possible
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+
+----- page 13 -----
+13
+Harvard MaDSys   ·   course.agentic-system.org
+13
+Forgetting is a first-class memory operation
+Lifecycle controls
+• Mark invalid
+• Erase permanently
+• Expire after a TTL
+• Create tiers and evict from active 
+memory
+Why forget
+• Stale information
+• Incorrect or conflicting information
+• Privacy and security
+• Storage and retrieval cost
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+
+----- page 14 -----
+14
+Harvard MaDSys   ·   course.agentic-system.org
+14
+Memory needs valid time and provenance
+April 2026
+Project serves models with vLLM
+superseded
+June 2026
+Project serves models with SGLang
+current
+Valid time: which fact applied when
+Provenance: where the fact came from
+Episode 28
+“We moved serving from vLLM to SGLang.”
+Project → SERVES_WITH → SGLang
+source: Episode 28
+Keeping?
+Format?
+Backend?
+Need it?
+Lesson?
+Valid?
+
+----- page 15 -----
+15
+Harvard MaDSys   ·   course.agentic-system.org
+15
+Who owns the memory?
+Agent-owned
+Files in the harness: CLAUDE.md, agent 
+scratchpad, task notes.
+Dedicated memory system
+A service the agent calls: Mem0, Graphiti, 
+supermemory.
+Agent harness
+LLM
+read / write
+CLAUDE.md,
+task notes
+Harness persists memory to disk
+Agent harness
+LLM
+search · update
+memories
+Memory layer
+library or service
+Memory is an API, shared across agents and sessions
+
+----- page 16 -----
+16
+Harvard MaDSys   ·   course.agentic-system.org
+16
+Dedicate memory systems
+Mem0
+Fact-centric
+Input: messages, scoped by user, agent, or run.
+Retrieval : vector search with filters; optional graph memory.
+e.g., “Uses SGLang for model serving.”
+Graphiti
+Temporal knowledge graph
+Input: episodes that yield entities and time-aware facts.
+Retrieval: hybrid semantic, keyword and graph search.
+e.g., uses → SGLang, valid Apr 2026 → present
+supermemory
+Profile, memory, document
+Maintain a user profile along with memory and document
+Input: conversations linked to source and time.
+Retrieval: profile, memory and document search
+
+----- page 17 -----
+Agent memory design checklist
+Observe
+Select
+Encode / organize
+Store
+Retrieve
+Reflect / consolidate
+Forget
+Is this worth remembering?
+What representation preserves the needed meaning?
+Where should it live? File, database?
+What is useful for the current task?
+Does this update or contradict an old memory?
+When is information stale or irrelevant?
+Each stage is a policy decision
+
+----- page 18 -----
+18
+Harvard MaDSys   ·   course.agentic-system.org
+18
+Failure modes
+Retrieval miss
+Relevant memory exists but isn't found.
+Context pollution
+Too many irrelevant memories enter context.
+Memory hallucination
+An inference stored as fact: “studying at Harvard” 
+becomes “visiting student at Harvard.”
+Staleness
+An old fact overrides newer information.
+Isolation failure
+Memory crosses a user boundary. 
+Overgeneralization
+One event becomes a durable preference.
+Persistent prompt injection
+Untrusted content returns later as instructions.
+Unbounded growth
+Size grows with lifetime, so retrieval cost and 
+quality degrade.
+Hands up
+
+----- page 19 -----
+20
+Harvard MaDSys   ·   course.agentic-system.org
+20
+How to evaluate agent memory
+Writes and update
+Precision, recall, and stale-memory rate
+Retrieval
+Precision, recall
+System
+Latency, token overhead, and store growth
+Governance
+Deletion compliance and scope isolation
+
+----- page 20 -----
+21
+Harvard MaDSys   ·   course.agentic-system.org
+21
+Agent memory evaluation
+LoCoMo
+1,540 questions
+10 long dialogues
+LongMemEval
+500 questions
+5 memory abilities
+BEAM
+2,000 questions
+Up to 10M tokens
+Memory component evaluation
+LoCoMo (ACL 2024) · LongMemEval (ICLR 2025) · BEAM (ICLR 2026) · LoCoMo-Refined
+Mainly test whether an agent can recall and reason over user-assistant histories. They cover 
+recall, temporal reasoning, updates, preferences and abstention.
+
+----- page 21 -----
+22
+Harvard MaDSys   ·   course.agentic-system.org
+22
+The agent memory stack
+?
+Agent runtime
+Claude Code, Letta, 
+Codex
+Memory management
+Mem0, Letta built-in, 
+custom
+Storage
+vector, SQL, graph, 
+object stores
+Separate memory layer
+Agent runtime
+Claude Code, Letta, 
+Codex
+Memory management
+in the runtime
+Storage
+markdown files
+Memory inside the harness
+
+----- page 22 -----
+23
+Harvard MaDSys   ·   course.agentic-system.org
+23
+Why is agent reliability a problem? 
+Errors compound
+1 in 13
+50-step runs finish with no 
+errors
+• A run succeeds only if 
+every step does
+• Error propagation makes 
+real runs worse than this
+95%
+77%
+60%
+36%
+8%
+1
+5
+10
+20
+50
+Assumes each step succeeds independently with probability 0.95.
+Chance an agent run is error-free
+By number of steps in the trajectory, 95% success per step
+
+----- page 23 -----
+24
+Harvard MaDSys   ·   course.agentic-system.org
+24
+Agent reliability
+What are the different ways agents fail?
+
+----- page 24 -----
+Where does the fault originate?
+User / task spec
+was the goal unambiguous?
+specification failure
+Agent harness
+context, loop, scheduling
+harness failure
+LLM
+reasoning and planning
+model failure
+Tool layer
+shell, browser, APIs
+tool failure
+Environment
+repo, OS, web, services
+environment failure
+
+----- page 25 -----
+26
+Harvard MaDSys   ·   course.agentic-system.org
+26
+Task specification
+Failure
+The spec said
+The agent did
+Ambiguous goal
+“Fix the login bug”
+Fixed the wrong one of 
+three
+Proxy objective
+“Make the tests pass”
+Deleted the failing test
+Unstated 
+constraint
+“Speed up search”
+Broke the public API
+No definition of 
+done
+“Clean up the parser”
+Never stopped 
+refactoring
+Conflicting goals
+“Minimal diff, every 
+edge case”
+Silently dropped the 
+edge cases
+The fix
+Name the file, symptom 
+and repro
+Forbid test edits; review 
+the diff
+State what must not 
+change
+Give an exit test and a 
+stop rule
+Rank the goals explicitly
+
+----- page 26 -----
+27
+Harvard MaDSys   ·   course.agentic-system.org
+27
+Agent harness
+Failure
+The harness did
+The effect
+The fix
+Context truncation 
+error
+Trimmed the oldest 
+turns
+Forgot the “keep the 
+API” rule
+Pin key rules outside the 
+window
+Memory error
+Recalled a stale note 
+as fact
+Edited a file that had 
+moved
+Date memories; re-check 
+before use
+State corruption error
+Kept a half-applied 
+edit
+Later steps built on 
+broken files
+Checkpoint; roll back 
+failed steps
+Control loop error
+Set no step or cost 
+budget
+200 steps, no 
+progress
+Cap steps, cost and time
+Blocking fan-out
+Waited on every 
+sub-agent
+One slow child stalled 
+the run
+Set timeouts; use partial 
+results
+
+----- page 27 -----
+28
+Harvard MaDSys   ·   course.agentic-system.org
+28
+Model
+Failure
+The model reasoned
+The agent did
+Hallucination
+“requests.fetch() exists”
+Called a nonexistent 
+function
+Instruction 
+violation
+“Speed matters more 
+than the API”
+Changed a signature it 
+was told to keep
+Faulty reasoning
+“A timeout means the 
+network is down”
+Added retries to a 
+deadlock
+Reasoning–
+action mismatch
+“I’ll only touch 
+parser.py”
+Rewrote three other files
+Unverified 
+success
+“Tests probably pass 
+now”
+Declared done, ran 
+nothing
+Long-horizon 
+degradation
+“The config still needs 
+fixing”
+Undid its own fix from 
+step 12
+The fix
+Check calls against real 
+docs
+Restate constraints; 
+check the diff
+Test the hypothesis 
+before fixing
+Compare each action to 
+the plan
+Require test output as 
+proof
+Re-read state; split into 
+short tasks
+
+----- page 28 -----
+29
+Harvard MaDSys   ·   course.agentic-system.org
+29
+Tool
+Failure
+The tool returned
+The agent did
+Truncated 
+output
+First 100 lines of a log
+Missed the error on line 
+4,000
+Silent failure
+Exit 0, empty result
+Assumed there were no 
+matches
+Ambiguous 
+schema
+A date with no time 
+zone
+Scheduled the job 8 
+hours off
+Flaky call
+A timeout on the first 
+try
+Declared the service 
+down
+Misleading error
+“Permission denied” 
+on a typo
+Retried with sudo
+The fix
+Return errors first; allow 
+paging
+Separate “empty” from 
+“failed”
+Use typed, explicit 
+schemas
+Retry with backoff 
+before judging
+Return precise, 
+actionable errors
+
+----- page 29 -----
+30
+Harvard MaDSys   ·   course.agentic-system.org
+30
+Environment
+Failure
+The environment had
+The agent did
+Stale state
+Yesterday’s cached 
+build
+Passed tests on old code
+Version 
+mismatch
+Python 3.8, not 3.12
+Shipped code that 
+crashed
+Random failure
+Task success depends 
+on environment
+Failed bc of leap year
+Changed web 
+page layout
+A redesigned checkout 
+page
+Clicked the wrong 
+button
+Rate limit
+HTTP 429 after 50 calls
+Stopped mid-migration
+The fix
+Build clean from a fresh 
+cache
+Pin versions in a lockfile
+Rerun failures; 
+quarantine flakes
+Re-read the page before 
+acting
+Throttle and checkpoint 
+long jobs
+
+----- page 30 -----
+31
+Harvard MaDSys   ·   course.agentic-system.org
+31
+Designing for failure
+Task 
+specification
+Write “done” 
+as a test
+• Acceptance 
+tests up front
+• List what must 
+not change
+Agent harness
+Bound every 
+run
+• Step, cost and 
+time caps
+• Checkpoint 
+and roll back
+Model
+Demand 
+evidence
+• Proof for every 
+claim
+• Verify 
+• Use stronger 
+models
+Tool
+Fail loudly
+• Typed 
+schemas
+• Errors distinct 
+from empty
+Environment
+Pin and 
+isolate
+• Fresh, pinned 
+sandboxes
+• Retry flakes 
+before judging
+We do not yet understand agents at scale, and there is little formal best practice.
+
+----- page 31 -----
+32
+Harvard MaDSys   ·   course.agentic-system.org
+32
+Next class
+• Agent evaluation
+• Cost-effective agent
+• Case studies

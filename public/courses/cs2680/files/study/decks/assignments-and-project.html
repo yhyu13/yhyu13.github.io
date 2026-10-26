@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="academic-paper" data-theme-base="../assets/themes/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS2680 &middot; Assignments, final project, and policy</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/academic-paper.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+    <style>
+    /* deck-local styles - tokens only, no literal colours */
+    .slide{padding:88px 96px 104px}
+    .slide.dense .h2{font-size:40px}
+    .slide.dense .lede{font-size:19px}
+    .t{width:100%;border-collapse:collapse;font-size:16px}
+    .t th,.t td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    .t th{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);font-weight:600}
+    .t tr:hover td{background:var(--surface-2)}
+    .t td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+    .t.sm{font-size:13px}
+    .t.sm th,.t.sm td{padding:5px 9px}
+    .t td code{font-size:.92em}
+    ul.clean{list-style:none;padding:0;margin:10px 0 0}
+    ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:15px;color:var(--text-2);line-height:1.55}
+    ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+    .card h4{margin-bottom:6px}
+    .card p{font-size:15px;line-height:1.55}
+    .vs{display:grid;grid-template-columns:1fr 76px 1fr;gap:24px;align-items:stretch;margin-top:22px}
+    .vs .side{padding:26px}
+    .vs .mid{font-size:48px;font-weight:800;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+    .vs .bad-side{border-top:3px solid var(--bad)}
+    .vs .good-side{border-top:3px solid var(--good)}
+    .vs h3{font-size:22px}
+    .vs .vs-li li{color:var(--text-2)}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px}
+    .step{position:relative;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+    .step .num{position:absolute;top:-22px;left:20px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .step h4{margin:16px 0 6px;font-size:16px}
+    .step p{font-size:13px;color:var(--text-2);line-height:1.55}
+    .step .tag{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-3)}
+    .flow{display:flex;align-items:stretch;gap:14px;margin-top:26px}
+    .flow .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+    .flow .node h4{font-size:15px;margin:0 0 4px}
+    .flow .node p{font-size:12px;color:var(--text-3);margin:0}
+    .flow .arr{color:var(--text-3);font-size:26px;align-self:center}
+    .flow .node.hl{border-color:var(--accent);border-width:2px}
+    .tl{position:relative;margin-top:26px}
+    .tl::before{content:"";position:absolute;left:0;right:0;top:44px;height:2px;background:var(--border)}
+    .tl .row{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;align-items:start}
+    .tl .item{position:relative;padding-top:74px;text-align:center}
+    .tl .dot{position:absolute;top:32px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);border:4px solid var(--bg);box-shadow:0 0 0 2px var(--accent)}
+    .tl .year{font-size:13px;color:var(--text-3);letter-spacing:.1em;text-transform:uppercase;position:absolute;top:0;left:0;right:0;font-weight:600}
+    .tl h4{font-size:16px}
+    .tl p{font-size:12px;color:var(--text-2)}
+    .arch{margin-top:16px;display:grid;gap:16px}
+    .arch .tier{display:grid;grid-template-columns:130px 1fr;align-items:stretch;gap:18px}
+    .arch .tname{display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;font-weight:600;font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+    .arch .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .arch .cells.three{grid-template-columns:repeat(3,1fr)}
+    .arch .cell{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .arch .cell h4{font-size:14px;margin:0 0 3px}
+    .arch .cell p{font-size:11px;color:var(--text-3);margin:0}
+    .arch .tier.hl .cell{border-top:3px solid var(--accent)}
+    .chk{max-width:880px;margin-top:18px}
+    .chk li{list-style:none;display:flex;align-items:flex-start;gap:13px;padding:11px 16px;border-bottom:1px solid var(--border)}
+    .chk li .b{flex-shrink:0;width:20px;height:20px;border:2px solid var(--border-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-top:3px}
+    .chk li.done .b{background:var(--good);border-color:var(--good);color:var(--surface)}
+    .chk li.done .b::after{content:"\2713";font-weight:900}
+    .chk li.done .t{text-decoration:line-through;color:var(--text-3)}
+    .chk li .t{font-size:17px}
+    .chk li .tag{margin-left:auto;font-size:11px;color:var(--text-3);white-space:nowrap}
+    .rm{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .rm .col{padding:18px 20px;border-right:1px solid var(--border);background:var(--surface)}
+    .rm .col:last-child{border-right:none}
+    .rm .col .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;background:var(--surface-2);color:var(--text-2);margin-bottom:8px}
+    .rm .col.now{background:var(--surface-2)}
+    .rm .col.now .tag{background:var(--accent);color:var(--surface)}
+    .rm h4{font-size:15px;margin:6px 0 2px}
+    .rm ul.clean li{font-size:13px}
+    .srcbox{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:10px}
+    .srcbox a{color:var(--accent)}
+    .deck-footer{font-size:11px}
+    </style>
+</head>
+<body data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint" data-theme-base="../assets/themes/">
+<div class="deck" data-themes="academic-paper,editorial-serif,minimal-white,swiss-grid,corporate-clean,engineering-whiteprint">
+
+  <div class="deck-header">
+    <span class="eyebrow">CS2680 &middot; Modern AI Systems: Agents and System Optimizations</span>
+    <span class="eyebrow">Harvard SEAS &middot; Fall 2026</span>
+  </div>
+  <div class="deck-footer">
+    <span class="dim2">CS2680 · Assignments and project &middot; Source: https://cs2680.seas.harvard.edu/assignments/index.html</span>
+    <span class="slide-number" data-current="1" data-total="13"></span>
+  </div>
+
+  <section class="slide" data-title="The five assignments and the final project">
+
+  <p class="kicker">Course mechanics · assignments, project, policy</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">The five assignments and the final project</h1>
+  <p class="lede">One private repository, three artifacts per assignment, and a project that inverts the problem: you choose the evaluation.</p>
+  <div class="row wrap mt-l" style="gap:8px"><span class="pill pill-accent">5 assignments</span><span class="pill ">70% of the grade</span><span class="pill ">Project 20%</span><span class="pill ">4 late days</span><span class="pill ">No exam</span></div>
+  <p class="dim2 mt-l" style="font-size:15px">assignments/index.html · project.html · policy.html</p>
+    <div class="notes">The sequence walks down the stack: use an agent, replace the runtime with your own loop, optimize everything around a black-box API, remove the API and own the serving engine, then optimize the whole stack.</div>
+  </section>
+  <section class="slide" data-title="The five Mads assignments">
+
+  <p class="kicker">Deliverables</p>
+  <h2 class="h2">The five Mads assignments</h2>
+  <p class="lede mb-l">Mads abbreviates Modern Agent Design and Systems, and nods to Harvard's MaDSys group. All five are individual.</p>
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>#</th><th>Codename</th><th>Title</th><th>Weight</th><th>Out</th><th>Due</th><th>Effort</th><th>Spec</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Mads-Lens</td><td>Watch the agent work - build a web UI for Claude Code</td><td>10%</td><td>Wed Sep 2</td><td>Sun Sep 20, 11:59pm</td><td>4-6 hours</td><td>Published</td></tr><tr><td>2</td><td>Mads-Loop</td><td>Build the loop - build an agent harness</td><td>10%</td><td>Mon Sep 21</td><td>Sun Oct 4, 11:59pm</td><td>10-12 hours</td><td>Published</td></tr><tr><td>3</td><td>Mads-Opt</td><td>Make every token count - harness competition</td><td>20%</td><td>Mon Oct 5</td><td>Tue Oct 20, 11:59pm</td><td>10-15 hours</td><td>Published</td></tr><tr><td>4</td><td>Mads-Serve</td><td>Own the serving engine - serve your own agent</td><td>20%</td><td>Wed Oct 21</td><td>Tue Nov 10, 11:59pm</td><td>10-14 hours</td><td>Not published</td></tr><tr><td>5</td><td>Mads-Stack</td><td>Optimize the full stack</td><td>10%</td><td>Wed Nov 11</td><td>Sun Nov 29, 11:59pm</td><td>12-18 hours</td><td>Not published</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Only assignments 1 to 3 have a published full specification. For assignments 4 and 5 the index page publishes the date, weight, codename, one-paragraph summary and effort estimate, and links to a not-yet-released page.</p>
+    <div class="notes">The grading instrument changes with each assignment: a feature checklist for A1, hidden held-out tasks for A2, a leaderboard rank for A3 - each step removes more of the scaffolding the course provides.</div>
+  </section>
+  <section class="slide" data-title="The same rules for all five">
+
+  <p class="kicker">Shared constraints</p>
+  <h2 class="h2">The same rules for all five</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>One repository</h4><ul class="clean "><li>One private GitHub repository serves the whole course - create it once</li><li>Each assignment's code, writeup files, benchmark outputs and session archives live under assignmentN/, from assignment1/ to assignment5/</li><li>Keep it private and add the instructor and the four TFs as collaborators</li></ul></div><div class="card "><h4>Three artifacts every time</h4><ul class="clean "><li>Code</li><li>A writeup</li><li>An archive of Claude Code session files</li><li>The session files carry no separate weight, but they are the record behind the writeup's process claims</li></ul></div><div class="card "><h4>AI use</h4><p class="dim">AI use is encouraged, must be disclosed on every submitted artifact, and never replaces authorship. Writeups must be your own prose, and you must be able to explain your own work unaided.</p></div><div class="card "><h4>Late days</h4><ul class="clean "><li>Four for the semester, counted in whole days, spendable across assignments</li><li>A submission one minute late consumes a full day</li><li>Once exhausted, late work loses 20% of its value per day, to a floor of zero after five days</li><li>They cannot be applied to student sharing sessions or the final project poster session</li></ul></div>
+  </div>
+    <div class="notes">Every assignment demands a record alongside the artifact, so the course grades the process and not only the output. That is why the session archives are mandatory even though they carry no points.</div>
+  </section>
+  <section class="slide" data-title="Build a web page that drives Claude Code">
+
+  <p class="kicker">Assignment 1 · Mads-Lens</p>
+  <h2 class="h2">Build a web page that drives Claude Code</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The build</h3>
+      
+      <ul class="clean "><li>A server spawns the headless command as a subprocess, forwards its events to the browser, and keeps the session id so a follow-up prompt can resume</li><li>Part 1 first: run claude -p &quot;&lt;prompt&gt;&quot; --output-format stream-json --verbose in a terminal, read the events, and save one run to events.jsonl as the Part 2 test input</li><li>The final result event carries total_cost_usd, duration_ms, num_turns and session_id</li><li>Seven required features: submit a prompt; show the trajectory live; show tool results, deliberately cut down long outputs; show status per tool call and per run; continue the conversation via session resume; show the run's numbers; show the trajectory as a tree, nesting subagent events under their spawning call via parent_tool_use_id</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>Rules, deliverables, grading</h3>
+      
+      <ul class="clean "><li>Auto-accept permission prompts with --dangerously-skip-permissions or --allowedTools, and authenticate with the Harvard login</li><li>Using the Agent SDK or an ANTHROPIC_API_KEY is explicitly wrong: the SDK needs Claude Console API keys the course does not provide, and an exported key takes precedence over the Harvard login and silently bills your own account</li><li>Do not use an agent framework or reimplement the agent loop - that is Assignment 2. Any web stack is allowed, and serving on your own machine suffices; if you expose a public URL you must put a random access token in front of it</li><li>Deliverables: code in assignment1/ with a README, the writeup at assignment1/writeup.md or .pdf, a 2-3 minute demo video on Canvas showing all seven features including a failing run and a subagent run, and the session-file archive committed to assignment1/</li><li>Grading: 70% for the seven features at 10% each, 20% writeup, 10% visual design</li></ul>
+    </div>
+  </div>
+    <div class="notes">Assignment 1 is the one assignment nothing later is measured against, which frees it to be exploratory and to be built with Claude Code itself.</div>
+  </section>
+  <section class="slide" data-title="Build madsLoop, a minimal coding-agent harness">
+
+  <p class="kicker">Assignment 2 · Mads-Loop</p>
+  <h2 class="h2">Build madsLoop, a minimal coding-agent harness</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The fixed parts</h3>
+      
+      <ul class="clean "><li>The model is fixed: qwen3.6-35b-a3b via the course proxy https://api.cs2680.com/v1, with the key exported as CS2680_API_KEY</li><li>Interface: python madsLoop.py -p &quot;&lt;problem statement&gt;&quot; [--log] &lt;workdir&gt;</li><li>The agent may read, search, edit and run commands only inside &lt;workdir&gt;, and the fix ends as unstaged changes, with later patches coming from git diff</li><li>A workable minimal tool set is bash, read_file, edit_file and done</li><li>Ten tasks are provided, and some are impossible even with a perfect harness</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>What you must supply</h3>
+      
+      <ul class="clean "><li>The harness: tool definitions with a name, a natural-language description and a JSON Schema for parameters; the agentic loop, appending the assistant message and exactly one tool-result message per call; and conversation state management, where an unpaired call is an API error</li><li>A system prompt covering role, interface, reproduction protocol and context growth, and at minimum truncation of large tool outputs</li><li>Logging with --log to ./madsLoop_logs/&lt;run&gt;.jsonl, one JSON object per line, with timestamp and event, and exactly the events run_start, api_request, api_retry, tool_call, tool_result and run_end</li><li>mytest/: four tasks of your own, split into solved_after_change.json and unsolved.json, plus a verify.sh that prints RESOLVED only if every fail_to_pass test passes and no pass_to_pass test regresses</li></ul>
+    </div>
+  </div>
+    <div class="notes">The evaluation runs the official SWE-bench Pro evaluation, so editing tests cannot help: it applies your diff to a fresh checkout, restores the held-out test files and runs the tests.</div>
+  </section>
+  <section class="slide" data-title="A leaderboard competition, not a prompt-writing exercise">
+
+  <p class="kicker">Assignment 3 · Mads-Opt</p>
+  <h2 class="h2">A leaderboard competition, not a prompt-writing exercise</h2>
+  
+  <div class="grid g2 mt-l" style="align-items:start">
+    <div class="card anim-fade-left" data-anim="fade-left">
+      <h3>The contract</h3>
+      
+      <ul class="clean "><li>The grader takes only your src/, zipped as src.zip and uploaded to the leaderboard</li><li>The same dispatcher/, madsOpt.py and evaluation_scripts/ as the starter code are run - do not modify them for local testing</li><li>Your agent runs in an agent container built from dispatcher/agent.Dockerfile with src/ mounted; the starter_code folder is mounted read-only at /madsOpt, where you may write only .tasks/ and madsOpt_logs/</li><li>Each task runs in its own container with the repo at /app. A tiny HTTP server, src/sandbox_server.py, exposes /health, /exec, /read and /write on port 8000 - everything you do to a repository goes through those calls</li><li>Neither container reaches the internet: the agent container's only egress is a proxy to the course API at CS2680_BASE_URL, and Go task containers come with GOPROXY=off</li></ul>
+    </div>
+    <div class="card anim-fade-right" data-anim="fade-right">
+      <h3>The dispatcher API and the limits</h3>
+      
+      <ul class="clean "><li>next_task, extract_patch(k) and submit_patch(k, text), evaluate(k) returning tests_failed, tests_total and attempt, continue_task(k), done(k, reason, iterations), and logger(k), which the leaderboard reads your turn counts from</li><li>At most 5 tasks live at once, and one attempt at a time per task</li><li>A 35-minute grading time limit per task - a hanging suite counts as all its tests failing - and a 4-hour whole-run limit counted from opening the first task; unopened tasks count as failures</li><li>Three model tiers priced per 1M tokens: expert at $2.00 input, $0.10 cached input, $10.00 output; standard at $0.08, $0.004, $0.28; starter at $0.01, $0.0005, $0.04. You may use any of them, as many as you like, in one run</li></ul>
+    </div>
+  </div>
+    <div class="notes">Log in to the leaderboard with your Harvard email and the initial password Cs2680-&lt;your 8-digit student ID&gt;, then change it.</div>
+  </section>
+  <section class="slide" data-title="How the leaderboard ranks and scores">
+
+  <p class="kicker">Assignment 3 · Mads-Opt</p>
+  <h2 class="h2">How the leaderboard ranks and scores</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Rule</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>The task set</td><td>26 tasks, numbered 1 to 26. You choose how many - the first k - to grade. A run is cut at 4 hours.</td></tr><tr><td>The three metrics</td><td>The number of tasks solved, the cost per solved task, and the time per solved task.</td></tr><tr><td>The ranking rule</td><td>Each student is ranked by their best submission. Best submissions solving at least 7 tasks are ranked in skyline layers over the three metrics: submission A dominates B if it is at least as good on all three and better on one. Submissions solving fewer than 7 tasks rank below all of them, ordered by tasks solved alone.</td></tr><tr><td>Ties</td><td>Equal ranks are ties - 1, 1, 1, 4... A new submission becomes your best only if it ranks strictly better.</td></tr><tr><td>The budget</td><td>At most one submission queued or being graded at a time, with a Cancel button. $30 per day for leaderboard grading, with a $10 limit per submission. If either limit is reached, grading stops and what it completed is recorded. Cancelling a queued submission costs nothing; cancelling one being graded stops the run, deducts the cost so far, and records the three metrics as of that moment.</td></tr><tr><td>The scoring formula</td><td>max(81 - r, 50) if any submission achieves the baseline, and 81 - r otherwise. Rank 1 scores 80, rank 12 scores 69, and rank 40 scores 50 if it beats the baseline and 41 if it does not. The baseline solves 16 tasks in 4 hours within a limit of $10.</td></tr><tr><td>The point split</td><td>The leaderboard accounts for 80 points, with another 10 for the writeup and 10 for the video.</td></tr><tr><td>The deadline</td><td>The leaderboard closes Tuesday, October 20, 11:59pm and accepts no late days; missing it scores 0 for the leaderboard. Late days apply only to the repo and the video.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The policy page prints the same leaderboard formula differently - max(80 - rank, 50 if you beat the baseline), with the floor changing nothing inside the top 30. Both are published as written; the Assignment 3 page is the one tied to its own rubric, so the figures above are that page's.</p>
+    <div class="notes">The scoring structure teaches &quot;clear the baseline, then compete on efficiency&quot;, not &quot;maximize the raw score&quot;. And a cancelled submission still counts and consumes the daily budget.</div>
+  </section>
+  <section class="slide" data-title="What you submit, and what the writeup must answer">
+
+  <p class="kicker">Assignment 3 · Mads-Opt</p>
+  <h2 class="h2">What you submit, and what the writeup must answer</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The writeup and video</h4><ul class="clean "><li>assignment3/writeup.pdf, entirely your own work with no AI-generated text</li><li>Three questions: the main components of your harness (for example subagents, memory carried across tasks, which model tier does what); the optimizations and trade-offs you made (for example the policy for continuing versus abandoning a failing task, or how many tasks you keep open); and the pitfalls you hit and what helped</li><li>The video is 3 minutes, your face visible and in your own voice, walking the code and showing where each writeup lesson lives</li></ul></div><div class="card "><h4>The session archive</h4><ul class="clean "><li>Commit your Claude Code session files as assignment3/a3-sessions.tar.gz, produced by package_claude_sessions.py</li><li>The session files carry no points of their own</li></ul></div><div class="card "><h4>Security and bonus</h4><p class="dim">Reporting a security vulnerability can earn up to 3 bonus points toward the final course score; abusing a vulnerability forfeits the submission.</p></div><div class="card "><h4>The index page disagrees about A3</h4><p class="dim">The assignments index says assignments 3 and 5 are submitted as a published blog post, while the published A3 spec requires a writeup.pdf plus a video in the repository. The blog-post requirement appears only on the index page and is not backed by a published spec, so both are reported here.</p></div>
+  </div>
+    <div class="notes">The &quot;index page disagrees&quot; card is a published conflict, not a choice. Do not quietly drop either statement.</div>
+  </section>
+  <section class="slide" data-title="What is published, and what is not">
+
+  <p class="kicker">Assignments 4 and 5</p>
+  <h2 class="h2">What is published, and what is not</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>#</th><th>Codename</th><th>Published fields</th><th>Not published</th></tr></thead>
+      <tbody>
+        <tr><td>4</td><td>Mads-Serve - &quot;Serve your own agent&quot;</td><td>Weight 20%; out Wed Oct 21; due Tue Nov 10, 11:59pm; effort estimate 10-14 hours; a one-paragraph summary</td><td>The full specification - parts, deliverables and grading breakdown - is marked &quot;not published at time of capture&quot;. The assignments index links it to a not-yet-released page.</td></tr><tr><td>5</td><td>Mads-Stack - &quot;Optimize the full stack&quot;</td><td>Weight 10%; out Wed Nov 11; due Sun Nov 29, 11:59pm; effort estimate 12-18 hours; a one-paragraph summary</td><td>The full specification is likewise not published. The to_release table marks assignments 1 to 3 as posted and leaves 4 and 5 without a spec link.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">The 2026-10-07 slide deck (8_agent_design_5.pdf, PDF page 2) adds two further published statements: Assignment 3 is worth 20% of the grade and should be treated like a midterm, and Assignment 4 is now worth 20 points while Assignment 5 is worth 10 points - because A5 was judged too hard and overlapped with the course project and other courses' projects.</p>
+    <div class="notes">No effort, date or weight for A4 or A5 was invented: only the fields the index page states. The &quot;part-ii-status&quot; deck covers the same ground from the schedule side.</div>
+  </section>
+  <section class="slide" data-title="Two tracks, one rubric, one claim">
+
+  <p class="kicker">Final project</p>
+  <h2 class="h2">Two tracks, one rubric, one claim</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>The tracks</h4><p class="dim">Product or research, named in the proposal and switchable later by emailing the instructor. Same deadlines, deliverables and rubric; the research track is held to a higher standard of novelty and evidence.</p></div><div class="card "><h4>Product</h4><p class="dim">Build an AI system that solves a real problem better than the strongest available alternative. The gap may come from missing context, poor reliability, high cost, slow response, privacy constraints, or an unsupported workflow.</p></div><div class="card "><h4>Research</h4><p class="dim">Requires an original, falsifiable claim about agents or the systems that run them: a result the closest published work does not provide, an explanation of why it occurs, and the conditions under which it holds. A polished implementation, a reproduction, a benchmark or a set of measurements does not meet the bar alone.</p></div><div class="card "><h4>Contribution forms and sides</h4><p class="dim">Forms: Measurement, Mechanism, Reproduction and boundary, Instrument. Sides: agent-side - planning, tool use, memory, context management, verification, multi-agent coordination, evaluation - or systems-side - inference, batching, scheduling, caching, routing, quantization, compression, kernels.</p></div>
+  </div>
+    <div class="notes">The project is the same skill set as the assignments with the problem inverted: students must choose the evaluation rather than receive it.</div>
+  </section>
+  <section class="slide" data-title="Deliverables, milestones and the evidence bar">
+
+  <p class="kicker">Final project</p>
+  <h2 class="h2">Deliverables, milestones and the evidence bar</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Requirement</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Weight and format</td><td>Individual, 20% of the course grade; one proposal, one poster and demo, one blog post and repository.</td></tr><tr><td>Proposal</td><td>Wed Oct 28, 11:59pm, 2% of the course grade, one PDF on Canvas, no page limit. Nine sections in order: title and summary, problem, existing work and the gap, claim, design, evaluation plan, goals, plan and resources, references.</td></tr><tr><td>Poster and demo</td><td>Mon Dec 7, 9:00am-1:00pm, SEC 1.402, 10%, in person. A visitor should find problem, gap, system or experiment and main result in a few minutes; include at least one figure legible from two meters; a live demo should run reliably in about two minutes. Each student reviews several other projects, and peer scores count toward the grade. Reviews are anonymous to the presenter and signed to the instructor. Late days do not apply to the poster session.</td></tr><tr><td>Blog post</td><td>Tue Dec 8, 11:59pm, 8%, a pull request to the course blog repository; the deadline is the moment the pull request is opened, with no need to merge it. Eight required items: problem and gap, design, evaluation method, results including comparisons where you did worse, limitations and threats to validity, which goal you reached, repository and demo links, and the AI use note.</td></tr><tr><td>Repository</td><td>Must let another person reproduce the main result: installation and execution guide, raw measurements behind each figure, figure-generating scripts, hardware, software versions and workload for every reported number; label all axes and units; keep figures legible in print and in grayscale.</td></tr><tr><td>The gap requirement</td><td>Product: run at least three of the closest commercial tools, open-source systems or research prototypes on your own task, give the same input directly to a frontier model, describe how each one fails, and end with the gap in one testable sentence. Research: cite the closest published work, state what it leaves unsettled, report what you reproduced so far, and state the result your experiment will establish that the closest published result does not.</td></tr><tr><td>Baselines</td><td>Product: the strongest existing system run on your tasks, plus the current by-hand workflow timed before your tool changes it. Research: the unmodified agent or system, plus the strongest published method or result reproduced in your setup.</td></tr><tr><td>The research evidence bar</td><td>State the hypothesis and fix the protocol before the main experiment; repeated trials; reported variation or uncertainty; an isolated proposed cause; at least one boundary condition tested; reproduction artifacts kept. A single benchmark score, one favorable prompt example, or one throughput number does not meet the bar.</td></tr><tr><td>Goals</td><td>75% is the minimum result you are confident you can deliver even if the main idea fails; 100% is the result you plan to deliver; 125% is an extension attempted if you reach 100% early. The blog post reports which goal you reached.</td></tr><tr><td>Pacing</td><td>Five weeks: week 1 fixes the problem and records the baseline; week 2 runs an end-to-end prototype; weeks 3 and 4 improve and run controlled experiments; week 5 analyzes results and prepares the poster, demo, blog post and repository. Run the complete path once and take the first measurement before building more infrastructure.</td></tr><tr><td>Grading dimensions</td><td>Weighted equally for both tracks: problem and motivation, technical execution, evaluation, reporting. A project whose main idea fails can still earn nearly full credit if the blog explains what you expected, what you measured, and why they differ.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+    <div class="notes">The project overlaps Assignment 4 (due Tue Nov 10) and Assignment 5 (due Sun Nov 29), so the poster and blog post must start before the final week. The rubric's hidden spine is &quot;measure one level deeper&quot; - breaking the 60-second result into the 40 seconds of tool calls.</div>
+  </section>
+  <section class="slide" data-title="Grading, bonus, integrity and computing">
+
+  <p class="kicker">Policy</p>
+  <h2 class="h2">Grading, bonus, integrity and computing</h2>
+  
+  <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+    <div class="card "><h4>Grading and the A policy</h4><p class="dim">These are the weights the assignments index and the policy page publish, and the ones the Assignment 1 to 3 spec headers agree with. Lecture 1 printed a different split on 2026-09-02, before the change recorded in Lecture 2; the course-overview deck shows both readings side by side with their sources.</p><ul class="clean "><li>A1 10%, A2 10%, A3 20%, A4 20%, A5 10%, final project 20%, class participation 10%, bonus up to 10%</li><li>No more than 20% of the class receives an A</li><li>Each leaderboard-scored assignment is scored out of 100, scaling to its share of the grade: 80 points for system performance and 20 for the write-up and video. A3 ranks on task solve rate and cost; A5 on task solve rate, API and GPU cost, and latency</li></ul></div><div class="card "><h4>Bonus, capped at 10% overall</h4><ul class="clean "><li>Optional presentations up to 4% each</li><li>Course feedback up to 4% - the home page says up to 6%</li><li>Problems current AI cannot solve at 2% each</li><li>An AI-stumper submission needs the exact prompt, the responses from ChatGPT, Claude and Gemini with date and model version, the correct answer with evidence, and a sentence on why the models failed</li></ul></div><div class="card "><h4>Participation and lectures</h4><ul class="clean "><li>Participation is 10% of the grade, earned for active participation; attendance is not tracked, and no participation means a participation score of zero</li><li>Laptops are welcome for note-taking, closed during student presentations and guest lectures</li><li>Lectures are not recorded</li><li>Auditing is allowed if there is room, by emailing the instructor before the first class; auditors do the reading for sessions they attend, do not submit assignments, are not graded, and are not provided computing</li></ul></div><div class="card "><h4>Academic integrity</h4><ul class="clean "><li>Discussing ideas, reading papers together and debugging are encouraged</li><li>Not acceptable: submitting work you did not do, copying without attribution, fabricating experimental results, or misrepresenting a measurement</li><li>Fabricated numbers are the one thing treated as a serious violation without exception</li><li>Poster peer review adds score trading and retaliatory downgrades to the list</li><li>Cite papers, blog posts, repositories and AI tools alike</li></ul></div>
+  </div>
+    <div class="notes">The 4% against 6% course-feedback cap is a published disagreement between the home page and the policy page, both inside the stated overall bonus cap of 10%. Both numbers are reported rather than one being chosen.</div>
+  </section>
+  <section class="slide" data-title="Where you run things">
+
+  <p class="kicker">Computing</p>
+  <h2 class="h2">Where you run things</h2>
+  
+  <div class="card mt-l" style="padding:6px 12px">
+    <table class="t sm">
+      <thead><tr><th>Environment</th><th>What it is</th><th>Needed for</th></tr></thead>
+      <tbody>
+        <tr><td>Claude Code</td><td>Harvard FAS provides a Claude Code license; submit a request for access</td><td>Required for Assignment 1, and potentially throughout the course</td></tr><tr><td>Model API access</td><td>OpenAI, Anthropic and Google models provided by Harvard FAS ATG, routed through the MaDSys hybridInference proxy. An account is created for every enrolled student and credentials are posted on Canvas, so there is nothing to register for - but be frugal</td><td>Required for Assignments 2 and 3</td></tr><tr><td>Course HPC (Harvard ATG)</td><td>An interactive Slurm job for long runs, plus the course GPU partition (RTX PRO 6000 Blackwell)</td><td>Required for Assignments 4 and 5, and the default for most serving projects</td></tr><tr><td>AWS</td><td>Registration is required of every student and the form closes after week one; use is optional - a small EC2 deployment with no GPU. Protect the endpoint, set a billing alarm before launch, and stop the instance when finished</td><td>Register in week one; use optional, for Assignment 1 hosting and project work</td></tr><tr><td>CloudLab</td><td>Bare metal, kernel or network access, isolated from a shared cluster</td><td>Project work, when the research question depends on bare-metal control or isolation</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dim2 mt-m" style="font-size:14px">Supporting tips from the computing page: keep secrets out of agent sessions, because a transcript contains the files the agent read and the command output; describe your environment and experiment setup - GPU, driver, serving engine and version, model, workload - because latency or throughput without that context cannot be reproduced; release idle resources; and escalate access problems early.</p>
+    <div class="notes">The project page also lists FASRC (H100 and H200 research nodes, with access approval and queue time) and sets a data-handling rule: a hosted API sends data off your machine, so check lab rules and IRB conditions for unpublished results, collaborators' data, human-subjects data or private communications.</div>
+  </section>
+
+  <section class="slide" data-title="Source &amp; navigation">
+    <p class="kicker">Provenance</p>
+    <h2 class="h2">Source &amp; navigation</h2>
+    <p class="lede">Every fact on this deck comes from the published Harvard CS2680 material below.</p>
+    <div class="card mt-l">
+      <h4>Upstream</h4>
+      <ul class="clean">
+<li><a href="https://cs2680.seas.harvard.edu/assignments/index.html">https://cs2680.seas.harvard.edu/assignments/index.html</a> &mdash; the assignments index - codenames, weights, dates, effort</li><li><a href="https://cs2680.seas.harvard.edu/assignments/assignment1.html">https://cs2680.seas.harvard.edu/assignments/assignment1.html</a> &mdash; Assignment 1 - Mads-Lens</li><li><a href="https://cs2680.seas.harvard.edu/assignments/assignment2.html">https://cs2680.seas.harvard.edu/assignments/assignment2.html</a> &mdash; Assignment 2 - Mads-Loop</li><li><a href="https://cs2680.seas.harvard.edu/assignments/assignment3.html">https://cs2680.seas.harvard.edu/assignments/assignment3.html</a> &mdash; Assignment 3 - Mads-Opt</li><li><a href="https://cs2680.seas.harvard.edu/slides/8_assignment3.pdf">https://cs2680.seas.harvard.edu/slides/8_assignment3.pdf</a> &mdash; the Assignment 3 briefing deck attached to the 2026-10-07 lecture</li><li><a href="https://cs2680.seas.harvard.edu/project.html">https://cs2680.seas.harvard.edu/project.html</a> &mdash; the final project specification</li><li><a href="https://cs2680.seas.harvard.edu/policy.html">https://cs2680.seas.harvard.edu/policy.html</a> &mdash; the course policy</li>
+      </ul>
+    </div>
+    <div class="row mt-l" style="gap:10px">
+      <a class="pill pill-accent" href="../index.html">&larr; Course index</a>
+      
+    </div>
+    <div class="notes">Provenance slide. The deck was generated from the course digest, which records the upstream URLs, the page markers and every number. The upstream source for this deck is https://cs2680.seas.harvard.edu/assignments/index.html.</div>
+  </section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>
