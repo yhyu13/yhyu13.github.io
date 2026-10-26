@@ -255,38 +255,47 @@
     }
 
     .book-card[data-book="identity"] {
-      --x: 17%;
-      --y: 41%;
-      --w: min(22vw, 318px);
+      --x: 10%;
+      --y: 42%;
+      --w: min(19vw, 300px);
       --r: -8deg;
       --yaw: -7deg;
       z-index: 1;
     }
 
     .book-card[data-book="craft"] {
-      --x: 39%;
+      --x: 30%;
       --y: 32%;
-      --w: min(24vw, 345px);
+      --w: min(21vw, 330px);
       --r: .8deg;
       --yaw: -3deg;
       z-index: 3;
     }
 
     .book-card[data-book="archive"] {
-      --x: 61%;
-      --y: 42%;
-      --w: min(22vw, 318px);
+      --x: 50%;
+      --y: 44%;
+      --w: min(19vw, 300px);
       --r: 8deg;
       --yaw: 7deg;
       z-index: 2;
     }
 
     .book-card[data-book="decks"] {
-      --x: 83%;
+      --x: 70%;
       --y: 34%;
-      --w: min(22vw, 318px);
+      --w: min(19vw, 300px);
       --r: -5deg;
       --yaw: 4deg;
+      z-index: 2;
+    }
+
+    .book-card[data-book="courses"] {
+      --x: 90%;
+      --y: 40%;
+      --w: min(19vw, 300px);
+      --r: 6deg;
+      --yaw: 5deg;
       z-index: 2;
     }
 
@@ -1198,27 +1207,33 @@
       }
 
       .book-card[data-book="identity"] {
-        --x: 12%;
+        --x: 5%;
         --y: 41%;
-        --w: min(42vw, 320px);
+        --w: min(38vw, 315px);
       }
 
       .book-card[data-book="craft"] {
-        --x: 37.3%;
+        --x: 27.5%;
         --y: 35%;
-        --w: min(46vw, 345px);
+        --w: min(42vw, 345px);
       }
 
       .book-card[data-book="archive"] {
-        --x: 62.7%;
+        --x: 50%;
         --y: 42%;
-        --w: min(42vw, 320px);
+        --w: min(38vw, 315px);
       }
 
       .book-card[data-book="decks"] {
-        --x: 88%;
+        --x: 72.5%;
         --y: 36%;
-        --w: min(42vw, 320px);
+        --w: min(38vw, 315px);
+      }
+
+      .book-card[data-book="courses"] {
+        --x: 95%;
+        --y: 40%;
+        --w: min(38vw, 315px);
       }
 
       [data-mode="detail"] .stage {
@@ -1289,27 +1304,33 @@
       }
 
       .book-card[data-book="identity"] {
-        --x: 2%;
+        --x: 0%;
         --y: 45%;
-        --w: 52vw;
+        --w: 50vw;
       }
 
       .book-card[data-book="craft"] {
-        --x: 34%;
+        --x: 25%;
         --y: 40%;
         --w: 58vw;
       }
 
       .book-card[data-book="archive"] {
-        --x: 66%;
+        --x: 50%;
         --y: 46%;
-        --w: 52vw;
+        --w: 50vw;
       }
 
       .book-card[data-book="decks"] {
-        --x: 98%;
+        --x: 75%;
         --y: 42%;
-        --w: 52vw;
+        --w: 50vw;
+      }
+
+      .book-card[data-book="courses"] {
+        --x: 100%;
+        --y: 44%;
+        --w: 50vw;
       }
 
       [data-mode="detail"] .stage {

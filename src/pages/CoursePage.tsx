@@ -71,7 +71,22 @@ export function CoursePage() {
     };
   }, [course]);
 
-  if (!course) return null;
+  if (!course) {
+    // An unknown slug renders the page shell with an honest message, like
+    // DeckReader does for an unknown deck — never a blank page.
+    return (
+      <article className="article-page course-page">
+        <div className="article-toolbar">
+          <Link className="article-back" to="/courses">
+            ← Courses
+          </Link>
+        </div>
+        <div className="article-inner">
+          <h1>Unknown course.</h1>
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article className="article-page course-page">
