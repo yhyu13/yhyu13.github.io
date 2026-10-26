@@ -37,9 +37,24 @@ ME = human. YOU = AI. Oldest first. One session = one heading + one two-column t
 | — | 版权判断（用户未明说，由我定，写在 spec 第 5 条并留了改口）：只发课件，不发 Harvard 原站的逐字节镜像 —— 个人主页上再分发第三方课程站最难辩护，官方源一点即达。 |
 | — | 交接：spec/plan 在 `docs/superpowers/`，提交 `3797ec5`；README 加了指针并修掉"三卷"的旧账（实为四卷）；JOURNEY 记本条。实现留给下一个 agent：Task 0 先同步克隆，Task 1 的导出工具写进 CS2680 仓 `tools/export_course_site.py`，assets 在该仓 `deploy/public/`。未推远程。 |
 
+## 2026-10-26 · Courses 卷：实现与上线
+
+| ME | YOU |
+|----|-----|
+| 交接点已推好（spec+plan 三提交），无限 token，gogogogo。 | 按 plan 顺序执行 Task 0–14。Task 0 基线复核：构建产物与交接时哈希一致，12 份 deck PDF 在位。 |
+| — | Task 1–2：CS2680 仓写 `tools/export_course_site.py`（幂等导出，断言 manifest 与文件逐字节一致，`files/` 外绝不写 index.html），158 个文件 18.7 MB 导入 `public/courses/cs2680/`，两次导出 SHA256 全等、只差 exportedAt。study 站 86 个文件与源逐字节一致，浏览器验证翻页/概念索引/搜索可用。 |
+| — | Task 3–8：`courses.ts` 数据模型、第五卷上书架、CourseShelf、CoursePage（六节）、路由、`courses.css`（只复用已有色值）。manifest 里 10 段视频先落占位符，页面如实显示"暂未提供下载"。 |
+| — | Task 9：CS2680 上游 11/11 闸门全绿后，10 段 MP4（89.4 MB）传 GitHub Release `courseware-v1`，带 tag 重导出只动 manifest.json 一行（幂等性自己证明了自己）。 |
+| — | Task 10：`scripts/check-links.mjs` 进 build 收尾——扫 `public/**/*.html` 的 href/src 加 `src/data` 的站内绝对路径；带扩展名的单段引用不算 SPA 路由；负路径测试确认真能抓坏链。 |
+| — | Task 11：海报 2560px→1600px 降采样，7.3 MB→3.15 MB（-57%），800px 宽下标题与数字仍可读；省不到 30% 就保留原 PNG 的闸门写进了导出工具。 |
+| — | Task 12 走查抓到 spec 的一个事实性盲区：书架位置是 CSS 里按书手写的（三个断点各一块 `[data-book=…]`），第五本书 DOM 自动出现但位置 0×0。三处断点按既有构图语言补了第五本并把四本重新布点（10/30/50/70/90%）。顺手把坏 slug 从"空白页"改成 DeckReader 式的诚实报错。 |
+| — | 走查还抓到课程页列表链接是浏览器默认蓝（在 `.article-body` 作用域外），补了 article 同款纸色链接样式。 |
+| — | Task 13：12 个实现提交推上 origin/master，Deploy 绿。线上验证：`/courses/cs2680/` 尾斜杠 404+外壳（和交接实测的 `/archive/capsule/` 同款行为，验收看 body 不看状态码——这条教训差点又踩一次）；manifest/pptx（431777 字节与 manifest 一致）/海报全 200；线上首页五本书，课程页六节十海报十 release 链接全渲染；学习站线上翻页、搜索正常。 |
+| — | Task 14：AGENTS.md 的"In progress"改写为已实现的两仓合同（导出命令、index.html 禁令、release tag、链接检查器四条），README 同步。 |
+
 ## Open items
 
 - 你这边若仍白屏：无痕打开 https://yhyu13.github.io/?v=2，或硬刷新。Network 里 `index.html` 应引用 `/assets/index-….js`，不应再请求 `/src/main.tsx`。
 - GitHub Pages 源必须保持 **GitHub Actions**，不要退回 branch `master` / root。
 - 未把本 journey 归档进 skill。
-- 本轮 mobile / QR 改完后尚未推远程。
+- `CS2680-Courseware` 仓是纯本地仓（无任何 remote）：导出工具的两个提交（`39861a4`、`873b5ca`）只存在于本机。要留底需要建远端（仓名/可见性待定）。
