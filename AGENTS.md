@@ -13,6 +13,18 @@ Live URL: `https://yhyu13.github.io`
 - `npm run build` — typecheck, Vite build, copy `dist/index.html` → `dist/404.html` (SPA fallback), then `scripts/check-links.mjs` (fails the build on any internal reference that does not resolve)
 - `npm run preview`
 
+## Git agent workflow
+
+Work runs as: issue contract → `docs/<N>-<slug>` spec PR (publishes the design
+under `docs/superpowers/`) → `feat|fix|chore/<N>-<slug>` implementation branch in
+its own worktree → independent review → squash merge. Read
+`docs/GIT_WORKFLOW.md` before opening a branch. Helpers:
+`scripts/new-worktree.ps1`, `scripts/list-worktrees.ps1`,
+`scripts/remove-worktree.ps1`. Red lines: never
+commit to `master` directly, one writer per file per worktree, never `git stash`,
+`Refs #N` never `Closes #N` without the user's approval, evidence block (quoted
+command output) in every PR.
+
 ## Layout
 
 - `src/data/manuals.ts` — the volumes (Identity, Craft, Archive, Video Slides, Courses)
@@ -24,6 +36,9 @@ Live URL: `https://yhyu13.github.io`
 - `public/courses/<slug>/files/` — exported courseware (static; no index.html at the course root — it would shadow the SPA route on Pages)
 - `public/` — favicon, `uploads/me.jpg`, old-URL redirect HTML
 - `.github/workflows/pages.yml` — build and deploy `dist/` to GitHub Pages
+- `docs/GIT_WORKFLOW.md` — the issue → spec PR → worktree → implementation PR → review → merge loop
+- `docs/superpowers/specs/`, `docs/superpowers/plans/` — SDD artifacts; a spec PR lands before its implementation branch is cut
+- `scripts/` — build helpers (`check-links.mjs`, …) and worktree lifecycle (`new-worktree.ps1`, `list-worktrees.ps1`, `remove-worktree.ps1`)
 
 ## The Courses volume and its two-repo contract
 

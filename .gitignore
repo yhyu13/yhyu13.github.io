@@ -6,3 +6,4 @@ dist
 incoming/
 content/
 ss/
+.kilo/worktrees/
