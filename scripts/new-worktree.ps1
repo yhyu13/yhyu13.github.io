@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   Create an isolated worktree + branch for one issue.
@@ -52,12 +52,26 @@ function Invoke-Git {
 }
 
 # --- repo root from script location -------------------------------------------------
+# Resolve the MAIN checkout (the common git dir's parent), so worktrees always land
+# in <main-repo>/.kilo/worktrees even when the script is invoked from inside a
+# worktree copy of itself.
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $probe = Invoke-Git -Repo $scriptDir -GitArgs @('rev-parse', '--show-toplevel') -AllowFail
 if ($probe.ExitCode -ne 0) {
     Fail "scripts/new-worktree.ps1 must live inside a git checkout (could not resolve repo root)."
 }
-$RepoRoot = ($probe.Output[0]).Trim() -replace '/', '\'
+$toplevel = ($probe.Output[0]).Trim()
+# Capture the full output — piping through `Select-Object -First 1` stops the
+# pipeline early and clobbers $LASTEXITCODE on PowerShell 5.1.
+$commonDirLines = @(& git -C $scriptDir rev-parse --git-common-dir)
+if ($LASTEXITCODE -ne 0 -or $commonDirLines.Count -eq 0) {
+    Fail "could not resolve the common git dir (exit $LASTEXITCODE)."
+}
+$commonDir = ([string]$commonDirLines[0]).Trim()
+if (-not [IO.Path]::IsPathRooted($commonDir)) {
+    $commonDir = Join-Path $toplevel $commonDir
+}
+$RepoRoot = (Split-Path -Parent ((Resolve-Path -LiteralPath $commonDir).Path)) -replace '/', '\'
 
 # --- validate inputs ----------------------------------------------------------------
 if ($Slug -notmatch '^[a-z0-9]+(-[a-z0-9]+)*$') {

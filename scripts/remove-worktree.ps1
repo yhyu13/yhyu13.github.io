@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   Remove one git worktree and prune its registration.
@@ -27,12 +27,24 @@ function Fail {
     exit 1
 }
 
+# Resolve the MAIN checkout (common git dir's parent), matching new-worktree.ps1.
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $probe = & git -C $scriptDir rev-parse --show-toplevel 2>$null
 if ($LASTEXITCODE -ne 0) {
     Fail "scripts/remove-worktree.ps1 must live inside a git checkout."
 }
-$RepoRoot = ($probe | Select-Object -First 1).ToString().Trim() -replace '/', '\'
+$toplevel = ($probe | Select-Object -First 1).ToString().Trim()
+# Capture the full output — piping through `Select-Object -First 1` stops the
+# pipeline early and clobbers $LASTEXITCODE on PowerShell 5.1.
+$commonDirLines = @(& git -C $scriptDir rev-parse --git-common-dir)
+if ($LASTEXITCODE -ne 0 -or $commonDirLines.Count -eq 0) {
+    Fail "could not resolve the common git dir (exit $LASTEXITCODE)."
+}
+$commonDir = ([string]$commonDirLines[0]).Trim()
+if (-not [IO.Path]::IsPathRooted($commonDir)) {
+    $commonDir = Join-Path $toplevel $commonDir
+}
+$RepoRoot = (Split-Path -Parent ((Resolve-Path -LiteralPath $commonDir).Path)) -replace '/', '\'
 
 if (-not (Test-Path -LiteralPath $Path)) {
     # Accept a worktree path relative to the repo root as well as a literal path.
