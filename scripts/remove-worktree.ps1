@@ -57,6 +57,9 @@ if (-not $Force -and $status) {
     Fail "Worktree is dirty; passing -Force discards uncommitted work. Files:`n$($status | Out-String)"
 }
 
+# Capture the branch BEFORE removal — the directory is gone afterwards.
+$head = & git -C $resolved rev-parse --abbrev-ref HEAD 2>$null
+
 & git -C $RepoRoot worktree remove "$resolved" $(if ($Force) { '--force' } else { @() })
 if ($LASTEXITCODE -ne 0) {
     Fail "git worktree remove failed (exit $LASTEXITCODE)."
@@ -64,7 +67,6 @@ if ($LASTEXITCODE -ne 0) {
 & git -C $RepoRoot worktree prune
 
 # Report the branch so the caller can decide deletion (only after merge).
-$head = & git -C $resolved rev-parse --abbrev-ref HEAD 2>$null
 Write-Host ""
 Write-Host "Removed : $resolved" -ForegroundColor Green
 if ($head -and $head -ne 'HEAD') {
