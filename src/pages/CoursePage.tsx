@@ -119,7 +119,9 @@ export function CoursePage() {
         ) : null}
         {course.sections.map((section) => (
           <section key={section.kind} className="course-section">
-            <p className="doc-label">{section.label}</p>
+            {/* a real heading per section: the page is a document, and the
+                label paragraphs would leave it a single bare H1 */}
+            <h2 className="doc-label">{section.label}</h2>
             <p className="detail-description">{section.description}</p>
             <CourseSectionBody section={section} course={course} manifest={manifest} />
           </section>
