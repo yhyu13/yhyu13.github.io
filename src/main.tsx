@@ -6,6 +6,7 @@ import "./styles/field-manuals.css";
 import "./styles/site.css";
 import "./styles/decks.css";
 import "./styles/courses.css";
+import "./styles/craft.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

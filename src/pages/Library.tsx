@@ -10,6 +10,9 @@ const DeckShelf = lazy(() =>
 const CourseShelf = lazy(() =>
   import("../components/CourseShelf").then((m) => ({ default: m.CourseShelf })),
 );
+const CraftPanel = lazy(() =>
+  import("../components/CraftPanel").then((m) => ({ default: m.CraftPanel })),
+);
 
 const BLOSSOMS = [
   { x: "4%", size: "30px", r: "18deg", duration: "10s", delay: "-4s" },
@@ -221,6 +224,10 @@ export function Library({ openId }: LibraryProps) {
       ) : openId === "courses" ? (
         <Suspense fallback={null}>
           <CourseShelf />
+        </Suspense>
+      ) : openId === "craft" && selected ? (
+        <Suspense fallback={null}>
+          <CraftPanel manual={selected} />
         </Suspense>
       ) : (
         <DetailPanel manual={selected} />
