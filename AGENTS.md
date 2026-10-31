@@ -48,11 +48,13 @@ The contract:
    (`releases/download/courseware-v1/…`), not repo files. A re-export without
    `--release-tag` leaves the video rows as placeholders the page shows as
    unavailable.
-4. `npm run build` runs the link checker last; it walks `public/**/*.html`
-   plus the site-absolute links in `src/data`, treats extensionless
-   single-segment paths under declared route prefixes as SPA routes, and
-   everything else must exist as a file. SPA routes answer 404 status + the
-   shell — judge them by the body, not the status code.
+4. `npm run build` runs the link checker last; it walks `public/**/*.html`,
+   the site-absolute links in `src/data`, **and every course manifest.json**
+   (advertised hrefs/posters must exist; binary file sizes must match — text
+   files are exempt, a Windows checkout rewrites line endings). It treats
+   extensionless single-segment paths under declared route prefixes as SPA
+   routes, and everything else must exist as a file. SPA routes answer 404
+   status + the shell — judge them by the body, not the status code.
 
 ## Deploy
 

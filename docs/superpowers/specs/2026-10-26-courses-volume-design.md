@@ -424,3 +424,50 @@ course page marks them `external: true`.
 - **Pages' 100 MB soft site cap.** After this change the deployed site is roughly
   19 MB of course assets on top of the existing 12 MB — comfortably inside it,
   and it only stays that way because the MP4s are not hosted.
+
+## Amendments — 2026-10-31, post-implementation audit
+
+An item-by-item audit of this spec against the shipped implementation closed
+every gap it could close and records the deviations it accepted. Verified:
+32 spec clauses → 26 PASS, 1 FAIL + 4 PARTIAL closed in `dfe0920`/`b67e197`,
+2 accepted below, 2 process clauses (N-A).
+
+Closed by the audit:
+
+- **Real headings** (Accessibility): section labels were `<p>`; now each
+  section renders a real `<h2 class="doc-label">` under the page's single H1.
+- **Landscape hint** (Accessibility): the study site's entry description now
+  says the site is a fixed-viewport, landscape deck before the visitor opens
+  it.
+- **Route lazy-loading** (Architecture §4): `CoursePage` is now
+  `React.lazy` + `Suspense` in `App.tsx`. Note the spec's premise was stale —
+  `DeckReader` itself is statically imported; the Library's lazy `CourseShelf`
+  was the operative precedent.
+- **Shelf counts** (Architecture §5): the card now shows decks / clips / pages
+  (manifest `text` group), via a dedicated one-line `blurb` field; the card
+  kicker reuses the shared `.kicker` vocabulary.
+- **Manifest re-check** (Testing): `check-links.mjs` gained a third walker
+  that reads every `public/courses/*/files/manifest.json` and requires each
+  advertised `href`/`poster` to exist on disk, with byte equality for binary
+  files (text files are exempt: a Windows checkout rewrites line endings, so
+  their on-disk size legitimately differs from the LF manifest). Negative
+  tested: missing poster → fail; truncated PPTX → fail; CRLF text → pass.
+
+Accepted deviations (recorded, not "fixed"):
+
+- **`CourseSection.groups?: {label, assets}[]` instead of a flat required
+  `assets[]`**, and the `CourseAsset.external` flag is unused — externality is
+  inferred from the href's shape. The `groups` shape came from the plan's Task
+  3 sketch and is strictly more expressive (the 文字 section needs two labelled
+  subgroups); the flag was redundant the moment href shape decided rendering.
+- **Header information distribution** (Architecture §5): kicker carries
+  `term · institution`, the meta line carries `titleEn · instructor · official
+  link` — a superset of the specified split, no information lost.
+- **A deleted release is not detectable at runtime** (Error handling): the
+  placeholder half of the rule is implemented (a non-URL href renders 暂未提供
+  下载); the "release deleted" half renders a live link because a client-side
+  404 probe per clip is not worth the cost. The manifest's `releaseTag` is the
+  audit trail: a re-export after any release change restores honesty.
+- **The error banner links to `files/text.html`**, not the bare course
+  directory — a directory URL lands on the Pages 404 shell, while `text.html`
+  is a real, complete index of everything under `files/`.
