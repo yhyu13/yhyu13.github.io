@@ -54,7 +54,8 @@ function CourseCard({ course }: { course: Course }) {
         if (cancelled || !data) return;
         const decks = data.groups.decks?.length ?? 0;
         const videos = data.groups.videos?.length ?? 0;
-        setCounts(`${decks} 份讲义 · ${videos} 段视频`);
+        const texts = data.groups.text?.length ?? 0;
+        setCounts(`${decks} 份讲义 · ${videos} 段视频 · ${texts} 份文字`);
       })
       .catch(() => {});
     return () => {
@@ -70,14 +71,16 @@ function CourseCard({ course }: { course: Course }) {
         aria-label={`Open ${course.title}`}
         style={{ ["--cover-color" as string]: course.color ?? "#3f5b63" }}
       >
-        <span className="course-card-kicker">{course.term}</span>
+        <span className="kicker">{course.term}</span>
         <span className="course-card-title">{course.title}</span>
         <span className="course-card-meta">
           {course.institution} · {course.instructor}
         </span>
       </Link>
       <div className="course-card-body">
-        <p className="course-card-desc">{course.sections[0]?.description ?? ""}</p>
+        <p className="course-card-desc">
+          {course.blurb ?? course.sections[0]?.description ?? ""}
+        </p>
         {counts ? <p className="course-card-counts">{counts}</p> : null}
         <div className="action-rail">
           <Link className="pill" to={`/courses/${course.slug}`}>

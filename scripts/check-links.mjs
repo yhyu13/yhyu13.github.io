@@ -99,6 +99,50 @@ for (const file of walk(DATA, [".ts", ".tsx"])) {
   }
 }
 
+// 3. the manifests are the course page's data source — re-check them from
+//    this side. The export script asserts them upstream; this is the other
+//    side of the same invariant: a manifest may not advertise a file that
+//    is not on disk, and file sizes must match.
+const courseDirs = existsSync(join(PUBLIC, "courses"))
+  ? readdirSync(join(PUBLIC, "courses"), { withFileTypes: true })
+  : [];
+for (const dir of courseDirs) {
+  if (!dir.isDirectory()) continue;
+  const manifestPath = join(PUBLIC, "courses", dir.name, "files", "manifest.json");
+  if (!existsSync(manifestPath)) continue;
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  for (const [group, entries] of Object.entries(manifest.groups ?? {})) {
+    for (const entry of entries ?? []) {
+      // posters are advertised for video rows regardless of where the video
+      // itself lives — check them before any href-based skip
+      if (entry.poster) {
+        const poster = join(dirname(manifestPath), entry.poster);
+        if (!existsSync(poster)) {
+          broken.push(`${manifestPath}\n    ${entry.poster} (advertised as a poster, missing on disk)`);
+        }
+      }
+      const href = entry.href ?? "";
+      if (/^https?:\/\//.test(href)) continue; // a release asset is not a file here
+      if (group === "videos") continue; // a placeholder href advertises no file
+      const target = join(dirname(manifestPath), href);
+      if (!existsSync(target) || !statSync(target).isFile()) {
+        broken.push(`${manifestPath}\n    ${href} (advertised by the manifest, missing on disk)`);
+      } else if (
+        Number.isFinite(entry.bytes) &&
+        // byte equality only for binary files: a Windows checkout with
+        // core.autocrlf rewrites text files' line endings, so their on-disk
+        // size legitimately differs from what the (LF) manifest recorded
+        !/\.(md|txt|json|html?|css|js|mjs|ts|tsx|xml|svg|csv)$/i.test(href) &&
+        statSync(target).size !== entry.bytes
+      ) {
+        broken.push(
+          `${manifestPath}\n    ${href} is ${statSync(target).size} bytes, manifest says ${entry.bytes}`
+        );
+      }
+    }
+  }
+}
+
 if (broken.length > 0) {
   console.error(`check-links: ${broken.length} broken reference(s):\n`);
   for (const b of broken) console.error(`  ${b}\n`);

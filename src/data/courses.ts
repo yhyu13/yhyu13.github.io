@@ -32,6 +32,8 @@ export type Course = {
   sourceUrl: string;
   licence: string;
   color?: string;
+  /** one-line description for the shelf card */
+  blurb?: string;
   sections: CourseSection[];
 };
 
@@ -47,12 +49,13 @@ export const COURSES: Course[] = [
     licence:
       "课程材料版权归 Harvard SEAS 与授课教师所有；本站仅供个人学习，课件为学习整理，未获授权再分发。",
     color: "#3f5b63",
+    blurb: "一门课的完整学习包：读学习站、下讲义、看带旁白的导览视频。",
     sections: [
       {
         kind: "site",
         label: "学习站",
         description:
-          "17 个页面、251 张幻灯片：概念索引（143 条，逐条深链到讲它的那一页）、离线全文搜索（212 张幻灯片 + 433 页课程文本）、三条阅读路线。打开后是一个独立页面。",
+          "17 个页面、251 张幻灯片：概念索引（143 条，逐条深链到讲它的那一页）、离线全文搜索（212 张幻灯片 + 433 页课程文本）、三条阅读路线。打开后是一个独立页面；固定视口的横屏排版，请在横屏窗口打开。",
         groups: [
           {
             label: "入口",

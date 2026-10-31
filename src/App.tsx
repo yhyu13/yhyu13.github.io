@@ -1,8 +1,12 @@
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Library } from "./pages/Library";
 import { ArticlePage } from "./pages/ArticlePage";
 import { DeckReader } from "./components/DeckReader";
-import { CoursePage } from "./pages/CoursePage";
+
+const CoursePage = lazy(() =>
+  import("./pages/CoursePage").then((m) => ({ default: m.CoursePage })),
+);
 
 export default function App() {
   return (
@@ -16,7 +20,14 @@ export default function App() {
       <Route path="/decks" element={<Library openId="decks" />} />
       <Route path="/decks/:slug" element={<DeckReader />} />
       <Route path="/courses" element={<Library openId="courses" />} />
-      <Route path="/courses/:slug" element={<CoursePage />} />
+      <Route
+        path="/courses/:slug"
+        element={
+          <Suspense fallback={null}>
+            <CoursePage />
+          </Suspense>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
