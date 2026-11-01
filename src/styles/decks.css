@@ -107,6 +107,8 @@ a.deck-card-source:hover { color: var(--paper); border-bottom-style: solid; }
     width: min(680px, calc(100% - 40px));
     margin: 360px auto 24px;
     max-height: none;
+    overflow: visible;
+    overscroll-behavior: auto;
     padding-bottom: 24px;
     -webkit-mask-image: none;
     mask-image: none;

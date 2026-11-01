@@ -53,12 +53,12 @@ for (const viewport of VIEWPORTS) {
 test.describe("touch affordance", () => {
   test.use({ viewport: { width: 375, height: 812 }, hasTouch: true });
 
-  test("Read badge is visible on touch devices", async ({ page }) => {
+  test("Read badge is visible on the centred touch cover", async ({ page }) => {
     await page.goto("http://localhost:5173/");
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(300);
-    const firstBook = page.locator(".book-card").first();
-    await expect(firstBook.locator(".open-badge")).toBeVisible();
+    await page.waitForTimeout(600);
+    const focused = page.locator('.book-card[data-focused="true"]');
+    await expect(focused.locator(".open-badge")).toBeVisible();
   });
 });
 

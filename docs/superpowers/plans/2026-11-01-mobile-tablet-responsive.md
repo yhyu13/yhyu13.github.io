@@ -41,6 +41,18 @@ scroll-to-top.
 | 10 | Extended viewport audit (320–1180 px, landscape) | reviewer | `tests/extra-viewports.spec.ts` |
 | 11 | Spec/plan addendum for the interaction change | docs | this section |
 
+### Round 3 — native shelf rail (issue #7)
+
+| # | Task | Owner | Evidence |
+|---|---|---|---|
+| 12 | Replace the focus-swap gesture with a native horizontal scroll-snap rail below 900px | impl | `overflow-x: auto`, `scroll-snap-type: x mandatory`; rail metrics test |
+| 13 | One tap on a cover opens it; remove the two-tap step | impl | `tests/scroll-bug.spec.ts` tap case |
+| 14 | Remove nested scroll containers on mobile detail/shelves (`overflow: visible`, `overscroll-behavior: auto`) | impl | computed `overflow-y: visible` and scroll-to-top for `/archive`, `/courses`, `/decks`, `/craft` |
+| 15 | Rail focus follows the centred cover without navigating | impl | `data-focused` follows `scrollLeft` |
+
+Supersedes round-2 task 8: swiping now moves the shelf itself, and a single
+tap opens the cover.
+
 ## Risk / rollback
 
 Risk: a breakpoint change could break the desktop layout or make the books

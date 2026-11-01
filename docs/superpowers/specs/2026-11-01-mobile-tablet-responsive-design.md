@@ -130,3 +130,31 @@ Acceptance additions:
   focuses it; the second tap opens it.
 - On a mobile detail route, scrolling down <u>500 px</u> and back up returns
   `scrollTop` to 0 with the close button visible.
+
+## Addendum 2026-11-01 (round 3, issue #7) — native shelf rail
+
+Field feedback replaced the focus-swap gesture with a real shelf:
+
+- **The shelf moves.** Below 900px the gallery is a native horizontal scroll
+  container: `display: flex`, `overflow-x: auto`,
+  `scroll-snap-type: x mandatory`, one card per snap point. Swiping pans the
+  covers like a music-app carousel; the centred cover gets
+  `data-focused="true"` and the rest recede. This supersedes the round-2
+  "swipe previews without moving the shelf" and "two-tap open" behaviour.
+- **One tap opens.** Tapping a cover opens its detail page immediately.
+- **No nested scroll traps.** On mobile, `.detail-scroll`, `.course-shelf`,
+  and `.deck-shelf` use `overflow: visible` and `overscroll-behavior: auto`,
+  so a touch inside them scrolls the document. Previously `overflow-y: auto`
+  plus `overscroll-behavior: contain` swallowed the gesture on Archive,
+  Courses, and Decks.
+
+Acceptance additions:
+
+- The gallery at 390px has `scrollWidth > clientWidth`, `overflow-x: auto`,
+  and `scroll-snap-type` containing `x`.
+- Scrolling the rail to a cover sets `data-focused="true"` on it without
+  changing the URL.
+- One tap on a cover navigates to its route.
+- `/archive`, `/courses`, `/decks`, and `/craft` at 390×844 scroll down and
+  back to `scrollTop = 0`, with the pane's computed `overflow-y` equal to
+  `visible`.
