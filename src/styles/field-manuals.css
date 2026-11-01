@@ -223,6 +223,12 @@
       transform-style: flat;
     }
 
+    @media (max-width: 899.98px) {
+      .gallery {
+        touch-action: pan-y;
+      }
+    }
+
     .book-card {
       --hover-y: 0px;
       --local-x: 0px;
@@ -1247,6 +1253,7 @@
     @media (max-width: 899.98px) {
       body {
         overflow: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       .stage {
@@ -1339,9 +1346,18 @@
       }
 
       [data-mode="detail"] .stage {
+        /* flow-root contains child margins without creating a scroll
+           container, so vertical scrolling stays on the document. */
+        display: flow-root;
         min-height: 100svh;
-        overflow-x: hidden;
-        overflow-y: auto;
+        /* Clip horizontal overflow without turning the stage into a scroll
+           container. */
+        overflow-x: clip;
+        overflow-y: visible;
+      }
+
+      [data-mode="detail"] .book-card:not(.selected) {
+        display: none;
       }
 
       [data-mode="detail"] .hero-word {

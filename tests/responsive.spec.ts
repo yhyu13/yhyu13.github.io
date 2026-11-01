@@ -32,9 +32,14 @@ for (const viewport of VIEWPORTS) {
         const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
         expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
 
-        // Brand and at least one book card exist.
+        // Brand and the relevant book card exist.
         await expect(page.locator(".brand")).toBeVisible();
-        await expect(page.locator(".book-card").first()).toBeVisible();
+        if (route.path === "/") {
+          await expect(page.locator(".book-card").first()).toBeVisible();
+        } else {
+          // Detail routes keep only the selected book; the others are hidden.
+          await expect(page.locator(".book-card.selected").first()).toBeVisible();
+        }
 
         // On detail routes, the close button is in the DOM.
         if (route.path !== "/") {

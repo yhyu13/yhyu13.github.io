@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QrShare, QrTrigger } from "../components/QrShare";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
@@ -48,6 +48,7 @@ export function Library({ openId }: LibraryProps) {
   const frame = useRef(0);
   const pointer = useRef({ x: 0, y: 0, clientX: -10000, clientY: -10000 });
   const selectedRef = useRef<HTMLButtonElement | null>(null);
+  const gallerySwipeRef = useRef({ id: -1, x: 0, y: 0, t: 0, active: false });
 
   const showToast = useCallback((message: string) => {
     window.clearTimeout(toastTimer.current);
@@ -60,6 +61,15 @@ export function Library({ openId }: LibraryProps) {
     if (mode !== "detail") return;
     navigate("/");
   }, [mode, navigate]);
+
+  const openAdjacentManual = useCallback((direction: 1 | -1, originX: number) => {
+    if (mode !== "gallery" || selected) return;
+    const ids = MANUALS.map((m) => m.id);
+    const ratio = Math.max(0, Math.min(1, originX / window.innerWidth));
+    const startIndex = Math.round(ratio * (ids.length - 1));
+    const nextIndex = (startIndex + direction + ids.length) % ids.length;
+    navigate(`/${ids[nextIndex]}`);
+  }, [mode, navigate, selected]);
 
   useEffect(() => {
     const coarse = window.matchMedia("(pointer: coarse)");
@@ -192,6 +202,31 @@ export function Library({ openId }: LibraryProps) {
     };
   }, [mode]);
 
+  const onGalleryPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType === "mouse" || !event.isPrimary) return;
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {}
+    gallerySwipeRef.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      t: Date.now(),
+      active: true,
+    };
+  };
+
+  const onGalleryPointerUp = (event: ReactPointerEvent<HTMLElement>) => {
+    const swipe = gallerySwipeRef.current;
+    if (!swipe.active || swipe.id !== event.pointerId) return;
+    gallerySwipeRef.current = { ...swipe, active: false };
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    if (Date.now() - swipe.t > 700) return;
+    if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy) * 1.2) return;
+    openAdjacentManual(dx < 0 ? 1 : -1, swipe.x);
+  };
+
   return (
     <main className="stage" ref={stageRef} aria-label="Hang Yu field library">
       {mode === "gallery" ? (
@@ -235,7 +270,12 @@ export function Library({ openId }: LibraryProps) {
         躬行
       </h1>
 
-      <section className="gallery" aria-label="Field manuals">
+      <section
+        className="gallery"
+        aria-label="Field manuals"
+        onPointerDown={mode === "gallery" ? onGalleryPointerDown : undefined}
+        onPointerUp={mode === "gallery" ? onGalleryPointerUp : undefined}
+      >
         {MANUALS.map((manual) => (
           <BookCard
             key={manual.id}
