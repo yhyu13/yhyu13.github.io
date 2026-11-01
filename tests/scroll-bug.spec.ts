@@ -29,59 +29,75 @@ test.describe("mobile detail scroll", () => {
   });
 });
 
-test.describe("mobile gallery shelf swipe", () => {
+test.describe("mobile gallery shelf swipe previews, tap opens", () => {
   test.use({ viewport: { width: 375, height: 812 }, hasTouch: true });
 
-  test("swipe left opens the next book", async ({ page }) => {
+  async function swipe(page, fromX: number, toX: number, pointerId: number) {
+    await page.evaluate(
+      ({ fromX, toX, pointerId }) => {
+        const gallery = document.querySelector(".gallery");
+        if (!gallery) throw new Error("no gallery");
+        const opts = {
+          bubbles: true,
+          cancelable: true,
+          pointerId,
+          pointerType: "touch",
+          isPrimary: true,
+          clientY: 500,
+        };
+        gallery.dispatchEvent(new PointerEvent("pointerdown", { ...opts, clientX: fromX }));
+        gallery.dispatchEvent(new PointerEvent("pointerup", { ...opts, clientX: toX }));
+      },
+      { fromX, toX, pointerId },
+    );
+  }
+
+  test("swipe left previews the next book without navigating", async ({ page }) => {
     await page.goto("http://localhost:5173/");
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(800);
 
-    const gallery = page.locator(".gallery");
-    const box = await gallery.boundingBox();
-    if (!box) throw new Error("gallery not found");
+    await swipe(page, 200, 80, 1);
+    await page.waitForTimeout(300);
 
-    // Dispatch a touch-like pointer swipe from right to left.
-    await page.evaluate(() => {
-      const gallery = document.querySelector(".gallery");
-      if (!gallery) throw new Error("no gallery");
-      const opts = {
-        bubbles: true,
-        cancelable: true,
-        pointerId: 1,
-        pointerType: "touch",
-        isPrimary: true,
-        clientY: 500,
-      };
-      gallery.dispatchEvent(new PointerEvent("pointerdown", { ...opts, clientX: 200 }));
-      gallery.dispatchEvent(new PointerEvent("pointerup", { ...opts, clientX: 80 }));
-    });
+    // Still on the gallery.
+    expect(new URL(page.url()).pathname).toBe("/");
+    // Focus moved from archive (index 2) to decks (index 3).
+    await expect(page.locator('.book-card[data-book="decks"]')).toHaveAttribute(
+      "data-focused",
+      "true",
+    );
+    await expect(page.locator('.book-card[data-book="archive"]')).toHaveAttribute(
+      "data-focused",
+      "false",
+    );
+  });
+
+  test("tap after swipe opens the previewed book", async ({ page }) => {
+    await page.goto("http://localhost:5173/");
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(800);
+
+    await swipe(page, 200, 80, 2);
+    await page.waitForTimeout(300);
+    await page.locator('.book-card[data-book="decks"]').click();
 
     await page.waitForURL("**/decks");
     await expect(page.locator(".detail-title")).toHaveText("Video Slides");
   });
 
-  test("swipe right opens the previous book", async ({ page }) => {
+  test("swipe right previews the previous book", async ({ page }) => {
     await page.goto("http://localhost:5173/");
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(800);
 
-    await page.evaluate(() => {
-      const gallery = document.querySelector(".gallery");
-      if (!gallery) throw new Error("no gallery");
-      const opts = {
-        bubbles: true,
-        cancelable: true,
-        pointerId: 2,
-        pointerType: "touch",
-        isPrimary: true,
-        clientY: 500,
-      };
-      gallery.dispatchEvent(new PointerEvent("pointerdown", { ...opts, clientX: 175 }));
-      gallery.dispatchEvent(new PointerEvent("pointerup", { ...opts, clientX: 295 }));
-    });
+    await swipe(page, 175, 295, 3);
+    await page.waitForTimeout(300);
 
-    await page.waitForURL("**/craft");
-    await expect(page.locator(".detail-title")).toHaveText("Craft");
+    expect(new URL(page.url()).pathname).toBe("/");
+    await expect(page.locator('.book-card[data-book="craft"]')).toHaveAttribute(
+      "data-focused",
+      "true",
+    );
   });
 });

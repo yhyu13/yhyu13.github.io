@@ -38,6 +38,7 @@ export function Library({ openId }: LibraryProps) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(2);
   const [toast, setToast] = useState("");
   const [toastShow, setToastShow] = useState(false);
   const selected = openId ? getManual(openId) : undefined;
@@ -62,14 +63,10 @@ export function Library({ openId }: LibraryProps) {
     navigate("/");
   }, [mode, navigate]);
 
-  const openAdjacentManual = useCallback((direction: 1 | -1, originX: number) => {
+  const focusAdjacentManual = useCallback((direction: 1 | -1) => {
     if (mode !== "gallery" || selected) return;
-    const ids = MANUALS.map((m) => m.id);
-    const ratio = Math.max(0, Math.min(1, originX / window.innerWidth));
-    const startIndex = Math.round(ratio * (ids.length - 1));
-    const nextIndex = (startIndex + direction + ids.length) % ids.length;
-    navigate(`/${ids[nextIndex]}`);
-  }, [mode, navigate, selected]);
+    setFocusedIndex((index) => (index + direction + MANUALS.length) % MANUALS.length);
+  }, [mode, selected]);
 
   useEffect(() => {
     const coarse = window.matchMedia("(pointer: coarse)");
@@ -224,7 +221,7 @@ export function Library({ openId }: LibraryProps) {
     const dy = event.clientY - swipe.y;
     if (Date.now() - swipe.t > 700) return;
     if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy) * 1.2) return;
-    openAdjacentManual(dx < 0 ? 1 : -1, swipe.x);
+    focusAdjacentManual(dx < 0 ? 1 : -1);
   };
 
   return (
@@ -276,11 +273,12 @@ export function Library({ openId }: LibraryProps) {
         onPointerDown={mode === "gallery" ? onGalleryPointerDown : undefined}
         onPointerUp={mode === "gallery" ? onGalleryPointerUp : undefined}
       >
-        {MANUALS.map((manual) => (
+        {MANUALS.map((manual, index) => (
           <BookCard
             key={manual.id}
             manual={manual}
             selected={selected?.id === manual.id}
+            focused={index === focusedIndex}
             tabIndex={mode === "detail" ? -1 : 0}
             onSelect={() => {
               if (mode === "detail") return;
@@ -368,12 +366,14 @@ export function Library({ openId }: LibraryProps) {
 function BookCard({
   manual,
   selected,
+  focused,
   tabIndex,
   onSelect,
   cardRef,
 }: {
   manual: Manual;
   selected: boolean;
+  focused: boolean;
   tabIndex: number;
   onSelect: () => void;
   cardRef?: RefObject<HTMLButtonElement | null>;
@@ -384,6 +384,7 @@ function BookCard({
       className={`book-card${selected ? " selected" : ""}`}
       type="button"
       data-book={manual.id}
+      data-focused={focused ? "true" : "false"}
       aria-label={`Open ${manual.coverTitle} details`}
       tabIndex={tabIndex}
       style={{

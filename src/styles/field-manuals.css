@@ -1345,6 +1345,18 @@
         --yaw: 3deg;
       }
 
+      /* Swipe preview: the focused volume lifts and the rest recede, so a
+         horizontal swipe browses the shelf and a tap opens the chosen book. */
+      [data-mode="gallery"] .book-card[data-focused="true"] {
+        --hover-y: -14px;
+        z-index: 8;
+        scale: 1.04;
+      }
+
+      [data-mode="gallery"] .book-card[data-focused="false"] {
+        opacity: 0.82;
+      }
+
       [data-mode="detail"] .stage {
         /* flow-root contains child margins without creating a scroll
            container, so vertical scrolling stays on the document. */
