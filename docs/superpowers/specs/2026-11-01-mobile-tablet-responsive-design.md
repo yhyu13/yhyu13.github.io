@@ -37,8 +37,8 @@ Use four width bands so each device class gets a tuned layout:
 |---|---|---|
 | Desktop | `>= 1180px` | Current five-book gallery; detail side-by-side. Unchanged. |
 | Small desktop / tablet landscape | `900px – 1179px` | Five books scaled down; detail panel widened to avoid cramping. |
-| Tablet portrait / large phone landscape | `640px – 899px` | Three-book focused row; hero word smaller; detail becomes vertical flow. |
-| Phone portrait | `<= 639px` | Two-book carousel-like row; largest book in center; vertical detail flow. |
+| Tablet portrait / large phone landscape | `640px – 899px` | All five books visible; centre volumes read larger; detail becomes vertical flow. |
+| Phone portrait | `<= 639px` | All five books visible; centre book largest, outer two shrink toward the edges; vertical detail flow. |
 
 The existing `560px` breakpoint is replaced by `639px`; the `900px` breakpoint
 stays as the boundary between side-by-side detail and vertical detail.
@@ -48,8 +48,10 @@ stays as the boundary between side-by-side detail and vertical detail.
 - Each band gets explicit `--x`, `--y`, `--w`, `--r`, `--yaw` values for every
   volume, declared in one place per file to end the current split-brain where
   `site.css` overrides only three of the five books.
-- On phone portrait, show the central book largest and its neighbors partly
-  off-canvas to suggest swiping. Rotations are reduced so titles remain legible.
+- On phone portrait, keep all five books on-canvas: the central book reads
+  largest and the outer two shrink toward the edges. Rotations are reduced so
+  titles remain legible. No cover is fully clipped; the earlier "carousel"
+  wording is dropped because it conflicted with the plan's no-clipping DoD.
 - On tablet portrait, keep all five books visible but narrower and with less
   rotation so they do not overlap.
 
