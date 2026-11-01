@@ -62,6 +62,19 @@ export function Library({ openId }: LibraryProps) {
   }, [mode, navigate]);
 
   useEffect(() => {
+    const coarse = window.matchMedia("(pointer: coarse)");
+    const syncTouch = () => {
+      document.body.dataset.touch = coarse.matches ? "true" : "false";
+    };
+    syncTouch();
+    coarse.addEventListener("change", syncTouch);
+    return () => {
+      coarse.removeEventListener("change", syncTouch);
+      delete document.body.dataset.touch;
+    };
+  }, []);
+
+  useEffect(() => {
     document.body.dataset.mode = mode;
     document.body.dataset.menu = menuOpen ? "open" : "closed";
     document.title = selected && selected.coverTitle !== "Hang Yu"
@@ -102,9 +115,23 @@ export function Library({ openId }: LibraryProps) {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = window.matchMedia("(pointer: coarse)");
+    const resetParallax = () => {
+      document.documentElement.style.setProperty("--mx", "0px");
+      document.documentElement.style.setProperty("--my", "0px");
+      document.querySelectorAll<HTMLElement>(".book-card").forEach((card) => {
+        card.style.setProperty("--local-x", "0px");
+        card.style.setProperty("--local-y", "0px");
+      });
+      if (selectedRef.current) {
+        selectedRef.current.style.removeProperty("--detail-yaw");
+        selectedRef.current.style.removeProperty("--detail-pitch");
+        selectedRef.current.dataset.orbiting = "false";
+      }
+    };
     const updateParallax = () => {
       frame.current = 0;
-      if (reduced.matches) return;
+      if (reduced.matches || coarse.matches) return;
       const { x, y, clientX, clientY } = pointer.current;
       if (mode === "detail" && selectedRef.current) {
         const bounds = selectedRef.current.getBoundingClientRect();
@@ -137,6 +164,7 @@ export function Library({ openId }: LibraryProps) {
     };
 
     const onMove = (event: PointerEvent) => {
+      if (coarse.matches || event.pointerType === "touch") return;
       pointer.current = {
         x: event.clientX / window.innerWidth - 0.5,
         y: event.clientY / window.innerHeight - 0.5,
@@ -149,11 +177,17 @@ export function Library({ openId }: LibraryProps) {
       pointer.current = { x: 0, y: 0, clientX: -10000, clientY: -10000 };
       if (!frame.current) frame.current = window.requestAnimationFrame(updateParallax);
     };
+    const onCoarseChange = () => {
+      if (coarse.matches) resetParallax();
+    };
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave);
+    coarse.addEventListener("change", onCoarseChange);
+    if (coarse.matches) resetParallax();
     return () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
+      coarse.removeEventListener("change", onCoarseChange);
       if (frame.current) cancelAnimationFrame(frame.current);
     };
   }, [mode]);

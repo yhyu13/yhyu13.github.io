@@ -7,3 +7,6 @@ incoming/
 content/
 ss/
 .kilo/worktrees/
+test-results/
+playwright-report/
+tests/screenshots.spec.ts-snapshots/

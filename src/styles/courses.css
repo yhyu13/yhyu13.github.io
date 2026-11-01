@@ -133,16 +133,38 @@
 /* Site entry points render as pills */
 .course-asset .pill { font-size: 13px; }
 
-/* Mobile: drop the shelf below the selected book, mirroring .deck-shelf */
-@media (max-width: 900px) {
+/* Small desktop / tablet landscape: widen the shelf column. */
+@media (min-width: 900px) and (max-width: 1179px) {
   .course-shelf {
-    top: calc(100svh + 48px);
-    left: 7%;
-    right: 7%;
-    width: auto;
+    right: 3.5%;
+    width: min(52%, 660px);
+  }
+}
+
+/* Mobile: drop the shelf below the selected book, mirroring .detail-panel */
+@media (max-width: 899.98px) {
+  .course-shelf {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: min(680px, calc(100% - 40px));
+    margin: 360px auto 24px;
     max-height: none;
-    padding-bottom: 130px;
+    padding-bottom: 24px;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
   .course-grid { grid-template-columns: 1fr; }
   .course-asset-poster { width: 148px; }
+}
+
+@media (max-width: 639.98px) {
+  .course-asset-video {
+    flex-direction: column;
+  }
+  .course-asset-poster {
+    width: 100%;
+    max-width: 320px;
+  }
 }

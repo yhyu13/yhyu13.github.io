@@ -250,7 +250,8 @@
         width 1100ms var(--ease),
         opacity 500ms ease,
         filter 500ms ease,
-        transform 520ms var(--ease);
+        transform 520ms var(--ease),
+        scale 180ms var(--ease);
       will-change: transform, left, top, width;
     }
 
@@ -1163,7 +1164,87 @@
       opacity: 1;
     }
 
-    @media (max-width: 900px) {
+    /* Responsive ladder ----------------------------------------------------
+       Desktop                     >= 1180px : base rules above
+       Small desktop / tablet land. 900-1179 : scaled books, wider detail
+       Tablet portrait / phone land. 640-899 : compact row, vertical detail
+       Phone portrait                <= 639 : two-book carousel, vertical detail
+       --------------------------------------------------------------------- */
+
+    @media (min-width: 900px) and (max-width: 1179px) {
+      .topbar {
+        padding: 22px 2.8vw;
+      }
+
+      .hero-word {
+        top: 10.5vh;
+        font-size: clamp(150px, 19vw, 250px);
+      }
+
+      .book-card[data-book="identity"] {
+        --x: 9.8%;
+        --y: 41%;
+        --w: min(16.5vw, 272px);
+        --r: -6deg;
+        --yaw: -5deg;
+      }
+
+      .book-card[data-book="craft"] {
+        --x: 29%;
+        --y: 33%;
+        --w: min(19vw, 300px);
+        --r: .6deg;
+        --yaw: -2deg;
+      }
+
+      .book-card[data-book="archive"] {
+        --x: 50%;
+        --y: 43%;
+        --w: min(17vw, 272px);
+        --r: 6deg;
+        --yaw: 5deg;
+      }
+
+      .book-card[data-book="decks"] {
+        --x: 71%;
+        --y: 35%;
+        --w: min(19vw, 272px);
+        --r: -4deg;
+        --yaw: 3deg;
+      }
+
+      .book-card[data-book="courses"] {
+        --x: 90.2%;
+        --y: 40%;
+        --w: min(16.5vw, 272px);
+        --r: 5deg;
+        --yaw: 4deg;
+      }
+
+      .detail-panel {
+        top: 13%;
+        right: 3.5%;
+        width: min(52%, 660px);
+      }
+
+      .bottom-dock {
+        right: 3.5%;
+        width: min(52%, 660px);
+      }
+
+      .detail-title {
+        font-size: clamp(46px, 5.2vw, 74px);
+      }
+
+      [data-mode="detail"] .book-card.selected {
+        left: 24%;
+        width: min(27vw, 360px);
+      }
+    }
+
+    /* Below 900px the detail view becomes a vertical flow: the selected book
+       sits near the top and the panel scrolls beneath it. */
+    @media (max-width: 899.98px) {
       body {
         overflow: auto;
       }
@@ -1174,17 +1255,11 @@
       }
 
       .topbar {
-        padding: 20px;
+        padding: 16px 20px;
       }
 
-      .close-button {
-        left: auto;
-        right: 76px;
-        transform: translate3d(0, -18px, 0) rotate(-45deg);
-      }
-
-      [data-mode="detail"] .close-button {
-        transform: translate3d(0, 0, 0) rotate(0);
+      .brand {
+        font-size: 23px;
       }
 
       .icon-button,
@@ -1197,78 +1272,127 @@
       }
 
       .ticket-button {
-        min-width: auto;
+        min-width: 0;
         padding: 0 18px;
       }
 
-      .hero-word {
-        top: 17vh;
-        font-size: clamp(128px, 28vw, 230px);
+      .close-button {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
       }
 
+      [data-mode="detail"] .close-button {
+        position: fixed;
+        top: 14px;
+        right: auto;
+        left: 50%;
+        z-index: 61;
+        transform: translate3d(-50%, 0, 0) rotate(0);
+      }
+
+      .hero-word {
+        top: 12vh;
+        font-size: clamp(88px, 16vw, 140px);
+      }
+
+      /* Focused five-book row: the central three read larger, the outer two
+         tuck toward the edges without overlapping into unreadable piles. */
       .book-card[data-book="identity"] {
-        --x: 5%;
-        --y: 41%;
-        --w: min(38vw, 315px);
+        --x: 10.5%;
+        --y: 42%;
+        --w: 16vw;
+        --r: -4deg;
+        --yaw: -3deg;
       }
 
       .book-card[data-book="craft"] {
-        --x: 27.5%;
-        --y: 35%;
-        --w: min(42vw, 345px);
+        --x: 30%;
+        --y: 37%;
+        --w: 18vw;
+        --r: -.5deg;
+        --yaw: -1deg;
       }
 
       .book-card[data-book="archive"] {
         --x: 50%;
-        --y: 42%;
-        --w: min(38vw, 315px);
+        --y: 43%;
+        --w: 21vw;
+        --r: 3deg;
+        --yaw: 2deg;
       }
 
       .book-card[data-book="decks"] {
-        --x: 72.5%;
-        --y: 36%;
-        --w: min(38vw, 315px);
+        --x: 70%;
+        --y: 37%;
+        --w: 18vw;
+        --r: -3deg;
+        --yaw: 2deg;
       }
 
       .book-card[data-book="courses"] {
-        --x: 95%;
-        --y: 40%;
-        --w: min(38vw, 315px);
+        --x: 89.5%;
+        --y: 42%;
+        --w: 16vw;
+        --r: 4deg;
+        --yaw: 3deg;
       }
 
       [data-mode="detail"] .stage {
-        min-height: calc(100svh + 760px);
+        min-height: 100svh;
+        overflow-x: hidden;
         overflow-y: auto;
+      }
+
+      [data-mode="detail"] .hero-word {
+        display: none;
+      }
+
+      [data-mode="detail"] .blossom-field {
+        display: none;
       }
 
       [data-mode="detail"] .book-card.selected {
         left: 50%;
-        top: 50svh;
-        width: min(58vw, 340px);
+        top: 110px;
+        width: min(30vw, 150px);
+        transform: translate3d(-50%, 0, 0) rotate(-2deg);
       }
 
-      .detail-panel {
-        top: calc(100svh + 48px);
-        right: 7%;
-        left: 7%;
-        width: auto;
-        padding-bottom: 130px;
+      [data-mode="detail"] .detail-panel {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        width: min(680px, calc(100% - 40px));
+        margin: 360px auto 24px;
+        padding-bottom: 24px;
       }
 
-       .detail-scroll {
-         max-height: none;
-         padding-bottom: 28px;
-       }
+      .detail-scroll {
+        max-height: none;
+        padding-right: 0;
+        padding-bottom: 12px;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
 
       .detail-title {
-        font-size: clamp(48px, 10vw, 70px);
+        font-size: clamp(40px, 9vw, 56px);
       }
 
       .bottom-dock {
-        right: 20px;
-        bottom: 20px;
-        left: 20px;
+        position: relative;
+        right: auto;
+        bottom: auto;
+        left: auto;
         width: auto;
+        margin-top: 8px;
+      }
+
+      .bottom-dock .meta-row,
+      .bottom-dock .detail-rule {
+        display: none;
       }
 
       .action-rail {
@@ -1281,15 +1405,78 @@
       }
 
       .pill {
-        min-width: 132px;
+        min-width: 44px;
+        min-height: 48px;
       }
 
       .pill.icon-only {
-        min-width: 58px;
+        min-width: 48px;
+      }
+
+      .menu-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 2px 8px;
       }
     }
 
-    @media (max-width: 560px) {
+    /* Landscape phones / short landscape tablets: the 640-899 rules assume
+       enough vertical room; on a short landscape viewport shrink the hero and
+       push the shelf toward the bottom so books clear the topbar. */
+    @media (max-width: 899.98px) and (max-height: 500px) and (orientation: landscape) {
+      .hero-word {
+        top: 8vh;
+        font-size: clamp(48px, 12vh, 120px);
+        opacity: 0.35;
+      }
+
+      .book-card[data-book="identity"] {
+        --y: 52%;
+        --w: 16vw;
+        --r: -3deg;
+      }
+
+      .book-card[data-book="craft"] {
+        --y: 48%;
+        --w: 18vw;
+        --r: -1deg;
+      }
+
+      .book-card[data-book="archive"] {
+        --y: 54%;
+        --w: 20vw;
+        --r: 1deg;
+      }
+
+      .book-card[data-book="decks"] {
+        --y: 49%;
+        --w: 18vw;
+        --r: 2deg;
+      }
+
+      .book-card[data-book="courses"] {
+        --y: 52%;
+        --w: 16vw;
+        --r: 3deg;
+      }
+
+      [data-mode="detail"] .book-card.selected {
+        top: 86px;
+        width: min(24vw, 120px);
+      }
+
+      [data-mode="detail"] .detail-panel,
+      [data-mode="detail"] .deck-shelf,
+      [data-mode="detail"] .course-shelf,
+      [data-mode="detail"] .craft-shelf {
+        margin-top: 230px;
+      }
+    }
+
+    /* Phone portrait: all five books stay on-canvas, the centre book reads
+       largest, outer volumes shrink so every cover remains tappable. */
+    @media (max-width: 639.98px) {
       .brand {
         font-size: 22px;
       }
@@ -1299,61 +1486,71 @@
       }
 
       .hero-word {
-        top: 22vh;
-        font-size: 38vw;
+        top: 12vh;
+        font-size: 30vw;
       }
 
       .book-card[data-book="identity"] {
-        --x: 0%;
-        --y: 45%;
-        --w: 50vw;
+        --x: 12%;
+        --y: 46%;
+        --w: 22vw;
+        --r: -4deg;
+        --yaw: -3deg;
       }
 
       .book-card[data-book="craft"] {
-        --x: 25%;
-        --y: 40%;
-        --w: 58vw;
+        --x: 32%;
+        --y: 41%;
+        --w: 26vw;
+        --r: -1.5deg;
+        --yaw: -1.5deg;
       }
 
       .book-card[data-book="archive"] {
-        --x: 50%;
+        --x: 54%;
         --y: 46%;
-        --w: 50vw;
+        --w: 32vw;
+        --r: 1deg;
+        --yaw: 1.5deg;
       }
 
       .book-card[data-book="decks"] {
-        --x: 75%;
+        --x: 76%;
         --y: 42%;
-        --w: 50vw;
+        --w: 26vw;
+        --r: 2.5deg;
+        --yaw: 2deg;
       }
 
       .book-card[data-book="courses"] {
-        --x: 100%;
+        --x: 92%;
         --y: 44%;
-        --w: 50vw;
-      }
-
-      [data-mode="detail"] .stage {
-        min-height: calc(100svh + 760px);
+        --w: 22vw;
+        --r: 4deg;
+        --yaw: 3deg;
       }
 
       [data-mode="detail"] .book-card.selected {
-        width: min(67vw, 315px);
+        top: 110px;
+        width: min(46vw, 160px);
       }
 
       .detail-panel {
-        right: 20px;
-        left: 20px;
+        width: calc(100% - 32px);
       }
 
       .detail-scroll {
-        padding-right: 14px;
+        padding-right: 12px;
+      }
+
+      .detail-title {
+        font-size: clamp(36px, 11vw, 48px);
       }
 
       .pill {
         min-width: 0;
-        min-height: 54px;
-        padding: 0 10px;
+        min-height: 44px;
+        padding: 0 12px;
         font-size: 12px;
       }
 
@@ -1362,9 +1559,9 @@
       }
 
       .pill.icon-only {
-        flex-basis: 54px;
-        width: 54px;
-        min-width: 54px;
+        flex-basis: 48px;
+        width: 48px;
+        min-width: 48px;
       }
 
       .meta-row {
@@ -1376,7 +1573,36 @@
       }
 
       .close-button {
-        top: 18px;
+        top: 12px;
+      }
+
+      .menu-link {
+        font-size: clamp(44px, 13vw, 76px);
+      }
+    }
+
+    /* Touch affordances ------------------------------------------------ */
+
+    .book-card:active {
+      scale: .98;
+    }
+
+    .pill:active,
+    .icon-button:active,
+    .ticket-button:active {
+      transform: scale(.98);
+    }
+
+    body[data-touch="true"] .book-card .open-badge {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1) rotate(-3deg);
+    }
+
+    @media (pointer: coarse) {
+      /* No hover on touch: keep the Read affordance permanently visible. */
+      .book-card .open-badge {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(-3deg);
       }
     }
 

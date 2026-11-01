@@ -498,21 +498,29 @@
   border-color: var(--paper);
 }
 
+/* Small desktop / tablet landscape: widen the shelf column. */
+@media (min-width: 900px) and (max-width: 1179px) {
+  .craft-shelf {
+    right: 3.5%;
+    width: min(52%, 660px);
+  }
+}
+
 /* Mobile: drop the shelf below the selected book, mirroring .detail-panel */
-@media (max-width: 900px) {
+@media (max-width: 899.98px) {
   .craft-shelf {
     position: relative;
     top: auto;
     right: auto;
     bottom: auto;
     left: auto;
-    width: auto;
-    margin: 340px 16px 24px;
+    width: min(680px, calc(100% - 40px));
+    margin: 360px auto 24px;
     display: flex;
   }
 
   .craft-shelf-head .detail-title {
-    font-size: clamp(40px, 11vw, 56px);
+    font-size: clamp(40px, 9vw, 56px);
   }
 
   .craft-shelf-scroll {
@@ -535,7 +543,26 @@
   }
 }
 
-@media (max-width: 560px) {
+@media (pointer: coarse) {
+  .craft-tab {
+    min-height: 44px;
+    padding: 9px 14px;
+  }
+
+  .craft-profile-link,
+  .craft-refresh,
+  .craft-auto {
+    min-height: 44px;
+    padding: 0 14px;
+  }
+
+  .craft-card-open {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 639.98px) {
   .craft-section-header {
     flex-wrap: wrap;
   }

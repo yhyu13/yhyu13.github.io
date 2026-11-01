@@ -58,7 +58,7 @@
   box-shadow: 0 10px 24px rgba(20, 14, 8, 0.35);
 }
 
-@media (min-width: 901px) {
+@media (min-width: 900px) {
   [data-mode="detail"] .blossom-field {
     clip-path: inset(0 52% 0 0);
   }
@@ -298,156 +298,13 @@ body:has(.article-page) {
   color: #30291f;
 }
 
-@media (max-width: 900px) {
-  .stage {
-    min-height: 100svh;
-    overflow: hidden;
-  }
+/* Gallery, book-card and detail-panel responsive rules live in
+   field-manuals.css. This file keeps article, QR and stage-wash concerns. */
 
-  .hero-word {
-    top: 10vh;
-    font-size: clamp(64px, 20vw, 120px);
-  }
-
-  .book-card[data-book="identity"] {
-    --x: 22%;
-    --y: 46%;
-    --w: min(38vw, 168px);
-    --r: -7deg;
-  }
-
-  .book-card[data-book="craft"] {
-    --x: 50%;
-    --y: 40%;
-    --w: min(42vw, 188px);
-    --r: 0.6deg;
-  }
-
-  .book-card[data-book="archive"] {
-    --x: 78%;
-    --y: 46%;
-    --w: min(38vw, 168px);
-    --r: 7deg;
-  }
-
-  [data-mode="detail"] .stage {
-    min-height: 100svh;
-    overflow-y: auto;
-  }
-
-  [data-mode="detail"] .hero-word {
-    display: none;
-  }
-
-  [data-mode="detail"] .blossom-field {
-    display: none;
-  }
-
-  [data-mode="detail"] .book-card.selected {
-    left: 50%;
-    top: 108px;
-    width: min(40vw, 148px);
-    transform: translate3d(-50%, 0, 0) rotate(-2deg);
-  }
-
-  [data-mode="detail"] .close-button {
-    top: 18px;
-    left: 50%;
-    right: auto;
-    z-index: 61;
-    transform: translate3d(-50%, 0, 0);
-  }
-
-  [data-mode="detail"] .detail-panel {
-    position: relative;
-    top: auto;
-    right: auto;
-    left: auto;
-    width: auto;
-    margin: 340px 20px 24px;
-    padding-bottom: 24px;
-  }
-
-  [data-mode="detail"] .bottom-dock {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    left: auto;
-    width: auto;
-    margin-top: 8px;
-  }
-
-  [data-mode="detail"] .bottom-dock .meta-row,
-  [data-mode="detail"] .bottom-dock .detail-rule {
-    display: none;
-  }
-
-  .detail-scroll {
-    max-height: none;
-    padding-bottom: 12px;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-
-  .detail-title {
-    font-size: clamp(40px, 11vw, 56px);
-  }
-
-  .bottom-dock {
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
-    width: auto;
-  }
-
-  .ticket-button {
-    display: none;
-  }
-}
-
-@media (max-width: 560px) {
-  .brand {
-    font-size: 22px;
-  }
-
-  .hero-word {
-    top: 11vh;
-    font-size: 20vw;
-  }
-
-  .book-card[data-book="identity"] {
-    --x: 20%;
-    --y: 48%;
-    --w: 36vw;
-  }
-
-  .book-card[data-book="craft"] {
-    --x: 50%;
-    --y: 42%;
-    --w: 40vw;
-  }
-
-  .book-card[data-book="archive"] {
-    --x: 80%;
-    --y: 48%;
-    --w: 36vw;
-  }
-
-  [data-mode="detail"] .book-card.selected {
-    width: min(42vw, 152px);
-    top: 108px;
-  }
-
-  [data-mode="detail"] .detail-panel {
-    margin: 340px 16px 24px;
-  }
-
-  .year {
-    display: none;
-  }
-
-  .meta-row {
-    grid-template-columns: max-content 1px 1fr;
+@media (max-width: 639.98px) {
+  .article-inner,
+  .article-toolbar {
+    width: calc(100% - 32px);
   }
 }
 
