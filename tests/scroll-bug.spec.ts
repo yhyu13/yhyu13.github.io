@@ -6,7 +6,7 @@ test.describe("mobile detail vertical scroll", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
   for (const [path, pane] of [
-    ["/craft", ".craft-shelf"],
+    ["/craft", ".craft-shelf-scroll"],
     ["/archive", ".detail-scroll"],
     ["/courses", ".course-shelf"],
     ["/decks", ".deck-shelf"],
@@ -99,5 +99,39 @@ test.describe("mobile shelf rail", () => {
     await page.locator('.book-card[data-book="craft"]').tap();
     await page.waitForURL("**/craft");
     await expect(page.locator(".detail-title")).toHaveText("Craft");
+  });
+
+  test("a real touch swipe moves the rail and focus", async ({ page }) => {
+    await page.goto(`${BASE}/`);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(900);
+
+    const before = await page.locator(".gallery").evaluate((el) => el.scrollLeft);
+    const client = await page.context().newCDPSession(page);
+    const y = 500;
+    await client.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x: 320, y }],
+    });
+    for (let x = 300; x >= 100; x -= 20) {
+      await client.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x, y }],
+      });
+      await page.waitForTimeout(16);
+    }
+    await client.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
+    await page.waitForTimeout(900);
+
+    const after = await page.locator(".gallery").evaluate((el) => el.scrollLeft);
+    expect(after).toBeGreaterThan(before + 40);
+    expect(new URL(page.url()).pathname).toBe("/");
+    await expect(page.locator('.book-card[data-book="decks"]')).toHaveAttribute(
+      "data-focused",
+      "true",
+    );
   });
 });

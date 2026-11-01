@@ -12,6 +12,7 @@ type ViewportSpec = {
 const VIEWPORTS: ViewportSpec[] = [
   { name: "small-phone-320x568", width: 320, height: 568, hasTouch: false },
   { name: "iphone14-390x844", width: 390, height: 844, hasTouch: false },
+  { name: "ipad-768x1024", width: 768, height: 1024, hasTouch: false },
   { name: "ipad-air-portrait-820x1180", width: 820, height: 1180, hasTouch: false },
   { name: "ipad-air-landscape-1180x820", width: 1180, height: 820, hasTouch: false },
   { name: "phone-landscape-812x375", width: 812, height: 375, hasTouch: true },

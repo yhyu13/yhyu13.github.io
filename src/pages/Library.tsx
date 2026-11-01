@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QrShare, QrTrigger } from "../components/QrShare";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
@@ -101,7 +101,7 @@ export function Library({ openId }: LibraryProps) {
     return () => window.clearTimeout(timer);
   }, [mode, selected?.id]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (mode !== "gallery") return;
     const rail = railRef.current;
     if (!rail) return;
@@ -149,14 +149,24 @@ export function Library({ openId }: LibraryProps) {
       }
     };
 
+    // Orientation change and resizing inside the mobile band keep the media
+    // query matched, so re-centre on resize as well.
+    const onResize = () => {
+      if (!railQuery.matches) return;
+      centerFocused();
+      updateFocus();
+    };
+
     rail.addEventListener("scroll", onScroll, { passive: true });
     railQuery.addEventListener("change", onRailChange);
-    const raf = requestAnimationFrame(centerFocused);
+    window.addEventListener("resize", onResize);
+    centerFocused();
+    updateFocus();
 
     return () => {
       rail.removeEventListener("scroll", onScroll);
       railQuery.removeEventListener("change", onRailChange);
-      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
       if (frame) cancelAnimationFrame(frame);
     };
   }, [mode]);

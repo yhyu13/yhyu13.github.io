@@ -158,3 +158,19 @@ Acceptance additions:
 - `/archive`, `/courses`, `/decks`, and `/craft` at 390×844 scroll down and
   back to `scrollTop = 0`, with the pane's computed `overflow-y` equal to
   `visible`.
+
+Implementation notes for the rail:
+
+- The rail sets a literal card width (`min(58vw, 300px, 48svh)`) and its own
+  `transform`, so the per-band `--x`/`--y`/`--w`/`--yaw` values are inert in
+  mobile gallery mode; `--r` still supplies the cover tilt. The values remain
+  for the desktop collage, which is unchanged above 900px.
+- `overscroll-behavior-x: contain` stops an overswipe at either end from
+  chaining to browser back/forward.
+- The rail recentres on mount (layout effect, before paint), on return from a
+  detail route, and on resize/orientation change while the mobile query is
+  matched.
+- The Read badge is shown only on the centred cover; the desktop hover badge
+  gains a small `translateZ` so it paints above the 3D front cover.
+- Pixel screenshot tests are tagged `@visual`; `test:e2e` excludes them and
+  `test:visual` runs them against local baselines.

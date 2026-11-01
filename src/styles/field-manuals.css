@@ -586,7 +586,7 @@
       font-weight: 700;
       letter-spacing: .12em;
       opacity: 0;
-      transform: translate(-50%, -50%) translateZ(120px) scale(.76) rotate(-3deg);
+      transform: translate(-50%, -50%) translateZ(40px) scale(.76) rotate(-3deg);
       transition: opacity 260ms ease, transform 420ms var(--ease), filter 260ms ease;
       pointer-events: none;
     }
@@ -595,7 +595,7 @@
     .book-card[data-hovered="true"] .open-badge,
     .book-card:focus-visible .open-badge {
       opacity: 1;
-      transform: translate(-50%, -50%) translateZ(120px) scale(1) rotate(-3deg);
+      transform: translate(-50%, -50%) translateZ(40px) scale(1) rotate(-3deg);
     }
 
     .book-card:focus-visible {
@@ -1359,6 +1359,7 @@
         scroll-padding-inline: calc(50% - min(29vw, 150px, 24svh));
         overflow-x: auto;
         overflow-y: hidden;
+        overscroll-behavior-x: contain;
         scroll-snap-type: x mandatory;
         touch-action: pan-x;
         -webkit-overflow-scrolling: touch;
@@ -1398,7 +1399,7 @@
 
       [data-mode="gallery"] .book-card[data-focused="true"] .open-badge {
         opacity: 1;
-        transform: translate(-50%, -50%) translateZ(120px) scale(1) rotate(-3deg);
+        transform: translate(-50%, -50%) translateZ(40px) scale(1) rotate(-3deg);
       }
 
       [data-mode="detail"] .stage {
@@ -1678,10 +1679,6 @@
       scale: .98;
     }
 
-    [data-mode="gallery"] .book-card[data-focused="true"]:active {
-      scale: .99;
-    }
-
     .pill:active,
     .icon-button:active,
     .ticket-button:active {
@@ -1690,14 +1687,14 @@
 
     body[data-touch="true"] .book-card .open-badge {
       opacity: 1;
-      transform: translate(-50%, -50%) translateZ(120px) scale(1) rotate(-3deg);
+      transform: translate(-50%, -50%) translateZ(40px) scale(1) rotate(-3deg);
     }
 
     @media (pointer: coarse) {
       /* No hover on touch: keep the Read affordance permanently visible. */
       .book-card .open-badge {
         opacity: 1;
-        transform: translate(-50%, -50%) translateZ(120px) scale(1) rotate(-3deg);
+        transform: translate(-50%, -50%) translateZ(40px) scale(1) rotate(-3deg);
       }
     }
 

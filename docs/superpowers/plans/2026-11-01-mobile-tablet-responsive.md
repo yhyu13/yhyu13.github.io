@@ -17,8 +17,9 @@ Evidence policy: the pixel screenshot baselines are local artifacts and stay
 gitignored (they embed a live WebGL canvas and are platform-sensitive). The
 committed verification is the geometry suite — `tests/responsive.spec.ts`,
 `tests/scroll-bug.spec.ts`, `tests/extra-viewports.spec.ts` — which asserts no
-horizontal overflow, vertical fit on landscape, touch focus, two-tap open and
-scroll-to-top.
+horizontal overflow, vertical fit on landscape, rail focus, one-tap open and
+scroll-to-top. Pixel tests are tagged `@visual`: `npm run test:e2e` excludes
+them, and `npm run test:visual` regenerates or compares the local baselines.
 
 ## Tasks
 

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build && node scripts/copy-404.mjs && node scripts/check-links.mjs",
     "preview": "vite preview",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --grep-invert @visual",
+    "test:visual": "playwright test tests/screenshots.spec.ts"
   },
   "dependencies": {
     "@designcodeio/threeui": "^1.1.0",
