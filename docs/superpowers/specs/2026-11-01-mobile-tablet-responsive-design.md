@@ -105,3 +105,26 @@ Move the duplicated/overridden book-position rules from `site.css` back into
    - 1440×900 (desktop)
 3. Manual checks on each screenshot: no horizontal scroll, no clipped books,
    no text overlap, close button visible, Read badge visible on touch.
+
+## Addendum 2026-11-01 — shelf interaction and mobile scrolling
+
+Field feedback after the first pass changed two behaviours:
+
+- **Swipe previews, tap opens.** A horizontal swipe on the gallery moves a
+  focused volume and never navigates. The focused cover lifts (`scale 1.04`,
+  `-14px`) while the others recede (`opacity .82`). On coarse pointers the
+  first tap on a non-focused book only focuses it; the second tap opens it.
+  Swipe-then-tap opens in one tap. Fine pointers keep single-click opening.
+- **Mobile detail scrolls on the document.** `display: flow-root` on the stage
+  contains the shelf's top margin without creating a scroll container, and
+  `overflow-x: clip` keeps the off-canvas book transforms from widening the
+  page. Non-selected books are `display: none` in mobile detail.
+
+Acceptance additions:
+
+- A swipe leaves the URL unchanged and moves `data-focused="true"` to the
+  adjacent book.
+- On touch, the first tap on a non-focused book leaves the URL unchanged and
+  focuses it; the second tap opens it.
+- On a mobile detail route, scrolling down <u>500 px</u> and back up returns
+  `scrollTop` to 0 with the close button visible.
