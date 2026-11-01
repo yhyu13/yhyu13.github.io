@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QrShare, QrTrigger } from "../components/QrShare";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
@@ -38,6 +38,7 @@ export function Library({ openId }: LibraryProps) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(2);
   const [toast, setToast] = useState("");
   const [toastShow, setToastShow] = useState(false);
   const selected = openId ? getManual(openId) : undefined;
@@ -48,6 +49,7 @@ export function Library({ openId }: LibraryProps) {
   const frame = useRef(0);
   const pointer = useRef({ x: 0, y: 0, clientX: -10000, clientY: -10000 });
   const selectedRef = useRef<HTMLButtonElement | null>(null);
+  const gallerySwipeRef = useRef({ id: -1, x: 0, y: 0, t: 0, active: false });
 
   const showToast = useCallback((message: string) => {
     window.clearTimeout(toastTimer.current);
@@ -60,6 +62,24 @@ export function Library({ openId }: LibraryProps) {
     if (mode !== "detail") return;
     navigate("/");
   }, [mode, navigate]);
+
+  const focusAdjacentManual = useCallback((direction: 1 | -1) => {
+    if (mode !== "gallery" || selected) return;
+    setFocusedIndex((index) => (index + direction + MANUALS.length) % MANUALS.length);
+  }, [mode, selected]);
+
+  useEffect(() => {
+    const coarse = window.matchMedia("(pointer: coarse)");
+    const syncTouch = () => {
+      document.body.dataset.touch = coarse.matches ? "true" : "false";
+    };
+    syncTouch();
+    coarse.addEventListener("change", syncTouch);
+    return () => {
+      coarse.removeEventListener("change", syncTouch);
+      delete document.body.dataset.touch;
+    };
+  }, []);
 
   useEffect(() => {
     document.body.dataset.mode = mode;
@@ -78,7 +98,10 @@ export function Library({ openId }: LibraryProps) {
     const delay = prefersReducedMotion() ? 0 : 700;
     const timer = window.setTimeout(() => {
       closeRef.current?.focus({ preventScroll: true });
-      if (window.innerWidth > 900 && stageRef.current) stageRef.current.scrollTop = 0;
+      if (stageRef.current) stageRef.current.scrollTop = 0;
+      // Mobile detail scrolls on the document; reset it for detail-to-detail
+      // navigation so a new volume opens at the top.
+      window.scrollTo({ top: 0 });
     }, delay);
     return () => window.clearTimeout(timer);
   }, [mode, selected?.id]);
@@ -102,9 +125,23 @@ export function Library({ openId }: LibraryProps) {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = window.matchMedia("(pointer: coarse)");
+    const resetParallax = () => {
+      document.documentElement.style.setProperty("--mx", "0px");
+      document.documentElement.style.setProperty("--my", "0px");
+      document.querySelectorAll<HTMLElement>(".book-card").forEach((card) => {
+        card.style.setProperty("--local-x", "0px");
+        card.style.setProperty("--local-y", "0px");
+      });
+      if (selectedRef.current) {
+        selectedRef.current.style.removeProperty("--detail-yaw");
+        selectedRef.current.style.removeProperty("--detail-pitch");
+        selectedRef.current.dataset.orbiting = "false";
+      }
+    };
     const updateParallax = () => {
       frame.current = 0;
-      if (reduced.matches) return;
+      if (reduced.matches || coarse.matches) return;
       const { x, y, clientX, clientY } = pointer.current;
       if (mode === "detail" && selectedRef.current) {
         const bounds = selectedRef.current.getBoundingClientRect();
@@ -137,6 +174,7 @@ export function Library({ openId }: LibraryProps) {
     };
 
     const onMove = (event: PointerEvent) => {
+      if (coarse.matches || event.pointerType === "touch") return;
       pointer.current = {
         x: event.clientX / window.innerWidth - 0.5,
         y: event.clientY / window.innerHeight - 0.5,
@@ -149,14 +187,44 @@ export function Library({ openId }: LibraryProps) {
       pointer.current = { x: 0, y: 0, clientX: -10000, clientY: -10000 };
       if (!frame.current) frame.current = window.requestAnimationFrame(updateParallax);
     };
+    const onCoarseChange = () => {
+      if (coarse.matches) resetParallax();
+    };
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave);
+    coarse.addEventListener("change", onCoarseChange);
+    if (coarse.matches) resetParallax();
     return () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);
+      coarse.removeEventListener("change", onCoarseChange);
       if (frame.current) cancelAnimationFrame(frame.current);
     };
   }, [mode]);
+
+  const onGalleryPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType === "mouse" || !event.isPrimary) return;
+    // No setPointerCapture here: capturing on the gallery can retarget the
+    // synthesized click that opens a book.
+    gallerySwipeRef.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      t: Date.now(),
+      active: true,
+    };
+  };
+
+  const onGalleryPointerUp = (event: ReactPointerEvent<HTMLElement>) => {
+    const swipe = gallerySwipeRef.current;
+    if (!swipe.active || swipe.id !== event.pointerId) return;
+    gallerySwipeRef.current = { ...swipe, active: false };
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    if (Date.now() - swipe.t > 700) return;
+    if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy) * 1.2) return;
+    focusAdjacentManual(dx < 0 ? 1 : -1);
+  };
 
   return (
     <main className="stage" ref={stageRef} aria-label="Hang Yu field library">
@@ -201,15 +269,30 @@ export function Library({ openId }: LibraryProps) {
         躬行
       </h1>
 
-      <section className="gallery" aria-label="Field manuals">
-        {MANUALS.map((manual) => (
+      <section
+        className="gallery"
+        aria-label="Field manuals"
+        onPointerDown={mode === "gallery" ? onGalleryPointerDown : undefined}
+        onPointerUp={mode === "gallery" ? onGalleryPointerUp : undefined}
+      >
+        {MANUALS.map((manual, index) => (
           <BookCard
             key={manual.id}
             manual={manual}
             selected={selected?.id === manual.id}
+            focused={index === focusedIndex}
             tabIndex={mode === "detail" ? -1 : 0}
             onSelect={() => {
               if (mode === "detail") return;
+              // On touch below 900px the first tap previews (focuses) a book
+              // and the second tap opens it; a swipe already moves the preview.
+              // At >=900px there is no focus styling, so a tap opens directly.
+              const coarse = window.matchMedia("(pointer: coarse)").matches;
+              const narrow = window.innerWidth <= 899;
+              if (coarse && narrow && index !== focusedIndex) {
+                setFocusedIndex(index);
+                return;
+              }
               navigate(`/${manual.id}`);
             }}
             cardRef={selected?.id === manual.id ? selectedRef : undefined}
@@ -294,12 +377,14 @@ export function Library({ openId }: LibraryProps) {
 function BookCard({
   manual,
   selected,
+  focused,
   tabIndex,
   onSelect,
   cardRef,
 }: {
   manual: Manual;
   selected: boolean;
+  focused: boolean;
   tabIndex: number;
   onSelect: () => void;
   cardRef?: RefObject<HTMLButtonElement | null>;
@@ -310,6 +395,7 @@ function BookCard({
       className={`book-card${selected ? " selected" : ""}`}
       type="button"
       data-book={manual.id}
+      data-focused={focused ? "true" : "false"}
       aria-label={`Open ${manual.coverTitle} details`}
       tabIndex={tabIndex}
       style={{
@@ -318,9 +404,11 @@ function BookCard({
       }}
       onClick={onSelect}
       onPointerEnter={(event) => {
+        if (event.pointerType === "touch") return;
         event.currentTarget.dataset.hovered = "true";
       }}
       onPointerLeave={(event) => {
+        if (event.pointerType === "touch") return;
         event.currentTarget.dataset.hovered = "false";
       }}
     >

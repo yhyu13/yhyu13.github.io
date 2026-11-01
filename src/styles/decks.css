@@ -62,6 +62,10 @@ a.deck-card-source:hover { color: var(--paper); border-bottom-style: solid; }
 .reader-page { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .reader-canvas { max-width: 100%; max-height: 100%; box-shadow: 0 18px 60px rgba(24, 18, 10, 0.5); }
 .reader-arrow {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
   font-size: 2rem; color: var(--paper); background: transparent; border: 0; cursor: pointer;
   padding: 8px 12px; border-radius: 10px;
 }
@@ -72,24 +76,66 @@ a.deck-card-source:hover { color: var(--paper); border-bottom-style: solid; }
   font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.82rem;
   font-style: italic; font-weight: 650; letter-spacing: .08em;
 }
-.thumb-strip { display: flex; gap: 8px; overflow-x: auto; max-width: 100%; padding-bottom: 6px; }
+.thumb-strip {
+  display: flex; gap: 8px; overflow-x: auto; max-width: 100%; padding-bottom: 6px;
+  -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scrollbar-width: thin;
+}
 .thumb {
   border: 2px solid transparent; border-radius: 6px; background: transparent; padding: 0; cursor: pointer;
+  flex: 0 0 auto;
   transition: border-color 200ms ease, opacity 200ms ease;
 }
 .thumb canvas { display: block; width: 96px; height: auto; opacity: 0.85; border-radius: 4px; }
 .thumb.active { border-color: var(--pink); }
 .thumb.active canvas { opacity: 1; }
 
-/* Mobile: drop the shelf below the selected book, mirroring .detail-panel */
-@media (max-width: 900px) {
+/* Small desktop / tablet landscape: widen the shelf column. */
+@media (min-width: 900px) and (max-width: 1179px) {
   .deck-shelf {
-    top: calc(100svh + 48px);
-    left: 7%;
-    right: 7%;
-    width: auto;
+    right: 3.5%;
+    width: min(52%, 660px);
+  }
+}
+
+/* Mobile: drop the shelf below the selected book, mirroring .detail-panel */
+@media (max-width: 899.98px) {
+  .deck-shelf {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: min(680px, calc(100% - 40px));
+    margin: 360px auto 24px;
     max-height: none;
-    padding-bottom: 130px;
+    padding-bottom: 24px;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
   .deck-grid { grid-template-columns: repeat(2, 1fr); }
+  .reader-arrow { min-width: 44px; min-height: 44px; }
+}
+
+@media (max-width: 639.98px) {
+  .deck-grid { grid-template-columns: 1fr; }
+  .reader-stage { gap: 6px; padding: 12px; }
+}
+
+@media (pointer: coarse) {
+  .reader-arrow {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0;
+    flex: 0 0 auto;
+  }
+}
+
+.deck-reader[data-touch="true"] .reader-arrow {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0;
+  flex: 0 0 auto;
 }

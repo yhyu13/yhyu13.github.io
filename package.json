@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build && node scripts/copy-404.mjs && node scripts/check-links.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@designcodeio/threeui": "^1.1.0",
@@ -19,6 +20,7 @@
     "three128": "npm:three@0.128.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.50.0",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

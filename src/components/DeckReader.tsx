@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 import { getDeck } from "../data/decks";
@@ -12,9 +12,11 @@ export function DeckReader() {
   const [num, setNum] = useState(0);
   const [error, setError] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
+  const rootRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backRef = useRef<HTMLAnchorElement>(null);
   const renderTaskRef = useRef<RenderTask | null>(null);
+  const swipeRef = useRef({ id: -1, x: 0, y: 0, t: 0, active: false });
 
   const retry = useCallback(() => {
     setError("");
@@ -68,6 +70,58 @@ export function DeckReader() {
   }, []);
 
   useEffect(() => {
+    const coarse = window.matchMedia("(pointer: coarse)");
+    const root = rootRef.current;
+    const sync = () => {
+      if (!root) return;
+      root.dataset.touch = coarse.matches ? "true" : "false";
+      root.classList.toggle("is-touch", coarse.matches);
+      root.style.setProperty("--reader-touch", coarse.matches ? "1" : "0");
+    };
+    sync();
+    coarse.addEventListener("change", sync);
+    return () => coarse.removeEventListener("change", sync);
+  }, [deck?.pdf]);
+
+  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" || !event.isPrimary) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest("button, a, input, textarea, select")) return;
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Older browsers may reject capture; the swipe still works in place.
+    }
+    swipeRef.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      t: Date.now(),
+      active: true,
+    };
+  };
+
+  const onPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const swipe = swipeRef.current;
+    if (!swipe.active || swipe.id !== event.pointerId) return;
+    swipeRef.current = { ...swipe, active: false };
+    if (!num) return;
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    if (Date.now() - swipe.t > 700) return;
+    if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy) * 1.2) return;
+    if (dx < 0) {
+      setPage((p) => Math.min(num, p + 1));
+    } else {
+      setPage((p) => Math.max(1, p - 1));
+    }
+  };
+
+  const onPointerCancel = () => {
+    swipeRef.current = { ...swipeRef.current, active: false };
+  };
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
         e.preventDefault();
@@ -100,7 +154,7 @@ export function DeckReader() {
   }
 
   return (
-    <main className="stage deck-reader" data-mode="detail" aria-keyshortcuts="ArrowLeft ArrowRight Space PageUp PageDown Escape">
+    <main className="stage deck-reader" ref={rootRef} data-mode="detail" aria-keyshortcuts="ArrowLeft ArrowRight Space PageUp PageDown Escape">
       <header className="topbar">
         <Link className="brand" to="/decks" ref={backRef}>Favorites</Link>
         <div className="nav-actions">
@@ -111,7 +165,13 @@ export function DeckReader() {
 
       <div className="reader-stage">
         <button className="reader-arrow reader-prev" type="button" aria-label="Previous page" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>‹</button>
-        <div className="reader-page">
+        <div
+          className="reader-page"
+          style={{ touchAction: "pan-y" }}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerCancel}
+        >
           <canvas ref={canvasRef} className="reader-canvas" aria-label={`Slide ${page} of ${num}`} />
           {error ? (
             <div className="reader-error">
