@@ -25,6 +25,15 @@ Spec: `docs/superpowers/specs/2026-11-01-mobile-tablet-responsive-design.md`
 | 6 | Add Playwright responsive screenshot test | impl | `npx playwright test` passes |
 | 7 | Self-review against spec acceptance criteria | reviewer | review comment in PR |
 
+### Round 2 — field feedback
+
+| # | Task | Owner | Evidence |
+|---|---|---|---|
+| 8 | Swipe previews a focused volume; tap opens (two-tap on touch) | impl | `tests/scroll-bug.spec.ts` swipe/tap cases |
+| 9 | Mobile detail scrolls on the document; scroll down and back to 0 | impl | `tests/scroll-bug.spec.ts` scroll case |
+| 10 | Extended viewport audit (320–1180 px, landscape) | reviewer | `tests/extra-viewports.spec.ts` |
+| 11 | Spec/plan addendum for the interaction change | docs | this section |
+
 ## Risk / rollback
 
 Risk: a breakpoint change could break the desktop layout or make the books
