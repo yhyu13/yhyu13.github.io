@@ -128,6 +128,14 @@ test.describe("tablet landscape touch at 1180x820", () => {
 test.describe("touch shelf behaviour at 390x844", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
+  test("brand link meets the 44px touch target", async ({ page }) => {
+    await page.goto(`${BASE}/`);
+    await page.waitForLoadState("networkidle");
+    const box = await page.locator(".brand").boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+  });
+
   test("swipe left previews the next book without navigating", async ({ page }) => {
     await page.goto(`${BASE}/`);
     await page.waitForLoadState("networkidle");

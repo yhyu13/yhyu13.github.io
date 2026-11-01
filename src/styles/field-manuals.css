@@ -1266,6 +1266,9 @@
       }
 
       .brand {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
         font-size: 23px;
       }
 
