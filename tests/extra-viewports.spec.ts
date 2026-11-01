@@ -126,6 +126,44 @@ test.describe("tablet landscape touch at 1180x820", () => {
   });
 });
 
+test.describe("deck performance at 390x844", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+
+  test("does not fan the book open on mobile detail", async ({ page }) => {
+    await page.goto(`${BASE}/decks`);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(800);
+    const style = await page.evaluate(() => {
+      const book = document.querySelector(".book-card.selected .book");
+      const fan = document.querySelector(".book-card.selected .page-fan");
+      const card = document.querySelector(".book-card.selected");
+      return {
+        transform: book ? getComputedStyle(book).transform : null,
+        fan: fan ? getComputedStyle(fan).display : null,
+        transition: card ? getComputedStyle(card).transition : null,
+      };
+    });
+    expect(style.transform).toBe("none");
+    expect(style.fan).toBe("none");
+    expect(style.transition).not.toContain("width");
+  });
+
+  test("loads deck covers lazily", async ({ page }) => {
+    const pdfs: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().includes(".pdf")) pdfs.push(request.url());
+    });
+    await page.goto(`${BASE}/decks`);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(800);
+    const initial = pdfs.length;
+    expect(initial).toBeLessThan(8);
+    await page.evaluate(() => window.scrollTo(0, 1400));
+    await page.waitForTimeout(1500);
+    expect(pdfs.length).toBeGreaterThan(initial);
+  });
+});
+
 test.describe("touch shelf behaviour at 390x844", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 

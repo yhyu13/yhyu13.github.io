@@ -33,8 +33,22 @@
   background: rgba(234, 223, 199, 0.09);
   border-color: rgba(234, 223, 199, 0.2);
 }
-.deck-cover { display: block; aspect-ratio: 4 / 3; background: #201d16; }
-.deck-thumb { width: 100%; height: 100%; object-fit: contain; }
+.deck-cover { position: relative; display: block; aspect-ratio: 4 / 3; background: #201d16; }
+.deck-cover-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  color: rgba(238, 228, 204, .5);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.35;
+  text-align: center;
+  pointer-events: none;
+}
+.deck-thumb { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; }
 .deck-card-body { padding: 16px 18px 20px; }
 .deck-card-title { font-size: clamp(1.05rem, 1.15vw, 1.25rem); font-style: italic; font-weight: 500; margin: 2px 0 6px; }
 .deck-card-desc { color: var(--muted); font-size: 14px; line-height: 1.5; }

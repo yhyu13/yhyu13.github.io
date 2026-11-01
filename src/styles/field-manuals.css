@@ -1417,6 +1417,38 @@
         display: none;
       }
 
+      /* Mobile detail: skip the multi-layer 3D page fan and the long
+         layout transition. The cover appears flat and the panel follows
+         immediately, which is calmer and much cheaper on phones. */
+      .book-card {
+        transition: opacity 300ms ease, scale 300ms ease;
+        will-change: auto;
+      }
+
+      [data-mode="detail"] .book-card.selected {
+        transition: opacity 240ms ease;
+      }
+
+      [data-mode="detail"] .book-card.selected .book {
+        transform: none;
+        transition: none;
+      }
+
+      [data-mode="detail"] .book-card.selected .page-fan {
+        display: none;
+      }
+
+      [data-mode="detail"] .book-card.selected .page-block {
+        transform: none;
+        transition: none;
+      }
+
+      [data-mode="detail"] .book-card.selected .front-cover {
+        transform: none;
+        transition: none;
+        box-shadow: 0 18px 30px rgba(29, 21, 11, 0.3);
+      }
+
       [data-mode="detail"] .hero-word {
         display: none;
       }
