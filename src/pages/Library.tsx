@@ -282,6 +282,13 @@ export function Library({ openId }: LibraryProps) {
             tabIndex={mode === "detail" ? -1 : 0}
             onSelect={() => {
               if (mode === "detail") return;
+              // On touch, the first tap previews (focuses) a book and the
+              // second tap opens it; a swipe already moves the preview.
+              const coarse = window.matchMedia("(pointer: coarse)").matches;
+              if (coarse && index !== focusedIndex) {
+                setFocusedIndex(index);
+                return;
+              }
               navigate(`/${manual.id}`);
             }}
             cardRef={selected?.id === manual.id ? selectedRef : undefined}

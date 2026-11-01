@@ -100,4 +100,23 @@ test.describe("mobile gallery shelf swipe previews, tap opens", () => {
       "true",
     );
   });
+
+  test("first tap focuses a different book, second tap opens it", async ({ page }) => {
+    await page.goto("http://localhost:5173/");
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(800);
+
+    const craft = page.locator('.book-card[data-book="craft"]');
+
+    // First tap only previews.
+    await craft.click();
+    await page.waitForTimeout(300);
+    expect(new URL(page.url()).pathname).toBe("/");
+    await expect(craft).toHaveAttribute("data-focused", "true");
+
+    // Second tap opens the previewed book.
+    await craft.click();
+    await page.waitForURL("**/craft");
+    await expect(page.locator(".detail-title")).toHaveText("Craft");
+  });
 });
