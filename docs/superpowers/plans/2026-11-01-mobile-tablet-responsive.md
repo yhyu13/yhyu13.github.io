@@ -18,8 +18,10 @@ gitignored (they embed a live WebGL canvas and are platform-sensitive). The
 committed verification is the geometry suite — `tests/responsive.spec.ts`,
 `tests/scroll-bug.spec.ts`, `tests/extra-viewports.spec.ts` — which asserts no
 horizontal overflow, vertical fit on landscape, rail focus, one-tap open and
-scroll-to-top. Pixel tests are tagged `@visual`: `npm run test:e2e` excludes
-them, and `npm run test:visual` regenerates or compares the local baselines.
+scroll-to-top. Pixel tests live in `tests/screenshots.spec.ts` and are excluded
+from the default config: `npm run test:e2e` runs the functional suite, and
+`npm run test:visual` uses `playwright.visual.config.ts` to regenerate or
+compare the local baselines.
 
 ## Tasks
 

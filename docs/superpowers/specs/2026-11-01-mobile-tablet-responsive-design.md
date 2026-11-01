@@ -172,5 +172,7 @@ Implementation notes for the rail:
   matched.
 - The Read badge is shown only on the centred cover; the desktop hover badge
   gains a small `translateZ` so it paints above the 3D front cover.
-- Pixel screenshot tests are tagged `@visual`; `test:e2e` excludes them and
-  `test:visual` runs them against local baselines.
+- Pixel screenshot tests live in `tests/screenshots.spec.ts` and are excluded
+  from the default Playwright config. `npm run test:e2e` runs the functional
+  suite; `npm run test:visual` uses `playwright.visual.config.ts` to compare
+  the local baselines.

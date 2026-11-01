@@ -101,6 +101,47 @@ test.describe("mobile shelf rail", () => {
     await expect(page.locator(".detail-title")).toHaveText("Craft");
   });
 
+  test("recentres the focused cover on orientation change", async ({ page }) => {
+    await page.goto(`${BASE}/`);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(900);
+
+    await page.locator(".gallery").evaluate((el) => {
+      const card = el.querySelector('.book-card[data-book="decks"]') as HTMLElement | null;
+      if (!card) throw new Error("no decks card");
+      el.scrollLeft = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
+      el.dispatchEvent(new Event("scroll"));
+    });
+    await page.waitForTimeout(500);
+    await expect(page.locator('.book-card[data-book="decks"]')).toHaveAttribute(
+      "data-focused",
+      "true",
+    );
+
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.waitForTimeout(800);
+
+    const centered = await page.locator(".gallery").evaluate((el) => {
+      const cards = Array.from(el.querySelectorAll(".book-card")) as HTMLElement[];
+      const center = el.scrollLeft + el.clientWidth / 2;
+      let best: HTMLElement | null = null;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      for (const card of cards) {
+        const distance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = card;
+        }
+      }
+      return best?.getAttribute("data-book") ?? null;
+    });
+    expect(centered).toBe("decks");
+    await expect(page.locator('.book-card[data-book="decks"]')).toHaveAttribute(
+      "data-focused",
+      "true",
+    );
+  });
+
   test("a real touch swipe moves the rail and focus", async ({ page }) => {
     await page.goto(`${BASE}/`);
     await page.waitForLoadState("networkidle");
