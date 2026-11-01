@@ -3,6 +3,16 @@ import QRCode from "qrcode";
 
 export const SITE_URL = "https://yhyu13.github.io";
 
+/**
+ * Share the address the visitor is actually on. On GitHub Pages this is the
+ * production origin; on a local dev server or LAN preview it is that address,
+ * so a phone scanning the in-site QR reaches the running build.
+ */
+function currentShareUrl() {
+  if (typeof window === "undefined") return SITE_URL;
+  return window.location.origin;
+}
+
 type QrShareProps = {
   open: boolean;
   onClose: () => void;
@@ -12,11 +22,12 @@ export function QrShare({ open, onClose }: QrShareProps) {
   const titleId = useId();
   const [dataUrl, setDataUrl] = useState("");
   const [error, setError] = useState("");
+  const shareUrl = currentShareUrl();
 
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
-    QRCode.toDataURL(SITE_URL, {
+    QRCode.toDataURL(shareUrl, {
       width: 512,
       margin: 2,
       color: { dark: "#29251d", light: "#eadfc7" },
@@ -34,7 +45,7 @@ export function QrShare({ open, onClose }: QrShareProps) {
     return () => {
       cancelled = true;
     };
-  }, [open]);
+  }, [open, shareUrl]);
 
   useEffect(() => {
     if (!open) return;
@@ -63,11 +74,11 @@ export function QrShare({ open, onClose }: QrShareProps) {
         <h2 id={titleId} className="qr-title">
           Scan this shelf
         </h2>
-        <p className="qr-url">{SITE_URL}</p>
+        <p className="qr-url">{shareUrl}</p>
         {error ? (
           <p className="qr-error">{error}</p>
         ) : dataUrl ? (
-          <img className="qr-image" src={dataUrl} alt={`QR code for ${SITE_URL}`} width={220} height={220} />
+          <img className="qr-image" src={dataUrl} alt={`QR code for ${shareUrl}`} width={220} height={220} />
         ) : (
           <p className="qr-error">Drawing…</p>
         )}
