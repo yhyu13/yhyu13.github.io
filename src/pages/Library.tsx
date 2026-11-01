@@ -98,7 +98,10 @@ export function Library({ openId }: LibraryProps) {
     const delay = prefersReducedMotion() ? 0 : 700;
     const timer = window.setTimeout(() => {
       closeRef.current?.focus({ preventScroll: true });
-      if (window.innerWidth > 900 && stageRef.current) stageRef.current.scrollTop = 0;
+      if (stageRef.current) stageRef.current.scrollTop = 0;
+      // Mobile detail scrolls on the document; reset it for detail-to-detail
+      // navigation so a new volume opens at the top.
+      window.scrollTo({ top: 0 });
     }, delay);
     return () => window.clearTimeout(timer);
   }, [mode, selected?.id]);
@@ -201,9 +204,8 @@ export function Library({ openId }: LibraryProps) {
 
   const onGalleryPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     if (event.pointerType === "mouse" || !event.isPrimary) return;
-    try {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    } catch {}
+    // No setPointerCapture here: capturing on the gallery can retarget the
+    // synthesized click that opens a book.
     gallerySwipeRef.current = {
       id: event.pointerId,
       x: event.clientX,
@@ -282,10 +284,12 @@ export function Library({ openId }: LibraryProps) {
             tabIndex={mode === "detail" ? -1 : 0}
             onSelect={() => {
               if (mode === "detail") return;
-              // On touch, the first tap previews (focuses) a book and the
-              // second tap opens it; a swipe already moves the preview.
+              // On touch below 900px the first tap previews (focuses) a book
+              // and the second tap opens it; a swipe already moves the preview.
+              // At >=900px there is no focus styling, so a tap opens directly.
               const coarse = window.matchMedia("(pointer: coarse)").matches;
-              if (coarse && index !== focusedIndex) {
+              const narrow = window.innerWidth <= 899;
+              if (coarse && narrow && index !== focusedIndex) {
                 setFocusedIndex(index);
                 return;
               }
@@ -400,9 +404,11 @@ function BookCard({
       }}
       onClick={onSelect}
       onPointerEnter={(event) => {
+        if (event.pointerType === "touch") return;
         event.currentTarget.dataset.hovered = "true";
       }}
       onPointerLeave={(event) => {
+        if (event.pointerType === "touch") return;
         event.currentTarget.dataset.hovered = "false";
       }}
     >

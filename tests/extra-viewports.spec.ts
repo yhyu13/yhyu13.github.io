@@ -79,6 +79,52 @@ for (const viewport of VIEWPORTS) {
   });
 }
 
+test.describe("landscape phone geometry at 812x375", () => {
+  test.use({ viewport: { width: 812, height: 375 }, hasTouch: true });
+
+  test("all books stay inside the viewport height", async ({ page }) => {
+    await page.goto(`${BASE}/`);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(900);
+    const boxes = await page.locator(".book-card").evaluateAll((els) =>
+      els.map((el) => {
+        const r = el.getBoundingClientRect();
+        return { book: el.getAttribute("data-book"), top: r.top, bottom: r.bottom };
+      }),
+    );
+    for (const box of boxes) {
+      expect(box.top, `${box.book} top`).toBeGreaterThanOrEqual(-1);
+      expect(box.bottom, `${box.book} bottom`).toBeLessThanOrEqual(378);
+    }
+  });
+
+  test("detail book does not overlap its shelf", async ({ page }) => {
+    await page.goto(`${BASE}/craft`);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(1200);
+    const geometry = await page.evaluate(() => {
+      const book = document.querySelector(".book-card.selected")?.getBoundingClientRect();
+      const shelf = document.querySelector(".craft-shelf")?.getBoundingClientRect();
+      return book && shelf ? { bookBottom: book.bottom, shelfTop: shelf.top } : null;
+    });
+    expect(geometry).not.toBeNull();
+    expect(geometry!.bookBottom).toBeLessThanOrEqual(geometry!.shelfTop + 2);
+  });
+});
+
+test.describe("tablet landscape touch at 1180x820", () => {
+  test.use({ viewport: { width: 1180, height: 820 }, hasTouch: true });
+
+  test("one tap opens a book (no invisible preview step)", async ({ page }) => {
+    await page.goto(`${BASE}/`);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(900);
+    await page.locator('.book-card[data-book="identity"]').tap();
+    await page.waitForURL("**/identity");
+    expect(new URL(page.url()).pathname).toBe("/identity");
+  });
+});
+
 test.describe("touch shelf behaviour at 390x844", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 

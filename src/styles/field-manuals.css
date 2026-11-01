@@ -1460,45 +1460,45 @@
       }
 
       .book-card[data-book="identity"] {
-        --y: 52%;
-        --w: 16vw;
+        --y: 34%;
+        --w: 12vw;
         --r: -3deg;
       }
 
       .book-card[data-book="craft"] {
-        --y: 48%;
-        --w: 18vw;
+        --y: 30%;
+        --w: 14vw;
         --r: -1deg;
       }
 
       .book-card[data-book="archive"] {
-        --y: 54%;
-        --w: 20vw;
+        --y: 34%;
+        --w: 16vw;
         --r: 1deg;
       }
 
       .book-card[data-book="decks"] {
-        --y: 49%;
-        --w: 18vw;
+        --y: 30%;
+        --w: 14vw;
         --r: 2deg;
       }
 
       .book-card[data-book="courses"] {
-        --y: 52%;
-        --w: 16vw;
+        --y: 34%;
+        --w: 12vw;
         --r: 3deg;
       }
 
       [data-mode="detail"] .book-card.selected {
         top: 86px;
-        width: min(24vw, 120px);
+        width: min(18vw, 100px);
       }
 
       [data-mode="detail"] .detail-panel,
       [data-mode="detail"] .deck-shelf,
       [data-mode="detail"] .course-shelf,
       [data-mode="detail"] .craft-shelf {
-        margin-top: 230px;
+        margin-top: 250px;
       }
     }
 
@@ -1609,10 +1609,31 @@
       }
     }
 
+    @media (max-width: 899.98px) {
+      /* The detail close button must not float above an open menu. */
+      body[data-menu="open"] .close-button {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    @media (max-width: 639.98px) {
+      /* Outer books are ~82px wide; keep the Read badge inside the cover. */
+      .book-card .open-badge {
+        width: 74px;
+        height: 52px;
+        font-size: 9px;
+      }
+    }
+
     /* Touch affordances ------------------------------------------------ */
 
     .book-card:active {
       scale: .98;
+    }
+
+    [data-mode="gallery"] .book-card[data-focused="true"]:active {
+      scale: .99;
     }
 
     .pill:active,
