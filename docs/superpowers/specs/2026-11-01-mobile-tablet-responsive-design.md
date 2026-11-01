@@ -176,3 +176,23 @@ Implementation notes for the rail:
   from the default Playwright config. `npm run test:e2e` runs the functional
   suite; `npm run test:visual` uses `playwright.visual.config.ts` to compare
   the local baselines.
+
+## Addendum 2026-11-01 (round 4, issue #9) — calm mobile detail and deck covers
+
+- Below 900px the selected book in detail is flat: no page-fan layers, no
+  `scale`/`rotateX`/`rotateY` on `.book`, and no `left`/`top`/`width`
+  transition. The cover appears at its final position and only fades, so
+  Video Slides no longer performs the exaggerated multi-layer expansion on a
+  phone.
+- Deck covers are lazy: an `IntersectionObserver` loads a PDF cover only when
+  the card approaches the viewport (240px root margin), and a title
+  placeholder fills the cover until it renders. Opening Video Slides requests
+  a handful of PDFs instead of all 15.
+- Desktop and tablet-landscape (>900px) keep the existing 3D detail animation.
+
+Acceptance additions:
+
+- `/decks` at 390×844: the selected `.book` transform is `none`, `.page-fan`
+  display is `none`, and the card transition contains no `width`.
+- The initial `/decks` load requests fewer than 8 PDFs; scrolling down
+  requests more.

@@ -56,6 +56,13 @@ compare the local baselines.
 Supersedes round-2 task 8: swiping now moves the shelf itself, and a single
 tap opens the cover.
 
+### Round 4 — calm detail and deck covers (issue #9)
+
+| # | Task | Owner | Evidence |
+|---|---|---|---|
+| 16 | Flatten the mobile detail book; remove the page fan and the long layout transition | impl | computed `transform: none`, `display: none`, transition without `width` |
+| 17 | Lazy-load deck covers with a title placeholder | impl | initial PDF request count `< 8`, more after scrolling |
+
 ## Risk / rollback
 
 Risk: a breakpoint change could break the desktop layout or make the books

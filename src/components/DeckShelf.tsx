@@ -45,23 +45,48 @@ function DeckCard({ deck }: { deck: Deck }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const didLoad = useRef(false);
   useEffect(() => {
-    if (didLoad.current) return;
-    didLoad.current = true;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
     let cancelled = false;
     let pdfDoc: PDFDocumentProxy | null = null;
-    loadPdf(deck.pdf)
-      .then((pdf) => {
-        pdfDoc = pdf;
-        if (cancelled || !canvasRef.current) return;
-        return renderPage(pdf, 1, canvasRef.current, 210).catch(() => {});
-      })
-      .catch(() => {});
-    return () => { cancelled = true; didLoad.current = false; destroyPdf(pdfDoc); };
+
+    const loadCover = () => {
+      if (didLoad.current) return;
+      didLoad.current = true;
+      loadPdf(deck.pdf)
+        .then((pdf) => {
+          pdfDoc = pdf;
+          if (cancelled || !canvasRef.current) return;
+          return renderPage(pdf, 1, canvasRef.current, 210).catch(() => {});
+        })
+        .catch(() => {});
+    };
+
+    // Render a PDF cover only when the card approaches the viewport. Opening
+    // Video Slides used to fetch all 15 PDFs at once, which made the first
+    // seconds on a phone very janky.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        loadCover();
+      },
+      { rootMargin: "240px" },
+    );
+    observer.observe(canvas);
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      didLoad.current = false;
+      destroyPdf(pdfDoc);
+    };
   }, [deck.pdf]);
 
   return (
     <article className="deck-card">
       <Link className="deck-cover" to={`/decks/${deck.slug}`} aria-label={`Open ${deck.title}`}>
+        <span className="deck-cover-placeholder" aria-hidden="true">{deck.title}</span>
         <canvas ref={canvasRef} className="deck-thumb" />
       </Link>
       <div className="deck-card-body">
