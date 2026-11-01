@@ -16,7 +16,8 @@ export function CourseShelf() {
     if (!shelf) return;
     const onWheel = (e: WheelEvent) => {
       if (e.target instanceof Node && shelf.contains(e.target)) return; // native scroll over the panel
-      if (shelf.scrollHeight <= shelf.clientHeight) return; // nothing to scroll (e.g. mobile page-scroll layout)
+      if (getComputedStyle(shelf).overflowY !== "auto") return; // mobile page-scroll layout
+      if (shelf.scrollHeight <= shelf.clientHeight) return; // nothing to scroll
       const dy = e.deltaY;
       const atTop = shelf.scrollTop <= 0;
       const atBottom = shelf.scrollTop + shelf.clientHeight >= shelf.scrollHeight;

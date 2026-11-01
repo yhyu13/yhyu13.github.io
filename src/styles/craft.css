@@ -525,6 +525,7 @@
 
   .craft-shelf-scroll {
     overflow: visible;
+    overscroll-behavior: auto;
     padding: 0;
     -webkit-mask-image: none;
     mask-image: none;

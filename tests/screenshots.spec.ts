@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const VIEWPORTS = [
-  { name: "phone-portrait", width: 375, height: 812 },
+  { name: "phone-portrait", width: 390, height: 844 },
   { name: "tablet-portrait", width: 768, height: 1024 },
   { name: "tablet-landscape", width: 1024, height: 768 },
   { name: "desktop", width: 1440, height: 900 },
@@ -21,7 +21,7 @@ for (const viewport of VIEWPORTS) {
     test.use({ viewport: { width: viewport.width, height: viewport.height } });
 
     for (const route of ROUTES) {
-      test(`${route.name}`, async ({ page }) => {
+      test(`${route.name} @visual`, async ({ page }) => {
         await page.goto(`http://localhost:5173${route.path}`);
         await page.waitForLoadState("networkidle");
         // Book transitions run 1100ms; wait for them to settle, plus lazy panels.

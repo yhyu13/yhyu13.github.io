@@ -17,8 +17,11 @@ Evidence policy: the pixel screenshot baselines are local artifacts and stay
 gitignored (they embed a live WebGL canvas and are platform-sensitive). The
 committed verification is the geometry suite — `tests/responsive.spec.ts`,
 `tests/scroll-bug.spec.ts`, `tests/extra-viewports.spec.ts` — which asserts no
-horizontal overflow, vertical fit on landscape, touch focus, two-tap open and
-scroll-to-top.
+horizontal overflow, vertical fit on landscape, rail focus, one-tap open and
+scroll-to-top. Pixel tests live in `tests/screenshots.spec.ts` and are excluded
+from the default config: `npm run test:e2e` runs the functional suite, and
+`npm run test:visual` uses `playwright.visual.config.ts` to regenerate or
+compare the local baselines.
 
 ## Tasks
 
@@ -40,6 +43,18 @@ scroll-to-top.
 | 9 | Mobile detail scrolls on the document; scroll down and back to 0 | impl | `tests/scroll-bug.spec.ts` scroll case |
 | 10 | Extended viewport audit (320–1180 px, landscape) | reviewer | `tests/extra-viewports.spec.ts` |
 | 11 | Spec/plan addendum for the interaction change | docs | this section |
+
+### Round 3 — native shelf rail (issue #7)
+
+| # | Task | Owner | Evidence |
+|---|---|---|---|
+| 12 | Replace the focus-swap gesture with a native horizontal scroll-snap rail below 900px | impl | `overflow-x: auto`, `scroll-snap-type: x mandatory`; rail metrics test |
+| 13 | One tap on a cover opens it; remove the two-tap step | impl | `tests/scroll-bug.spec.ts` tap case |
+| 14 | Remove nested scroll containers on mobile detail/shelves (`overflow: visible`, `overscroll-behavior: auto`) | impl | computed `overflow-y: visible` and scroll-to-top for `/archive`, `/courses`, `/decks`, `/craft` |
+| 15 | Rail focus follows the centred cover without navigating | impl | `data-focused` follows `scrollLeft` |
+
+Supersedes round-2 task 8: swiping now moves the shelf itself, and a single
+tap opens the cover.
 
 ## Risk / rollback
 

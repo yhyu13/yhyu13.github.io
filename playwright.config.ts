@@ -2,6 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  // Pixel screenshots are local evidence with gitignored baselines; run them
+  // with `npm run test:visual`, not the default e2e pass.
+  testIgnore: ["**/screenshots.spec.ts"],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -15,7 +18,7 @@ export default defineConfig({
     actionTimeout: 20000,
   },
   webServer: {
-    command: "npm run dev -- --port 5173",
+    command: "npx vite --port 5173",
     url: "http://localhost:5173",
     reuseExistingServer: !process.env.CI,
     timeout: 120000,

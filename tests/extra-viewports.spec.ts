@@ -12,6 +12,7 @@ type ViewportSpec = {
 const VIEWPORTS: ViewportSpec[] = [
   { name: "small-phone-320x568", width: 320, height: 568, hasTouch: false },
   { name: "iphone14-390x844", width: 390, height: 844, hasTouch: false },
+  { name: "ipad-768x1024", width: 768, height: 1024, hasTouch: false },
   { name: "ipad-air-portrait-820x1180", width: 820, height: 1180, hasTouch: false },
   { name: "ipad-air-landscape-1180x820", width: 1180, height: 820, hasTouch: false },
   { name: "phone-landscape-812x375", width: 812, height: 375, hasTouch: true },
@@ -136,20 +137,18 @@ test.describe("touch shelf behaviour at 390x844", () => {
     expect(box!.height).toBeGreaterThanOrEqual(44);
   });
 
-  test("swipe left previews the next book without navigating", async ({ page }) => {
+  test("rail scroll focuses the centred cover without navigating", async ({ page }) => {
     await page.goto(`${BASE}/`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(800);
 
-    const common = {
-      pointerId: 1,
-      pointerType: "touch",
-      isPrimary: true,
-      clientY: 420,
-    };
-    await page.dispatchEvent(".gallery", "pointerdown", { ...common, clientX: 220, buttons: 1 });
-    await page.dispatchEvent(".gallery", "pointerup", { ...common, clientX: 80, buttons: 0 });
-    await page.waitForTimeout(300);
+    await page.locator(".gallery").evaluate((el) => {
+      const card = el.querySelector('.book-card[data-book="decks"]') as HTMLElement | null;
+      if (!card) throw new Error("no decks card");
+      el.scrollLeft = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
+      el.dispatchEvent(new Event("scroll"));
+    });
+    await page.waitForTimeout(500);
 
     expect(new URL(page.url()).pathname).toBe("/");
     await expect(page.locator('.book-card[data-book="decks"]')).toHaveAttribute(
@@ -162,19 +161,12 @@ test.describe("touch shelf behaviour at 390x844", () => {
     );
   });
 
-  test("first tap focuses a non-focused book, second tap opens it", async ({ page }) => {
+  test("one tap opens a cover", async ({ page }) => {
     await page.goto(`${BASE}/`);
     await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(800);
 
     const identity = page.locator('.book-card[data-book="identity"]');
-    await expect(identity).toHaveAttribute("data-focused", "false");
-
-    await identity.tap();
-    await page.waitForTimeout(300);
-    expect(new URL(page.url()).pathname).toBe("/");
-    await expect(identity).toHaveAttribute("data-focused", "true");
-
     await identity.tap();
     await page.waitForURL("**/identity");
     expect(new URL(page.url()).pathname).toBe("/identity");

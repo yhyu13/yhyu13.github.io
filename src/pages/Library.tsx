@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QrShare, QrTrigger } from "../components/QrShare";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
@@ -49,7 +49,7 @@ export function Library({ openId }: LibraryProps) {
   const frame = useRef(0);
   const pointer = useRef({ x: 0, y: 0, clientX: -10000, clientY: -10000 });
   const selectedRef = useRef<HTMLButtonElement | null>(null);
-  const gallerySwipeRef = useRef({ id: -1, x: 0, y: 0, t: 0, active: false });
+  const railRef = useRef<HTMLElement | null>(null);
 
   const showToast = useCallback((message: string) => {
     window.clearTimeout(toastTimer.current);
@@ -62,11 +62,6 @@ export function Library({ openId }: LibraryProps) {
     if (mode !== "detail") return;
     navigate("/");
   }, [mode, navigate]);
-
-  const focusAdjacentManual = useCallback((direction: 1 | -1) => {
-    if (mode !== "gallery" || selected) return;
-    setFocusedIndex((index) => (index + direction + MANUALS.length) % MANUALS.length);
-  }, [mode, selected]);
 
   useEffect(() => {
     const coarse = window.matchMedia("(pointer: coarse)");
@@ -105,6 +100,76 @@ export function Library({ openId }: LibraryProps) {
     }, delay);
     return () => window.clearTimeout(timer);
   }, [mode, selected?.id]);
+
+  useLayoutEffect(() => {
+    if (mode !== "gallery") return;
+    const rail = railRef.current;
+    if (!rail) return;
+    const railQuery = window.matchMedia("(max-width: 899.98px)");
+    let frame = 0;
+
+    const cardsOf = () => Array.from(rail.querySelectorAll<HTMLElement>(".book-card"));
+
+    const centerFocused = () => {
+      if (!railQuery.matches) return;
+      const cards = cardsOf();
+      const card =
+        rail.querySelector<HTMLElement>('.book-card[data-focused="true"]') ?? cards[2];
+      if (!card) return;
+      rail.scrollLeft = card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2;
+    };
+
+    const updateFocus = () => {
+      frame = 0;
+      if (!railQuery.matches) return;
+      const cards = cardsOf();
+      if (cards.length === 0) return;
+      const center = rail.scrollLeft + rail.clientWidth / 2;
+      let best = 0;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      cards.forEach((card, index) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const distance = Math.abs(cardCenter - center);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = index;
+        }
+      });
+      setFocusedIndex(best);
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(updateFocus);
+    };
+
+    const onRailChange = () => {
+      if (railQuery.matches) {
+        centerFocused();
+        updateFocus();
+      }
+    };
+
+    // Orientation change and resizing inside the mobile band keep the media
+    // query matched, so re-centre on resize as well.
+    const onResize = () => {
+      if (!railQuery.matches) return;
+      centerFocused();
+      updateFocus();
+    };
+
+    rail.addEventListener("scroll", onScroll, { passive: true });
+    railQuery.addEventListener("change", onRailChange);
+    window.addEventListener("resize", onResize);
+    centerFocused();
+    updateFocus();
+
+    return () => {
+      rail.removeEventListener("scroll", onScroll);
+      railQuery.removeEventListener("change", onRailChange);
+      window.removeEventListener("resize", onResize);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [mode]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -202,30 +267,6 @@ export function Library({ openId }: LibraryProps) {
     };
   }, [mode]);
 
-  const onGalleryPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
-    if (event.pointerType === "mouse" || !event.isPrimary) return;
-    // No setPointerCapture here: capturing on the gallery can retarget the
-    // synthesized click that opens a book.
-    gallerySwipeRef.current = {
-      id: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-      t: Date.now(),
-      active: true,
-    };
-  };
-
-  const onGalleryPointerUp = (event: ReactPointerEvent<HTMLElement>) => {
-    const swipe = gallerySwipeRef.current;
-    if (!swipe.active || swipe.id !== event.pointerId) return;
-    gallerySwipeRef.current = { ...swipe, active: false };
-    const dx = event.clientX - swipe.x;
-    const dy = event.clientY - swipe.y;
-    if (Date.now() - swipe.t > 700) return;
-    if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy) * 1.2) return;
-    focusAdjacentManual(dx < 0 ? 1 : -1);
-  };
-
   return (
     <main className="stage" ref={stageRef} aria-label="Hang Yu field library">
       {mode === "gallery" ? (
@@ -272,8 +313,7 @@ export function Library({ openId }: LibraryProps) {
       <section
         className="gallery"
         aria-label="Field manuals"
-        onPointerDown={mode === "gallery" ? onGalleryPointerDown : undefined}
-        onPointerUp={mode === "gallery" ? onGalleryPointerUp : undefined}
+        ref={railRef}
       >
         {MANUALS.map((manual, index) => (
           <BookCard
@@ -284,15 +324,7 @@ export function Library({ openId }: LibraryProps) {
             tabIndex={mode === "detail" ? -1 : 0}
             onSelect={() => {
               if (mode === "detail") return;
-              // On touch below 900px the first tap previews (focuses) a book
-              // and the second tap opens it; a swipe already moves the preview.
-              // At >=900px there is no focus styling, so a tap opens directly.
-              const coarse = window.matchMedia("(pointer: coarse)").matches;
-              const narrow = window.innerWidth <= 899;
-              if (coarse && narrow && index !== focusedIndex) {
-                setFocusedIndex(index);
-                return;
-              }
+              // The rail already previews the centred book; one tap opens it.
               navigate(`/${manual.id}`);
             }}
             cardRef={selected?.id === manual.id ? selectedRef : undefined}

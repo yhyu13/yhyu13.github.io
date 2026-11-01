@@ -130,3 +130,49 @@ Acceptance additions:
   focuses it; the second tap opens it.
 - On a mobile detail route, scrolling down <u>500 px</u> and back up returns
   `scrollTop` to 0 with the close button visible.
+
+## Addendum 2026-11-01 (round 3, issue #7) — native shelf rail
+
+Field feedback replaced the focus-swap gesture with a real shelf:
+
+- **The shelf moves.** Below 900px the gallery is a native horizontal scroll
+  container: `display: flex`, `overflow-x: auto`,
+  `scroll-snap-type: x mandatory`, one card per snap point. Swiping pans the
+  covers like a music-app carousel; the centred cover gets
+  `data-focused="true"` and the rest recede. This supersedes the round-2
+  "swipe previews without moving the shelf" and "two-tap open" behaviour.
+- **One tap opens.** Tapping a cover opens its detail page immediately.
+- **No nested scroll traps.** On mobile, `.detail-scroll`, `.course-shelf`,
+  and `.deck-shelf` use `overflow: visible` and `overscroll-behavior: auto`,
+  so a touch inside them scrolls the document. Previously `overflow-y: auto`
+  plus `overscroll-behavior: contain` swallowed the gesture on Archive,
+  Courses, and Decks.
+
+Acceptance additions:
+
+- The gallery at 390px has `scrollWidth > clientWidth`, `overflow-x: auto`,
+  and `scroll-snap-type` containing `x`.
+- Scrolling the rail to a cover sets `data-focused="true"` on it without
+  changing the URL.
+- One tap on a cover navigates to its route.
+- `/archive`, `/courses`, `/decks`, and `/craft` at 390×844 scroll down and
+  back to `scrollTop = 0`, with the pane's computed `overflow-y` equal to
+  `visible`.
+
+Implementation notes for the rail:
+
+- The rail sets a literal card width (`min(58vw, 300px, 48svh)`) and its own
+  `transform`, so the per-band `--x`/`--y`/`--w`/`--yaw` values are inert in
+  mobile gallery mode; `--r` still supplies the cover tilt. The values remain
+  for the desktop collage, which is unchanged above 900px.
+- `overscroll-behavior-x: contain` stops an overswipe at either end from
+  chaining to browser back/forward.
+- The rail recentres on mount (layout effect, before paint), on return from a
+  detail route, and on resize/orientation change while the mobile query is
+  matched.
+- The Read badge is shown only on the centred cover; the desktop hover badge
+  gains a small `translateZ` so it paints above the 3D front cover.
+- Pixel screenshot tests live in `tests/screenshots.spec.ts` and are excluded
+  from the default Playwright config. `npm run test:e2e` runs the functional
+  suite; `npm run test:visual` uses `playwright.visual.config.ts` to compare
+  the local baselines.
