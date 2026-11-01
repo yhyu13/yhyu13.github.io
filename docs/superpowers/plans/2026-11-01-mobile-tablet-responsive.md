@@ -13,6 +13,13 @@ Spec: `docs/superpowers/specs/2026-11-01-mobile-tablet-responsive-design.md`
 - The duplicated responsive rules in `site.css` are consolidated back into
   `field-manuals.css`; `site.css` only holds article/QR/stage-wash rules.
 
+Evidence policy: the pixel screenshot baselines are local artifacts and stay
+gitignored (they embed a live WebGL canvas and are platform-sensitive). The
+committed verification is the geometry suite — `tests/responsive.spec.ts`,
+`tests/scroll-bug.spec.ts`, `tests/extra-viewports.spec.ts` — which asserts no
+horizontal overflow, vertical fit on landscape, touch focus, two-tap open and
+scroll-to-top.
+
 ## Tasks
 
 | # | Task | Owner | Evidence |
