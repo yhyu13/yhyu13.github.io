@@ -160,3 +160,46 @@ Entry chunk after the local `lazy()` experiment:
 dist/assets/index-UqeG0qEW.js  293.15 kB │ gzip:  96.13 kB
 dist/assets/pdf-DJp4UbTZ.js    441.45 kB │ gzip: 133.42 kB
 ```
+
+## Addendum 2026-11-02 — what shipped, and what was deliberately not
+
+Decisions 1 and 2 and the budget check are implemented on
+`feat/11-mobile-performance`. Decision 3 (a shared PDF worker) was **not**
+implemented: it changes document and worker lifetimes, which is the part of
+this spec that can leak, so it stays behind its own test before it lands.
+
+Re-measured on the built branch the same way as the problem section
+(`vite preview`, Chromium, `waitUntil: load` + 4 s settle):
+
+| Route / viewport | Before | After | Change |
+|---|---|---|---|
+| every route, 390×844, entry chunk | 739.80 kB | 293.88 kB | −445.92 kB |
+| `/` at 390×844 | 1260 kB | <u>332 kB</u> | −928 kB |
+| `/` at 768×1024 | 1260 kB | <u>332 kB</u> | −928 kB |
+| `/` at 1440×900 | 1260 kB | 779 kB (entry + `StageWash`) | −481 kB, backdrop kept |
+| `/archive` at 390×844, `pdf.js` requests | 1 (inside entry) | 0 | −441.45 kB |
+| `/decks` at 390×844 | 5044 kB, 2 workers | 5039 kB, 2 workers | unchanged (deferred) |
+| `/decks` at 768×1024 | 9304 kB, 4 workers | 9299 kB, 4 workers | unchanged (deferred) |
+
+Two consequences worth recording:
+
+- The gallery at `/decks` now fetches `pdf-*.js` (441.45 kB) itself, because
+  the cover thumbnails render PDFs. It no longer arrives through the entry
+  chunk, so Archive, Craft, Courses and the home page stop paying for it, but
+  `/decks` total transfer is essentially unchanged.
+- The desktop home page dropped by the exact entry-chunk reduction and keeps
+  the backdrop, so the visual language above 900 px with a fine pointer is
+  untouched.
+
+Implemented guards:
+
+- `scripts/check-budget.mjs` runs inside `npm run build` and fails it when
+  `dist/assets/index-*.js` exceeds 300 kB (Vite's kB unit).
+- `tests/perf-budget.spec.ts` asserts the module-level decisions against the
+  dev server: no `StageWash` and no `threeui` on a phone, no `pdfjs-dist` from
+  `/archive`, fewer than eight covers on `/decks`, and the desktop backdrop and
+  reader intact.
+
+Deferred to the next round, with the evidence above as their baseline:
+plan tasks 3, 4 and 6 (worker singleton, threshold tuning, worker-lifetime
+test) and the deletion of `StageWash` from the phone visual baselines.

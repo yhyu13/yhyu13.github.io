@@ -52,3 +52,17 @@ recorded in the spec's consequences; the desktop visual language is unchanged.
 
 Rollback: revert the squash commit on `master`. No data, URL or export-contract
 change is involved.
+
+## Status 2026-11-02
+
+| # | Task | State |
+|---|---|---|
+| 1 | Lazy `/decks/:slug` route | done — entry chunk 739.80 → 293.88 kB |
+| 2 | Gate `StageWash` | done — zero backdrop requests at 390×844 and 768×1024 |
+| 5 | Budget assertions | done — `scripts/check-budget.mjs` inside `npm run build`, `tests/perf-budget.spec.ts` for module-level decisions |
+| 3, 4, 6 | Shared PDF worker, threshold tuning, worker-lifetime test | deferred — `/decks` still requests 2 × 1236 kB at 390×844 |
+| 7 | Regenerate phone visual baselines | left to the visual run — baselines are local and gitignored |
+| 8 | Self-review | pending reviewer |
+
+The shipped subset keeps the phone-first wins that carry no lifecycle risk and
+leaves the worker work, which can leak, behind its own test.
