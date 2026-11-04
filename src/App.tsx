@@ -2,7 +2,12 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Library } from "./pages/Library";
 import { ArticlePage } from "./pages/ArticlePage";
-import { DeckReader } from "./components/DeckReader";
+
+// pdf.js is only needed on a deck detail route. Importing the reader eagerly
+// pulled it into the entry chunk, so every route (Archive included) paid for it.
+const DeckReader = lazy(() =>
+  import("./components/DeckReader").then((m) => ({ default: m.DeckReader })),
+);
 
 const CoursePage = lazy(() =>
   import("./pages/CoursePage").then((m) => ({ default: m.CoursePage })),
@@ -18,7 +23,14 @@ export default function App() {
       <Route path="/archive/capsule" element={<ArticlePage slug="capsule" />} />
       <Route path="/archive/rainbow" element={<ArticlePage slug="rainbow" />} />
       <Route path="/decks" element={<Library openId="decks" />} />
-      <Route path="/decks/:slug" element={<DeckReader />} />
+      <Route
+        path="/decks/:slug"
+        element={
+          <Suspense fallback={null}>
+            <DeckReader />
+          </Suspense>
+        }
+      />
       <Route path="/courses" element={<Library openId="courses" />} />
       <Route
         path="/courses/:slug"

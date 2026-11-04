@@ -2,6 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useSta
 import { Link, useNavigate } from "react-router-dom";
 import { QrShare, QrTrigger } from "../components/QrShare";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
+import { stageWashAllowed, stageWashQueries } from "../lib/stageWash";
 
 const StageWash = lazy(() => import("../components/StageWash"));
 const DeckShelf = lazy(() =>
@@ -41,6 +42,9 @@ export function Library({ openId }: LibraryProps) {
   const [focusedIndex, setFocusedIndex] = useState(2);
   const [toast, setToast] = useState("");
   const [toastShow, setToastShow] = useState(false);
+  // Decided before the lazy() import runs, so a phone never downloads the
+  // 492 kB three.js chunk for a backdrop it can barely see.
+  const [washEnabled, setWashEnabled] = useState(stageWashAllowed);
   const selected = openId ? getManual(openId) : undefined;
   const mode = selected ? "detail" : "gallery";
   const stageRef = useRef<HTMLElement>(null);
@@ -62,6 +66,17 @@ export function Library({ openId }: LibraryProps) {
     if (mode !== "detail") return;
     navigate("/");
   }, [mode, navigate]);
+
+  useEffect(() => {
+    const queries = stageWashQueries();
+    if (!queries.length) return;
+    const sync = () => setWashEnabled(stageWashAllowed());
+    sync();
+    for (const query of queries) query.addEventListener("change", sync);
+    return () => {
+      for (const query of queries) query.removeEventListener("change", sync);
+    };
+  }, []);
 
   useEffect(() => {
     const coarse = window.matchMedia("(pointer: coarse)");
@@ -269,7 +284,7 @@ export function Library({ openId }: LibraryProps) {
 
   return (
     <main className="stage" ref={stageRef} aria-label="Hang Yu field library">
-      {mode === "gallery" ? (
+      {mode === "gallery" && washEnabled ? (
         <Suspense fallback={null}>
           <StageWash />
         </Suspense>
