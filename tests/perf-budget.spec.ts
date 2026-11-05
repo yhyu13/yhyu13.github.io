@@ -75,3 +75,33 @@ test.describe("desktop 1440x900", () => {
     expect(matches(requests, "pdfjs-dist").length).toBeGreaterThan(0);
   });
 });
+
+test.describe("PDF worker lifetime", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test("one worker serves the gallery and every deck opened afterwards", async ({ page }) => {
+    const requests = collect(page);
+    await page.goto("/decks", { waitUntil: "load" });
+    await page.waitForSelector(".deck-cover");
+    await page.waitForTimeout(2000);
+
+    const firstDeck = page.locator(".deck-cover").first();
+    const secondDeck = page.locator(".deck-cover").nth(1);
+
+    await firstDeck.click();
+    await page.waitForSelector(".deck-reader", { timeout: 15000 });
+    await page.waitForTimeout(1500);
+    await page.goBack({ waitUntil: "load" });
+    await page.waitForSelector(".deck-cover");
+
+    await secondDeck.click();
+    await page.waitForSelector(".deck-reader", { timeout: 15000 });
+    await page.waitForTimeout(1500);
+
+    // `?url` is the constant module that exports the worker path, not a worker.
+    const workerScripts = matches(requests, "pdf.worker.min.mjs").filter(
+      (url) => !url.includes("?url"),
+    );
+    expect(workerScripts.length).toBe(1);
+  });
+});
