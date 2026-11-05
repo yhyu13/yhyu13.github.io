@@ -203,3 +203,43 @@ Implemented guards:
 Deferred to the next round, with the evidence above as their baseline:
 plan tasks 3, 4 and 6 (worker singleton, threshold tuning, worker-lifetime
 test) and the deletion of `StageWash` from the phone visual baselines.
+
+## Addendum 2026-11-02 (round 2) — decision 3 shipped, with the constraint it hit
+
+This supersedes the "deferred" note for decision 3. The shared PDF worker is
+implemented on `feat/11-mobile-performance`; plan tasks 3 and 6 are done.
+
+The first attempt failed in a way worth recording, because it is the whole
+reason this decision was written as risky. `PDFDocumentLoadingTask.destroy()`
+does not only tear down the document: it marks the borrowed worker
+`_pendingDestroy` and deletes the worker from pdf.js's port cache
+(`pdf.mjs`, `PDFDocumentLoadingTask.destroy` → `PDFWorker.destroy`). A
+`getDocument()` that overlaps that window throws
+
+```
+Error: PDFWorker.create - the worker is being destroyed.
+```
+
+In the browser this is not a caught error: the second deck opened after a
+back-navigation rendered an empty `#root`. The fix is in `src/lib/pdf.ts` —
+destroys are chained into one promise, and `loadPdf()` awaits that chain before
+creating a document. With that serialisation the borrowed port is reusable and
+the error cannot occur.
+
+Re-measured on the built branch, same method as before:
+
+| Route / viewport | Before round 2 | After round 2 |
+|---|---|---|
+| `/decks` at 390×844 | 5039 kB, 2 workers | <u>3804 kB</u>, 1 worker |
+| `/decks` at 768×1024 | 9299 kB, 4 workers | <u>5592 kB</u>, 1 worker |
+| `/decks/:slug` at 390×844 | 2914 kB, 2 workers | 2914 kB, 1 worker |
+
+Covered by `tests/perf-budget.spec.ts` → "one worker serves the gallery and
+every deck opened afterwards", which opens two decks across a back-navigation
+and asserts exactly one worker script fetch.
+
+Plan task 4 (tuning the `IntersectionObserver` threshold) was left undone on
+purpose: with one worker, the remaining transfer on `/decks` is the PDFs
+themselves plus `pdf.js`, so shrinking the first-screen cover count would trade
+first-paint content for a smaller number without removing waste. It stays a
+knob for a future measurement, not a task.

@@ -66,3 +66,14 @@ change is involved.
 
 The shipped subset keeps the phone-first wins that carry no lifecycle risk and
 leaves the worker work, which can leak, behind its own test.
+
+## Status 2026-11-02 (round 2)
+
+| # | Task | State |
+|---|---|---|
+| 3 | Shared PDF worker | done — one worker per session, serialised destroys (`src/lib/pdf.ts`) |
+| 6 | Worker-lifetime test | done — two decks across a back-navigation, one worker script |
+| 4 | `IntersectionObserver` threshold tuning | dropped — with one worker the residual transfer is the PDFs and `pdf.js` themselves; narrowing the first screen would only hide content |
+
+`/decks` transfer after this round: <u>3804 kB</u> at 390×844 (was 5039 kB) and
+<u>5592 kB</u> at 768×1024 (was 9299 kB).
