@@ -32,7 +32,7 @@ function isExternal(href: string) {
 const TEXT_GROUPS: [string, string][] = [
   ["notes", "页面笔记"],
   ["slides", "讲义逐页文本"],
-  ["transcript", "字幕（.srt）"],
+  ["transcript", "字幕 SRT"],
 ];
 
 const TEXT_GROUP_LABELS: Record<string, string> = Object.fromEntries(TEXT_GROUPS);

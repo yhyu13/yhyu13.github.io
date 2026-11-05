@@ -116,7 +116,7 @@ export const COURSES: Course[] = [
         kind: "decks",
         label: "讲义",
         description:
-          "1 份 PowerPoint 讲义，107 页：104 页内容 + 课程地图 + 全课总结，与 6 集视频同源。",
+          "1 份 PowerPoint 讲义，107 页：104 页内容 + 课程封面 + 课程地图 + 全课总结，与 6 集视频同源。",
       },
       {
         kind: "videos",
@@ -128,7 +128,7 @@ export const COURSES: Course[] = [
         kind: "text",
         label: "文字",
         description:
-          "三层文字：6 份逐页笔记、6 份屏幕文字、6 份 SRT 字幕，共 18 份。",
+          "三层文字：6 份页面笔记、6 份屏幕文字、6 份 SRT 字幕，共 18 份。",
       },
       {
         kind: "digest",
