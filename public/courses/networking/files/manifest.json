@@ -1,0 +1,166 @@
+{
+  "slug": "networking",
+  "title": "How to Network · 人脉不是通讯录",
+  "exportedAt": "2026-11-05T11:34:14+00:00",
+  "source": "C:\\Git-repo-my\\个人成长\\networking-course",
+  "releaseTag": "courseware-networking-v1",
+  "groups": {
+    "decks": [
+      {
+        "label": "networking-course.pptx",
+        "href": "downloads/networking-course.pptx",
+        "bytes": 2087594,
+        "slides": 107
+      }
+    ],
+    "videos": [
+      {
+        "label": "第 1 集 · 为什么经营人脉",
+        "desc": "模块一 · 对应课程第 01 到 18 节",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-networking-v1/networking-ep1.mp4",
+        "poster": "posters/ep1.jpg",
+        "meta": "3:21 · 17 页 · 59 条字幕"
+      },
+      {
+        "label": "第 2 集 · 人脉是心态，不是技巧",
+        "desc": "模块二 · 对应课程第 19 到 26 节",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-networking-v1/networking-ep2.mp4",
+        "poster": "posters/ep2.jpg",
+        "meta": "2:24 · 15 页 · 44 条字幕"
+      },
+      {
+        "label": "第 3 集 · 目标、请求、反馈、感谢",
+        "desc": "模块三 · 对应课程第 27 到 35 节",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-networking-v1/networking-ep3.mp4",
+        "poster": "posters/ep3.jpg",
+        "meta": "3:13 · 19 页 · 58 条字幕"
+      },
+      {
+        "label": "第 4 集 · 先领导自己",
+        "desc": "模块四 · 对应课程第 36 到 45 节",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-networking-v1/networking-ep4.mp4",
+        "poster": "posters/ep4.jpg",
+        "meta": "3:24 · 20 页 · 59 条字幕"
+      },
+      {
+        "label": "第 5 集 · 关系与信任",
+        "desc": "模块五 · 对应课程第 46 到 51 节",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-networking-v1/networking-ep5.mp4",
+        "poster": "posters/ep5.jpg",
+        "meta": "2:40 · 17 页 · 49 条字幕"
+      },
+      {
+        "label": "第 6 集 · 领导他人，走向社群",
+        "desc": "模块六 · 对应课程第 52 到 54 节",
+        "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-networking-v1/networking-ep6.mp4",
+        "poster": "posters/ep6.jpg",
+        "meta": "2:23 · 16 页 · 43 条字幕"
+      }
+    ],
+    "text": [
+      {
+        "label": "第 1 集 · 为什么经营人脉.md",
+        "href": "text/notes/ep1.md",
+        "group": "notes"
+      },
+      {
+        "label": "第 1 集 · 屏幕文字.md",
+        "href": "text/slides/ep1.md",
+        "group": "slides"
+      },
+      {
+        "label": "第 1 集 · 字幕.srt",
+        "href": "text/transcript/ep1.srt",
+        "group": "transcript"
+      },
+      {
+        "label": "第 2 集 · 人脉是心态，不是技巧.md",
+        "href": "text/notes/ep2.md",
+        "group": "notes"
+      },
+      {
+        "label": "第 2 集 · 屏幕文字.md",
+        "href": "text/slides/ep2.md",
+        "group": "slides"
+      },
+      {
+        "label": "第 2 集 · 字幕.srt",
+        "href": "text/transcript/ep2.srt",
+        "group": "transcript"
+      },
+      {
+        "label": "第 3 集 · 目标、请求、反馈、感谢.md",
+        "href": "text/notes/ep3.md",
+        "group": "notes"
+      },
+      {
+        "label": "第 3 集 · 屏幕文字.md",
+        "href": "text/slides/ep3.md",
+        "group": "slides"
+      },
+      {
+        "label": "第 3 集 · 字幕.srt",
+        "href": "text/transcript/ep3.srt",
+        "group": "transcript"
+      },
+      {
+        "label": "第 4 集 · 先领导自己.md",
+        "href": "text/notes/ep4.md",
+        "group": "notes"
+      },
+      {
+        "label": "第 4 集 · 屏幕文字.md",
+        "href": "text/slides/ep4.md",
+        "group": "slides"
+      },
+      {
+        "label": "第 4 集 · 字幕.srt",
+        "href": "text/transcript/ep4.srt",
+        "group": "transcript"
+      },
+      {
+        "label": "第 5 集 · 关系与信任.md",
+        "href": "text/notes/ep5.md",
+        "group": "notes"
+      },
+      {
+        "label": "第 5 集 · 屏幕文字.md",
+        "href": "text/slides/ep5.md",
+        "group": "slides"
+      },
+      {
+        "label": "第 5 集 · 字幕.srt",
+        "href": "text/transcript/ep5.srt",
+        "group": "transcript"
+      },
+      {
+        "label": "第 6 集 · 领导他人，走向社群.md",
+        "href": "text/notes/ep6.md",
+        "group": "notes"
+      },
+      {
+        "label": "第 6 集 · 屏幕文字.md",
+        "href": "text/slides/ep6.md",
+        "group": "slides"
+      },
+      {
+        "label": "第 6 集 · 字幕.srt",
+        "href": "text/transcript/ep6.srt",
+        "group": "transcript"
+      }
+    ],
+    "digest": [
+      {
+        "label": "全课总结.md",
+        "href": "digest/summary.md",
+        "scope": "5 条结论 · 6 模块"
+      },
+      {
+        "label": "六模块地图.md",
+        "href": "digest/module-map.md",
+        "scope": "6 模块 · 每模块 1 句"
+      }
+    ]
+  },
+  "notice": "课程材料版权归 University of Michigan 与 Coursera 所有；原课程视频与音频未收录。"
+}

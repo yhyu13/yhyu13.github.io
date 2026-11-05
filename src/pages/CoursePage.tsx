@@ -29,6 +29,14 @@ function isExternal(href: string) {
   return /^https?:\/\//.test(href);
 }
 
+const TEXT_GROUPS: [string, string][] = [
+  ["notes", "页面笔记"],
+  ["slides", "讲义逐页文本"],
+  ["transcript", "字幕 SRT"],
+];
+
+const TEXT_GROUP_LABELS: Record<string, string> = Object.fromEntries(TEXT_GROUPS);
+
 function human(bytes?: number) {
   if (bytes == null) return "";
   return bytes >= 1024 * 1024
@@ -214,12 +222,31 @@ function CourseSectionBody({
       );
     case "text": {
       if (!assets) return <ManifestPending error={!manifest} />;
-      const notes = assets.filter((a) => a.group === "notes");
-      const slides = assets.filter((a) => a.group === "slides");
+      // Groups are data, not a fixed pair: CS2680 has notes + slides, the
+      // networking course adds transcript. Keep the two original labels so
+      // the CS2680 page does not change.
+      const groups = new Map<string, ManifestAsset[]>();
+      for (const asset of assets) {
+        const key = asset.group ?? "other";
+        groups.set(key, [...(groups.get(key) ?? []), asset]);
+      }
+      const known = TEXT_GROUPS.map(([key]) => key);
+      const order = [
+        ...known,
+        ...[...groups.keys()].filter((key) => !known.includes(key)),
+      ];
       return (
         <>
-          <AssetGroup slug={course.slug} label={`页面笔记（${notes.length}）`} assets={notes} />
-          <AssetGroup slug={course.slug} label={`讲义逐页文本（${slides.length}）`} assets={slides} />
+          {order
+            .filter((key) => groups.has(key))
+            .map((key) => (
+              <AssetGroup
+                key={key}
+                slug={course.slug}
+                label={`${TEXT_GROUP_LABELS[key] ?? "其他"}（${groups.get(key)?.length ?? 0}）`}
+                assets={groups.get(key) ?? []}
+              />
+            ))}
         </>
       );
     }

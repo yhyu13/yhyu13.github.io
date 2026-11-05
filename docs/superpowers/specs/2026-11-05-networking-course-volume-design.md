@@ -73,11 +73,11 @@ Courses 卷现在只有一门课（CS2680），而且卷级文案把"每门课"�
 ```ts
 [
   { kind: "decks",  label: "讲义",
-    description: "1 份 PowerPoint 讲义，107 页：104 页内容 + 课程地图 + 全课总结，与 6 集视频同源。" },
+    description: "1 份 PowerPoint 讲义，107 页：104 页内容 + 课程封面 + 课程地图 + 全课总结，与 6 集视频同源。" },
   { kind: "videos", label: "视频",
     description: "6 段讲解视频，共 17 分 25 秒，1280×720，带旁白与可开关的中文字幕。视频存放在 GitHub Release，不在本站。" },
   { kind: "text",   label: "文字",
-    description: "三层文字：6 份逐页笔记、6 份屏幕文字、6 份 SRT 字幕，共 18 份。" },
+    description: "三层文字：6 份页面笔记、6 份屏幕文字、6 份 SRT 字幕，共 18 份。" },
   { kind: "digest", label: "摘要",
     description: "两份摘要：全课 5 条结论与六模块地图；每个模块的 takeaway 与讲稿原句。" },
   { kind: "notice", label: "版权与出处",
@@ -103,7 +103,7 @@ python tools/export_course_site.py --profile homepage --slug networking `
     --dest "C:\Git-repo-my\yhyu13.github.io\public\courses\networking"
 ```
 
-导出后的树（29 个文件）：
+导出后的树（30 个文件）：
 
 ```
 public/courses/networking/
@@ -117,6 +117,7 @@ public/courses/networking/
     posters/ep1.jpg … ep6.jpg             6 张，从成片 t=1.0 s 定帧
     NOTICE.txt
     manifest.json
+    text.html                             课程文件目录（manifest 取不到时的入口）
 ```
 
 **硬规则（与 CS2680 相同）：**
@@ -196,7 +197,7 @@ gh release create courseware-networking-v1 `
 - 每集第 1 页就是该集封面（head 各不相同，见 worksheet §2 的表），
   在 `t=1.0 s` 已经稳定，避开入场动画。
 - 用 `imageio_ffmpeg.get_ffmpeg_exe()`（流水线已经依赖它，机器上没有系统 ffmpeg）
-  取 `-frames:v 1 -q:v 4`，输出 1280×720 JPEG，6 张预计 0.7–0.9 MB。
+  取 `-frames:v 1 -q:v 4`，输出 1280×720 JPEG，6 张实测共 272 KB。
 - 同一输入、同一时间点 → 同一张图，满足导出器的幂等要求。
 
 ## Decision 6 — `CoursePage` 的 text 分支改成按组渲染
@@ -209,7 +210,7 @@ gh release create courseware-networking-v1 `
 export const TEXT_GROUPS: [string, string][] = [
   ["notes", "页面笔记"],
   ["slides", "讲义逐页文本"],
-  ["transcript", "字幕（.srt）"],
+  ["transcript", "字幕 SRT"],
 ];
 
 // case "text":
@@ -286,8 +287,8 @@ https://www.coursera.org/learn/how-to-network
 
 | # | 任务 | 产出 / 文件 |
 |---|---|---|
-| 1 | 写导出器 | `networking-course/tools/export_course_site.py`：读 `content/content.json`、`out/`，写 29 个文件并自检 |
-| 2 | 跑导出 | `public/courses/networking/files/`（29 文件，~2.9 MB） |
+| 1 | 写导出器 | `networking-course/tools/export_course_site.py`：读 `content/content.json`、`out/`，写 30 个文件并自检 |
+| 2 | 跑导出 | `public/courses/networking/files/`（30 文件，~2.4 MB） |
 | 3 | 上传 Release | `courseware-networking-v1`，6 个 MP4，148.1 MB |
 | 4 | 加课程记录 | `src/data/courses.ts` 第二条 `COURSES` 项 |
 | 5 | 改 text 渲染 | `src/pages/CoursePage.tsx` 的 `case "text"` |
@@ -332,7 +333,7 @@ npm run preview
 
 ## Definition of done
 
-- [ ] `public/courses/networking/files/` 有 29 个文件；课程根目录只有 `files/`；
+- [ ] `public/courses/networking/files/` 有 30 个文件；课程根目录只有 `files/`；
       `public/courses/networking/index.html` 不存在。
 - [ ] `manifest.json` 的 `decks/videos/text/digest` 条数为 1/6/18/2；
       deck 字节数 2,087,594；6 个 poster 全部存在；6 个视频 href 全部指向

@@ -170,3 +170,7 @@
     max-width: 320px;
   }
 }
+
+/* A Chinese course title must stay one run: at desktop widths the H1 is wide
+   enough that normal CJK line breaking leaves a single character on line two. */
+.course-page h1 { word-break: keep-all; }

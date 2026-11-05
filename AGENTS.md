@@ -71,6 +71,19 @@ The contract:
    routes, and everything else must exist as a file. SPA routes answer 404
    status + the shell — judge them by the body, not the status code.
 
+The second course is **networking** (`How to Network`, University of Michigan ·
+Coursera, slug `networking`). It has no interactive study site; the course page
+shows decks, videos, text, digest and notice only. Its source folder is
+`C:\Git-repo-my\个人成长\networking-course` (not a git repo) and its export is
+`tools/export_course_site.py` there:
+
+```
+python tools/export_course_site.py --profile homepage --slug networking --dest <this repo>\public\courses\networking
+```
+
+Its six clips are release `courseware-networking-v1`; its subtitle group is
+`transcript` in the manifest and is rendered by `CoursePage`'s text branch.
+
 ## Deploy
 
 GitHub Pages **must** use source **GitHub Actions**, not branch `master` / root. The workflow file does not switch that setting.
