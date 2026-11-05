@@ -14,8 +14,8 @@ Build: `npm run build` (typecheck → Vite → 404 fallback → link check). Git
 ## The Courses volume
 
 The fifth volume (`courses`, Field Manual · V) hosts online-course material.
-CS2680 is the first course. It is implemented; the contract below is how it
-stays correct.
+CS2680 is the first course; `networking` (`How to Network`) is the second. It
+is implemented; the contract below is how it stays correct.
 
 - Spec: [docs/superpowers/specs/2026-10-26-courses-volume-design.md](docs/superpowers/specs/2026-10-26-courses-volume-design.md)
 - Plan: [docs/superpowers/plans/2026-10-26-courses-volume.md](docs/superpowers/plans/2026-10-26-courses-volume.md)
@@ -33,3 +33,15 @@ the course root except `files/` — an `index.html` there would shadow this
 site's own `/courses` route on Pages. The video clips are GitHub Release
 assets (`courseware-v1`), not repo files. `npm run build` ends with a link
 checker that fails on any internal reference that does not resolve.
+
+The `networking` course lives in `C:\Git-repo-my\个人成长\networking-course`
+(not a git repo) and has no study site. Its exporter is
+`tools/export_course_site.py` there:
+
+```bash
+python C:\Git-repo-my\个人成长\networking-course\tools\export_course_site.py --profile homepage --slug networking --dest public\courses\networking
+```
+
+Its six clips are release assets (`courseware-networking-v1`). Its `text`
+section has three groups — `notes`, `slides`, `transcript` — and the subtitle
+files are served from the site, not from the release.

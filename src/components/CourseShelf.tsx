@@ -34,7 +34,7 @@ export function CourseShelf() {
     <section className="course-shelf" ref={shelfRef} aria-label="Courses">
       <h2 className="detail-title">Courses</h2>
       <p className="detail-description">
-        网课学习包：可交互的学习站、讲义、带旁白的视频，以及课程的文字层。
+        网课学习包：讲义、带旁白的视频、笔记与摘要；CS2680 另带可交互的学习站。
       </p>
       <div className="course-grid">
         {COURSES.map((course) => (

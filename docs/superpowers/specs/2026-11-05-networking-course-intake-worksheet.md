@@ -83,7 +83,7 @@ Scope: `C:\Git-repo-my\个人成长\networking-course` 下的全部产物
 
 | 去处 | 内容 | 体积 |
 |---|---|---:|
-| GitHub Pages（`public/courses/networking/files/`） | PPTX 2.0 MB + 海报 ~0.8 MB + 文本 ~0.07 MB + notice/manifest | **~2.9 MB** |
+| GitHub Pages（`public/courses/networking/files/`） | PPTX 2.0 MB + 海报 ~0.27 MB + 文本 ~0.07 MB + notice/manifest | **~2.4 MB** |
 | GitHub Release（`courseware-networking-v1`） | 6 段 MP4 | **148.1 MB**（141.3 MiB） |
 | 对照：CS2680 | Pages 15 MB / Release 89.4 MB | — |
 

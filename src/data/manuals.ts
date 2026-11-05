@@ -175,33 +175,33 @@ export const MANUALS: Manual[] = [
     id: "courses",
     kicker: "Field Manual · V",
     coverTitle: "Courses",
-    subtitle: "网课 · 课件 · 交互页",
-    footer: "CS2680 · Notes · Clips",
+    subtitle: "网课 · 课件 · 视频",
+    footer: "CS2680 · Networking · Notes · Clips",
     coverColor: "#3f5b63",
     coverInk: "#1c2c31",
     year: "2026",
     description:
-      "网课的完整学习包：可交互的学习站、可下载的讲义、带旁白与字幕的导览视频，以及课程的文字层。CS2680 是第一门。",
+      "网课学习包：可下载的讲义、带旁白与字幕的讲解视频、逐页笔记与摘要。CS2680 另带一个可交互的学习站；人脉课是一套六集讲解视频。",
     stepsLabel: "How to read this volume",
     steps: [
       {
         title: "打开一门课",
-        body: "每门课是一份打包的档案：学习站、讲义、视频、文字与摘要，各归其位。",
+        body: "每门课是一份打包的档案：讲义、视频、文字与摘要，有的还带学习站。",
       },
       {
         title: "先读，再下载",
-        body: "学习站是阅读的地方——有概念索引和全文搜索；讲义是拿走的东西。",
+        body: "有学习站的课，先读站——有概念索引和全文搜索；没有学习站的课，从讲义和逐页笔记读起。",
       },
       {
         title: "视频带旁白",
-        body: "每段视频都有旁白与字幕，字幕由画面自己渲染，所以缺字也不会变豆腐块。",
+        body: "每段讲解都有旁白和可开关的中文字幕；导览片是引子，讲义才是可以拿走的东西。",
       },
     ],
-    excerptLabel: "First course",
-    excerpt: "CS2680 · Modern AI Systems · Harvard SEAS · Fall 2026",
+    excerptLabel: "Courses",
+    excerpt: "CS2680 · Harvard SEAS · Fall 2026 ｜ How to Network · University of Michigan · 2026",
     reviewLabel: "Before you leave",
     review:
-      "课程材料版权归 Harvard SEAS 与授课教师所有；这里是个人学习的整理，不是原站的分发。",
+      "课程材料版权归各课程的原作者所有：CS2680 归 Harvard SEAS 与授课教师，人脉课归 University of Michigan 与 Coursera。这里是个人学习的整理，不是原站的分发。",
     actions: [{ label: "Browse courses", href: "/courses" }],
   },
 ];

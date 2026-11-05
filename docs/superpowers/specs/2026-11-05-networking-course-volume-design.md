@@ -196,7 +196,7 @@ gh release create courseware-networking-v1 `
 - 每集第 1 页就是该集封面（head 各不相同，见 worksheet §2 的表），
   在 `t=1.0 s` 已经稳定，避开入场动画。
 - 用 `imageio_ffmpeg.get_ffmpeg_exe()`（流水线已经依赖它，机器上没有系统 ffmpeg）
-  取 `-frames:v 1 -q:v 4`，输出 1280×720 JPEG，6 张预计 0.7–0.9 MB。
+  取 `-frames:v 1 -q:v 4`，输出 1280×720 JPEG，6 张实测共 272 KB。
 - 同一输入、同一时间点 → 同一张图，满足导出器的幂等要求。
 
 ## Decision 6 — `CoursePage` 的 text 分支改成按组渲染
@@ -287,7 +287,7 @@ https://www.coursera.org/learn/how-to-network
 | # | 任务 | 产出 / 文件 |
 |---|---|---|
 | 1 | 写导出器 | `networking-course/tools/export_course_site.py`：读 `content/content.json`、`out/`，写 29 个文件并自检 |
-| 2 | 跑导出 | `public/courses/networking/files/`（29 文件，~2.9 MB） |
+| 2 | 跑导出 | `public/courses/networking/files/`（29 文件，~2.4 MB） |
 | 3 | 上传 Release | `courseware-networking-v1`，6 个 MP4，148.1 MB |
 | 4 | 加课程记录 | `src/data/courses.ts` 第二条 `COURSES` 项 |
 | 5 | 改 text 渲染 | `src/pages/CoursePage.tsx` 的 `case "text"` |
