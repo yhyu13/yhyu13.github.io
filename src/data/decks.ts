@@ -56,6 +56,17 @@ export const DECKS: Deck[] = [
       "以视频内容梳理中国社会四个阶层的划分、流动与处境——一份观察当下结构的切片。",
   },
   {
+    slug: "dsh-blender-plugin-v21",
+    title: "DSH × Blender 实时插件 v2.1.0",
+    year: "2026",
+    date: "2026-10-16",
+    source: "Bilibili · 赛博雪豹",
+    sourceUrl: "https://www.bilibili.com/video/BV1ohJ86wEaQ",
+    pdf: "/decks/dsh-blender-plugin-v21.pdf",
+    description:
+      "DeepSeek Harness 直连实时驱动的 Blender 插件更新——面板内缩放/平移、一次多选构件、headless 作业区，把 AI 建模接进真实 GUI。",
+  },
+  {
     slug: "gow-raising-kratos",
     title: "God of War — Raising Kratos",
     year: "2018",
