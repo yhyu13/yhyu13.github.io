@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pull Up 内测入口</title>
+<style>
+  :root{--ink:#141414;--paper:#faf8f4;--muted:#6f6a62;--line:#dcd7cd;--accent:#efe3b8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    display:flex;min-height:100vh;align-items:center;justify-content:center;padding:28px}
+  main{width:100%;max-width:520px}
+  .kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:34px;line-height:1.18;margin:14px 0 12px;letter-spacing:-.4px}
+  p{font-size:15px;line-height:1.75;color:#3d3a35;margin:0 0 14px}
+  .box{border:2px solid var(--ink);padding:18px;margin:20px 0}
+  .box h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  ul{margin:0;padding-left:18px;font-size:14px;line-height:1.9;color:#3d3a35}
+  a.go{display:block;text-align:center;background:var(--ink);color:var(--paper);text-decoration:none;
+    font-size:17px;font-weight:700;padding:16px;border:2px solid var(--ink);margin-top:8px}
+  a.go:hover{background:var(--paper);color:var(--ink)}
+  .btn2{display:block;text-align:center;text-decoration:none;color:var(--ink);font-size:14px;
+    padding:12px;border:2px dashed var(--line);margin-top:10px}
+  .meta{font-size:12px;color:var(--muted);line-height:1.8;margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+  .warn{background:var(--accent);border:2px solid var(--ink);padding:12px;font-size:13px;line-height:1.7;margin-top:16px}
+  .off{display:none}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">Pull Up · 拽你起来 · 小范围内测</div>
+  <h1>每晚八点，问你三句。<br>第五天起，它开始记得你。</h1>
+  <p>这不是打卡机。它只问睡得几点、精力几分、心情几分，然后按你的记录给结论——<b>样本不够就不给结论</b>。</p>
+
+  <div class="box">
+    <h2>内测怎么参与</h2>
+    <ul>
+      <li>连续 14 天，每晚 20:00 进来聊三句</li>
+      <li>第 10 天左右你会看到第一张证据卡</li>
+      <li>数据随时可删：单条「记错了」，或一键清空</li>
+    </ul>
+  </div>
+
+  <a class="go" id="enter" href="#">进入内测 →</a>
+  <a class="btn2" id="privacy" href="#">先看隐私政策：我们记什么、用来干什么</a>
+
+  <div class="warn" id="warn">
+    内测地址是一台临时服务器。如果按钮打不开，说明今天的地址换了——在群里说一句，我十分钟内更新。
+  </div>
+
+  <div class="meta" id="meta">正在读取当前内测地址…</div>
+</main>
+<script>
+  fetch('./config.json', { cache: 'no-store' })
+    .then(r => r.json())
+    .then(cfg => {
+      const base = (cfg.apiBase || '').replace(/\/$/, '');
+      const enter = document.getElementById('enter');
+      const priv = document.getElementById('privacy');
+      if (!base) throw new Error('empty apiBase');
+      enter.href = base + '/index.html';
+      priv.href = base + '/privacy.html';
+      document.getElementById('meta').textContent =
+        '通道 ' + (cfg.channel || '-') + ' · 更新于 ' + (cfg.updatedAt || '-') + ' · ' + (cfg.expiresNote || '');
+      document.getElementById('warn').classList.add('off');
+    })
+    .catch(err => {
+      document.getElementById('meta').textContent = '读取内测地址失败：' + err.message + '（入口页正常，地址待更新）';
+    });
+</script>
+</body>
+</html>

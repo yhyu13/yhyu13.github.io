@@ -1,0 +1,6 @@
+{
+  "apiBase": "https://physically-smtp-decide-flyer.trycloudflare.com",
+  "channel": "internal-test-2026-11-09",
+  "updatedAt": "2026-11-09T12:50:00Z",
+  "expiresNote": "这是临时隧道地址；入口链接 /pullup/ 永久不变，隧道变了只改本文件"
+}
