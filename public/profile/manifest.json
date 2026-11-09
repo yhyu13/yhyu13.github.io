@@ -1,0 +1,9 @@
+{
+  "markdown": "hang-yu.md",
+  "markdownSha256LF": "b5979142d38ef86ca0bfc115654881b68543734a450884e631d6778ab696813d",
+  "pdf": "hang-yu.pdf",
+  "pdfSha256": "57fbffcd80d0263715e3baa604be255c25c1992b66be4e5f1c1fda7b3682de9a",
+  "pdfSourceSha256LF": "b5979142d38ef86ca0bfc115654881b68543734a450884e631d6778ab696813d",
+  "reviewedOn": "2026-11-09",
+  "provenance": "Owner-reviewed public Markdown and previously inspected one-page A4 nonblank PDF. Hashes pin reviewed artifacts, not proof of semantic equivalence."
+}

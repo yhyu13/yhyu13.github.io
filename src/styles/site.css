@@ -1,3 +1,89 @@
+.identity-profile {
+  color: #eee2ca;
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.identity-profile .profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.identity-profile .pill {
+  flex: 1 1 140px;
+  min-height: 44px;
+  white-space: normal;
+  text-align: center;
+  text-decoration: none;
+}
+
+.identity-profile .pill:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.identity-profile .pill:focus-visible,
+.identity-profile textarea:focus-visible {
+  outline: 2px solid #e7b8b9;
+  outline-offset: 3px;
+}
+
+.identity-profile .profile-status {
+  min-height: 1.8em;
+  margin: 12px 0;
+  color: #e7b8b9;
+}
+
+.identity-profile h3 {
+  font-size: 25px;
+  line-height: 1.4;
+  margin: 20px 0 12px;
+}
+
+.identity-profile h4 {
+  font-size: 19px;
+  color: #e7b8b9;
+  margin: 28px 0 12px;
+}
+
+.identity-profile p,
+.identity-profile ul {
+  margin: 12px 0;
+}
+
+.identity-profile ul {
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.identity-profile li + li {
+  margin-top: 12px;
+}
+
+.identity-profile blockquote {
+  margin: 20px 0;
+  padding-left: 16px;
+  border-left: 2px solid #c3a47b;
+}
+
+.identity-profile .profile-fallback {
+  display: block;
+}
+
+.identity-profile textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  resize: vertical;
+  background: #29251d;
+  color: #eee2ca;
+  font: 14px/1.6 monospace;
+}
+
 #root {
   min-height: 100svh;
 }

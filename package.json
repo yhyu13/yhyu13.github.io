@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && node scripts/copy-404.mjs && node scripts/check-links.mjs && node scripts/check-budget.mjs",
+    "build": "tsc --noEmit && vite build && node scripts/copy-404.mjs && node scripts/check-links.mjs && node scripts/check-budget.mjs && node scripts/check-profile.mjs",
+    "test:profile": "node scripts/check-profile.mjs --self-test",
     "preview": "vite preview",
     "test:e2e": "playwright test",
     "test:visual": "playwright test --config playwright.visual.config.ts"
