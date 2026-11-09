@@ -15,6 +15,10 @@ const CraftPanel = lazy(() =>
   import("../components/CraftPanel").then((m) => ({ default: m.CraftPanel })),
 );
 
+const IdentityProfile = lazy(() =>
+  import("../components/IdentityProfile").then((m) => ({ default: m.IdentityProfile })),
+);
+
 const BLOSSOMS = [
   { x: "4%", size: "30px", r: "18deg", duration: "10s", delay: "-4s" },
   { x: "16%", size: "19px", r: "74deg", duration: "8.5s", delay: "-1s" },
@@ -500,30 +504,38 @@ function DetailPanel({ manual }: { manual?: Manual }) {
             {manual.photo ? (
               <img className="identity-photo" src={manual.photo} alt="Hang Yu, University of Illinois i-card" width={148} height={96} />
             ) : null}
-            <p className="detail-description">{manual.description}</p>
-            <section className="doc-section">
-              <p className="doc-label">{manual.stepsLabel}</p>
-              <ol className="doc-steps">
-                {manual.steps.map((step) => (
-                  <li key={step.title}>
-                    <span className="doc-step-copy">
-                      <strong>{step.title}</strong>
-                      <span>{step.body}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-            <section className="doc-section">
-              <p className="doc-label">{manual.excerptLabel}</p>
-              <div className="prompt-block">
-                <code>{manual.excerpt}</code>
-              </div>
-            </section>
-            <section className="doc-section">
-              <p className="doc-label">{manual.reviewLabel}</p>
-              <p className="doc-review">{manual.review}</p>
-            </section>
+            {manual.id === "identity" ? (
+              <Suspense fallback={<p role="status">正在加载公开介绍…</p>}>
+                <IdentityProfile />
+              </Suspense>
+            ) : (
+              <>
+                <p className="detail-description">{manual.description}</p>
+                <section className="doc-section">
+                  <p className="doc-label">{manual.stepsLabel}</p>
+                  <ol className="doc-steps">
+                    {manual.steps.map((step) => (
+                      <li key={step.title}>
+                        <span className="doc-step-copy">
+                          <strong>{step.title}</strong>
+                          <span>{step.body}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+                <section className="doc-section">
+                  <p className="doc-label">{manual.excerptLabel}</p>
+                  <div className="prompt-block">
+                    <code>{manual.excerpt}</code>
+                  </div>
+                </section>
+                <section className="doc-section">
+                  <p className="doc-label">{manual.reviewLabel}</p>
+                  <p className="doc-review">{manual.review}</p>
+                </section>
+              </>
+            )}
           </div>
           <div className="bottom-dock">
             <div className="meta-row" aria-label="Field edition and publication year">
