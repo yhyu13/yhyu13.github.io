@@ -158,6 +158,11 @@ export function DeckReader() {
       <header className="topbar">
         <Link className="brand" to="/decks" ref={backRef}>Favorites</Link>
         <div className="nav-actions">
+          {deck.links?.map((link) => (
+            <a key={link.href} className="pill pill-extra" href={link.href}>
+              {link.label}
+            </a>
+          ))}
           <a className="pill" href={deck.pdf} download>Download PDF</a>
           <Link className="icon-button" to="/decks" aria-label="Back to video slides">×</Link>
         </div>
