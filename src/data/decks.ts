@@ -7,6 +7,8 @@ export type Deck = {
   sourceUrl?: string;
   pdf: string; // "/decks/<slug>.pdf"
   description: string;
+  /** Optional companions: the animated page, the long-read, the cut. */
+  links?: { label: string; href: string }[];
   color?: string;
 };
 
@@ -32,6 +34,11 @@ export const DECKS: Deck[] = [
     pdf: "/decks/bci-industry-survey.pdf",
     description:
       "《求是》2026/21 深度调研的解读——科学前沿、工程技术、产业投资、治理监管四层递进，用融资额、企业数与时间表回答一个问题：脑机接口离真正的生产力还有多远。",
+    links: [
+      { label: "90 秒动画页", href: "/bci/film.html" },
+      { label: "长页解读", href: "/bci/longread.html" },
+      { label: "MP4 · 配音版", href: "/bci/bci-industry-survey-90s-vo.mp4" },
+    ],
   },
   {
     slug: "blackhole-cpp-simulation-summary",

@@ -93,6 +93,15 @@ function DeckCard({ deck }: { deck: Deck }) {
         <p className="kicker">{deck.date}</p>
         <h3 className="deck-card-title">{deck.title}</h3>
         <p className="deck-card-desc">{deck.description}</p>
+        {deck.links?.length ? (
+          <div className="deck-card-links">
+            {deck.links.map((link) => (
+              <a key={link.href} className="pill" href={link.href}>
+                {link.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
         {deck.sourceUrl ? (
           <a className="deck-card-source" href={deck.sourceUrl} target="_blank" rel="noreferrer">
             Watch original · {deck.source ?? "video"}

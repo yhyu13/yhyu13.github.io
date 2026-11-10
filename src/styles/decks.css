@@ -56,6 +56,16 @@
 a.deck-card-source { display: inline-block; text-decoration: none; border-bottom: 1px dashed currentColor; }
 a.deck-card-source:hover { color: var(--paper); border-bottom-style: solid; }
 .deck-card-body .action-rail { margin-top: 16px; }
+/* Companion artifacts (animated page / long-read / cut) sit under the blurb as
+   plain pills: the card already has a boxed rail for Read + Download. */
+.deck-card-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.deck-card-links .pill { flex: 0 0 auto; min-height: 40px; }
+
+/* The reader top bar keeps only Download PDF on phones; the companions are one
+   tap away on the shelf card and four pills would overflow a 360px header. */
+@media (max-width: 640px) {
+  .deck-reader .nav-actions .pill-extra { display: none; }
+}
 
 .kicker {
   margin: 0 0 8px;
