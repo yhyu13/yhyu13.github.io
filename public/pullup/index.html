@@ -66,8 +66,10 @@
   function alive(url, ms) {
     return new Promise(resolve => {
       const t = setTimeout(() => resolve(false), ms);
-      fetch(url, { cache: 'no-store' })
-        .then(r => { clearTimeout(t); resolve(r.ok); })
+      // 跨域探活只能用 no-cors：产品是 same-origin 设计，后端没有 CORS 头。
+      // no-cors 拿到的是 opaque 响应（r.ok 恒 false），但「请求没抛错」就证明链路通。
+      fetch(url, { cache: 'no-store', mode: 'no-cors' })
+        .then(() => { clearTimeout(t); resolve(true); })
         .catch(() => { clearTimeout(t); resolve(false); });
     });
   }
