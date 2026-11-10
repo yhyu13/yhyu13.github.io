@@ -52,22 +52,39 @@
   <div class="meta" id="meta">正在读取当前内测地址…</div>
 </main>
 <script>
+  // 两道检查：①config.json 读得到 ②config 指向的后端真的活着。
+  // 只查①的话，隧道挂了页面仍然显示「进入内测」，点进去才知道打不开——那是最差的一种失败。
+  const warn = document.getElementById('warn');
+  function fail(msg) {
+    document.getElementById('meta').textContent = msg;
+    warn.classList.remove('off');
+    const enter = document.getElementById('enter');
+    enter.removeAttribute('href');
+    enter.style.opacity = '0.5';
+    enter.textContent = '当前不可用 · 地址更新中';
+  }
+  function alive(url, ms) {
+    return new Promise(resolve => {
+      const t = setTimeout(() => resolve(false), ms);
+      fetch(url, { cache: 'no-store' })
+        .then(r => { clearTimeout(t); resolve(r.ok); })
+        .catch(() => { clearTimeout(t); resolve(false); });
+    });
+  }
   fetch('./config.json', { cache: 'no-store' })
     .then(r => r.json())
-    .then(cfg => {
+    .then(async cfg => {
       const base = (cfg.apiBase || '').replace(/\/$/, '');
-      const enter = document.getElementById('enter');
-      const priv = document.getElementById('privacy');
-      if (!base) throw new Error('empty apiBase');
-      enter.href = base + '/index.html';
-      priv.href = base + '/privacy.html';
+      if (!base) throw new Error('apiBase 为空');
+      const ok = await alive(base + '/api/health', 8000);
+      if (!ok) return fail('内测地址当前不可达（' + base + '）。入口页正常，地址待更新。');
+      document.getElementById('enter').href = base + '/index.html';
+      document.getElementById('privacy').href = base + '/privacy.html';
       document.getElementById('meta').textContent =
         '通道 ' + (cfg.channel || '-') + ' · 更新于 ' + (cfg.updatedAt || '-') + ' · ' + (cfg.expiresNote || '');
-      document.getElementById('warn').classList.add('off');
+      warn.classList.add('off');
     })
-    .catch(err => {
-      document.getElementById('meta').textContent = '读取内测地址失败：' + err.message + '（入口页正常，地址待更新）';
-    });
+    .catch(err => fail('读取内测地址失败：' + err.message));
 </script>
 </body>
 </html>
