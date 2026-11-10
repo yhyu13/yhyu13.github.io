@@ -23,6 +23,17 @@ export const DECKS: Deck[] = [
       "李飞飞谈世界模型（world model）与空间智能——从视觉数据到能理解物理世界的模型，通向通用智能的一条路径。",
   },
   {
+    slug: "bci-industry-survey",
+    title: "脑机接口产业调查 — 离现实生产力还有多远",
+    year: "2026",
+    date: "2026-11-05",
+    source: "Bilibili · 铉铮",
+    sourceUrl: "https://www.bilibili.com/video/BV1wdx96dEQW",
+    pdf: "/decks/bci-industry-survey.pdf",
+    description:
+      "《求是》2026/21 深度调研的解读——科学前沿、工程技术、产业投资、治理监管四层递进，用融资额、企业数与时间表回答一个问题：脑机接口离真正的生产力还有多远。",
+  },
+  {
     slug: "blackhole-cpp-simulation-summary",
     title: "黑洞 C++ 模拟",
     year: "",
