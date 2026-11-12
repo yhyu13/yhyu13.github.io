@@ -591,3 +591,95 @@
     font-size: 11px;
   }
 }
+
+/* Self-hosted works (public/labs/*): the two cards that open a page this site
+   serves, as opposed to the external platform listings in Showcase. */
+.craft-works { margin-bottom: 22px; }
+
+.craft-works-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.craft-work-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 16px 16px 14px;
+  border: 1px solid rgba(234, 223, 199, 0.14);
+  border-radius: 14px;
+  background: rgba(234, 223, 199, 0.05);
+  color: inherit;
+  text-decoration: none;
+  transition: background 240ms var(--ease), border-color 240ms ease, transform 240ms var(--ease);
+}
+
+.craft-work-card:hover {
+  background: rgba(234, 223, 199, 0.09);
+  border-color: rgba(234, 223, 199, 0.24);
+  transform: translateY(-2px);
+}
+
+.craft-work-index {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: var(--pink-bright);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  opacity: 0.7;
+}
+
+.craft-work-kind {
+  color: var(--pink-bright);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.craft-work-title {
+  font-family: var(--serif, "Iowan Old Style", "Palatino Linotype", serif);
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.3;
+  padding-right: 28px;
+}
+
+.craft-work-desc {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.craft-work-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.craft-work-tag {
+  padding: 2px 7px;
+  border: 1px solid rgba(234, 223, 199, 0.18);
+  border-radius: 999px;
+  color: rgba(242, 241, 236, 0.72);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.craft-work-meta {
+  margin-left: auto;
+  color: rgba(242, 241, 236, 0.45);
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  .craft-works-grid { grid-template-columns: minmax(0, 1fr); }
+  .craft-work-foot { gap: 8px; }
+  .craft-work-meta { margin-left: 0; width: 100%; }
+}

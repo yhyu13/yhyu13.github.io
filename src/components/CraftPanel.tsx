@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   BILIBILI_PROFILE,
   BILIBILI_STATS,
+  CRAFT_WORKS,
   GITEE_PROFILE,
   GITEE_STATS,
   GITHUB_PROFILE,
@@ -130,6 +131,28 @@ function CraftOverview({ manual }: { manual: Manual }) {
   return (
     <div className="craft-tab-panel">
       <p className="detail-description craft-lede">{manual.description}</p>
+
+      <section className="craft-works" aria-label="Works">
+        <h3 className="craft-stats-heading">Works · self-hosted</h3>
+        <div className="craft-works-grid">
+          {CRAFT_WORKS.map((work, index) => (
+            <Link className="craft-work-card" to={work.href} key={work.id}>
+              <span className="craft-work-index" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span className="craft-work-kind">{work.kind}</span>
+              <span className="craft-work-title">{work.title}</span>
+              <span className="craft-work-desc">{work.description}</span>
+              <span className="craft-work-foot">
+                {work.tags?.map((tag) => (
+                  <span className="craft-work-tag" key={tag}>{tag}</span>
+                ))}
+                {work.meta ? <span className="craft-work-meta">{work.meta}</span> : null}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <section className="craft-stats-board">
         <h3 className="craft-stats-heading">Platform pulse</h3>

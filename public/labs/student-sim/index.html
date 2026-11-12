@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudentSim：让 AI 教师在真实学生研究前获得可度量反馈</title>
+<meta name="description" content="UIUC × Microsoft Research 论文 StudentSim（arXiv:2609.01591）的精读、可交互页、口播 deck 与 PPTX。含全部关键数字、F×R 双维度框架，以及落地 ROI 的四步路径。">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">UIUC × Microsoft Research　·　arXiv:2609.01591　·　NICE 学术 第 209 期</p>
+
+    <h1>AI 教师好不好，<br>不看它讲得多漂亮，<br><span class="hl">看学生收到之后变了没有。</span></h1>
+
+    <p class="sub">但这份反馈要等真学生 —— 短则几个月，长则几年。<br>
+       StudentSim 把「学生」换成了<strong>按每个学生单独训练的 LLM 模拟器</strong>
+       （Qwen3-4B-Instruct + per-student LoRA）：<strong>两阶段训练</strong> + <strong>F×R 双维度评估</strong>，
+       先在虚拟学生身上把 AI 教师练到会教，再用真人做最终验收。</p>
+
+    <div class="hero-nums">
+      <div><b>0.51 / 0.91</b><span>棋类 F / R（Maia2 0.45/0.27，GPT-5.4 0.23/0.72）</span></div>
+      <div><b>90.5%</b><span>专家盲评 Accuracy（GPT-5.4 当 reward 只有 71.6%）</span></div>
+      <div><b>4B</b><span>基座模型规模 · 却是三个领域全面第一</span></div>
+    </div>
+
+    <div class="cta">
+      <a class="btn" href="downloads/StudentSim-AI教师反馈.pptx">下载 PPTX（18 页 · 含逐页备注）</a>
+      <a class="btn ghost" href="deck/index.html">在线看口播 deck（按 S 演讲者视图）</a>
+      <a class="btn ghost" href="downloads/explainer.html">可交互精读页</a>
+      <a class="btn ghost" href="downloads/00-核心结论.md">精读 Markdown</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <p class="sec-num">01</p>
+  <h2>一句话讲清</h2>
+  <p class="lead">教育是一个环：判断一条指导的好坏，不看它本身写得漂不漂亮，而看它落到学生身上之后，学生产生了什么反应。
+    而这一层的反馈，是整个研发流程的<b>瓶颈</b>。</p>
+  <div class="three">
+    <div><b>瓶颈在时间</b><p>你可能只改了一个很小的技术细节，但要拿到对应的学生信号，还要再花几个月甚至几年。</p></div>
+    <div><b>出路是代理信号</b><p>迭代期用 AI 模拟器替代真人当 proxy 提供反馈，把反馈拉到机器的时间尺度上。</p></div>
+    <div><b>红线：不能替代真人</b><p>模拟器只服务于早期迭代。产品落地前，仍然必须在真实学生身上测一遍。</p></div>
+  </div>
+</section>
+
+<section>
+  <p class="sec-num">02</p>
+  <h2>关键数字</h2>
+  <p class="lead">全部出自 arXiv:2609.01591 的摘要与正文 Table 2 / 3 / 4，不是二手转述。</p>
+  <div class="nums"><div class="num-card"><div class="v">0.51 / 0.91</div><div class="l">棋类 F / R</div><div class="n">StudentSim（Qwen3-4B + per-player LoRA）</div></div><div class="num-card"><div class="v">0.23 / 0.72</div><div class="l">棋类 F / R</div><div class="n">GPT-5.4（in-context 提示）</div></div><div class="num-card"><div class="v">0.45 / 0.27</div><div class="l">棋类 F / R</div><div class="n">Maia2（state-tracking，无语言输入通路）</div></div><div class="num-card"><div class="v">90.5%</div><div class="l">人类盲评 Accuracy</div><div class="n">StudentSim reward（最高）</div></div><div class="num-card"><div class="v">71.6%</div><div class="l">人类盲评 Accuracy</div><div class="n">GPT-5.4 reward —— 低于不训练 RL 的 75.7%</div></div><div class="num-card"><div class="v">60</div><div class="l">受评学生数</div><div class="n">chess 30 / L2 写作 15 / math 15</div></div><div class="num-card"><div class="v">74</div><div class="l">盲评标注数</div><div class="n">来自 8 位有段位的竞技棋手</div></div><div class="num-card"><div class="v">4B</div><div class="l">基座模型规模</div><div class="n">Qwen3-4B-Instruct</div></div></div>
+</section>
+
+<section>
+  <p class="sec-num">03</p>
+  <h2>全文的枢轴：F × R</h2>
+  <p class="lead">这篇工作第一个贡献不是模型，是<b>把问题定义清楚</b>。旧方法各占一角，右上角才是目标。</p>
+  <div class="quad-wrap"><div class="quad"><div class="q t-amber"><span class="ax">高 R · 低 F</span><b>prompt LLM</b><span class="d">接得住指导，但演的不是那个人 —— 信号嘈杂</span></div><div class="q t-teal"><span class="ax">高 F · 高 R</span><b>StudentSim</b><span class="d">两个都要高 —— 这就是目标</span></div><div class="q t-muted"><span class="ax">低 F · 低 R</span><b>通用 LLM（未训练）</b><span class="d">两个维度都不行</span></div><div class="q t-amber"><span class="ax">高 F · 低 R</span><b>state-tracking</b><span class="d">后验记录很准，但接不住干预</span></div></div></div>
+  <div class="two">
+    <div><b>F · Behavioral Fidelity　行为保真</b>
+      <p>模拟器在起始状态下的作答，是否匹配这一位学生真实的强项与弱项。<br>
+         棋类 = top-1 走子准确率；L2 写作 = 错误画像匹配；数学 = 选中的选项是否一致。</p></div>
+    <div><b>R · Guidance Responsiveness　指导响应</b>
+      <p>学生读完老师的指导之后，能不能把认知状态往前推一步。<br>
+         测的是多轮：题 → 错答 → 指导 → 改对。</p></div>
+  </div>
+  <p class="note-line">两条旧路各占一角：<b>Maia2</b> 像但不听（没有自然语言输入通路，R 其实是零指导下限）；
+     <b>prompt LLM</b> 听但不像（太有能力，演不出认知落差，讲者叫它「能力悖论」）。</p>
+</section>
+
+<section>
+  <p class="sec-num">04</p>
+  <h2>方法：两阶段训练</h2>
+  <p class="lead">每个学生的数据稀疏到不可能直接训 —— 二语写作数据集采了整整一年，人均 3 篇、超 70% 的人不超过 5 篇。</p>
+  <div class="flow">
+    <div><span class="n">1</span><b>Stage 1 · pooled training</b>
+      <p>把所有学生的记录汇总，训一个领域级 base adapter（Qwen3-4B + LoRA）。单轮与多轮记录按 0.2 比例混合采样：单轮训 F，多轮训 R。</p></div>
+    <div><span class="n">2</span><b>Stage 2 · per-student LoRA</b>
+      <p>在这个已经学好的底座上，用这一位学生自己的记录继续训练，得到专属 adapter。不是从零开始训。</p></div>
+    <div><span class="n">3</span><b>StudentSimEval</b>
+      <p>60 名学生、3 个领域（chess 30 / L2 写作 15 / math 15）。所有方法在同记录 fit、同留出记录评。</p></div>
+    <div><span class="n">4</span><b>模拟器当 reward</b>
+      <p>GRPO 训 tutor policy，reward = 学生接受指导前后的表现差。personalization 与 perception 作为乘性门。</p></div>
+  </div>
+
+  <h3 class="sub-h mt-l">实现细节（论文口径）</h3>
+  <div class="tbl-wrap">
+    <table class="detail-tbl">
+      <tbody>
+        <tr><th>基座</th><td>Qwen3-4B-Instruct —— 三个领域同一个底座</td></tr>
+        <tr><th>适配器</th><td>LoRA。Stage 1 训领域级 adapter，Stage 2 在其上继续训出每生一个专属 adapter</td></tr>
+        <tr><th>两阶段共享</th><td>base model、LoRA 架构、优化器；只有 batch size 与训练时长按各领域数据量调</td></tr>
+        <tr><th>数据混合</th><td>单轮 : 多轮 = 0.8 : 0.2。单轮训 F，多轮训 R，联合训练让两者同时长</td></tr>
+        <tr><th>推理</th><td>贪心解码（T = 0）</td></tr>
+        <tr><th>F 的定义</th><td>chess = top-1 走子准确率；L2 = 错误画像匹配（错误率 + 错误类型）；math = 选中的选项与真实学生一致</td></tr>
+        <tr><th>R 的定义</th><td>题 → 错答 → 指导 → 规范修正答案；测模拟器能否把初始错答修正到规范答案</td></tr>
+        <tr><th>基线</th><td>GPT-4o / GPT-5.4（in-context 给 profile + 题 + 指导）；未训练的 Qwen3-4B-Instruct（L2 / math）；Maia2（仅棋类，条件在 FEN + 玩家 ELO）</td></tr>
+        <tr><th>数据来源</th><td>棋类语料 = Lichess（2025-05），全部是真人对手的真实对局</td></tr>
+        <tr><th>Reward 结构</th><td>冻结模拟器 + 两颗头（personalization / perception），作为<b>乘性门</b>作用在走子质量项上；头是轻量线性探针，读模拟器自己的 backbone</td></tr>
+        <tr><th>RL 设置</th><td>GRPO。棋类 tutor policy 读棋盘图 + 文本；reward 用 Stockfish centipawn 查表比较 revised vs previous</td></tr>
+        <tr><th>评估口径</th><td>所有方法同记录 fit、同留出记录评；盲评 74 条 / 8 位标注者，2000+ Elo 专家子集与三重标注子集给出相同排序</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <p class="sec-num">05</p>
+  <h2>讲解视频</h2>
+  <p class="lead">18 页幻灯片 + 逐字稿字幕，<b>AI 配音版</b>。<b>这是二次讲解，不是原演讲录像</b> ——
+     讲的是同一篇论文，但措辞是为「没听过这场 talk 的人」重写的。
+     也提供<b>无配音字幕版</b>，适合自己配讲解或做二次剪辑。</p>
+  <div class="video-wrap">
+    <video controls preload="none" poster="media/poster.png" playsinline>
+      <source src="https://github.com/yhyu13/yhyu13.github.io/releases/download/works-student-sim-v1/studentsim-explainer-voiced.mp4" type="video/mp4">
+      你的浏览器不支持 <video>，请直接下载：<a href="https://github.com/yhyu13/yhyu13.github.io/releases/download/works-student-sim-v1/studentsim-explainer-voiced.mp4">配音版 MP4</a>
+    </video>
+  </div>
+  <p class="cap">配音版：Microsoft 神经语音（zh-CN-YunxiNeural）· 逐句与字幕对齐 ·
+     另有 <a href="https://github.com/yhyu13/yhyu13.github.io/releases/download/works-student-sim-v1/studentsim-explainer-silent.mp4">无配音字幕版</a></p>
+</section>
+
+<section>
+  <p class="sec-num">06</p>
+  <h2>结果，以及一个反直觉的发现</h2>
+  <p class="lead">三个领域、两个指标，StudentSim 全面超过 GPT-5.4 —— 而基座只有 4B。</p>
+  <div class="tables">
+    <div class="tbl-wrap">
+      <h3>棋类：F 与 R 分开看，结论完全相反</h3>
+      <table>
+        <thead><tr><th>方法</th><th>Behavior Fidelity F ↑</th><th>Guidance Responsiveness R ↑</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>StudentSim（Qwen3-4B + per-player LoRA）</td><td>0.51</td><td>0.91</td></tr>
+          <tr><td>GPT-5.4（in-context 提示）</td><td>0.23</td><td>0.72</td></tr>
+          <tr><td>Maia2（state-tracking，无语言输入通路）</td><td>0.45</td><td>0.27</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-wrap">
+      <h3>人类专家盲评：8 位有段位的棋手，74 条标注</h3>
+      <table>
+        <thead><tr><th>条件</th><th>Accuracy (%) ↑</th><th>Guidance ↑</th><th>Personalization ↑</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>StudentSim reward</td><td>90.5</td><td>3.31</td><td>3.93</td></tr>
+          <tr><td>No RL</td><td>75.7</td><td>2.99</td><td>2.80</td></tr>
+          <tr><td>GPT-5.4 reward</td><td>71.6</td><td>3.08</td><td>2.42</td></tr>
+        </tbody>
+      </table>
+      <p class="cap">三个条件共享同一个 tutor policy、同一个 SFT 起点、同一套 GRPO 设置 —— 唯一变量是 reward。</p>
+    </div>
+  </div>
+  <div class="callout">
+    <span class="tag">反直觉</span>
+    <b>用 GPT-5.4 当 reward，教出来的老师反而更差。</b>
+    <p>accuracy 只有 71.6%，比完全不训练 RL 的 75.7% 还低 —— 因为它不懂「过往记录 → 应有表现」这一步 mapping，
+       生成的步骤是乱的，<b>噪声信号没法指出下一步该往哪走</b>。<br>
+       这条结果反过来印证了「能力悖论」：<b>信号质量，比信号强度重要得多。</b></p>
+  </div>
+</section>
+
+<section class="roi">
+  <p class="sec-num">07</p>
+  <h2>落地 ROI：从哪边入手？</h2>
+  <p class="lead">答案很明确：<b>从「评估端」切入，不要从「训练端」切入。</b>
+     下面这一节是本次整理的落地推论，<b>不是论文结论</b>；论文只提供了 F / R 两个尺子和「需要多迭代才划算」这个前提。</p>
+
+  <div class="roi-ladder">
+    <h3>四个台阶，按顺序上</h3>
+    <table class="roi-tbl">
+      <thead><tr><th></th><th>要做什么</th><th>一次性成本</th><th>收益确定性</th><th>什么时候值得</th></tr></thead>
+      <tbody><tr><td class="step"><span class="sn">0</span></td><td class="rt"><b>先用 F / R 给现有系统体检</b><span>拿一批真实留出记录，跑一遍「像不像学生」和「听不听话」两个指标</span></td><td class="pill good">极低</td><td class="pill good">高</td><td class="when">永远先做这一步 —— 一次投入，之后每次迭代都能用</td></tr><tr><td class="step"><span class="sn">1</span></td><td class="rt"><b>用你自己的日志造 S 集 / T 集</b><span>S 集 = 单轮（题 + 学生的作答）；T 集 = 多轮（题 → 错答 → 指导 → 改对）</span></td><td class="pill good">低</td><td class="pill good">高</td><td class="when">日志里已经有「纠正前后」记录的话，这一步数据采集成本接近 0</td></tr><tr><td class="step"><span class="sn">2</span></td><td class="rt"><b>训 per-student LoRA 模拟器</b><span>pooled 训练学领域共性 → 每个学生一个 adapter（4B 起步，开源可本地跑）</span></td><td class="pill warn">中</td><td class="pill warn">中</td><td class="when">迭代次数多、单个学生的数据又特别稀疏时</td></tr><tr><td class="step"><span class="sn">3</span></td><td class="rt"><b>模拟器当 reward 做 RL</b><span>GRPO 训 tutor policy，reward = 学生接受指导前后的表现差</span></td><td class="pill bad">高</td><td class="pill bad">低</td><td class="when">论文自陈是 proof of concept —— 最后再考虑</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="why-grid"><div class="why"><b>评估端的收益是线性的</b><p>F / R 两个指标一次建好，之后每次改模型都能立刻知道「是更像学生了，还是更能听劝了」。这是永久复用的资产。</p></div><div class="why"><b>训练端的收益是二阶的，而且会被放大</b><p>模拟器一旦错了，RL 会把这个错误当成学生的真实反应去优化 tutor —— 论文里用 GPT-5.4 当 reward，accuracy 只有 71.6%，比完全不训练 RL 的 75.7% 还低。</p></div><div class="why"><b>所以顺序必须是：先能测 → 再能模拟 → 最后能训练</b><p>跳过前面直接做 RL，等于在没有量尺的情况下练技术：你的 tutor 变好了，你也不知道是它真的变好，还是你的模拟器骗了你。</p></div></div>
+
+  <div class="roi-stack">
+    <h3>如果你已经有 AI tutor 的技术栈，从这三处切进去</h3>
+    <ul><li><b>你已经有 BKT / DKT 知识追踪</b><p>那你已经站在 <b>F 这一维</b>上了 —— 知识追踪本质上就是 state-tracking，也就是论文里的 Maia2 那一类：<b>高保真、接不住干预</b>。</p></li><li><b>StudentSim 补的是 R 这一维</b><p>不是「 tutor 说的话对不对」，而是 <b>学生到底会不会照做</b>。这是两个不同的缺口，混起来做会互相掩盖。</p></li><li><b>你的掌握度仪表盘就是天然的落点</b><p>把它从「掌握度变化」扩成两个数：<b>像不像</b>（错题画像 / 掌握概率比对）+ <b>听不听话</b>（纠正前后掌握度比对）。这一步不需要训练任何模型。</p></li><li><b>你的错题本直接就是 S 集</b><p>单轮记录 = 题 + 学生的作答。你只是把它从「给人看」变成了「给模型训」。</p></li><li><b>你的纠正记录直接就是 T 集</b><p>题 → 错答 → 指导 → 改对。这四元组多数 tutor 日志里本来就存在，只是没被标成训练数据。<b>这是 ROI 最陡的一步。</b></p></li></ul>
+  </div>
+
+  <div class="roi-not">
+    <h3>三种情况，不要做</h3>
+    <ul><li><b>迭代次数少的时候，不要做</b><p>讲者原话：只做一个小的干预的话，学生模拟器可能并没有那么强的必要 —— 直接上真实学生更划算。</p></li><li><b>反馈不稀疏的场景，没有 ROI</b><p>日志量大、反馈快、用户多的产品，拿真人反馈比造模拟器便宜得多。</p></li><li><b>没有「个体差异」的领域，R 这一维没有信号</b><p>所有人同一道题、同一个答案，就不存在「这一位学生」的模拟对象。</p></li></ul>
+  </div>
+
+  <div class="formula">
+    <b>收益公式</b>
+    <p>ROI ≈ <span class="f">每轮迭代省下的等待时间 × 剩余迭代次数</span> − <span class="f">建 S/T 集 + 训模拟器的一次性成本</span></p>
+    <p class="cap">临界点就是讲者那句话：「<b>当我们需要多能迭代的时候</b>，可能才会需要学生模拟器的介入。」</p>
+  </div>
+</section>
+
+<section>
+  <p class="sec-num">08</p>
+  <h2>八条结论</h2>
+  <p class="lead">每条都能回查到视频的哪一段、论文的哪一张表。</p>
+  <ol class="concl"><li><span class="cn">01</span><div><b>瓶颈不是模型，是「学生信号」</b><p>判断 AI 教师好不好，不看指导写得漂不漂亮，而看学生收到之后产生了什么反应。</p><p class="l2">但改一个小细节就要等几个月甚至几年才能拿到这份反馈 —— 早期迭代被卡死在数据上。</p></div></li><li><span class="cn">02</span><div><b>旧的两条路各占一半，都不够</b><p>state-tracking（Maia2）后验地追踪学生状态，保真但接不住干预；prompt LLM 接得住指导，但「太有能力」。</p><p class="l2">后者叫「能力悖论」：让它演幼儿园学生做微积分，语言幼稚但解题步骤依然专业 —— 信号嘈杂。</p></div></li><li><span class="cn">03</span><div><b>把问题定义成 F × R 两个维度</b><p>Behavioral Fidelity：模拟得像不像这个学生；Guidance Responsiveness：接不接得住老师的指导。</p><p class="l2">旧方法正好落在两个极值点上，目标是右上角 —— 两个都要高。</p></div></li><li><span class="cn">04</span><div><b>两阶段训练解决「每人一两条记录」</b><p>先 pooled training 学领域共性，再在 base adapter 上做 per-student LoRA 特化。</p><p class="l2">二语写作数据集采了整整一年，人均 3 篇、超 70% 的人不超过 5 篇 —— 直接训必然过拟合。</p></div></li><li><span class="cn">05</span><div><b>4B 小模型在两个维度上赢过 GPT-5.4</b><p>三个领域都是：Maia2 像但不听，GPT-5.4 听但不像，StudentSim 两头都要。</p><p class="l2">而且模拟器小、开放、可本地部署 —— reward 可以自己跑。</p></div></li><li><span class="cn">06</span><div><b>模拟器当 reward，专家盲评确实更好</b><p>8 位有段位的棋手、74 条盲评：StudentSim reward 的 accuracy 90.5%，guidance 3.31，personalization 3.93。</p><p class="l2">三个条件共享 tutor policy / SFT 起点 / GRPO 设置，差异只来自 reward。</p></div></li><li><span class="cn">07</span><div><b>反直觉：用 GPT-5.4 当 reward 反而更差</b><p>GPT-5.4 reward 的 accuracy 只有 71.6%，比完全不训练 RL 的 75.7% 还低，personalization 2.42 最低。</p><p class="l2">因为它不懂「过往记录 → 应有表现」这一步 mapping，噪声信号把 policy 带偏了。</p></div></li><li><span class="cn">08</span><div><b>它能推广，但有三堵墙</b><p>方法论可迁移：symbolic → neural → training 三部曲，可用到任何 human simulator。</p><p class="l2">但长程追踪（遗忘、顿悟）、学生隐私、模拟群体的代表性（validity）都还没有答案。</p></div></li></ol>
+</section>
+
+<section>
+  <p class="sec-num">09</p>
+  <h2>四个还没解决的问题</h2>
+  <p class="lead">这四条比结论更值得记住 —— 它们决定了这个方法能不能离开实验室。</p>
+  <div class="opens">
+    <div><b>只有 one-guided step</b><p>遗忘、顿悟这类长程行为需要长时间追踪 —— 数据、隐私、发布都难。</p></div>
+    <div><b>隐私</b><p>拿一个学生的数据去训他自己的模拟器，学生没授权怎么办。
+       讲者原话：<b>privacy 是技术面前不可翻越的高墙</b>。</p></div>
+    <div><b>代表性（validity）</b><p>模拟出来的学生群体和真实分布对不上，reviewer 会直接打回。</p></div>
+    <div><b>开销</b><p>只做小改动的话，直接上真实学生可能更划算；需要大量迭代时模拟器才划算。</p></div>
+  </div>
+</section>
+
+<section>
+  <p class="sec-num">10</p>
+  <h2>拿走这些</h2>
+  <div class="dl">
+    <a href="https://github.com/yhyu13/yhyu13.github.io/releases/download/works-student-sim-v1/studentsim-explainer-voiced.mp4"><b>讲解视频 · 配音版</b><span>18 页 + 逐字稿字幕 + AI 配音，与字幕逐句对齐</span></a>
+    <a href="https://github.com/yhyu13/yhyu13.github.io/releases/download/works-student-sim-v1/studentsim-explainer-silent.mp4"><b>讲解视频 · 无配音字幕版</b><span>同一套画面与字幕，自己配讲解或二次剪辑</span></a>
+    <a href="downloads/StudentSim-AI教师反馈.pptx"><b>PPTX · 18 页</b><span>16:9，每页带演讲者备注（PowerPoint 备注视图）</span></a>
+    <a href="deck/index.html"><b>口播 HTML deck</b><span>按 S 进演讲者视图（当前页/下一页/逐字稿/计时器）</span></a>
+    <a href="downloads/explainer.html"><b>可交互精读页</b><span>结论折叠 · F×R 象限 · 核对清单</span></a>
+    <a href="downloads/00-核心结论.md"><b>精读 Markdown</b><span>8 条结论 + Mermaid 结构图 + 回查表</span></a>
+    <a href="downloads/transcript.md"><b>完整转写</b><span>21,562 字，按 10 分钟分片</span></a>
+    <a href="downloads/README.md"><b>交付说明</b><span>流水线、QA 命令、复现步骤</span></a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>出处</h4>
+        <p>视频：<a href="https://www.bilibili.com/video/BV1EMJQ6tE8d">BV1EMJQ6tE8d</a>（NICE 学术 第 209 期，63 分 15 秒）</p>
+        <p>论文：<a href="https://arxiv.org/abs/2609.01591">arXiv:2609.01591</a> — StudentSim: Training LLM-based Student Simulators（2026-09-01）</p>
+        <p>代码：<a href="https://github.com/microsoft/StudentSim">github.com/microsoft/StudentSim</a></p>
+        <p>讲者主页：<a href="https://empathyang.github.io">empathyang.github.io</a></p>
+      </div>
+      <div>
+        <h4>口径与边界</h4>
+        <p>第 06 节的 ROI 推论是<b>本次整理的落地判断</b>，不是论文结论。</p>
+        <p>网上流传的「2000+ Elo 子集 93.3% vs 56.7%」在本次核对的 arXiv 全文中<b>未检索到</b>，故未采用；论文只写该子集与三重标注子集「给出相同排序」。</p>
+        <p>时间戳是 10 分钟分片边界，不是词级时间戳。</p>
+      </div>
+    </div>
+    <p class="dis">本页由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p>
+    <p class="dis" style="margin-top:6px">本页地址：<a href="https://dhvofnxywk0rt.space.mcode.cn">dhvofnxywk0rt.space.mcode.cn</a>　·　内容包可整包下载（见上方「拿走这些」）</p>
+  </div>
+</footer>
+
+</body>
+</html>

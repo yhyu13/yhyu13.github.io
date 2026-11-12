@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudentSim · 精读（可交互）</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#101828;--body:#344054;--muted:#667085;--faint:#98A2B3;
+  --line:#E4E7EC;--soft:#F7F8FA;--card:#fff;--bg:#F2F4F7;
+  --navy:#123A5E;--teal:#0E7C86;--tealbg:#E6F3F4;--amber:#A9720F;--amberbg:#FBF1DF;
+  --red:#A8343A;--redbg:#FAEDED;--green:#1F7A4D;
+  --sans:"Microsoft YaHei","PingFang SC",-apple-system,"Segoe UI",sans-serif;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;
+     padding-bottom:56px}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px}
+header{background:var(--navy);color:#fff;padding:38px 0 32px;margin-bottom:26px}
+header .eyebrow{color:#7FD3DD;font-weight:700;letter-spacing:2px;font-size:12px}
+header h1{font-size:clamp(23px,5vw,36px);line-height:1.24;margin:10px 0 10px}
+header p{color:#C6D6E5;font-size:clamp(13.5px,2.6vw,16px)}
+header .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+header .tags span{background:rgba(255,255,255,.09);border:1px solid #2C5878;border-radius:999px;
+                   padding:5px 13px;font-size:12.5px;color:#D6E4EF}
+h2{font-size:clamp(18px,3.4vw,24px);color:var(--navy);margin:34px 0 4px;
+   display:flex;align-items:center;gap:9px}
+h2 .sq{width:9px;height:24px;border-radius:3px;background:var(--teal);flex:0 0 auto}
+.sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+a{color:var(--teal)}
+.mono{font-family:"Consolas","SF Mono",monospace;font-size:13px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+@media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}}
+.st{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px}
+.st .v{font-size:clamp(22px,4.4vw,30px);font-weight:800;color:var(--teal);line-height:1.1}
+.st .l{font-size:13.5px;font-weight:700;margin-top:6px}
+.st .n{font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.45}
+
+.acc{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);
+     border:1px solid var(--line);border-radius:13px;padding:14px 16px;margin-bottom:8px;
+     font:inherit;color:inherit;cursor:pointer;transition:box-shadow .18s,border-color .18s}
+.acc:hover{border-color:#C3D2DE;box-shadow:0 5px 16px rgba(16,40,70,.06)}
+.acc .n{width:34px;height:34px;border-radius:10px;background:var(--tealbg);color:var(--teal);
+        font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.acc .t{font-weight:700;font-size:clamp(14.5px,3vw,17px);color:var(--navy);flex:1 1 auto;min-width:0}
+.acc .tag{font-size:11.5px;color:var(--teal);font-weight:700;background:var(--tealbg);
+           border-radius:999px;padding:3px 10px;white-space:nowrap}
+.acc .chev{color:var(--faint);font-size:13px;flex:0 0 auto;transition:transform .18s}
+.acc[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.body{background:var(--card);border:1px solid var(--line);border-top:none;border-radius:0 0 13px 13px;
+      margin:-8px 0 10px;padding:2px 16px 15px}
+.body p{font-size:14.5px;color:var(--body);margin:11px 0}
+.body p.l2{color:var(--muted)}
+.body .meta{font-size:12px;color:var(--faint);border-top:1px dashed var(--line);padding-top:9px;margin-top:12px}
+
+.quad-wrap{position:relative;padding-left:30px}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:560px){.quad{grid-template-columns:1fr}}
+.q{position:relative;text-align:left;background:var(--card);border:1px solid var(--line);
+   border-radius:13px;padding:14px 16px;cursor:pointer;font:inherit;color:inherit;
+   transition:transform .15s,box-shadow .15s}
+.q:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(16,40,70,.09)}
+.q.t-teal{border-color:var(--teal);background:var(--tealbg)}
+.q.t-amber{border-color:#E7C98A;background:var(--amberbg)}
+.q .ax{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
+.q.t-teal .ax{color:var(--teal)}
+.q.t-amber .ax{color:var(--amber)}
+.q b{display:block;font-size:16.5px;color:var(--navy);margin-bottom:4px}
+.q .d{display:block;font-size:12.5px;color:var(--body)}
+.q .tip{display:block;font-size:12px;color:var(--muted);margin-top:7px;
+         border-top:1px dashed rgba(16,40,70,.16);padding-top:7px;max-height:0;overflow:hidden;transition:max-height .2s}
+.q.on .tip{max-height:120px}
+.qx{position:absolute;font-size:12px;color:var(--faint)}
+.qy{left:0;top:0}
+
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--card);
+      border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{background:#EDF1F5;color:var(--navy);text-align:left;padding:10px 13px;font-weight:700;font-size:13px}
+td{padding:10px 13px;border-top:1px solid var(--line);color:var(--body)}
+td.v{font-weight:800;color:var(--teal);white-space:nowrap}
+td.n{color:var(--muted);font-size:13px}
+
+.ck{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer}
+.cb{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:6px;
+    border:2px solid #C6CED8;flex:0 0 auto;cursor:pointer;margin:0;position:relative;
+    background:#fff;transition:background .15s,border-color .15s}
+.cb:checked{background:var(--teal);border-color:var(--teal)}
+.cb:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;
+                    justify-content:center;color:#fff;font-size:15px;line-height:1}
+.cb:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.ck .tx{flex:1 1 auto}
+.ck .tx b{display:block;font-size:14.5px;color:var(--navy)}
+.ck .tx i{font-style:normal;font-size:12.5px;color:var(--muted)}
+.ck .by{font-size:11.5px;color:var(--teal);font-weight:700;white-space:nowrap}
+.ck:has(.cb:checked){border-color:#B6E1DE;background:#F4FBFB}
+
+.open{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+.open ul{margin:0;padding-left:19px}
+.open li{margin-bottom:9px;font-size:14px;color:var(--body)}
+.open li b{color:var(--navy)}
+.open .src{font-size:11px;color:var(--faint);background:var(--soft);border-radius:999px;padding:2px 8px}
+
+.note{background:#FFF7E8;border:1px solid #EFD9A8;border-radius:13px;padding:15px 17px;
+      font-size:13.5px;color:#6B4E12;margin-top:20px}
+footer{margin-top:32px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:12.5px}
+footer .row{display:block;margin-bottom:5px;overflow-wrap:anywhere;word-break:break-word}
+footer .dis{margin-top:12px;font-size:11.5px;color:var(--faint)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">NICE 学术 · 第 209 期 · 论文精读</div>
+    <h1>StudentSim：让 AI 教师在真实学生研究前获得可度量反馈</h1>
+    <p>杨可（UIUC）· Microsoft Research × UIUC · arXiv:2609.01591（2026-09-01）<br>
+       核心问题：如果 AI 教师的改进依赖学生反馈，我们能否先训练出足够可评估、可度量的 AI 学生？</p>
+    <div class="tags">
+      <span>8 条结论</span><span>60 名学生</span><span>3 个领域</span>
+      <span>F × R 双维度</span><span>转写 21,562 字符</span><span>时间戳为分片估算</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2><span class="sq"></span>先看四个数字</h2>
+  <div class="sub">全部出自 arXiv:2609.01591 摘要 / Table 2 / Table 3 / Table 4</div>
+  <div class="stats"><div class="st"><div class="v">0.51 / 0.91</div><div class="l">StudentSim 棋类 F / R</div><div class="n">Maia2 0.45 / 0.27　·　GPT-5.4 0.23 / 0.72</div></div><div class="st"><div class="v">90.5%</div><div class="l">人类盲评 Accuracy</div><div class="n">No RL 75.7　·　GPT-5.4 reward 71.6</div></div><div class="st"><div class="v">3.93 / 5</div><div class="l">StudentSim 个性化评分</div><div class="n">No RL 2.80　·　GPT-5.4 reward 2.42</div></div><div class="st"><div class="v">60</div><div class="l">受评学生数</div><div class="n">chess 30　·　L2 写作 15　·　math 15</div></div></div>
+
+  <h2><span class="sq"></span>八条结论</h2>
+  <div class="sub">点开看展开：这条为什么成立、对应视频哪一段、转写里能搜到哪句话。</div>
+  <div id="acc"><button class="acc" data-i="1" aria-expanded="false"><span class="n">01</span><span class="t">瓶颈不是模型，是「学生信号」</span><span class="tag">问题</span><span class="chev">▾</span></button><div class="body" id="c1" hidden><p>判断 AI 教师好不好，不看指导写得漂不漂亮，而看学生收到之后产生了什么反应。</p><p class="l2">但改一个小细节就要等几个月甚至几年才能拿到这份反馈 —— 早期迭代被卡死在数据上。</p><div class="meta">视频位置 00:00–10:00　|　转写锚点：「收集数据的 bottleneck」</div></div><button class="acc" data-i="2" aria-expanded="false"><span class="n">02</span><span class="t">旧的两条路各占一半，都不够</span><span class="tag">框架</span><span class="chev">▾</span></button><div class="body" id="c2" hidden><p>state-tracking（Maia2）后验地追踪学生状态，保真但接不住干预；prompt LLM 接得住指导，但「太有能力」。</p><p class="l2">后者叫「能力悖论」：让它演幼儿园学生做微积分，语言幼稚但解题步骤依然专业 —— 信号嘈杂。</p><div class="meta">视频位置 00:00–10:00　|　转写锚点：state-tracking models / prompt LLM / 能力的悖论</div></div><button class="acc" data-i="3" aria-expanded="false"><span class="n">03</span><span class="t">把问题定义成 F × R 两个维度</span><span class="tag">框架</span><span class="chev">▾</span></button><div class="body" id="c3" hidden><p>Behavioral Fidelity：模拟得像不像这个学生；Guidance Responsiveness：接不接得住老师的指导。</p><p class="l2">旧方法正好落在两个极值点上，目标是右上角 —— 两个都要高。</p><div class="meta">视频位置 10:00–20:00　|　转写锚点：behavioral fidelity / guidance responsiveness</div></div><button class="acc" data-i="4" aria-expanded="false"><span class="n">04</span><span class="t">两阶段训练解决「每人一两条记录」</span><span class="tag">方法</span><span class="chev">▾</span></button><div class="body" id="c4" hidden><p>先 pooled training 学领域共性，再在 base adapter 上做 per-student LoRA 特化。</p><p class="l2">二语写作数据集采了整整一年，人均 3 篇、超 70% 的人不超过 5 篇 —— 直接训必然过拟合。</p><div class="meta">视频位置 10:00–20:00　|　转写锚点：「第一阶段 pooled training / 第二阶段 student-specific」</div></div><button class="acc" data-i="5" aria-expanded="false"><span class="n">05</span><span class="t">4B 小模型在两个维度上赢过 GPT-5.4</span><span class="tag">结果</span><span class="chev">▾</span></button><div class="body" id="c5" hidden><p>三个领域都是：Maia2 像但不听，GPT-5.4 听但不像，StudentSim 两头都要。</p><p class="l2">而且模拟器小、开放、可本地部署 —— reward 可以自己跑。</p><div class="meta">视频位置 30:00–40:00　|　转写锚点：「我们是一个非常小的模型，train 的是一个 4 billion 的 model」</div></div><button class="acc" data-i="6" aria-expanded="false"><span class="n">06</span><span class="t">模拟器当 reward，专家盲评确实更好</span><span class="tag">结果</span><span class="chev">▾</span></button><div class="body" id="c6" hidden><p>8 位有段位的棋手、74 条盲评：StudentSim reward 的 accuracy 90.5%，guidance 3.31，personalization 3.93。</p><p class="l2">三个条件共享 tutor policy / SFT 起点 / GRPO 设置，差异只来自 reward。</p><div class="meta">视频位置 40:00–50:00　|　转写锚点：accuracy / guidance / personalization 三个维度</div></div><button class="acc" data-i="7" aria-expanded="false"><span class="n">07</span><span class="t">反直觉：用 GPT-5.4 当 reward 反而更差</span><span class="tag">反直觉</span><span class="chev">▾</span></button><div class="body" id="c7" hidden><p>GPT-5.4 reward 的 accuracy 只有 71.6%，比完全不训练 RL 的 75.7% 还低，personalization 2.42 最低。</p><p class="l2">因为它不懂「过往记录 → 应有表现」这一步 mapping，噪声信号把 policy 带偏了。</p><div class="meta">视频位置 40:00–50:00　|　转写锚点：「GPT-4 reward 反而让它的成绩指标下降了」</div></div><button class="acc" data-i="8" aria-expanded="false"><span class="n">08</span><span class="t">它能推广，但有三堵墙</span><span class="tag">边界</span><span class="chev">▾</span></button><div class="body" id="c8" hidden><p>方法论可迁移：symbolic → neural → training 三部曲，可用到任何 human simulator。</p><p class="l2">但长程追踪（遗忘、顿悟）、学生隐私、模拟群体的代表性（validity）都还没有答案。</p><div class="meta">视频位置 40:00–60:00　|　转写锚点：symbolic / neural / training 三部曲 + Q&amp;A</div></div></div>
+
+  <h2><span class="sq"></span>全文枢轴：F × R</h2>
+  <div class="sub">点任意一格看细节。旧方法各占一角，右上角才是目标。</div>
+  <div class="quad-wrap"><span class="qx qy">R ↑</span><div class="quad"><button class="q t-amber" data-q="prompt LLM"><span class="ax">高 R · 低 F</span><b>prompt LLM</b><span class="d">接得住指导，但演的不是那个人 —— 信号嘈杂</span><span class="tip">GPT-4o / GPT-5.4 靠提示词扮演学生。听懂了，但不像这个人。</span></button><button class="q t-teal" data-q="StudentSim"><span class="ax">高 F · 高 R</span><b>StudentSim</b><span class="d">两个都要高 —— 这就是目标</span><span class="tip">Qwen3-4B + per-student LoRA。棋类 F=0.51 / R=0.91。</span></button><button class="q t-muted" data-q="通用 LLM（未训练）"><span class="ax">低 F · 低 R</span><b>通用 LLM（未训练）</b><span class="d">两个维度都不行</span><span class="tip">不训练就直接扮演，既不像也接不住。</span></button><button class="q t-amber" data-q="state-tracking"><span class="ax">高 F · 低 R</span><b>state-tracking</b><span class="d">后验记录很准，但接不住干预</span><span class="tip">Maia2。F=0.45，但 R 只有 0.27 —— 没有语言输入通路。</span></button></div></div>
+
+  <h2><span class="sq"></span>关键数字逐条</h2>
+  <div class="sub">每一行都能回查到论文或转写的具体位置。</div>
+  <table><tbody><tr><td class="v">0.51 / 0.91</td><td>棋类 F / R</td><td class="n">StudentSim（Qwen3-4B + per-player LoRA）</td></tr><tr><td class="v">0.23 / 0.72</td><td>棋类 F / R</td><td class="n">GPT-5.4（in-context 提示）</td></tr><tr><td class="v">0.45 / 0.27</td><td>棋类 F / R</td><td class="n">Maia2（state-tracking，无语言输入通路）</td></tr><tr><td class="v">90.5%</td><td>人类盲评 Accuracy</td><td class="n">StudentSim reward（最高）</td></tr><tr><td class="v">71.6%</td><td>人类盲评 Accuracy</td><td class="n">GPT-5.4 reward —— 低于不训练 RL 的 75.7%</td></tr><tr><td class="v">60</td><td>受评学生数</td><td class="n">chess 30 / L2 写作 15 / math 15</td></tr><tr><td class="v">74</td><td>盲评标注数</td><td class="n">来自 8 位有段位的竞技棋手</td></tr><tr><td class="v">4B</td><td>基座模型规模</td><td class="n">Qwen3-4B-Instruct</td></tr></tbody></table>
+
+  <h2><span class="sq"></span>你可以现场核对哪 6 件事</h2>
+  <div class="sub">勾掉你已经确认的。数据来自论文与演讲，不是通用清单。</div>
+  <label class="ck"><input type="checkbox" class="cb"><span class="tx"><b>模拟器能像学生</b><i>F：起始作答是否匹配这一位学生的强项与弱项</i></span><span class="by">paper Table 2</span></label><label class="ck"><input type="checkbox" class="cb"><span class="tx"><b>模拟器接得住指导</b><i>R：读完老师的指导后，认知状态能不能往前推一步</i></span><span class="by">paper Table 3</span></label><label class="ck"><input type="checkbox" class="cb"><span class="tx"><b>两阶段训练</b><i>pooled → per-student LoRA，绕开每人一两条记录</i></span><span class="by">paper §4</span></label><label class="ck"><input type="checkbox" class="cb"><span class="tx"><b>同一批留出集</b><i>所有方法同记录 fit、同留出记录评</i></span><span class="by">paper §4</span></label><label class="ck"><input type="checkbox" class="cb"><span class="tx"><b>reward 的两头</b><i>personalization + perception 作为乘性门</i></span><span class="by">paper §6</span></label><label class="ck"><input type="checkbox" class="cb"><span class="tx"><b>真人验收</b><i>8 位有段位的棋手、74 条盲评</i></span><span class="by">paper Table 4</span></label>
+
+  <h2><span class="sq"></span>还没解决的四件事</h2>
+  <div class="sub">这四条比结论更值得记住 —— 它们决定了这个方法能不能离开实验室。</div>
+  <div class="open"><ul><li><b>只有 one-guided step</b>　遗忘、顿悟这类长程行为需要长时间追踪 —— 数据、隐私、发布都难　<span class="src">talk</span></li><li><b>隐私</b>　拿学生的数据训他自己的模拟器，学生没授权怎么办。讲者原话：privacy 是技术面前不可翻越的高墙　<span class="src">talk</span></li><li><b>代表性（validity）</b>　模拟出来的学生群体和真实分布对不上，reviewer 会直接打回　<span class="src">talk</span></li><li><b>开销</b>　只做小改动的话，直接上真实学生可能更划算；需要大量迭代时模拟器才划算　<span class="src">talk</span></li></ul></div>
+
+  <h2><span class="sq"></span>怎么核对</h2>
+  <div class="sub">视频时间戳是 <b>10 分钟分片边界</b>，不是词级时间戳；语音识别输出不含词级时间信息，
+    编造精确到秒的时间戳会给出假精度。</div>
+  <table><thead><tr><th>结论</th><th>视频位置</th><th>转写锚点</th></tr></thead><tbody><tr><td>瓶颈不是模型，是「学生信号」</td><td class="mono">00:00–10:00</td><td class="n">「收集数据的 bottleneck」</td></tr><tr><td>旧的两条路各占一半，都不够</td><td class="mono">00:00–10:00</td><td class="n">state-tracking models / prompt LLM / 能力的悖论</td></tr><tr><td>把问题定义成 F × R 两个维度</td><td class="mono">10:00–20:00</td><td class="n">behavioral fidelity / guidance responsiveness</td></tr><tr><td>两阶段训练解决「每人一两条记录」</td><td class="mono">10:00–20:00</td><td class="n">「第一阶段 pooled training / 第二阶段 student-specific」</td></tr><tr><td>4B 小模型在两个维度上赢过 GPT-5.4</td><td class="mono">30:00–40:00</td><td class="n">「我们是一个非常小的模型，train 的是一个 4 billion 的 model」</td></tr><tr><td>模拟器当 reward，专家盲评确实更好</td><td class="mono">40:00–50:00</td><td class="n">accuracy / guidance / personalization 三个维度</td></tr><tr><td>反直觉：用 GPT-5.4 当 reward 反而更差</td><td class="mono">40:00–50:00</td><td class="n">「GPT-4 reward 反而让它的成绩指标下降了」</td></tr><tr><td>它能推广，但有三堵墙</td><td class="mono">40:00–60:00</td><td class="n">symbolic / neural / training 三部曲 + Q&amp;A</td></tr></tbody></table>
+
+  <div class="note">
+    <b>口径与边界</b><br>
+    · 第 8 条结论「它能推广，但有三堵墙」是<b>本次整理的归纳</b>，讲者未这样归纳过。<br>
+    · Table 4 的列顺序是 Accuracy / Guidance / Personalization，对应 90.5 / 3.31 / 3.93；
+      二手解读常把后两列写反，本页按论文原表。<br>
+    · 网上流传的「2000+ Elo 子集 93.3% vs 56.7%」在本次核对的 arXiv 全文中<b>未检索到</b>，
+      故不写入结论；论文只写明该子集与三重标注子集「给出相同排序」。<br>
+    · 转写由语音识别生成，人名与技术名词可能有同音错字，已按上下文校正。
+    · 论文自陈边界：chess 是 proof of concept；迁移到自由文本领域需要各自的 reward 函数。
+  </div>
+
+  <footer>
+    <div class="row">视频：%s（%s）</div>
+    <div class="row">论文：%s — %s</div>
+    <div class="row">代码：%s</div>
+    <div class="row">讲者主页：%s</div>
+    <div class="row">完整转写：../transcript.md　|　口播 deck：../deck/index.html　|　PPTX：../slides/output/</div>
+    <div class="dis">免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.acc').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var body = document.getElementById('c' + btn.dataset.i);
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    body.hidden = open;
+  });
+});
+document.querySelectorAll('.q').forEach(function(c){
+  c.addEventListener('click', function(){
+    c.classList.toggle('on');
+  });
+});
+</script>
+</body>
+</html>
