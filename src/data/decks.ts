@@ -164,14 +164,14 @@ export const DECKS: Deck[] = [
   },
   {
     slug: "huberman-accelerated-learning",
-    title: "Huberman × Joe Lonsdale — 如何加速学习",
+    title: "Huberman Lab — 如何加速学习（Alpha School）",
     year: "",
     date: "",
     source: "Bilibili · Andrew Huberman",
     sourceUrl: "https://www.bilibili.com/video/BV114YX63Ene",
     pdf: "/decks/huberman-accelerated-learning.pdf",
     description:
-      "14 页拆 Alpha School 的学习法：每天两小时学术时间怎么做到十倍效率，Worked Example + 初始掌握 + 间隔重复三件套，以及 AI 在其中的位置。",
+      "14 页拆 Alpha School 的学习法：每天两小时学术时间怎么做到十倍效率，Worked Example + 初始掌握 + 间隔重复三件套，以及 AI 在其中的位置。嘉宾姓名两处来源不一致：搬运标题写 Joe Liemandt，deck 与 ASR 稿写 Joe Lonsdale；本页不代为判定，以原片为准。",
   },
   {
     slug: "meyerowitz-photography-master",
