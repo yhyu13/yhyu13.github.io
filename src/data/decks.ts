@@ -41,6 +41,23 @@ export const DECKS: Deck[] = [
     ],
   },
   {
+    slug: "berkeley-ai-alumni-panel",
+    title: "Berkeley AI 校友圆桌 — DeepMind / Cursor / xAI",
+    year: "2026",
+    date: "2026-10-09",
+    source: "Bilibili · geek_UNCLE",
+    sourceUrl: "https://www.bilibili.com/video/BV1Nkph6sEQ6",
+    pdf: "/decks/berkeley-ai-alumni-panel.pdf",
+    description:
+      "78.8 分钟的伯克利校友圆桌压成七条能直接用的结论：让人记住你的是作品不是简历、海投是策略不是赌博、实习是双向尽调，以及大厂与初创的真实体感。",
+    links: [
+      {
+        label: "口播成片",
+        href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v1/berkeley-ai-alumni-panel-voiced.mp4",
+      },
+    ],
+  },
+  {
     slug: "blackhole-cpp-simulation-summary",
     title: "黑洞 C++ 模拟",
     year: "",
@@ -74,6 +91,28 @@ export const DECKS: Deck[] = [
       "以视频内容梳理中国社会四个阶层的划分、流动与处境——一份观察当下结构的切片。",
   },
   {
+    slug: "davos-2026-musk-fink",
+    title: "2026 达沃斯 — 马斯克对话贝莱德 CEO",
+    year: "2026",
+    date: "2026",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1vzzxBFEpY",
+    pdf: "/decks/davos-2026-musk-fink.pdf",
+    description:
+      "32 分钟对谈的提炼：特斯拉与贝莱德两种复利、能源与算力瓶颈、太空 AI 数据中心，以及火星与好奇心这笔长期账。",
+  },
+  {
+    slug: "deepseek-r1-reasoning",
+    title: "DeepSeek-R1 — 为什么会推理",
+    year: "2026",
+    date: "2026-11-12",
+    source: "Bilibili · 斯坦福讲座",
+    sourceUrl: "https://www.bilibili.com/video/BV1BQsX6yELJ",
+    pdf: "/decks/deepseek-r1-reasoning.pdf",
+    description:
+      "16 页讲清 R1 的推理是怎么训出来的：思维链为什么不够、强化学习里奖励怎么给、以及「查得到」和「要想一步」的分界。",
+  },
+  {
     slug: "dsh-blender-plugin-v21",
     title: "DSH × Blender 实时插件 v2.1.0",
     year: "2026",
@@ -85,6 +124,34 @@ export const DECKS: Deck[] = [
       "DeepSeek Harness 直连实时驱动的 Blender 插件更新——面板内缩放/平移、一次多选构件、headless 作业区，把 AI 建模接进真实 GUI。",
   },
   {
+    slug: "emba-ipo-capital-path",
+    title: "EMBA 企业上市课 — 成长型企业的资本路径",
+    year: "2018",
+    date: "2018",
+    source: "Bilibili · Martinludeking",
+    sourceUrl: "https://www.bilibili.com/video/BV15s411g7DG",
+    pdf: "/decks/emba-ipo-capital-path.pdf",
+    description:
+      "一堂 2018 年 EMBA 课的还原：多层次资本市场怎么分层、新三板挂牌与投行的双重角色、发审委六大关注点、港股新规。规则此后已多次修订，只作课堂内容存档。",
+  },
+  {
+    slug: "flirting-power",
+    title: "调情力 — 让你的生活更美好",
+    year: "",
+    date: "",
+    source: "Bilibili · 脑神经科学",
+    sourceUrl: "https://www.bilibili.com/video/BV1bCn36NEF1",
+    pdf: "/decks/flirting-power.pdf",
+    description:
+      "把一期 12 分钟的讲稿整理成可操作的关系学：调情不是套路，是持续给出注意力、好奇与选择。",
+    links: [
+      {
+        label: "成片 · 配音版",
+        href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v1/flirting-power-reel.mp4",
+      },
+    ],
+  },
+  {
     slug: "gow-raising-kratos",
     title: "God of War — Raising Kratos",
     year: "2018",
@@ -94,6 +161,28 @@ export const DECKS: Deck[] = [
     pdf: "/decks/gow-raising-kratos.pdf",
     description:
       "“Making Of” 纪录片——圣莫尼卡如何用一镜到底与父子羁绊重塑奎托斯。导演 Brandon Aureli 与 Santa Monica Studio 团队分享五年磨一剑的幕后。",
+  },
+  {
+    slug: "huberman-accelerated-learning",
+    title: "Huberman × Joe Lonsdale — 如何加速学习",
+    year: "",
+    date: "",
+    source: "Bilibili · Andrew Huberman",
+    sourceUrl: "https://www.bilibili.com/video/BV114YX63Ene",
+    pdf: "/decks/huberman-accelerated-learning.pdf",
+    description:
+      "14 页拆 Alpha School 的学习法：每天两小时学术时间怎么做到十倍效率，Worked Example + 初始掌握 + 间隔重复三件套，以及 AI 在其中的位置。",
+  },
+  {
+    slug: "meyerowitz-photography-master",
+    title: "乔尔·梅耶罗维茨 — 拆解摄影大师 001",
+    year: "2026",
+    date: "2026-11-10",
+    source: "Bilibili · 看世界的方法",
+    sourceUrl: "https://www.bilibili.com/video/BV1WJW36aETG",
+    pdf: "/decks/meyerowitz-photography-master.pdf",
+    description:
+      "20 页拆解纽约街头摄影师 Joel Meyerowitz：从 35mm 追瞬间到 8×10 等一束光，五个问题回到同一件事——他拍的不是人，是人与环境的关系。",
   },
   {
     slug: "moon-industrialization-sfia",
