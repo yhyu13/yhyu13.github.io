@@ -334,3 +334,41 @@ export const CRAFT_SECTIONS: CraftSection[] = [
 
 /** How many cards to show per section before requiring a refresh. */
 export const CARDS_PER_SECTION = 4;
+
+/**
+ * Self-hosted works: pages this site serves itself, as opposed to the
+ * external platform listings above. Each one is a static folder under
+ * `public/labs/`, so the href points at that folder's index.html.
+ */
+export type CraftWork = {
+  id: string;
+  kind: string;
+  title: string;
+  description: string;
+  href: string;
+  meta?: string;
+  tags?: string[];
+};
+
+export const CRAFT_WORKS: CraftWork[] = [
+  {
+    id: "student-sim",
+    kind: "论文精读 · 可交互页",
+    title: "StudentSim：AI 教师好不好，看学生变了没有",
+    description:
+      "UIUC × Microsoft Research 的 StudentSim 精读页：0.51 / 0.91 的 F×R 双维度、90.5% 专家盲评，配 18 页 deck、两支讲解视频与逐字稿。",
+    href: "/labs/student-sim/index.html",
+    meta: "arXiv 2609.01591 · 2026",
+    tags: ["AI 教育", "论文精读"],
+  },
+  {
+    id: "wuxia-town",
+    kind: "可玩原型 · Three.js",
+    title: "武侠世界 · 白模 Demo",
+    description:
+      "村、城、塞三块场景的可玩白模，单文件运行、零外部依赖，用来验证「武侠小镇」的空间尺度与动线是否成立。",
+    href: "/labs/wuxia-town/index.html",
+    meta: "单文件 · 9.3 MB",
+    tags: ["游戏原型", "Three.js"],
+  },
+];
