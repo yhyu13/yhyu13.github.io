@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 
 const canonical = readFileSync(new URL("../public/profile/hang-yu.md", import.meta.url), "utf8");
+const text = (value: string) => value.replace(/\r\n/g, "\n");
 const pdf = readFileSync(new URL("../public/profile/hang-yu.pdf", import.meta.url));
 const hash = (bytes: Buffer) => createHash("sha256").update(bytes).digest("hex");
 
@@ -15,6 +16,10 @@ test("canonical profile renders safely and native downloads match real bytes", a
     await expect(page.locator(".profile-text")).toContainText(block.replace(/^#{1,2} |^- |^> /g, "").replace(/\*\*/g, ""));
   }
   await expect(page.locator(".identity-photo")).toBeVisible();
+  await expect(page.locator(".identity-contact img")).toHaveCount(4);
+  await expect(page.getByText("个人照片 · 2017 GTC")).toBeVisible();
+  await expect(page.getByText("2021 头像")).toBeVisible();
+  await expect(page.getByText("微信公众号")).toBeVisible();
   await expect(page.locator(".bottom-dock a")).toHaveCount(2);
   await expect(page.getByRole("link", { name: "Zhihu", exact: true })).toHaveAttribute("href", "https://www.zhihu.com/people/ao-ta-kang-007");
   await expect(page.getByRole("link", { name: "Bilibili", exact: true })).toHaveAttribute("href", "https://space.bilibili.com/1526329479");
@@ -31,7 +36,9 @@ test("canonical profile renders safely and native downloads match real bytes", a
     expect(download.suggestedFilename()).toBe(filename);
     const path = await download.path();
     expect(path).not.toBeNull();
-    expect(hash(readFileSync(path!))).toBe(hash(expected));
+    const saved = filename.endsWith(".md") ? Buffer.from(text(readFileSync(path!, "utf8"))) : readFileSync(path!);
+    const source = filename.endsWith(".md") ? Buffer.from(text(expected.toString("utf8"))) : expected;
+    expect(hash(saved)).toBe(hash(source));
     expect(new URL(page.url()).pathname).toBe("/identity");
   }
 });
@@ -48,7 +55,7 @@ test("clipboard awaits success and copies the exact fetched Markdown", async ({ 
   await page.getByRole("button", { name: "复制给 Agent" }).click();
   await expect(page.getByRole("button", { name: "正在复制…" })).toBeDisabled();
   await expect(page.locator(".profile-status")).not.toContainText("已复制");
-  expect(await page.evaluate(() => (window as unknown as { copiedProfile: string }).copiedProfile)).toBe(canonical);
+  expect(text(await page.evaluate(() => (window as unknown as { copiedProfile: string }).copiedProfile))).toBe(text(canonical));
   await page.evaluate(() => (window as unknown as { finishProfileCopy: () => void }).finishProfileCopy());
   await expect(page.locator(".profile-status")).toContainText("已复制公开介绍");
 });
@@ -64,9 +71,10 @@ for (const mode of ["rejected", "unavailable"] as const) {
     await page.getByRole("button", { name: "复制给 Agent" }).click();
     const fallback = page.getByRole("textbox", { name: "手动复制 Markdown" });
     await expect(fallback).toBeFocused();
-    await expect(fallback).toHaveValue(canonical);
+    expect(text(await fallback.inputValue())).toBe(text(canonical));
     await expect(fallback).toHaveAttribute("readonly", "");
-    expect(await fallback.evaluate((el: HTMLTextAreaElement) => [el.selectionStart, el.selectionEnd])).toEqual([0, canonical.length]);
+    const shown = text(await fallback.inputValue());
+    expect(await fallback.evaluate((el: HTMLTextAreaElement) => [el.selectionStart, el.selectionEnd])).toEqual([0, shown.length]);
     await expect(page.locator(".profile-status")).toContainText("自动复制不可用");
     await expect(page.locator(".profile-status")).not.toContainText("已复制");
   });

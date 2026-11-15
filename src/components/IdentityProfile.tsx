@@ -84,6 +84,24 @@ export function IdentityProfile() {
 
   return (
     <section className="identity-profile" aria-label="公开个人介绍" lang="zh-CN">
+      <div className="identity-contact" aria-label="照片与微信">
+        <figure>
+          <img src="/uploads/hang-gtc.jpg" alt="俞航在 2017 年 GTC 主会场的合影" width={713} height={1053} />
+          <figcaption>个人照片 · 2017 GTC</figcaption>
+        </figure>
+        <figure>
+          <img src="/uploads/hang-portrait.jpg" alt="俞航 2021 年的头像" width={1024} height={1024} />
+          <figcaption>2021 头像</figcaption>
+        </figure>
+        <figure>
+          <img src="/uploads/wechat-personal.jpg" alt="俞航的个人微信二维码" width={958} height={1415} />
+          <figcaption>个人微信</figcaption>
+        </figure>
+        <figure>
+          <img src="/uploads/wechat-official.jpg" alt="俞航的微信公众号二维码" width={430} height={430} />
+          <figcaption>微信公众号</figcaption>
+        </figure>
+      </div>
       <div className="profile-actions" aria-label="公开介绍分享">
         <a className="pill" href={PROFILE.pdf} download="hang-yu.pdf">下载 PDF</a>
         <a className="pill" href={PROFILE.markdown} download="hang-yu.md">下载 Markdown</a>
