@@ -502,7 +502,7 @@ function DetailPanel({ manual }: { manual?: Manual }) {
           <h2 className="detail-title">{manual.coverTitle}</h2>
           <div className="detail-scroll" tabIndex={0} aria-label={`${manual.coverTitle} guide`}>
             {manual.photo ? (
-              <img className="identity-photo" src={manual.photo} alt="Hang Yu, University of Illinois i-card" width={148} height={96} />
+              <img className="identity-photo" src={manual.photo} alt="Hang Yu, University of Illinois i-card" width={1432} height={1515} />
             ) : null}
             {manual.id === "identity" ? (
               <Suspense fallback={<p role="status">正在加载公开介绍…</p>}>
