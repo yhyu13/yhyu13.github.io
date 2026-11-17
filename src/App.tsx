@@ -42,6 +42,14 @@ export default function App() {
         }
       />
       <Route
+        path="/archive/a16z-agent-architecture"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="a16z-agent-architecture" />
+          </Suspense>
+        }
+      />
+      <Route
         path="/archive/mutation-testing"
         element={
           <Suspense fallback={null}>

@@ -8,7 +8,8 @@ export type ArchivePost = {
     | "scene-3d-pipeline"
     | "stageshow-teardown"
     | "mutation-testing"
-    | "ue5-lighting";
+    | "ue5-lighting"
+    | "a16z-agent-architecture";
   title: string;
   date: string;
   authors?: string;
@@ -1981,6 +1982,282 @@ export const ARCHIVE_POSTS: ArchivePost[] = [
         <p>那就回到我的项目设置里吧。现在你们应该明白为什么我觉得为自己设置快捷键如此重要了。这样就能不断提醒自己：「我需要更新我的天空光，这就是我更新它的方法。」你们可以设置任意喜欢的按键。</p>
         <p>它的功能是：告诉天空光「嘿，一天中不同时间太阳的位置已经变了。接下来我们需要你们重新采集数据，并读取相关信息。这样一整天的光照效果才能正常运作。」</p>
         <p>好了，这也结束了我们这门虚幻引擎 5 升级版光照基础课程的第一部分介绍。下期见。我将为大家讲解如何正确设置，以实现 24 小时不间断的昼夜光照效果。到时候见。</p>
+      </>
+    ),
+  },
+  {
+    slug: "a16z-agent-architecture",
+    title: "深读切片 · Agent 架构、能力边界与知识工程",
+    date: "2026-10-06",
+    authors: "Hang Yu",
+    tags: ["Agent", "a16z 研读"],
+    body: (
+      <>
+        <blockquote><p>覆盖 19 篇文件，全部存在、全部读完（无需 glob 替代）。</p></blockquote>
+        <h2>⚠️ 开篇必记的一处纠错</h2>
+        <p>任务简报把 <code>call-the-plumber</code> 归为"agent 与软件接口边界 / leaky abstraction"的来源。 <strong>实读后确认：该文件通篇没有任何一句涉及 LLM、agent 或软件架构。</strong> 它是关于美国财政部停发纸质支票、霍尔木兹海峡与油价、Carney 的 Davos 演讲、Cloudflare IP 被封的宏观随笔。 leaky abstraction 只作为概念被定义并用于解释<strong>国际秩序碎片化</strong>。</p>
+        <p>→ 下面的 leaky abstraction 迁移是我做的推断，<strong>不是原文主张</strong>，已单独标注。</p>
+        <hr />
+        <h2>一、Agent 架构模式清单</h2>
+        <h3>1.1 上下文层：语义层的严格超集 ⭐ 最贴近 day-job</h3>
+        <p><strong>原文</strong>（<code>2026-03-10-your-data-agents-need-context.md:61</code>）：</p>
+        <blockquote><p>"A modern data context layer should essentially become a <strong>superset of what a semantic layer would traditionally cover</strong>. Sure, specific metric definitions can be hard-coded, but a modern context layer should include more to ensure agent autonomy – canonical entities, identity resolution, specific instructions to dissect tribal knowledge, proper governance guidance, and more."</p></blockquote>
+        <p><strong>语义层为什么会腐烂</strong>（<code>:44</code>）——一个具体的失败链： 数据平台负责人说"revenue 的定义我们记在语义层里了"。但团队一看，那份 YAML 是<strong>去年离职的成员</strong>更新的、 <strong>BI 工具已不再引用</strong>、且<strong>没有包含之后上线的两条新产品线</strong>。</p>
+        <blockquote><p>"The agent has no idea how revenue is actually defined today."</p></blockquote>
+        <p><strong>代价</strong>（<code>:25</code>，引 MIT <em>State of AI in Business 2025</em>）：失败主因是 "brittle workflows, lack of contextual learning, and misalignment with day-to-day operations"。 作者明说这不是模型问题——模型在 codegen 和数学推理上进步巨大，<strong>但在数据侧仍落后</strong>（以 SQL benchmark 为证）。</p>
+        <h3>1.2 In-context learning 三段式（2023 年基线，注意时效）</h3>
+        <p><code>2023-06-20:60-64</code> 的三阶段：<strong>数据预处理/embedding → prompt 构建/检索 → prompt 执行/推理</strong>。</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项</th>
+        <th>原文数字</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>朴素全量塞入的容量上限</td><td>GPT-4 "~50 pages of input text"（<code>:56</code>）</td></tr>
+        <tr><td>成本曲线</td><td>成本与时间随 prompt 长度<strong>平方级</strong>增长（<code>:68</code>）</td></tr>
+        <tr><td>微调记忆门槛</td><td>一条信息需在训练集中出现 <strong>~10 次</strong>模型才会记住（<code>:66</code>）</td></tr>
+        <tr><td>降级档位</td><td>gpt-3.5-turbo "~50x cheaper"（<code>:114</code>）</td></tr>
+        <tr><td>长上下文≠好效果</td><td>Claude 100k "accuracy degrades with the length of input"（<code>:115</code>）</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <blockquote><p><strong>⚠️ 时效警告</strong>：该文 frontmatter 是 <code>modified: 2026-01-22</code>，但正文结论仍是 "agents don't really work yet… capable of incredible demos but not yet reliable, reproducible task-completion"（<code>:134</code>）。 这与 2026-08 的生产部署实况<strong>直接矛盾</strong>。 <strong>推论：<code>modified</code> 字段不能当作内容时效性依据</strong>——这同时也是本语料库日期标注问题的旁证。</p></blockquote>
+        <h3>1.3 Run-caching：把一次成功固化为确定性代码 ⭐ Game Harness 直系对应</h3>
+        <p><strong>原文</strong>（<code>2026-08-10-can-agents-use-a-computer-yet-weve-got-the-data.md:53</code>）：</p>
+        <blockquote><p>"the agent runs the workflow once, the system <strong>caches it as deterministic code</strong>, runs execute as cheap repeatable code from then on, and <strong>the model comes back only when something breaks</strong> – to diagnose, fix, and re-cache."</p></blockquote>
+        <p><strong>代价</strong>（<code>:69</code>）：成本由 harness 而非模型决定——"$3 and $15 depending on <strong>how often it screenshots, how much context it carries</strong>, how much of the work it can hand off to deterministic code"，且 "COGS are inference plus retries (i.e. <strong>failed runs still burn tokens</strong>)"。</p>
+        <h3>1.4 LLM 不做决策、只写目标函数（TetrisBench 的转向）</h3>
+        <p><code>:45</code>：</p>
+        <blockquote><p>"given the current board state, <strong>generate a scoring function</strong> that evaluates possible placements. That function runs deterministically, scores all legal moves, and selects the best one. The model decides if/when it wants to update the function."</p></blockquote>
+        <p>失效模式同样明确（<code>:39</code>）："Language models aren't trained to reason over large, evolving state spaces in a step-by-step way."</p>
+        <h3>1.5 Code-native 生成：Code → Render → Inspect → Revise ⭐ 与 UE 最贴</h3>
+        <p><code>2026-06-02-the-next-frontier-of-visual-ai-is-code.md:78</code> 给出四步闭环；<code>:80</code> 指出与 diffusion 的机制差异：</p>
+        <blockquote><p>"it <strong>cannot map feedback cleanly onto a specific source-level edit</strong>" ——而 code-native 循环里 "If the spacing is wrong, change the CSS. If a logo curve is off, edit the SVG path."</p></blockquote>
+        <p>文中点名的表示包括 <strong>"a USD scene graph, a shader, or a game-engine scene"</strong>， 并称 3D 的核心价值是"生成跨视角、跨编辑、跨交互都站得住的一致 3D 结构"，而非单角度像真。</p>
+        <p><code>:126</code> 的 VIGA 描述尤其可迁移：</p>
+        <blockquote><p>"VIGA <strong>does not just expose raw Blender in a loop</strong>. It gives the agent <strong>semantic tools for observation and modification, plus memory over prior attempts</strong>."</p></blockquote>
+        <h3>1.6 多模型路由</h3>
+        <ul>
+        <li><strong>降级分流</strong>：<code>2023-06-20:116</code> "Triaging some requests to open source models… especially effective in high-volume B2C use cases like search or chat."</li>
+        <li><strong>成本手段</strong>：<code>2026-08-14:133</code> NAB 的 CIO 把 Cursor 的多模型配置当控成本工具。</li>
+        <li><strong>秒级动态路由</strong>：<code>2026-08-19:51</code> OpenRouter 的 Ori Eval，"route you the best possible models and providers, on a second-to-second basis"。</li>
+        <li><strong>反例（选择权是产品特性）</strong>：<code>2026-08-14:59</code> —— "Developers are notoriously choosy… It put the developer in the <strong>sovereign seat</strong>."</li>
+        </ul>
+        <h3>1.7 Harness 是被承认的独立工程层</h3>
+        <ul>
+        <li><code>2026-04-22:33</code> 引 Cursor 的 scaling-agents 博客：</li>
+        </ul>
+        <blockquote><p>"A surprising amount of the system's behavior comes down to <strong>how we prompt the agents</strong>. The harness and models matter, but <strong>the prompts matter more</strong>."</p></blockquote>
+        <ul>
+        <li><code>2026-08-10:31</code>：模型只暴露 API（截图进、点击/击键出），"builders <strong>wrap that loop in their own harness</strong>: a sandboxed VM or browser, plus the orchestration, verification, and retry logic"。</li>
+        <li><code>2026-08-10:81</code> 现状判断：<strong>"Most computer-use systems deployed in production today are single-agent: one model, one task, one session"</strong>。</li>
+        </ul>
+        <h3>1.8 垂直化 + Wedge</h3>
+        <ul>
+        <li>语音：<code>2024-05-29:75</code> "Companies that build for the <strong>'edge cases'</strong> in these verticals have a better chance…"</li>
+        <li>楔子：<code>2025-01-29:77</code> "founders instead find a '<strong>wedge</strong>' to start…"</li>
+        <li>Computer-use：<code>2026-08-10:43</code> "The real unlock is <strong>the long tail of software where no clean API exists</strong>."</li>
+        </ul>
+        <hr />
+        <h2>二、能力边界的实测证据</h2>
+        <h3>2.1 TetrisBench（<code>2026-02-23</code>）⭐ 方法论价值 &gt; 结论</h3>
+        <p><strong>测什么</strong>：LLM 在长时序优化下的行为。方法论上<strong>刻意剥离视觉</strong>，棋盘状态全用 JSON 结构化。</p>
+        <p><strong>两阶段设计</strong>：</p>
+        <ol>
+        <li>第一阶段（<strong>失败</strong>）：每回合送完整棋盘 JSON 让模型直接选招 → "Moves were inconsistent, often nonsensical, and frequently self-destructive"。</li>
+        <li>第二阶段（<strong>有效</strong>）：模型生成 scoring function，确定性执行器跑合法着法。</li>
+        </ol>
+        <p><strong>关键数字</strong>：</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>指标</th>
+        <th>值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>Gemini 3 Pro 胜率</td><td><strong>62.0%</strong></td></tr>
+        <tr><td>Gemini 3 Pro 干预频率</td><td><strong>1.22 updates/game</strong>（全场最低）</td></tr>
+        <tr><td>Gemini 3 Flash 干预频率</td><td><strong>2.68/game</strong>（全场最高）</td></tr>
+        <tr><td>Gemini 3 Flash 胜率</td><td>60.3%，110.4 pts/move</td></tr>
+        <tr><td>TAFOKINTS（前竞技选手）vs Claude Opus 4.5</td><td><strong>22,300 vs 15,700</strong>；Opus "played perfectly for <strong>21 rounds</strong>"</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p><strong>结论</strong>：模型 "outperform most human players"，但 "<strong>The top human players still beat certain frontier models consistently.</strong>" 差距来源<strong>不是反应速度或操作精度</strong>（环境是回合制），而是 <strong>edge cases</strong>—— "moments where the 'correct' move isn't locally optimal but preserves long-term flexibility"。</p>
+        <blockquote><p><strong>可迁移的三条方法论</strong>： <code>:139</code> "<strong>how strongly representation shapes what you end up measuring</strong>" <code>:141</code> "optimization horizon is something you <strong>observe in behavior, not something you reliably elicit with prompts</strong>" <code>:143</code> "<strong>intervention is itself a meaningful decision from LLMs. Knowing how to act is different from knowing when to stop and reconsider.</strong>"</p></blockquote>
+        <h3>2.2 Computer Use 实况（<code>2026-08-10</code>）⭐ 对"能不能驱动 UE"最直接</h3>
+        <p><strong>测什么</strong>：OSWorld-Verified，agent 在真实桌面（Ubuntu/Windows/macOS）上完成任务的比例。</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项</th>
+        <th>值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>一年前最佳 OSWorld-Verified</td><td><strong>42%</strong></td></tr>
+        <tr><td>当前最佳（Claude Fable 5）</td><td><strong>85%</strong></td></tr>
+        <tr><td>人类基线</td><td><strong>~72%</strong></td></tr>
+        <tr><td>可部署性拐点</td><td>创始人原话：模型 "<strong>until Opus 4.6 in February 2026</strong>" 才够生产使用</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p><strong>作者自己的批判（最重要）</strong>（<code>:33</code>）：</p>
+        <blockquote><p>"OSWorld counts completed tasks, so 85% still means <strong>15 of 100 failed</strong>, and a business process only finishes if every step does. <strong>Back-office work doesn't grade on a curve</strong>: if a person reviews every output, no labor was saved."</p></blockquote>
+        <p><strong>两个具体失效判据</strong>（<code>:47</code>）：</p>
+        <ol>
+        <li><strong>不可交叉验证</strong>——agent 把 "net 60" 读成 "net 30"，"the record looks perfectly plausible, passes every visual check, and nobody catches it until an invoice goes out wrong"。</li>
+        <li><strong>成功信号延迟</strong>——理赔提交后屏幕显示 "received"，两天后理算员打电话来对保单号，"the agent has no idea the call ever happened, and the claim quietly stalls"。</li>
+        </ol>
+        <blockquote><p>"<strong>a smarter model doesn't fix a process whose ground truth shows up as a phone call to somebody's desk a week later, unless the harness is designed to handle the edge case from the get-go.</strong>"</p></blockquote>
+        <p><strong>成本对照（fully loaded）</strong>：</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>方式</th>
+        <th>成本/小时</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>agent</td><td><strong>$6–8</strong>（区间 $3–15）</td></tr>
+        <tr><td>离岸 BPO</td><td>~$10（$8–15）</td></tr>
+        <tr><td>美国后台</td><td>$30–45</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>声称 "70-80% gross margin against US back-office labor"。 速度上仍显著更慢："a task someone finishes in <strong>two to three minutes</strong> can take an agent <strong>eight to ten</strong>"。</p>
+        <p><strong>未来方向</strong>：Standard Intelligence 的 <strong>1100 万小时</strong>视频数据集、<strong>30 FPS</strong> 动作模型， 以及 "some teams already cut latency today by <strong>grounding on the accessibility tree instead of screenshots</strong>"。</p>
+        <h3>2.3 明确纠正：modelbusters 两篇<strong>没有</strong>能力实测</h3>
+        <p><code>2025-08-07</code> 是纯商业框架（what-not-how products / pull-not-push markets / network effects / compounded growth）， 引用的全是公司财务数据（CrowdStrike "48% of customers now run 6 or more modules, fueling roughly $500M of net-new ARR annually"、 Roblox 13 岁以上段 <strong>61M DAU</strong> 等），<strong>不含任何 agent/LLM 能力评测</strong>。</p>
+        <p><code>2025-08-14-ai-hardware.md</code>（992 词）与 <code>2026-06-02</code> <strong>均未见 benchmark 数字</strong>，只有机制描述与定性主张。</p>
+        <hr />
+        <h2>三、认知框架 / 可复用判断规则</h2>
+        <h3>3.1 ⭐ Filing Cabinet Fallacy（<code>2026-04-22</code>）——本批最锋利</h3>
+        <p>规则一句话（<code>:57-59</code>）：</p>
+        <blockquote><p>"<strong>Imagine a system with infinite storage… It can look up anything. Has it learned? No. It has never been forced to do the compression.</strong>"</p></blockquote>
+        <p>配套核心论断（<code>:63</code>）：</p>
+        <blockquote><p>"<strong>the very mechanism that makes LLMs powerful during training… is exactly what we refuse to let them do after deployment.</strong> We stop the compression at the moment of release and replace it with external memory."</p></blockquote>
+        <p><strong>可直接作为决策规则</strong>：区分两类知识—— "in-context learning is sufficient for problems where the answer, or pieces of the answer, <strong>already exist somewhere in the world</strong>"， 而真正需要参数化学习的是三类：<strong>需要真正发现的</strong>（novel mathematics）、<strong>对抗性场景</strong>（security）、 <strong>隐性到无法用语言表达的知识</strong>。</p>
+        <p>产品观察（<code>:75</code>）："Users don't actually want recall per se. <strong>They want competence</strong>… the difference between 'Here is what you responded to this email before' (verbatim) vs. 'I understand how you think well enough to anticipate what you need' is the difference between <strong>retrieval and learning</strong>."</p>
+        <h3>3.2 上下文 / 模块 / 权重三段谱系</h3>
+        <p><code>:79</code> 的划线标准很干脆：<strong>"The dividing line is not 'memory features' vs. 'no memory features.' It is: where does compaction happen?"</strong> （无压缩纯检索 → 全内化权重学习，中间是 modules。）</p>
+        <p>模块层的价值主张（<code>:91</code>）："An 8B model with the right module can match <strong>109B</strong> performance on targeted tasks using a fraction of the memory."</p>
+        <h3>3.3 "表示方式决定你测到什么"（TetrisBench）</h3>
+        <p><code>:139</code>："By stripping away vision and working with structured state, <strong>the task shifted from perception to planning</strong>."</p>
+        <h3>3.4 稀缺资源已从"生产"转移到"担保"（两篇互证）</h3>
+        <ul>
+        <li><code>2026-08-10:33</code>："the scarce resource is no longer <strong>writing</strong> the code, it's <strong>vouching for it</strong>."</li>
+        <li><code>2026-08-14:129</code>：Fortune 500 代码量从 ~15 万行/周涨到 80 万行/周后，"<strong>the increase had totally blown up the entire process of code review</strong>, creating a new bottleneck."</li>
+        </ul>
+        <h3>3.5 Leaky Abstraction（<code>2026-04-30</code>）——<strong>仅为概念定义，迁移为我方推断</strong></h3>
+        <p>定义（<code>:31</code>）：</p>
+        <blockquote><p>"<strong>'reliable interfaces built out of less-than-reliable parts'</strong>. TCP (a reliable protocol) is built on top of IP (an unreliable protocol)."</p></blockquote>
+        <p>可迁移的是<strong>三层分析范式</strong>（<code>:23-25</code>）：① 为什么抽象的幕后被掀开；② 人们<strong>看见细节</strong>并试图直接抓控制权时会发生什么；③ 理性行为体随之<strong>硬化自身防御</strong>的二阶后果。</p>
+        <p>结构判断（<code>:77</code>）：</p>
+        <blockquote><p>"you can't build a complex system from scratch, you can only <strong>iterate it out of a simple system that works</strong>."</p></blockquote>
+        <blockquote><p>⚠️ <strong>重复强调</strong>：该文<strong>没有</strong>把 leaky abstraction 应用于 LLM/agent 边界。 上面这段软件工程外推是本次分析的迁移，引用前请注明。</p></blockquote>
+        <h3>3.6 分层原则</h3>
+        <ul>
+        <li><code>2026-06-02:33</code>：判据是 "production workflows care a lot about what happens <strong>after</strong> generation"——产物而非输出。</li>
+        <li><code>2026-08-27:19</code>："price at the <strong>highest layer of value that you can reliably measure, attribute, and defend</strong>"；判据 <code>:43</code>：</li>
+        </ul>
+        <blockquote><p>"<strong>What unit of value does the customer already understand, and can we measure it consistently?</strong>"</p></blockquote>
+        <ul>
+        <li><code>2026-08-27:59</code>："<strong>Transparency does not require the billing meter and the underlying cost meter to be the same.</strong>"</li>
+        <li><code>2026-01-07-everything-is-computer</code>："Capability concentrates at the product level, but <strong>scale accumulates far below it</strong>."</li>
+        </ul>
+        <hr />
+        <h2>四、对 RAG / 知识工程的直接启示 ⭐</h2>
+        <h3>4.1 上下文供给的五步流水线（<code>2026-03-10:67-81</code>，逐条摘原文做法）</h3>
+        <ol>
+        <li><strong>Accessing the right data</strong>——不限于数仓，"may extend beyond just what's available in warehouses… This includes tribal knowledge captured in internal systems, <strong>GDrive/Slack, etc.</strong>"</li>
+        <li><strong>Automated context construction</strong>——重点是 <strong>high signal context</strong>，且给了<strong>两个可操作信号源</strong>：</li>
+        </ol>
+        <ul>
+        <li>"looking through <strong>past query history</strong> can be high signal in determining the <strong>most referenced tables and most common joins</strong>"</li>
+        <li>"data modeling solutions like <strong>dbt or LookML</strong> can provide clear definitions for business metrics"</li>
+        </ul>
+        <ol>
+        <li><strong>Human refinement</strong>——自动层覆盖不到的部分被定义为 <strong>"implicit, conditional, and historically contingent"</strong>。 原文例子是一条路由规则："for CRM data, look at <strong>Affinity</strong> for all new USCAN deals from 2025 onwards but <strong>Salesforce</strong> for all global leads before that."</li>
+        <li><strong>Agent connection</strong>——"This can typically be done through <strong>API or MCP</strong>"，且要求 "accessible <strong>real-time</strong>"。</li>
+        <li><strong>Self-updating context flows</strong>——</li>
+        </ol>
+        <blockquote><p>"In the case a data agent provides <strong>incorrect data</strong> and requires accuracy refinement, that should of course be <strong>incorporated back into the context layer</strong>. In this way the context layer becomes a <strong>living and constantly evolving corpus</strong>."</p></blockquote>
+        <p><strong>多维语料形态</strong>（<code>:77</code>）：</p>
+        <blockquote><p>"the context layer can become a <strong>multi-dimensional corpus where code lives alongside natural language</strong>"—— 类比："Just like developers can set up <strong>.cursorrules</strong> files to guide agents and control output behavior, data practitioners can maintain rules and guidelines."</p></blockquote>
+        <h3>4.2 知识分层：哪些进 prompt，哪些必须进 weights</h3>
+        <p><code>2026-04-22:73</code>：</p>
+        <blockquote><p>"in-context learning is limited to <strong>what can be expressed in language</strong>, whereas weights can encode concepts that someone's prompt cannot relay in text. Some patterns are too high-dimensional, too tacit, too deeply structural to fit in a context."</p></blockquote>
+        <p>原文举的两个例子恰好都是<strong>感知/隐性模式</strong>：医学扫描中区分良性伪影与肿瘤的<strong>视觉纹理</strong>、 定义说话者独特韵律的<strong>音频微波动</strong>。结论句：</p>
+        <blockquote><p>"No matter how long the context window grows, there will be knowledge that <strong>cannot be described in text and can only be held in the parameters</strong>."</p></blockquote>
+        <blockquote><p><strong>映射到 UE</strong>：材质节点网络的"手感"、动画节奏的韵律、物理参数的隐性标定 —— 按这套框架属于 <strong>无法压进 Markdown 描述、只能压进权重</strong>的一类；API 签名、参数语义、性能约束属于 context 层。</p></blockquote>
+        <h3>4.3 向量管道只会更重要（2023 年的预判，至今未被推翻）</h3>
+        <p><code>2023-06-20:90</code>：</p>
+        <blockquote><p>"It's tempting to say embeddings will become less relevant… However, feedback from experts suggests the opposite—**that the embedding pipeline may become <em>more</em> important over time**. Large context windows are a powerful tool, but they also entail significant computational cost."</p></blockquote>
+        <p>同文未解问题（<code>:86</code>）："It's not clear, in the long run, if it makes sense to <strong>tightly couple vector and scalar workloads</strong>"。</p>
+        <h3>4.4 上下文窗口不是免费的：三条硬约束</h3>
+        <ul>
+        <li>容量：GPT-4 ~50 页（<code>2023-06-20:56</code>）；成本平方级（<code>:68</code>）。</li>
+        <li><strong>长上下文≠好效果</strong>：Claude 100k "accuracy degrades with the length of input"（<code>:115</code>）。</li>
+        <li><strong>⭐ agent 长任务的实测失效区间</strong>（<code>2026-04-22:41</code>）：</li>
+        </ul>
+        <blockquote><p>"one task can consume a significant portion of total available context… They often <strong>fail after 20–100 steps</strong> because they lose the thread: their context fills up, coherence degrades, and they stop converging."</p></blockquote>
+        <p>目标是把可用循环从 "~20 steps" 推到 "~20,000"（<code>:47</code>）。 扩展手段（<code>:87</code>）：多 agent 作为 <strong>context 本身的 scaling 策略</strong>—— "a coordinated swarm of agents, each holding its own context, specializing on a slice of the problem, and communicating results, can collectively approximate unbounded working memory."</p>
+        <h3>4.5 评测方法：TetrisBench 的实验设计可复用</h3>
+        <ol>
+        <li><strong>控制变量</strong>（<code>:55</code>）：同一 piece sequence、同一约束、同一执行循环，只换模型。</li>
+        <li><strong>不要只看单一聚合指标</strong>（<code>:63</code>）："Two models could have similar average scores but very different win profiles… The table hid stylistic divergence inside a single metric."</li>
+        <li><strong>加一个行为指标</strong>（<code>:81</code>）：把 "points per move, plotted against the number of <strong>strategy interventions</strong>" 一起画。 结果显示干预频率与胜率<strong>不成单调关系</strong>（Gemini 3 Pro 干预最少却胜率最高）；<code>:85</code> 指出 "models that intervened the most <strong>oscillated between heuristics without converging</strong>"。</li>
+        </ol>
+        <blockquote><p><strong>对 RAG 的对应物</strong>：把"检索频次 / 重写次数"作为独立诊断维度，而不是只调最终答案质量。</p></blockquote>
+        <h3>4.6 成本作为知识供给的约束条件</h3>
+        <p><code>2026-08-10:69</code>：</p>
+        <blockquote><p>"in practice anywhere between <strong>$3 and $15</strong> depending on how often it screenshots, how much context it carries… <strong>the harness drives real-world cost as much as the model does</strong>."</p></blockquote>
+        <p><code>2026-08-27:83</code>：</p>
+        <blockquote><p>"every user can generate inference, <strong>retrieval, search, tool calls</strong>, third-party data, media generation, retries, and failed runs."</p></blockquote>
+        <p>→ <strong>检索的召回条数、重试次数、失败 run 的 token 消耗都是显式成本项</strong>，知识工程的预算约束应进设计。</p>
+        <hr />
+        <h2>五、存疑 / 利益冲突 / 数据可疑之处</h2>
+        <h3>A. 利益相关披露不足（最强信号）</h3>
+        <p><code>2026-08-10</code> 三位署名作者均为 a16z 投资合伙人，文末 About 区列出各自被投项目： Fabrizio Serafini — "Investing in <strong>Lightfield</strong>"；Eric Zhou — "Investing in <strong>Tessera Labs</strong>"、 "<strong>Why the World Still Runs on SAP</strong>"。</p>
+        <p>该文核心论点是"企业靠 legacy 系统、缺 API 的长尾软件最适合 computer-use"， 而其中一位作者正在投资 SAP 方向公司。<strong>文中未做此关联披露。</strong></p>
+        <h3>B. 数据链条可疑处</h3>
+        <ul>
+        <li><code>2026-08-10:67</code>：agent 成本 "$6-8/hour" 自述为 "comes from <strong>a founder estimate</strong>, cross-checked against frontier token pricing…"， 但给出的 cross-check 链接指向 llm-stats.com 的 <strong>OSWorld benchmark 页面</strong>——<strong>链接与被引数据类型不匹配</strong>。 且 OSWorld 数据本身是 "best <strong>reported</strong> score"（各厂商各自 harness 的结果），<strong>非统一框架重跑</strong>。</li>
+        <li><code>2026-08-10</code> 未给访谈样本量，只有 3 个具名案例，无 N、无方法、无选择标准。</li>
+        <li><code>2025-09-08:33</code> <strong>口径自相矛盾</strong>：正文称 "over <strong>1B monthly active users</strong>" 与 "~20 minutes a day（up ~2x）"， 但脚注 1 链接标题为 CNBC "ChatGPT to hit <strong>700M weekly users</strong>, up <strong>4x</strong>"。三组数字无法互证。</li>
+        <li><code>2025-09-08:61</code> 明确自承为媒体拼凑："(<strong>based on press coverage</strong>)"。</li>
+        <li><code>2025-09-08:67</code> Decagon 数据脚注为 "Per Decagon <strong>case study</strong>"，而 <strong>Decagon 是 a16z 被投公司</strong>。</li>
+        <li><code>2026-02-23</code> TetrisBench：表格全为图片不可提取；<strong>未给随机种子、temperature、max tokens、人类被试数量</strong>； "hundreds of games per pairing" 与 "800+ games" 两处口径不同，<strong>无法判断统计显著性</strong>。</li>
+        <li><code>2026-08-27:29</code> 唯一硬数据："In our survey of <strong>50 technical AI buyers</strong>, 27 preferred credits…14 preferred tokens"——<strong>样本 50 且方法学未披露</strong>。</li>
+        </ul>
+        <h3>C. 投资立场驱动的结论</h3>
+        <ul>
+        <li><code>2025-08-07:107</code>："every point of growth is worth <strong>~2x</strong> more than a point of margin" —— 这是从 Rule of 40 推出的<strong>估值推论</strong>，非实证。</li>
+        <li><code>2025-09-08</code> 通篇为募资叙事（$6T 白领服务、$1T AI 基建、2030 年 $3T 算力），且"10x product experiences for 1/10th cost"<strong>无来源标注</strong>。</li>
+        <li><code>2026-08-19</code> OpenRouter/Stripe 是 a16z 被投公司，文中"not missing a generational opportunity"为自陈。</li>
+        <li><code>2026-08-14</code> Cursor/SpaceXAI 同为被投公司交易叙事，数据全部来自 Cursor COO 转述，<strong>无独立验证</strong>。</li>
+        </ul>
+        <h3>D. 前后矛盾</h3>
+        <ul>
+        <li><code>2023-06-20:134</code> "agents don't really work yet" <strong>vs</strong> <code>2026-08-10</code> 大规模生产部署（1500-2000 万次/月）。 前者 frontmatter <code>modified: 2026-01-22</code> 却未更新正文观点 → <strong><code>modified</code> 不可作内容时效性依据</strong>。</li>
+        <li><code>2025-08-14</code> 断言 "The models are still too big for mobile AI to really work"，<strong>未给出任何模型尺寸或端侧推理数据</strong>。</li>
+        </ul>
+        <h3>E. 结构性缺口（对读者最重要）</h3>
+        <ul>
+        <li><strong><code>call-the-plumber</code> 不含任何 agent 内容</strong>，leaky abstraction 无法直接用于软件接口设计论证。 建议补 Joel Spolsky 原文或 a16z 其他 infra 文章作为独立来源，<strong>不要以该文件为据</strong>。</li>
+        <li><code>2026-06-02</code>（视觉 AI = 代码）对 UE 场景类比很强，但<strong>全文零 benchmark 数字</strong>。</li>
+        <li><code>2026-08-13</code> 自我指涉矛盾：标题称 10% AI generated，结尾称 "0% of the text here was 'AI-generated'… I did talk to Sol 5.6 a fair bit"。作者自陈 2019-2020 旧文被 Pangram 判为 "70-75% AI Generated"， 并承认 "the window of reliable AI detection at the frontier could now be closed"—— <strong>即该文论证的检测工具本身被他质疑失效</strong>。</li>
+        </ul>
+        <hr />
+        <p><strong>交付说明</strong>：本次为纯只读分析，未创建/修改/删除任何文件。 所有表格类数据（TetrisBench 分数表、OSWorld 柱状图）在清洗后的 Markdown 中为图片，无法核对，故未复述。</p>
       </>
     ),
   },
