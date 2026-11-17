@@ -401,4 +401,14 @@ export const CRAFT_WORKS: CraftWork[] = [
     meta: "index.html + 旁白 m4a · 3.4 MB",
     tags: ["口播", "长征史"],
   },
+  {
+    id: "a16z-radar",
+    kind: "检索页 · 单文件",
+    title: "a16z 研报雷达 · 793 篇",
+    description:
+      "把 a16z 2010–2026 的 793 篇 posts 做成一张可检索的表：按标题/作者/分类搜、只看 AI 相关（516 篇）、或按字数翻长文，共 163 万词。只存标题与链接，正文回原文读。",
+    href: "/labs/a16z-radar/index.html",
+    meta: "单文件 · 191 KB · 零依赖",
+    tags: ["索引", "a16z"],
+  },
 ];

@@ -116,12 +116,12 @@ export const MANUALS: Manual[] = [
     kicker: "Field Manual · III",
     coverTitle: "Archive",
     subtitle: "2017 · 2026",
-    footer: "Seven field notes",
+    footer: "Eight field notes",
     coverColor: "#566044",
     coverInk: "#293024",
     year: "2017–2026",
     description:
-      "Two 2017 field notes and five recent research notes: Matrix Capsules, DeepMind Rainbow, how far AI tutors close the gap to human 1:1 tutoring, a survey-plus-design for AI-driven 3D scene pipelines, a teardown of the Stageshow agent skill, what mutation testing actually buys an agent, and a UE5 lighting course map with three lecture transcripts.",
+      "Two 2017 field notes and six recent research notes, ending with a line-cited deep read of nineteen a16z posts on agent architecture. The rest: Matrix Capsules, DeepMind Rainbow, AI tutors versus human 1:1 tutoring, an AI-driven 3D scene pipeline, a Stageshow agent-skill teardown, mutation testing, and a UE5 lighting course map.",
     stepsLabel: "How to read this volume",
     steps: [
       {
@@ -152,6 +152,10 @@ export const MANUALS: Manual[] = [
         title: "UE5 游戏光照设计",
         body: "2026-11-12. Hang Yu. A course map for Vertex School’s lighting course plus three lecture transcripts: theory, exteriors, and what to measure.",
       },
+      {
+        title: "深读切片 · Agent 架构",
+        body: "2026-10-06. Hang Yu. Nineteen a16z posts read end to end, with line-number citations: what agents can and cannot do yet, where leaky abstractions actually bite, and one correction to the brief.",
+      },
     ],
     excerptLabel: "Period notes",
     excerpt: "Capsule: tensor in, pose out. Rainbow: six DQN extensions. AI tutor: 2 sigma is mostly a misquote. 3D: one sentence to a scene, with an audit gate. Stageshow: read the skill, not the video.",
@@ -166,6 +170,7 @@ export const MANUALS: Manual[] = [
       { label: "Stageshow", href: "/archive/stageshow-teardown" },
       { label: "Mutation", href: "/archive/mutation-testing" },
       { label: "UE5", href: "/archive/ue5-lighting" },
+      { label: "Agent 切片", href: "/archive/a16z-agent-architecture" },
     ],
   },
   {
