@@ -260,7 +260,272 @@ export const DECKS: Deck[] = [
     description:
       "Kimi K3 与 Vox-EMW 的实时视频通话演示——低延迟、可打断的多模态语音交互体验。",
   },
+  {
+    slug: "ai-coworker-grok-bot",
+    title: "AI 同事如何工作 — Grok Bot 的软件工厂",
+    year: "2026",
+    date: "",
+    source: "Y Combinator · Lightcone",
+    pdf: "/decks/ai-coworker-grok-bot.pdf",
+    description:
+      "12 页拆 Lightcone 那期 Grok Bot 对谈：六个 AI 员工怎么排成一条流水线、人只在批准这一步出现，以及「软件工厂」里哪些环节仍然得靠人。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/ai-coworker-grok-bot-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "ai-long-project",
+    title: "如何用 AI 长期开发一个复杂项目",
+    year: "",
+    date: "",
+    source: "Bilibili · oil欧呦",
+    sourceUrl: "https://www.bilibili.com/video/BV1rPWd6nEpP",
+    pdf: "/decks/ai-long-project.pdf",
+    description:
+      "把模型的执行力留下，把长期迭代里的混乱管住：16 页讲一个复杂项目怎么分工、每次改动怎么验收、规则怎么沉淀进仓库。",
+  },
+  {
+    slug: "ascent-trimsheet-disguise",
+    title: "《上行战场》一张贴图的伪装",
+    year: "",
+    date: "",
+    source: "Bilibili · CG加油站",
+    sourceUrl: "https://www.bilibili.com/video/BV1kXTL6qEYb",
+    pdf: "/decks/ascent-trimsheet-disguise.pdf",
+    description:
+      "11 人团队、4 名美术、8000+ 资产，硬表面 80% 共用一张 4K trim sheet：Tor Frick 在 GDC 2022 讲的那套「伪装」与数学。数字出自原片转述。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/ascent-trimsheet-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "codex-blender-camera",
+    title: "Codex × Blender — AI 复杂运镜怎么做",
+    year: "2026",
+    date: "2026-09-15",
+    source: "Bilibili · T7丨第七变量",
+    sourceUrl: "https://www.bilibili.com/video/BV1VNes61EvX",
+    pdf: "/decks/codex-blender-camera.pdf",
+    description:
+      "一个 CQB 一镜到底的案例：五版白模预演、两类参考图、一份分工明确的提示词，从 Blender 白模到 Seedance 生成。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/codex-blender-camera-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "cook-skill-vote",
+    title: "Cook — 给 Agent 一条分数线",
+    year: "",
+    date: "",
+    source: "Bilibili · code炀",
+    sourceUrl: "https://www.bilibili.com/video/BV1SLW66oErv",
+    pdf: "/decks/cook-skill-vote.pdf",
+    description:
+      "Leon Lin 的 cook 循环：给 agent 一个目标、一条分数线和一段时间，让它自己做到像参考图。10 页讲清评分标准、评委与止损。",
+  },
+  {
+    slug: "dan-koe-account-growth",
+    title: "Dan Koe — 从零做账号的两个杠杆",
+    year: "",
+    date: "",
+    source: "Bilibili · PatternSight",
+    sourceUrl: "https://www.bilibili.com/video/BV144Hj6LEMh",
+    pdf: "/decks/dan-koe-account-growth.pdf",
+    description:
+      "从零做账号不是多发几条，而是两个杠杆：把内容变成资产，把资产换成注意力。16 页压缩重讲。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/dan-koe-account-growth-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "dan-koe-creator-play",
+    title: "Dan Koe — 网红退场，手艺人上场",
+    year: "",
+    date: "",
+    source: "Bilibili · 来点思考",
+    sourceUrl: "https://www.bilibili.com/video/BV1p2xL67EJ3",
+    pdf: "/decks/dan-koe-creator-play.pdf",
+    description:
+      "流量红利结束后，创作者该换的玩法：从追热点转向做手艺，用作品积累而不是用算法喂养。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/dan-koe-creator-play-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "dankoe-writing",
+    title: "Dan Koe — 拯救大脑的写作系统",
+    year: "",
+    date: "",
+    source: "Bilibili · PatternSight",
+    sourceUrl: "https://www.bilibili.com/video/BV13v4A6cEL9",
+    pdf: "/decks/dankoe-writing.pdf",
+    description:
+      "一套让「学的更快、想的更清」的写作流程：先想清楚写给谁、再决定写什么，最后才是怎么写。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/dankoe-writing-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "deadlock-improvement",
+    title: "Deadlock 变强哲学 — 比别人更快提升",
+    year: "",
+    date: "",
+    source: "Bilibili · 旁白_B",
+    sourceUrl: "https://www.bilibili.com/video/BV1pGsL62E7y",
+    pdf: "/decks/deadlock-improvement.pdf",
+    description:
+      "Akraken 讲的不是孤立地变强，而是相对速度：练什么、怎么复盘、怎么把每一次对局变成下一次的输入。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/deadlock-improvement-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "deepseek-29-skills",
+    title: "DeepSeek 装 29 个 Skill — 把 Flash 用成 Opus 的八成",
+    year: "",
+    date: "",
+    source: "Bilibili · 马丁没有早晨zZ",
+    sourceUrl: "https://www.bilibili.com/video/BV1ZMxs6PEfD",
+    pdf: "/decks/deepseek-29-skills.pdf",
+    description:
+      "29 个技能怎么分工、哪些真的提效、哪些只是好看：16 页拆一套可复用的 DeepSeek Stack。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/deepseek-29-skills-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "grok-bot-marketing",
+    title: "Grok Bot 营销小队 — 六个 AI 员工",
+    year: "",
+    date: "",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1ZBHx6ZELv",
+    pdf: "/decks/grok-bot-marketing.pdf",
+    description:
+      "官方营销指南的解读：六个岗位、一条流水线，人只做批准。每个岗位的输入输出与验收标准都写清楚了。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/grok-bot-marketing-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "herdr-multi-agent",
+    title: "Herdr — 多 Agent 的瓶颈不是算力",
+    year: "2026",
+    date: "",
+    source: "Bilibili · 为什么叫QQ",
+    sourceUrl: "https://www.bilibili.com/video/BV1xz8Y6SEX1",
+    pdf: "/decks/herdr-multi-agent.pdf",
+    description:
+      "多 Agent 真正的瓶颈是人的注意力：Herdr 把并行的 coding agent 收进一个终端工作区，让「看谁在等我」变成一屏能扫完的事。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/herdr-multi-agent-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "mainstream-media-reform",
+    title: "深化主流媒体系统性变革",
+    year: "2026",
+    date: "",
+    source: "Bilibili · 铉铮",
+    sourceUrl: "https://www.bilibili.com/video/BV1Bh4n6dEb5",
+    pdf: "/decks/mainstream-media-reform.pdf",
+    description:
+      "《求是》2026 年第 11 期专访的解读：怎么看、怎么办——把五组关系放在一起，本身就是一种判断。",
+  },
+  {
+    slug: "march-witness",
+    title: "随军记 — 一个瑞士传教士的长征见证",
+    year: "",
+    date: "",
+    source: "中国军号 · 长征颂 MV",
+    pdf: "/decks/march-witness.pdf",
+    description:
+      "薄复礼（Alfred Bosshardt）1934.10—1936.4 的 560 天：16 页逐镜拆《The Journey Witnesses》怎么用影像讲一段被记录下来的长征。",
+  },
+  {
+    slug: "megadev-generating-text",
+    title: "MegaDev 第 1 课 — 生成文本",
+    year: "",
+    date: "",
+    source: "Bilibili · P1",
+    sourceUrl: "https://www.bilibili.com/video/BV1xsWQ6nEky",
+    pdf: "/decks/megadev-generating-text.pdf",
+    description:
+      "中高级 AI 开发课的第一讲：生成文本这条链路上，从 prompt 到结构化输出各自解决什么问题。28 页。",
+  },
+  {
+    slug: "musk-work-method",
+    title: "马斯克工作法 — 9200 条笔记里的操作系统",
+    year: "2026",
+    date: "2026-11-11",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1HNW26fErj",
+    pdf: "/decks/musk-work-method.pdf",
+    description:
+      "把一部纪录片压成一套可以拆开的操作系统：一套操作系统、五步算法、矢量、组织即产品、速度与失败。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/musk-work-method-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "nobody-saves-you",
+    title: "没人来救你 — 送给迷茫困惑者的真心话",
+    year: "",
+    date: "",
+    source: "Bilibili · PatternSight",
+    sourceUrl: "https://www.bilibili.com/video/BV1M9n46CEKm",
+    pdf: "/decks/nobody-saves-you.pdf",
+    description:
+      "原片把出口从别人身上收回来：朋友、家人、政府和讲者本人都不会替你走完这一步。建议和工具可以留下，决定必须自己做。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/nobody-saves-you-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "pstack-ai-automation",
+    title: "pstack — 怎么让 AI 全自动完成工作",
+    year: "",
+    date: "",
+    source: "Bilibili · 非良237",
+    sourceUrl: "https://www.bilibili.com/video/BV12D4E6NEMn",
+    pdf: "/decks/pstack-ai-automation.pdf",
+    description:
+      "Lauren Tan（poteto）开源工作流的拆解：月合并 2,500、约 60 个 skill、新手 6 步。产量不是装完就有，是验证和环境换来的信任。",
+  },
+  {
+    slug: "skill-doctor",
+    title: "Skill Doctor — 会自我改进的 Agent",
+    year: "2026",
+    date: "2026-09-04",
+    source: "Bilibili · 为什么叫QQ",
+    sourceUrl: "https://www.bilibili.com/video/BV1dYt46kEMw",
+    pdf: "/decks/skill-doctor.pdf",
+    description:
+      "让 Agent 改自己的说明书：失败会话取证、最小 diff、PR 人审、可回滚。证据只从失败的会话里取。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/skill-doctor-voiced.mp4" },
+    ],
+  },
+  {
+    slug: "skill-trigger",
+    title: "Skill 怎么写，才会被 Agent 用上",
+    year: "",
+    date: "",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1BqnJ63E4h",
+    pdf: "/decks/skill-trigger.pdf",
+    description:
+      "把一支讲解收成四件事：触发、正文、验收和维护。不用点名也会被用上，靠的是描述写对了场景。",
+    links: [
+      { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/skill-trigger-voiced.mp4" },
+    ],
+  },
 ];
+
+// The shelf reads in array order; sorting by slug means a deck lands
+// alphabetically wherever it was appended, so batches do not need manual
+// placement (and a mis-sorted insert cannot drift silently).
+DECKS.sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
 
 export function getDeck(slug: string | undefined): Deck | undefined {
   return DECKS.find((deck) => deck.slug === slug);
