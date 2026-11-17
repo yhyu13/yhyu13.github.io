@@ -1,0 +1,12 @@
+MIT 14.13 Psychology and Economics (Spring 2020) — 课程重制
+
+课程本体由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布：
+https://ocw.mit.edu/courses/14-13-psychology-and-economics-spring-2020/
+
+本站收录的是个人学习整理物：
+- decks/  25 份讲义（24 讲 + 课程总册），由个人笔记重新排版生成，不是 OCW 原始课件
+- text/notes/  24 份原讲逐字转写（faster-whisper，英文）
+- text/srt/    24 份讲解视频字幕
+- digest/delivery.md  逐讲实测清单
+
+原课程视频与音频未收录（体量约 11 GB）。引用请回指 OCW 原始页面。

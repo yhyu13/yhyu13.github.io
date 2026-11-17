@@ -1,0 +1,460 @@
+{
+ "slug": "mit-14-13",
+ "title": "MIT 14.13 · 心理学与经济学",
+ "exportedAt": "2026-11-18T00:00:00+00:00",
+ "source": "个人成长/mit-psych-econ-14-13",
+ "releaseTag": null,
+ "groups": {
+  "decks": [
+   {
+    "label": "lec01 · 介绍与概述 I",
+    "href": "decks/lec01.pdf",
+    "bytes": 736645,
+    "slides": 11
+   },
+   {
+    "label": "lec02 · 介绍与概述 II",
+    "href": "decks/lec02.pdf",
+    "bytes": 592243,
+    "slides": 11
+   },
+   {
+    "label": "lec03 · 时间偏好（理论）I",
+    "href": "decks/lec03.pdf",
+    "bytes": 902647,
+    "slides": 11
+   },
+   {
+    "label": "lec04 · 时间偏好（理论）II",
+    "href": "decks/lec04.pdf",
+    "bytes": 784733,
+    "slides": 11
+   },
+   {
+    "label": "lec05 · 时间偏好（应用）I",
+    "href": "decks/lec05.pdf",
+    "bytes": 742169,
+    "slides": 10
+   },
+   {
+    "label": "lec06 · 时间偏好（应用）II",
+    "href": "decks/lec06.pdf",
+    "bytes": 815013,
+    "slides": 10
+   },
+   {
+    "label": "lec07 · 风险偏好I",
+    "href": "decks/lec07.pdf",
+    "bytes": 689942,
+    "slides": 10
+   },
+   {
+    "label": "lec08 · 风险偏好 II",
+    "href": "decks/lec08.pdf",
+    "bytes": 622819,
+    "slides": 10
+   },
+   {
+    "label": "lec09 · 参照依赖偏好",
+    "href": "decks/lec09.pdf",
+    "bytes": 551643,
+    "slides": 10
+   },
+   {
+    "label": "lec10 · 社会偏好 I",
+    "href": "decks/lec10.pdf",
+    "bytes": 470240,
+    "slides": 10
+   },
+   {
+    "label": "lec11 · 社会偏好 II",
+    "href": "decks/lec11.pdf",
+    "bytes": 653133,
+    "slides": 10
+   },
+   {
+    "label": "lec12 · 社会偏好 III",
+    "href": "decks/lec12.pdf",
+    "bytes": 817173,
+    "slides": 11
+   },
+   {
+    "label": "lec13 · 期中复习",
+    "href": "decks/lec13.pdf",
+    "bytes": 739605,
+    "slides": 11
+   },
+   {
+    "label": "lec14 · 社会偏好 IV",
+    "href": "decks/lec14.pdf",
+    "bytes": 613009,
+    "slides": 10
+   },
+   {
+    "label": "lec15 · 有限注意力",
+    "href": "decks/lec15.pdf",
+    "bytes": 672694,
+    "slides": 10
+   },
+   {
+    "label": "lec16 · 信念效用；学习 I",
+    "href": "decks/lec16.pdf",
+    "bytes": 777155,
+    "slides": 11
+   },
+   {
+    "label": "lec17 · 信念的效用；学习 II",
+    "href": "decks/lec17.pdf",
+    "bytes": 847301,
+    "slides": 11
+   },
+   {
+    "label": "lec18 · 状态依赖偏好、投射与归因偏差",
+    "href": "decks/lec18.pdf",
+    "bytes": 763982,
+    "slides": 11
+   },
+   {
+    "label": "lec19 · 性别、歧视与身份",
+    "href": "decks/lec19.pdf",
+    "bytes": 594208,
+    "slides": 10
+   },
+   {
+    "label": "lec20 · 默认选项、助推与框架",
+    "href": "decks/lec20.pdf",
+    "bytes": 802506,
+    "slides": 11
+   },
+   {
+    "label": "lec21 · 偏好的可塑与不可达",
+    "href": "decks/lec21.pdf",
+    "bytes": 684956,
+    "slides": 10
+   },
+   {
+    "label": "lec22 · 心理学视角下的贫困",
+    "href": "decks/lec22.pdf",
+    "bytes": 666807,
+    "slides": 10
+   },
+   {
+    "label": "lec23 · 幸福与心理健康",
+    "href": "decks/lec23.pdf",
+    "bytes": 755984,
+    "slides": 10
+   },
+   {
+    "label": "lec24 · 行为代理人的政策",
+    "href": "decks/lec24.pdf",
+    "bytes": 902975,
+    "slides": 12
+   },
+   {
+    "label": "课程总册",
+    "href": "decks/master.pdf",
+    "bytes": 13995940,
+    "slides": 281
+   }
+  ],
+  "text": [
+   {
+    "label": "第 01 讲 · 逐字转写.md",
+    "href": "text/notes/01.md",
+    "bytes": 56594,
+    "group": "notes"
+   },
+   {
+    "label": "第 02 讲 · 逐字转写.md",
+    "href": "text/notes/02.md",
+    "bytes": 71807,
+    "group": "notes"
+   },
+   {
+    "label": "第 03 讲 · 逐字转写.md",
+    "href": "text/notes/03.md",
+    "bytes": 70907,
+    "group": "notes"
+   },
+   {
+    "label": "第 04 讲 · 逐字转写.md",
+    "href": "text/notes/04.md",
+    "bytes": 76425,
+    "group": "notes"
+   },
+   {
+    "label": "第 05 讲 · 逐字转写.md",
+    "href": "text/notes/05.md",
+    "bytes": 66371,
+    "group": "notes"
+   },
+   {
+    "label": "第 06 讲 · 逐字转写.md",
+    "href": "text/notes/06.md",
+    "bytes": 74301,
+    "group": "notes"
+   },
+   {
+    "label": "第 07 讲 · 逐字转写.md",
+    "href": "text/notes/07.md",
+    "bytes": 67647,
+    "group": "notes"
+   },
+   {
+    "label": "第 08 讲 · 逐字转写.md",
+    "href": "text/notes/08.md",
+    "bytes": 66023,
+    "group": "notes"
+   },
+   {
+    "label": "第 09 讲 · 逐字转写.md",
+    "href": "text/notes/09.md",
+    "bytes": 74062,
+    "group": "notes"
+   },
+   {
+    "label": "第 10 讲 · 逐字转写.md",
+    "href": "text/notes/10.md",
+    "bytes": 21423,
+    "group": "notes"
+   },
+   {
+    "label": "第 11 讲 · 逐字转写.md",
+    "href": "text/notes/11.md",
+    "bytes": 67144,
+    "group": "notes"
+   },
+   {
+    "label": "第 12 讲 · 逐字转写.md",
+    "href": "text/notes/12.md",
+    "bytes": 71696,
+    "group": "notes"
+   },
+   {
+    "label": "第 13 讲 · 逐字转写.md",
+    "href": "text/notes/13.md",
+    "bytes": 41553,
+    "group": "notes"
+   },
+   {
+    "label": "第 14 讲 · 逐字转写.md",
+    "href": "text/notes/14.md",
+    "bytes": 90096,
+    "group": "notes"
+   },
+   {
+    "label": "第 15 讲 · 逐字转写.md",
+    "href": "text/notes/15.md",
+    "bytes": 65281,
+    "group": "notes"
+   },
+   {
+    "label": "第 16 讲 · 逐字转写.md",
+    "href": "text/notes/16.md",
+    "bytes": 68293,
+    "group": "notes"
+   },
+   {
+    "label": "第 17 讲 · 逐字转写.md",
+    "href": "text/notes/17.md",
+    "bytes": 71125,
+    "group": "notes"
+   },
+   {
+    "label": "第 18 讲 · 逐字转写.md",
+    "href": "text/notes/18.md",
+    "bytes": 72308,
+    "group": "notes"
+   },
+   {
+    "label": "第 19 讲 · 逐字转写.md",
+    "href": "text/notes/19.md",
+    "bytes": 63319,
+    "group": "notes"
+   },
+   {
+    "label": "第 20 讲 · 逐字转写.md",
+    "href": "text/notes/20.md",
+    "bytes": 69339,
+    "group": "notes"
+   },
+   {
+    "label": "第 21 讲 · 逐字转写.md",
+    "href": "text/notes/21.md",
+    "bytes": 73452,
+    "group": "notes"
+   },
+   {
+    "label": "第 22 讲 · 逐字转写.md",
+    "href": "text/notes/22.md",
+    "bytes": 66737,
+    "group": "notes"
+   },
+   {
+    "label": "第 23 讲 · 逐字转写.md",
+    "href": "text/notes/23.md",
+    "bytes": 66260,
+    "group": "notes"
+   },
+   {
+    "label": "第 24 讲 · 逐字转写.md",
+    "href": "text/notes/24.md",
+    "bytes": 70501,
+    "group": "notes"
+   },
+   {
+    "label": "lec01.srt",
+    "href": "text/srt/lec01.srt",
+    "bytes": 9498,
+    "group": "transcript"
+   },
+   {
+    "label": "lec02.srt",
+    "href": "text/srt/lec02.srt",
+    "bytes": 13213,
+    "group": "transcript"
+   },
+   {
+    "label": "lec03.srt",
+    "href": "text/srt/lec03.srt",
+    "bytes": 12227,
+    "group": "transcript"
+   },
+   {
+    "label": "lec04.srt",
+    "href": "text/srt/lec04.srt",
+    "bytes": 12156,
+    "group": "transcript"
+   },
+   {
+    "label": "lec05.srt",
+    "href": "text/srt/lec05.srt",
+    "bytes": 9402,
+    "group": "transcript"
+   },
+   {
+    "label": "lec06.srt",
+    "href": "text/srt/lec06.srt",
+    "bytes": 9310,
+    "group": "transcript"
+   },
+   {
+    "label": "lec07.srt",
+    "href": "text/srt/lec07.srt",
+    "bytes": 9077,
+    "group": "transcript"
+   },
+   {
+    "label": "lec08.srt",
+    "href": "text/srt/lec08.srt",
+    "bytes": 10565,
+    "group": "transcript"
+   },
+   {
+    "label": "lec09.srt",
+    "href": "text/srt/lec09.srt",
+    "bytes": 12606,
+    "group": "transcript"
+   },
+   {
+    "label": "lec10.srt",
+    "href": "text/srt/lec10.srt",
+    "bytes": 9068,
+    "group": "transcript"
+   },
+   {
+    "label": "lec11.srt",
+    "href": "text/srt/lec11.srt",
+    "bytes": 10376,
+    "group": "transcript"
+   },
+   {
+    "label": "lec12.srt",
+    "href": "text/srt/lec12.srt",
+    "bytes": 12248,
+    "group": "transcript"
+   },
+   {
+    "label": "lec13.srt",
+    "href": "text/srt/lec13.srt",
+    "bytes": 13205,
+    "group": "transcript"
+   },
+   {
+    "label": "lec14.srt",
+    "href": "text/srt/lec14.srt",
+    "bytes": 10907,
+    "group": "transcript"
+   },
+   {
+    "label": "lec15.srt",
+    "href": "text/srt/lec15.srt",
+    "bytes": 10757,
+    "group": "transcript"
+   },
+   {
+    "label": "lec16.srt",
+    "href": "text/srt/lec16.srt",
+    "bytes": 11638,
+    "group": "transcript"
+   },
+   {
+    "label": "lec17.srt",
+    "href": "text/srt/lec17.srt",
+    "bytes": 14227,
+    "group": "transcript"
+   },
+   {
+    "label": "lec18.srt",
+    "href": "text/srt/lec18.srt",
+    "bytes": 9903,
+    "group": "transcript"
+   },
+   {
+    "label": "lec19.srt",
+    "href": "text/srt/lec19.srt",
+    "bytes": 10037,
+    "group": "transcript"
+   },
+   {
+    "label": "lec20.srt",
+    "href": "text/srt/lec20.srt",
+    "bytes": 10730,
+    "group": "transcript"
+   },
+   {
+    "label": "lec21.srt",
+    "href": "text/srt/lec21.srt",
+    "bytes": 10231,
+    "group": "transcript"
+   },
+   {
+    "label": "lec22.srt",
+    "href": "text/srt/lec22.srt",
+    "bytes": 10175,
+    "group": "transcript"
+   },
+   {
+    "label": "lec23.srt",
+    "href": "text/srt/lec23.srt",
+    "bytes": 9177,
+    "group": "transcript"
+   },
+   {
+    "label": "lec24.srt",
+    "href": "text/srt/lec24.srt",
+    "bytes": 12056,
+    "group": "transcript"
+   }
+  ],
+  "digest": [
+   {
+    "label": "交付清单.md",
+    "href": "digest/delivery.md",
+    "bytes": 2033,
+    "scope": "24 讲实测数据：时长、字幕条数、文件体积"
+   }
+  ]
+ },
+ "notice": "课程材料由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布；本站只收录个人整理的讲义、转写与清单，原课程视频未收录。"
+}

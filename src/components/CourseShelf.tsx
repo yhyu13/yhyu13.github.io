@@ -56,7 +56,14 @@ function CourseCard({ course }: { course: Course }) {
         const decks = data.groups.decks?.length ?? 0;
         const videos = data.groups.videos?.length ?? 0;
         const texts = data.groups.text?.length ?? 0;
-        setCounts(`${decks} 份讲义 · ${videos} 段视频 · ${texts} 份文字`);
+        // Skip empty groups: a course with no hosted video should not read
+        // "0 段视频" on its shelf card.
+        const parts = [
+          decks ? `${decks} 份讲义` : "",
+          videos ? `${videos} 段视频` : "",
+          texts ? `${texts} 份文字` : "",
+        ].filter(Boolean);
+        setCounts(parts.join(" · "));
       })
       .catch(() => {});
     return () => {

@@ -144,6 +144,46 @@ export const COURSES: Course[] = [
       },
     ],
   },
+  {
+    slug: "mit-14-13",
+    title: "MIT 14.13 · 心理学与经济学",
+    titleEn: "Psychology and Economics (Behavioral Economics)",
+    term: "Spring 2020",
+    institution: "MIT OpenCourseWare",
+    instructor: "Frank Schilbach",
+    sourceUrl:
+      "https://ocw.mit.edu/courses/14-13-psychology-and-economics-spring-2020/",
+    licence:
+      "课程材料由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布；本站只收录个人整理的讲义、逐字转写与清单，原课程视频与音频未收录。",
+    color: "#3d5a4c",
+    blurb:
+      "24 讲行为经济学：533 页自制讲义（含 281 页课程总册）、24 份逐字转写与字幕。",
+    sections: [
+      {
+        kind: "decks",
+        label: "讲义",
+        description:
+          "25 份 PDF，共 533 页：24 讲各 10–12 页，外加一份 281 页的课程总册（封面 + 课程地图 + 24 章 + 全课总结）。讲义由个人笔记重排生成，不是 OCW 原始课件。",
+      },
+      {
+        kind: "text",
+        label: "文字",
+        description:
+          "两层文字共 48 份：24 份原讲逐字转写（英文，带时间码）与 24 份讲解视频字幕 SRT。",
+      },
+      {
+        kind: "digest",
+        label: "摘要",
+        description: "逐讲实测清单：时长、字幕条数、文件体积。",
+      },
+      {
+        kind: "notice",
+        label: "版权与出处",
+        description:
+          "课程由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布；原课程视频与音频体量约 11 GB，本站未收录，请访问 OCW 课程页。",
+      },
+    ],
+  },
 ];
 
 export function getCourse(slug: string | undefined): Course | undefined {
