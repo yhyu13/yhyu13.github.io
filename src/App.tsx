@@ -42,6 +42,22 @@ export default function App() {
         }
       />
       <Route
+        path="/archive/mutation-testing"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="mutation-testing" />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/archive/ue5-lighting"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="ue5-lighting" />
+          </Suspense>
+        }
+      />
+      <Route
         path="/archive/scene-3d-pipeline"
         element={
           <Suspense fallback={null}>

@@ -116,12 +116,12 @@ export const MANUALS: Manual[] = [
     kicker: "Field Manual · III",
     coverTitle: "Archive",
     subtitle: "2017 · 2026",
-    footer: "Capsule · Rainbow · Tutor · 3D · Stageshow",
+    footer: "Seven field notes",
     coverColor: "#566044",
     coverInk: "#293024",
     year: "2017–2026",
     description:
-      "Two 2017 field notes and three recent research notes: a reproducibility report on Matrix Capsules, a review of DeepMind Rainbow, a study of how far AI tutors close the gap to human 1:1 tutoring, a survey-plus-design for AI-driven 3D scene pipelines, and a teardown of the Stageshow agent skill.",
+      "Two 2017 field notes and five recent research notes: Matrix Capsules, DeepMind Rainbow, how far AI tutors close the gap to human 1:1 tutoring, a survey-plus-design for AI-driven 3D scene pipelines, a teardown of the Stageshow agent skill, what mutation testing actually buys an agent, and a UE5 lighting course map with three lecture transcripts.",
     stepsLabel: "How to read this volume",
     steps: [
       {
@@ -144,6 +144,14 @@ export const MANUALS: Manual[] = [
         title: "Stageshow 技能拆解",
         body: "2026-11-12. Hang Yu. Reverse-engineering an agent skill from a video: what it actually does, and whether its advertised self-check loop holds up.",
       },
+      {
+        title: "变异测试（Mutation Testing）调研",
+        body: "2026-11-12. Hang Yu. Three installable skills, one working MCP server and a 13-language install table — plus why mutation score is a diagnostic, not a target.",
+      },
+      {
+        title: "UE5 游戏光照设计",
+        body: "2026-11-12. Hang Yu. A course map for Vertex School’s lighting course plus three lecture transcripts: theory, exteriors, and what to measure.",
+      },
     ],
     excerptLabel: "Period notes",
     excerpt: "Capsule: tensor in, pose out. Rainbow: six DQN extensions. AI tutor: 2 sigma is mostly a misquote. 3D: one sentence to a scene, with an audit gate. Stageshow: read the skill, not the video.",
@@ -156,6 +164,8 @@ export const MANUALS: Manual[] = [
       { label: "AI Tutor", href: "/archive/ai-tutor" },
       { label: "3D Pipeline", href: "/archive/scene-3d-pipeline" },
       { label: "Stageshow", href: "/archive/stageshow-teardown" },
+      { label: "Mutation", href: "/archive/mutation-testing" },
+      { label: "UE5", href: "/archive/ue5-lighting" },
     ],
   },
   {
