@@ -132,7 +132,7 @@ for (const dir of courseDirs) {
         // byte equality only for binary files: a Windows checkout with
         // core.autocrlf rewrites text files' line endings, so their on-disk
         // size legitimately differs from what the (LF) manifest recorded
-        !/\.(md|txt|json|html?|css|js|mjs|ts|tsx|xml|svg|csv)$/i.test(href) &&
+        !/\.(md|txt|json|html?|css|js|mjs|ts|tsx|xml|svg|csv|srt|vtt)$/i.test(href) &&
         statSync(target).size !== entry.bytes
       ) {
         broken.push(
