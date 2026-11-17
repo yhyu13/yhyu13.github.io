@@ -1,7 +1,14 @@
 import type { ReactNode } from "react";
 
 export type ArchivePost = {
-  slug: "capsule" | "rainbow" | "ai-tutor" | "scene-3d-pipeline" | "stageshow-teardown";
+  slug:
+    | "capsule"
+    | "rainbow"
+    | "ai-tutor"
+    | "scene-3d-pipeline"
+    | "stageshow-teardown"
+    | "mutation-testing"
+    | "ue5-lighting";
   title: string;
   date: string;
   authors?: string;
@@ -1328,6 +1335,652 @@ export const ARCHIVE_POSTS: ArchivePost[] = [
         </ul>
         <hr />
         <p>免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p>
+      </>
+    ),
+  },
+  {
+    slug: "mutation-testing",
+    title: "变异测试（Mutation Testing）调研总结",
+    date: "2026-11-12",
+    authors: "Hang Yu",
+    tags: ["软件测试", "Agent Skills"],
+    body: (
+      <>
+        <blockquote><p>触发源：B 站切片【Matt Pocock】变异测试太强了（BV1PQxk6fES8） 原片：YouTube《Mutation testing is AWESOME》（video id <code>djSbndoByr8</code>） 调研日期：2026-11-12</p></blockquote>
+        <hr />
+        <h2>英文重述</h2>
+        <blockquote><p>Download this Bilibili video, then research whether there are existing <strong>agent skills</strong>, <strong>open-source plugins</strong>, <strong>MCP servers</strong>, or <strong>guides</strong> for the technique it covers (mutation testing). If nothing suitable exists, write the findings up as a Markdown summary instead.</p></blockquote>
+        <hr />
+        <h2>结论先行</h2>
+        <ol>
+        <li><em>现成资产是有的，而且质量不低</em>：本次共核实出 <u>3 个可直接安装的 agent skill</u>、<u>1 个可运行的 MCP server</u>、<u>1 份覆盖 13 种语言的框架安装对照表</u>、<u>1 份已失效的 MCP 登记</u>。</li>
+        <li><em>但本机没有</em>：本地 <u>262 个 skill</u> 中对 <code>mutation|mutant|变异|stryker|mutmut|pitest</code> 的全文检索为 <u>0 命中</u>；当前已配置的 <u>2 个 MCP server</u>（<code>actor-critique-loop</code>、<code>blender</code>）也不涉及变异测试。<em>结论是要「装或抄」，不是「没有所以自己从零写」。</em></li>
+        <li><em>最强的三个 skill 各有侧重，不能互相替代</em>：</li>
+        </ol>
+        <ul>
+        <li><code>genotoxic</code>（Trail of Bits）做<strong>分诊</strong>——把「存活变异体」进一步分类成 误报 / 缺测试 / 该上 fuzz / 双工具互证；</li>
+        <li><code>mutation-tester</code>（adiomas）做<strong>工作流</strong>——接在 TDD 的 GREEN 之后，只对 git diff 增量跑，带阈值与阻断策略；</li>
+        <li><code>mutation-testing</code>（aks-builds）做<strong>知识手册</strong>——操作符表、语言选型、CI 集成模式、常见坑。</li>
+        </ul>
+        <ol>
+        <li><em>MCP 侧：<code>mutmut-mcp</code> 可用但 npm 上不存在</em>，必须走 git 源安装；<code>test-trust</code> 的 GitHub 仓库在本次核验时已 <u>404「Page not found」</u>，<em>不要照抄目录站去装</em>。</li>
+        <li><em>这段视频的重点不是「测试质量」，而是「给 AI agent 的反馈信号」</em>。原片英文字幕原文是「This gives your <strong>agent</strong> really rich feedback about how good its tests are」——讲的是怎么给编码 agent 一个比「CI 绿了」更硬的信号。这与上面几个 skill 的设计取向完全一致。</li>
+        </ol>
+        <hr />
+        <h2>一、视频本体（已核实）</h2>
+        <h3>1.1 两个版本的元数据</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项</th>
+        <th>B 站切片</th>
+        <th>YouTube 原片</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>ID</td><td>BV1PQxk6fES8 / cid 43207689213</td><td><code>djSbndoByr8</code></td></tr>
+        <tr><td>标题</td><td>【Matt Pocock】变异测试太强了</td><td>Mutation testing is AWESOME</td></tr>
+        <tr><td>作者</td><td>科技小火龙</td><td>Matt Pocock（@mattpocockuk，<u>43.7 万</u>订阅）</td></tr>
+        <tr><td>时长</td><td><u>58 秒</u></td><td>—</td></tr>
+        <tr><td>发布</td><td><u>2026-10-31 18:05</u>（UTC+8）</td><td><u>2026-10-14</u></td></tr>
+        <tr><td>观看 / 点赞</td><td>—</td><td><u>131,702</u> 次观看 / <u>2,515</u> 赞</td></tr>
+        <tr><td>音轨</td><td>中文配音</td><td>英文原声 + YouTube 自动配音中文轨</td></tr>
+        <tr><td>来源</td><td>描述里直接给出 YouTube 链接</td><td>—</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>B 站片是原片的<strong>自动配音中文切片</strong>，不是独立内容。因此下文的「视频说了什么」以原片为准，中文音轨仅作对照。[来源: 3-YouTube oEmbed / watch 页]</p>
+        <h3>1.2 画面证据（已抽帧核对）</h3>
+        <p>StrykerJS 变异测试报告面板可见三个计数徽标：</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>Killed</th>
+        <th>Survived</th>
+        <th>NoCoverage</th>
+        <th>合计</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><u>35</u></td><td><u>31</u></td><td><u>4</u></td><td><u>70</u></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>由此算出的变异分数（脚本计算，非心算）：</p>
+        <ul>
+        <li><code>mutation score = killed / (killed + survived) = 35 / 66 = <u>53.03%</u></code></li>
+        <li>若按 <code>killed / total = 35 / 70 = <u>50.00%</u></code> 口径（部分工具把 NoCoverage 也算进分母）</li>
+        </ul>
+        <p><em>这个分数本身就是演示效果的一部分</em>：它说明<strong>同一套用例，行覆盖率可以很高，但仍然漏掉一半的变异</strong>——这正是变异测试相对行覆盖率的核心卖点。</p>
+        <h3>1.3 逐句转写与术语纠正</h3>
+        <p>中文音轨是机器自动配音，术语翻译有明显错误。以下为<strong>纠正后</strong>的语义：</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>中文音轨原文</th>
+        <th>纠正后</th>
+        <th>说明</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>变化测试</td><td><strong>变异测试 / mutation testing</strong></td><td>全文术语</td></tr>
+        <tr><td>变化</td><td><strong>变异体 / mutant</strong></td><td>不是「变化」</td></tr>
+        <tr><td>生存的变化</td><td><strong>存活变异体 / survived mutant</strong></td><td>测试没抓到</td></tr>
+        <tr><td>需要被杀死的变化</td><td><strong>被杀死变异体 / killed mutant</strong></td><td>测试抓到了</td></tr>
+        <tr><td>你的原则</td><td><strong>你的源码</strong></td><td>机器误译</td></tr>
+        <tr><td>测试员</td><td><strong>测试 / test</strong></td><td>机器误译</td></tr>
+        <tr><td>有点害怕测试员的测试效果</td><td><em>—</em></td><td>音轨在此处已不可靠，见 1.4</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>1.4 原片论述主线（据原片英文字幕 + 音轨对齐）</h3>
+        <ol>
+        <li>高质量的测试套件是重要的，<em>但你怎么知道它真的能兜住 bug</em>？变异测试给出答案。</li>
+        <li>变异测试对源码施加一处可控改动（片中演示把字符串改成空串），然后<strong>重跑测试</strong>，看用例是否会失效。</li>
+        <li>每个变异体落进两个桶：<strong>被杀死</strong>（有用例报错，测试有效）或<strong>存活</strong>（全部照过，测试有盲区）。</li>
+        <li>这个结果给 agent 提供「每个用例到底在抓哪类变异」的<strong>结构化反馈</strong>。</li>
+        <li>工具选择依语言而定，片中用的是 <strong>StrykerJS</strong>。</li>
+        </ol>
+        <h3>1.5 已知信息盲区</h3>
+        <ul>
+        <li>B 站切片只截了 <u>58 秒</u>，原片完整版<strong>未下载、未完整转写</strong>——本次只核实了切片段落内的论点。原片对「如何把变异测试接进 agent 循环」的完整论述未覆盖。</li>
+        <li>YouTube 页面显示有自动生成的字幕轨（繁体），本次未抓取该轨做逐句对齐。</li>
+        </ul>
+        <hr />
+        <h2>二、检索结果</h2>
+        <h3>2.1 Agent Skills（<u>3 个</u>，全部已读取原文核实）</h3>
+        <p>#### ① <code>genotoxic</code> — Trail of Bits</p>
+        <ul>
+        <li>位置：<code>bongkage/trailofbits-skills</code> → <code>plugins/trailmark/skills/genotoxic/</code></li>
+        <li>仓库：<code><a href="https://github.com/bongkage/trailofbits-skills" target="_blank" rel="noreferrer">https://github.com/bongkage/trailofbits-skills</a></code>（<code>git ls-remote</code> 通过，仓库公开）</li>
+        <li>原文：<code><a href="https://raw.githubusercontent.com/bongkage/trailofbits-skills/main/plugins/trailmark/skills/genotoxic/SKILL.md" target="_blank" rel="noreferrer">https://raw.githubusercontent.com/bongkage/trailofbits-skills/main/plugins/trailmark/skills/genotoxic/SKILL.md</a></code></li>
+        </ul>
+        <p><em>这是本次找到的最完整的一个</em>，它不是「跑一次变异测试」，而是三件工具的编排：</p>
+        <pre><code>Phase 1  代码图构建   trailmark analyze --language auto --summary &#123;dir&#125;
+        Phase 2  变异测试     按语言选框架（mutmut / Stryker / cargo-mutants / ...）
+        Phase 2b necessist    删掉测试语句看是否还通过（可选，与 Phase 2 并行）
+        Phase 3  分诊        用图数据把结论分成 4 桶</code></pre>
+        <p>输出的 4 个桶：<code>Corroborated</code>（两个工具指向同一函数，置信度最高）、<code>False Positives</code>（误报）、<code>Missing Tests</code>（该补用例）、<code>Fuzzing Targets</code>（该上 fuzz 而不是写单测）。报告落盘为 <code>GENOTOXIC_REPORT.md</code>。</p>
+        <p>它的<strong>语言框架对照表</strong>（<code>references/mutation-frameworks.md</code>）是本次检索到的最有复用价值的单一文件，覆盖 <u>13 种语言</u>的安装命令、配置模板、运行命令、以及「怎么解析出存活变异体」的 jq/grep 片段。</p>
+        <blockquote><p>注意它有两条<strong>明确的禁止项</strong>：框架装不上时<strong>不允许</strong>退化成「手动分析」冒充变异测试；necessist 与变异测试是两个不同工具，不允许因为「necessist 不是变异测试」就跳过。</p></blockquote>
+        <p>#### ② <code>mutation-tester</code> — adiomas</p>
+        <ul>
+        <li>位置：<code>adiomas/claude-code-adiomas-plugins</code> → <code>autonomous-dev/skills/mutation-tester/</code></li>
+        <li>仓库：<code><a href="https://github.com/adiomas/claude-code-adiomas-plugins" target="_blank" rel="noreferrer">https://github.com/adiomas/claude-code-adiomas-plugins</a></code>（<code>git ls-remote</code> 通过）</li>
+        <li>原文：<code><a href="https://raw.githubusercontent.com/adiomas/claude-code-adiomas-plugins/main/autonomous-dev/skills/mutation-tester/SKILL.md" target="_blank" rel="noreferrer">https://raw.githubusercontent.com/adiomas/claude-code-adiomas-plugins/main/autonomous-dev/skills/mutation-tester/SKILL.md</a></code></li>
+        </ul>
+        <p><em>偏工作流编排</em>，明确把变异测试接进 TDD 循环：</p>
+        <pre><code>RED → GREEN → REFACTOR → MUTATE → ✓
+                                 ↓
+                            Score &lt; 80%?
+                                 ↓
+                          补测试 → 回到 RED</code></pre>
+        <p>要点：只对 <code>git diff --name-only HEAD~1</code> 命中的文件做<strong>增量</strong>变异；<code>coverageAnalysis: "perTest"</code>；给出 <u>80%</u>（关键路径阻断）/ <u>60%</u>（任意改动阻断）/ <u>60–80%</u>（警告）三档阈值；并明确列了 <u>6 条不该用</u>的场景（没有配置工具、测试还没写、纯 UI 改动、生成代码、时间敏感任务、配置文件）。</p>
+        <p>#### ③ <code>mutation-testing</code> — aks-builds</p>
+        <ul>
+        <li>位置：<code>aks-builds/quality-skills</code> → <code>skills/mutation-testing/</code></li>
+        <li>仓库：<code><a href="https://github.com/aks-builds/quality-skills" target="_blank" rel="noreferrer">https://github.com/aks-builds/quality-skills</a></code>（<code>git ls-remote</code> 通过）</li>
+        <li>原文：<code><a href="https://raw.githubusercontent.com/aks-builds/quality-skills/main/skills/mutation-testing/SKILL.md" target="_blank" rel="noreferrer">https://raw.githubusercontent.com/aks-builds/quality-skills/main/skills/mutation-testing/SKILL.md</a></code></li>
+        </ul>
+        <p><em>偏知识手册</em>，写得像一份可以照着讲的规范：</p>
+        <ul>
+        <li>把结果定义成 4 态：<code>Killed</code> / <code>Survived</code> / <code>No coverage</code> / <code>Timeout</code>；</li>
+        <li>给了一个 <u>100% 行覆盖但测试无效</u> 的反例（<code>assert discount(100, True) is not None</code>）；</li>
+        <li>列出 <u>9 类变异操作符</u>（算术 / 条件 / 布尔 / 常量 / 返回 / 分支 / 方法调用移除 / 自增自减 / 取负）；</li>
+        <li>按语言推荐工具（Java PITest 称为 gold standard，Python 提 mutmut 与 Cosmic Ray，Go 提 go-mutesting 与 gremlins.dev）；</li>
+        <li>给出 <u>7 条常见坑</u>，其中最关键的两条是：<strong>别把 mutation score 当发布门禁</strong>（追 100% 会写出过度特化、重构即碎的测试），以及<strong>别在没覆盖的代码上跑</strong>。</li>
+        </ul>
+        <p>它的 <code>description</code> 写得非常克制，明确划界：「行覆盖率看 code-coverage，整体策略看 test-strategy」——<em>这正是 skill 该有的写法</em>。</p>
+        <h3>2.2 MCP Server（<u>2 个</u>，一可用一已失效）</h3>
+        <p>#### ① <code>mutmut-mcp</code> — 可用（推荐）</p>
+        <ul>
+        <li>仓库：<code><a href="https://github.com/wdm0006/mutmut-mcp" target="_blank" rel="noreferrer">https://github.com/wdm0006/mutmut-mcp</a></code>（<code>git ls-remote</code> 通过，MIT）</li>
+        <li>原始 README 已读全文核实</li>
+        <li>工具数：<u>13 个</u>（<code>run_mutmut</code> / <code>start_mutmut_run</code> / <code>mutmut_run_status</code> / <code>cancel_mutmut_run</code> / <code>show_results</code> / <code>show_survivors</code> / <code>rerun_mutmut_on_survivor</code> / <code>clean_mutmut_cache</code> / <code>show_mutant</code> / <code>mutant_context</code> / <code>prioritize_survivors</code> / <code>mutation_score</code> 等）</li>
+        <li>关键设计（对 agent 特别友好）：</li>
+        <li><code>mutant_context</code> 返回 <code>&#123;mutant_id, diff, tests, message&#125;</code>——<strong>直接告诉你哪个用例覆盖了这个变异体</strong>，<code>tests</code> 为空即「没有任何测试覆盖它」；</li>
+        <li><code>prioritize_survivors</code> 按「重要性」排序存活变异体，agent 不用自己排优先级；</li>
+        <li>后台运行 + 取消 + 状态查询，适合放进长任务循环；</li>
+        <li>跨进程文件锁 <code>.mutmut-mcp.lock</code>，并发调用返回 busy 而非搞坏 mutmut 状态。</li>
+        <li><em>安装方式</em>（<strong>npm 上没有这个包</strong>，<code>npm view @wdm0006/mutmut-mcp</code> 返回 <u>404</u>，必须走 git 源）：</li>
+        </ul>
+        <pre data-lang="json"><code>&#123;
+          "mcpServers": &#123;
+            "mutmut": &#123;
+              "command": "uvx",
+              "args": ["--from", "git+https://github.com/wdm0006/mutmut-mcp", "mutmut-mcp"]
+            &#125;
+          &#125;
+        &#125;</code></pre>
+        <ul>
+        <li>它自己的 CI 用变异测试测自己（<code>source_paths = ["mutmut_mcp.py"]</code>），并对「未检出变异体数」设了硬预算，超了就红。<em>这条自证实践本身就说明作者懂变异测试的正确用法</em>——不是拿分数当 KPI，而是拿「漏网变异体数」当回归闸门。</li>
+        </ul>
+        <p><strong>本机安装实测（2026-11-12，已通过）</strong>：</p>
+        <pre data-lang="powershell"><code>uvx --from git+https://github.com/wdm0006/mutmut-mcp python -c "import mutmut_mcp; print(mutmut_mcp.__file__)"
+        # → IMPORT_OK C:\Users\yuhang\AppData\Local\uv\cache\archive-v0\dGr4uVloWLAI4-2p\Lib\site-packages\mutmut_mcp.py</code></pre>
+        <p><em>注意</em>：直接跑 <code>uvx ... mutmut-mcp</code> 会<strong>挂住不返回</strong>——这是 stdio MCP server 的正常行为（它启动后等待 stdin 上的 JSON-RPC），不是安装失败。首次拉取 + 构建耗时会明显长于后续（本次首次约 <u>3 分钟</u>内完成导入）。</p>
+        <p>#### ② <code>test-trust</code> — 已失效，不要照抄安装</p>
+        <ul>
+        <li>登记在 Glama / HiMCP（快照日期 <u>2026-08-20</u>，README 全文可读）</li>
+        <li><strong>但 <code><a href="https://github.com/rrudy9/test-trust" target="_blank" rel="noreferrer">https://github.com/rrudy9/test-trust</a></code> 在 <u>2026-11-12</u> 核验为 GitHub「Page not found」</strong>，<code>git ls-remote</code> 同样返回 <code>Repository not found</code></li>
+        <li>目录站快照里描述的功能（若仓库恢复则值得参考）：以 git diff 变更行为中心做<strong>作用域限定</strong>，只对改动函数做变异测试；把结果聚合成一个 per-function 的 <strong>trust score</strong>；支持 mutmut / StrykerJS / gremlins / cargo-mutants 四种引擎；附带 GitHub Action 在 PR 里评论「哪些函数的测试抓不住回归」</li>
+        </ul>
+        <p><em>给 agent 的启示仍然成立</em>：<strong>别再对整个仓库跑变异测试</strong>，只对 diff 涉及函数跑，再聚合成一个可信度分数——这与 <code>genotoxic</code> 的「增量 + 分诊」思路一致。</p>
+        <h3>2.3 各语言官方/主流变异测试工具</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>语言</th>
+        <th>首选工具</th>
+        <th>备选</th>
+        <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>TypeScript / JavaScript</td><td><strong>Stryker</strong>（<code>@stryker-mutator/core</code>）</td><td>—</td><td>支持 Jest / Vitest / Mocha / Karma；支持 <code>--since</code> 增量</td></tr>
+        <tr><td>Python</td><td><strong>mutmut</strong>（3.x）</td><td>pytest-gremlins</td><td>mutmut 3.x 命名形如 <code>mymodule.x_add__mutmut_1</code>，状态含 survived / no tests / timeout / suspicious / skipped / segfault</td></tr>
+        <tr><td>Python（更快）</td><td><strong>pytest-gremlins</strong></td><td>—</td><td>用 mutation switching，不落盘不重载模块，需 Python 3.11+</td></tr>
+        <tr><td>Rust</td><td><strong>cargo-mutants</strong></td><td>—</td><td><code>cargo mutants --json</code>，结果在 <code>mutants.out/outcomes.json</code></td></tr>
+        <tr><td>Go</td><td><strong>gremlins</strong></td><td>go-mutesting</td><td><code>gremlins unleash .</code>；gremlins 有覆盖引导的精准选测</td></tr>
+        <tr><td>Java / JVM</td><td><strong>PITest</strong></td><td>—</td><td>改字节码而非源码，因此快；HTML 报告</td></tr>
+        <tr><td>C# / .NET</td><td><strong>Stryker.NET</strong></td><td>—</td><td><code>dotnet tool install -g dotnet-stryker</code></td></tr>
+        <tr><td>C / C++</td><td><strong>Mull</strong></td><td>—</td><td>LLVM 插件式；<strong>二进制 LLVM 版本必须与本机 Clang 严格一致</strong></td></tr>
+        <tr><td>Ruby</td><td><strong>mutant</strong></td><td>—</td><td></td></tr>
+        <tr><td>PHP</td><td><strong>Infection</strong></td><td>—</td><td><code>infection-log.json</code></td></tr>
+        <tr><td>Solidity</td><td><strong>slither-mutate</strong></td><td>—</td><td>15 个算子，按严重度级联；论文 arXiv:2006.11597</td></tr>
+        <tr><td>Circom</td><td><strong>circomvent</strong>（Trail of Bits）</td><td>—</td><td>仓库需从源码克隆</td></tr>
+        <tr><td>Cairo</td><td><strong>cairo-mutants</strong>（Trail of Bits）</td><td>—</td><td>同上</td></tr>
+        <tr><td>Haskell</td><td><strong>MuCheck</strong></td><td>Hedgehog / QuickCheck 作性质测试代理</td><td></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>2.4 指南与配套工具</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>类型</th>
+        <th>资源</th>
+        <th>说明</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>单文件最佳指南</td><td>Trail of Bits <code>references/mutation-frameworks.md</code></td><td>13 语言安装 + 配置 + 结果解析 + necessist，本次已读全文</td></tr>
+        <tr><td>互补工具</td><td><strong>necessist</strong>（<code>trailofbits/necessist</code>，<code>git ls-remote</code> 通过）</td><td>删测试语句再跑，通过即说明该断言无作用；支持 Go / Rust / Solidity / Hardhat / Vitest / Anchor</td></tr>
+        <tr><td>代码图分析</td><td><strong>trailmark</strong></td><td><code>genotoxic</code> 的前置依赖，<code>uv tool install trailmark</code></td></tr>
+        <tr><td>官方文档</td><td>StrykerJS 官方文档（<code>stryker-mutator/stryker-js</code>，仓库公开）</td><td>配置项与 mutator 列表以官方文档为准</td></tr>
+        <tr><td>科普长文</td><td>worldprogramming.org「What is mutation testing?」</td><td>概念澄清用，含等价变异体与常见坑</td></tr>
+        <tr><td>教程</td><td>pie.inc 博客「What Is Mutation Testing?」/ drizz.dev</td><td>偏 QA 团队视角</td></tr>
+        <tr><td>榜单类</td><td>rottenwifi.com「Best Mutation Testing Tools」</td><td><em>营销站，含推广链接，仅作线索不作依据</em></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>2.5 本机现状（已核实）</h3>
+        <ul>
+        <li>本地 skill 目录 <code>C:\Users\yuhang\.minimax\skills</code> 共 <u>262 个</u>目录，全文检索 <code>mutation|mutant|变异测试|stryker|mutmut|pitest|metamorphic</code> → <u>0 命中</u>。</li>
+        <li>已配置 MCP server <u>2 个</u>：<code>actor-critique-loop</code>（stdio / node）、<code>blender</code>（stdio / uvx）。无变异测试相关。</li>
+        <li>环境侧：<code>uv</code> / <code>uvx</code> <u>0.12.5</u> 可用；<code>ffmpeg</code>（imageio-ffmpeg 内置）可用；<code>faster-whisper 1.2.1</code> 可用。</li>
+        </ul>
+        <hr />
+        <h2>三、[判断与建议]</h2>
+        <blockquote><p>以下为判断，非已核实事实。</p></blockquote>
+        <h3>3.1 三条路线的取舍</h3>
+        <p><strong>A. 直接抄 <code>genotoxic</code>（推荐给「想做事」的人）</strong></p>
+        <p>它的价值不在「会跑 Stryker」——那部分十分钟就能学会——而在<strong>分诊 taxonomy</strong>：把「有 31 个存活变异体」这个数字，翻译成「这 3 个是真缺测试、这 2 个是等价变异体别管、这 5 个该上 fuzz」。<em>没有这一步，变异测试的产出就是一堆噪音，agent 会被淹没。</em></p>
+        <p><strong>B. 只装 <code>mutmut-mcp</code>（推荐给「Python 项目 + 要接 agent」的人）</strong></p>
+        <p><code>mutant_context</code> 返回的 <code>tests</code> 字段直接解决了 agent 最难的部分：<strong>该往哪个测试文件里补什么断言</strong>。配合 <code>prioritize_survivors</code> 的排序，agent 就有了一条「发现问题 → 定位文件 → 写用例」的闭环。</p>
+        <p><strong>C. 什么都不装，自己写一个本地 skill</strong></p>
+        <p>如果目标是把变异测试固化进 <code>C:\Git-repo-my\个人成长</code> 的工作流，且主要语言不是 Python，那么自建更实际——因为 <code>mutmut-mcp</code> 只覆盖 Python，而 <code>genotoxic</code> 依赖 <code>trailmark</code> 这类额外工具链。</p>
+        <h3>3.2 落地时最容易踩的三个坑（三个 skill 都反复强调）</h3>
+        <ol>
+        <li><em>别把 mutation score 当发布门禁</em>。<code>aks-builds</code> 与 <code>adiomas</code> 在这点上直接对立：<code>aks-builds</code> 说「发布门禁通常是坏主意」，<code>adiomas</code> 说「关键路径 <u>80%</u> 阻断」。<strong>我的判断</strong>：两者都对，但适用面不同——门禁只适合 auth / payment / parser 这类高风险模块，其余模块应当作为<strong>缺口发现器</strong>而非闸门。<code>mutmut-mcp</code> 作者自己的做法最值得抄：卡的是「漏网变异体<strong>数量</strong>」，不是「分数百分比」。</li>
+        <li><em>必须先有行覆盖率基线</em>。在没被覆盖的代码上跑变异测试，得到的是一堆 <code>NoCoverage</code>，没有信息量。</li>
+        <li><em>等价变异体会污染信号</em>。<code>assert x is not None</code> 这类断言在任何变更下都通过，等价变异体是变异测试的固有噪音，必须人工分诊掉，否则会把分数压到没有指导意义。</li>
+        </ol>
+        <h3>3.3 给「让 agent 写测试」这个场景的补充判断</h3>
+        <p>原片讲的是给 agent 更硬的反馈信号，这一点比「测试质量」本身更重要。但视频页的一条高赞评论提出了一个真实的反例，值得记下来：</p>
+        <blockquote><p>有开发者反馈，agent 写的测试往往测的是<strong>实现</strong>而不是<strong>功能需求</strong>，变异测试反而会把这个坏倾向<strong>放大</strong>——因为变异体都是对着实现细节生成的，agent 会被引导去补一堆「锁死实现」的断言。他自己的做法是 review PR 时把 <u>40 个测试减到 12 个高质量测试*。</u></p></blockquote>
+        <p><em>这是本次调研中唯一一个「变异测试可能有害」的一手证据</em>。它的推论是：<strong>变异测试该用在「人写的需求驱动的测试」上做验收，而不是用来指导 agent 生成新测试</strong>——或者反过来，用它做<strong>减法</strong>（找出哪些测试是空转的），比用它做加法更安全。</p>
+        <h3>3.4 未覆盖的盲区</h3>
+        <ul>
+        <li>原片完整版未下载，agent 工作流的完整论述缺失。</li>
+        <li>三个 skill 均未在本机实测运行，只做了原文阅读与仓库可达性核验。</li>
+        <li><code>test-trust</code> 的原始源码已不可访问，其实现细节（trust score 具体算法）<strong>未经核实</strong>，上表描述来自目录站快照，<strong>仅供参考</strong>。</li>
+        <li>未调研 mutation testing 在 RAG / 训练数据构建上的用法（与本机 day-job 的 LLM 语料方向可能相关，但本次未展开）。</li>
+        </ul>
+        <hr />
+        <h2>四、表格总结：</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>选项</th>
+        <th>代价</th>
+        <th>影响</th>
+        <th>ROI</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><strong>我1</strong>：装 <code>mutmut-mcp</code>（uvx + git 源）到本机 MCP</td><td><u>约 3–15 分钟</u>安装配置（首次拉取构建较慢，已在本机实测通过）；仅覆盖 Python 项目</td><td>agent 立刻拿到「变异体 → 覆盖它的用例」映射，可闭环补测试；<u>13 个 MCP 工具</u>可用</td><td>投入 1 次安装；产出：每次跑变异测试省掉手工解析 JSON 与排序存活项（估算省 <u>30–60 分钟</u>/次）；回收周期 <u>首次跑完即回本</u></td></tr>
+        <tr><td><strong>我2</strong>：把 <code>genotoxic</code> 的 taxonomy + 13 语言对照表落成本地 skill</td><td><u>约 1–2 小时</u>改写落盘；需补本机路径与命令</td><td>跨语言可用；把「存活变异体」变成可执行的补测/fuzz 清单，而非噪音数字</td><td>投入一次性改写；产出：每个项目的变异测试产出从「不可用数字」变成「可执行工单」；回收周期 <u>第 2 次使用时回本</u></td></tr>
+        <tr><td><strong>你1</strong>：仅在 auth / payment / parser 等高风险模块按需跑，人工分诊</td><td>几乎为零（用现成工具）</td><td>见效慢但风险最低；符合三个 skill 的共同告诫「别当门禁」</td><td>投入 每次 <u>10–30 分钟</u>；产出：抓住 <u>1 个</u>真实回归即回本；回收周期 <u>即时</u>（但覆盖范围有限）</td></tr>
+        <tr><td><strong>你2</strong>：把变异测试接进 CI 做发布门禁</td><td>需 CI 改造 + <u>数倍</u>测试时长 + 分数治理成本</td><td>风险最高：易产出过度特化测试、拖慢流水线、诱发「刷分」行为</td><td>投入 <u>以周计</u>；产出：不明确的长期质量收益；回收周期 <u>不可估算</u>（不建议）</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <hr />
+        <h2>附录 A：本地转写全文（ASR 输出，已纠正术语）</h2>
+        <pre><code>[0.00-3.44]  有高品质的测试组合是重要的
+        [3.44-6.72]  但是你怎么知道你的测试组合能够成功呢?
+        [6.72-8.52]  有一个方法可以改善你的测试组合
+        [8.52-11.12] 就是用它进行变化测试        → 变异测试
+        [11.12-14.72] 变化测试会看出你的原则       → 源码
+        [14.72-16.40] 它会进行变化                 → 施加变异
+        [16.40-18.84] 在这里,它改成了Java String
+        [18.84-20.00] 它就会变成一个空空的 String
+        [20.00-22.28] 然后它会重新进行测试
+        [22.28-24.00] 看看你的测试会否失效
+        [24.00-26.68] 每个变化测试的变化           → 每个变异体
+        [26.68-29.04] 都是一个生存的变化           → 存活变异体
+        [29.04-31.16] 需要被杀死的变化             → 被杀死变异体
+        [31.16-33.88] 这给你的测试员很豪华的信息
+        [33.88-36.12] 关于测试员的测试效果
+        [36.12-37.36] 你会发现测试员的测试效果
+        [37.36-40.00] 会更加厉害
+        [40.00-41.72] 你会知道每个测试员
+        [41.72-44.24] 都在捕捉你系统的有可能变化
+        [44.24-45.84] 所以我非常喜欢变化测试
+        [45.84-47.32] 我建议大家
+        [47.32-51.04] 有点害怕测试员的测试效果    → 机器音轨在此不可靠
+        [51.04-53.04] 在这里,我使用striker.js
+        [53.04-54.08] 来写写字
+        [54.08-55.84] 但是有很多选项
+        [55.84-57.60] 根据你正在工作的语言</code></pre>
+        <h2>附录 B：素材清单</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>文件</th>
+        <th>大小</th>
+        <th>说明</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>BV1PQxk6fES8.mp4</code></td><td><u>3.5 MB</u></td><td>已合流视频（480×854 竖屏，含中文配音）</td></tr>
+        <tr><td><code>audio_16k.wav</code></td><td><u>1.8 MB</u></td><td>16 kHz 单声道，供 ASR</td></tr>
+        <tr><td><code>transcript.txt</code> / <code>.srt</code> / <code>.json</code></td><td><u>1.2–2.8 KB</u></td><td>转写三件套（含时间轴）</td></tr>
+        <tr><td><code>meta.json</code></td><td><u>2.5 KB</u></td><td>bvid / cid / 标题 / 时长 / 流信息</td></tr>
+        <tr><td><code>frames/f_01…f_06.png</code></td><td>6 张</td><td>关键帧（间隔 9 秒）</td></tr>
+        <tr><td><code>fetch.py</code> / <code>asr.py</code></td><td>—</td><td>可复跑的下载与转写脚本</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <hr />
+        <blockquote><p>免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p></blockquote>
+      </>
+    ),
+  },
+  {
+    slug: "ue5-lighting",
+    title: "UE5 游戏光照设计 · 内容地图与三讲讲义",
+    date: "2026-11-12",
+    authors: "Hang Yu",
+    tags: ["UE5", "光照设计"],
+    body: (
+      <>
+        <blockquote><p>素材事实与知识点清单。PPT / 口播 / skill 三类交付物共用这一份底稿。</p></blockquote>
+        <h2>一、素材事实（已核实）</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项</th>
+        <th>值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>短链</td><td><code><a href="https://b23.tv/ZTsZW55" target="_blank" rel="noreferrer">https://b23.tv/ZTsZW55</a></code></td></tr>
+        <tr><td>落地页</td><td><code><a href="https://www.bilibili.com/video/BV17Eeq6sEMY/" target="_blank" rel="noreferrer">https://www.bilibili.com/video/BV17Eeq6sEMY/</a></code></td></tr>
+        <tr><td>BV 号</td><td><code>BV17Eeq6sEMY</code></td></tr>
+        <tr><td>UP 主</td><td>ChyiZ_（搬运）</td></tr>
+        <tr><td>原始出品</td><td>Vertex School · 讲师 Maria（Deviation Games 首席灯光艺术家）</td></tr>
+        <tr><td>总时长</td><td>7314 秒（<u>2 小时 2 分</u>）</td></tr>
+        <tr><td>分P 数</td><td>6</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>分P 结构（关键：有一半是重复）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>P</th>
+        <th>时长</th>
+        <th>标题</th>
+        <th>性质</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>P1</td><td>870s</td><td>UE5游戏光照设计 \</td><td>室内外布光/... （标题被设为总标题）</td><td>= A01 入门介绍，<strong>与 P4 字节数完全相同（5220491 B）</strong></td></tr>
+        <tr><td>P2</td><td>1693s</td><td>【国语】A 02 理论介绍_dub</td><td>A02 的国语配音版</td></tr>
+        <tr><td>P3</td><td>1094s</td><td>【国语】B 01 1.0 外景基础（一）_dub</td><td>B01 的国语配音版</td></tr>
+        <tr><td>P4</td><td>870s</td><td>【原声】A 01 入门介绍_sub</td><td>A01 原声版</td></tr>
+        <tr><td>P5</td><td>1693s</td><td>【原声】A 02 理论介绍_sub</td><td>A02 原声版（与 P2 差 216 字节）</td></tr>
+        <tr><td>P6</td><td>1094s</td><td>【原声】B 01 1.0 外景基础（一）_sub</td><td>B01 原声版（与 P3 差 216 字节）</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p><strong>去重后真实课程内容只有 3 节</strong>：</p>
+        <ol>
+        <li><strong>A01 入门介绍</strong>（870s / 14.5 分）— 导论，讲师背景 + 三件工具（DaVinci Resolve / Pinterest / PureRef）+ 课程定位（技术 50% / 艺术 50%）</li>
+        <li><strong>A02 理论介绍</strong>（1693s / 28 分）— 全课方法论核心，数字照明 vs 现实照明、光源类型、GI、两小时核心目标</li>
+        <li><strong>B01 1.0 外景基础（一）</strong>（1094s / 18 分）— 第一个动手环节，UE5 外景系统搭建 + 项目检查 + 曝光钩子</li>
+        </ol>
+        <h3>缺口（必须向用户说明）</h3>
+        <ul>
+        <li>标题写「9h 实战」，B 站实际只上传了 <u>1 小时</u> 的 3 节内容，是完整课程的第一部分（B01 结尾明确说「下期见，我将讲解 24 小时昼夜光照」）。</li>
+        <li>因此「每节课都做」= 3 套交付物，不是 9 套。</li>
+        <li>版权：这是付费课程（Vertex School）的搬运版。交付物按「学习笔记 / 知识点重制」定位，不整段搬运视频画面与讲师原声，转写文本仅作本地语料，不外发。</li>
+        </ul>
+        <h2>二、知识点清单（按课节）</h2>
+        <h3>A01 · 入门介绍（技术密度：低）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>#</th>
+        <th>知识点</th>
+        <th>可讲性</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>1</td><td>讲师履历：育碧上海（Far Cry 4 / Primal / Valley of the Yetis）→ Crytek（Robinson: The Journey / The Climb）→ Cloud Imperium（Star Citizen）→ Splash Damage（Gears 5）→ Deviation Games 首席灯光艺术家</td><td>低（人设页）</td></tr>
+        <tr><td>2</td><td>课程定位：50% 技术 + 50% 艺术；目标是「用光讲故事」而非纯技术</td><td><strong>高</strong>（课程声明）</td></tr>
+        <tr><td>3</td><td>三件工具：DaVinci Resolve（免费版做调色/HDR）、Pinterest（图像搜索引擎找灵感）、PureRef（情绪板 overlay）</td><td>中</td></tr>
+        <tr><td>4</td><td>学习前置：每周练习量、视觉训练优先于软件训练</td><td>中</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>A02 · 理论介绍（技术密度：高，是全课枢纽）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>#</th>
+        <th>知识点</th>
+        <th>关键结论</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>1</td><td><strong>附加法照明（additive lighting）</strong>：数字照明是「拖几个光源进去」，现实照明是「一个太阳 + 无数次反弹」</td><td>认知起点</td></tr>
+        <tr><td>2</td><td><strong>数字照明四大组件</strong>：Directional Light（主光，90% 室外场景）、Skylight（辅助/环境）、Point Light（点光，室内基础照明）、Spot Light（游戏里最常用）</td><td>光源选型口诀</td></tr>
+        <tr><td>3</td><td><strong>Rect Light（区域光）</strong>：游戏里慎用，因为 Lumen 已处理 GI 与反射；滥用会出现「方形光源」人造感。只在特写、资产审核、柔面材质时用</td><td>反直觉结论，值得单页</td></tr>
+        <tr><td>4</td><td><strong>GI 演进</strong>：UE4 混合工作流 = 烘焙 lightmap / volumetric lightmap → UE5 = Lumen 实时 GI</td><td>版本分水岭</td></tr>
+        <tr><td>5</td><td><strong>衰减（falloff）</strong>：亮度从光源核心到边缘渐弱；点光衰减低、覆盖广，是最适合室内基础照明的光源</td><td>参数直觉</td></tr>
+        <tr><td>6</td><td><strong>三光源法</strong>：key light（塑形 + 覆盖）、back light（游戏里多由 GI/Skylight 代劳）、ambient（点光）</td><td>与摄影棚对应</td></tr>
+        <tr><td>7</td><td><strong>游戏照明 vs 电影照明</strong>：电影是固定机位、可无限打磨；游戏要覆盖玩家所有可能视角，首要目标是<strong>可见性</strong></td><td>职业认知</td></tr>
+        <tr><td>8</td><td><strong>两大核心目标</strong>（全课最重要的一句）：① 展现关卡最理想形态；② <strong>引导玩家视线</strong></td><td>可作为全课标题页</td></tr>
+        <tr><td>9</td><td><strong>参考图分类法</strong>：材质参考图（标准曝光、看清质感）vs 氛围参考图（长曝光 / 后期调色、看光线与空间）</td><td>可直接做成对照页</td></tr>
+        <tr><td>10</td><td><strong>直接光 vs 间接光</strong>：裸光源（太阳、无罩灯泡）vs 经介质散射的柔光（灯罩、纸灯笼）；公共空间优先间接光</td><td>生活观察法</td></tr>
+        <tr><td>11</td><td><strong>第一周练习</strong>：不碰引擎，出门拍光 —— 观察窗框/墙壁在一天中的变化，判断直接光 / 间接光</td><td>可执行作业</td></tr>
+        <tr><td>12</td><td><strong>霓虹灯禁令</strong>：开课阶段禁止用霓虹灯，因为未掌握色彩理论前的「直觉用色」会掩盖对光的基本理解</td><td>教学法观点</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>B01 · 1.0 外景基础（一）（技术密度：高，全实操）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>#</th>
+        <th>知识点</th>
+        <th>操作要点</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>1</td><td><strong>UE5 全实时光照</strong>：不再需要烘焙 lightmap，但混合工作流的知识仍有重叠</td><td>观念转换</td></tr>
+        <tr><td>2</td><td><strong>默认关卡清理</strong>：删掉 Reflection Capture（基于 SSR 的旧方案）、BP_Sky_Sphere、Atmospheric Fog</td><td>第一步动作</td></tr>
+        <tr><td>3</td><td><strong>外景三件套</strong>：Sky Atmosphere + Skylight + Directional Light，缺一不可，是一个联动系统</td><td>系统观</td></tr>
+        <tr><td>4</td><td><strong>Atmosphere Sun Light 开关</strong>：Directional Light 上必须勾选，否则 Sky Atmosphere 完全不显示</td><td>最高频踩坑，值得单独一页</td></tr>
+        <tr><td>5</td><td><strong>项目自检三件</strong>：① 显卡支持光追 ② RHI 显示 DirectX 12（低于 11 无光追）③ Project Settings 里 Lumen 已启用</td><td>上手前检查表</td></tr>
+        <tr><td>6</td><td><strong>Lumen 两种追踪模式</strong>：Detail Tracing（小场景、网格密集、交互多）vs Global Tracing（大场景、街道、景观）选错会崩或加载困难</td><td>决策表</td></tr>
+        <tr><td>7</td><td><strong>反射必须与 GI 一致</strong>：GI 选 Lumen，反射方式也要选 Lumen，因为 SSR 已被取代</td><td>一致性</td></tr>
+        <tr><td>8</td><td><strong>Auto Exposure Histogram + Extend default luminance range</strong>：初学者先别开，等做完一个项目再开；开了才有 Cine Camera 的手动曝光（DoF、快门）空间</td><td>分阶段建议</td></tr>
+        <tr><td>9</td><td><strong>Shift+V = Visualize HDR and Adaptation</strong>：看曝光直方图，判断曝光是否合理</td><td>快捷键</td></tr>
+        <tr><td>10</td><td><strong>Skylight 的 Static / Dynamic</strong>：默认 Static（固定），实时场景必须改 Dynamic/Movable</td><td>必改项</td></tr>
+        <tr><td>11</td><td><strong>Recapture（重新捕捉）</strong>：Skylight 改了太阳角度后必须 Recapture，否则「场景突然变色」的怪异现象；实时捕捉（Real Time Capture）在游戏里太贵，不推荐</td><td>高频困惑点</td></tr>
+        <tr><td>12</td><td><strong>下一节钩子</strong>：24 小时昼夜光照的正确设置</td><td>承上启下</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h2>三、贯穿全课的三条主线（做 skill 时的骨架）</h2>
+        <ol>
+        <li><strong>可见性优先于美感</strong> —— A02 反复强调，直接决定布光决策顺序。</li>
+        <li><strong>光是有方向的叙事</strong> —— 引导玩家视线是第二个核心目标。</li>
+        <li><strong>先训练眼睛，再训练软件</strong> —— A02 第一周作业、霓虹灯禁令都是这条的推论。</li>
+        </ol>
+        <h2>四、待用户确认（阻塞项）</h2>
+        <ol>
+        <li>交付范围：3 节（去重）还是 6 个分P 全做</li>
+        <li>「PPTXQ」具体指哪种格式</li>
+        <li>「HTSMP4 single HTML」具体指哪种交付</li>
+        <li>「5 个 skill」的拆分口径</li>
+        </ol>
+        <h2>A01 入门介绍 · 逐字转写</h2>
+        <ul>
+        <li>来源：B站 BV17Eeq6sEMY P1（= P4 原声版，字节数完全相同）</li>
+        <li>时长：870s（14 分 30 秒）</li>
+        <li>讲师：Maria（Vertex School），Deviation Games 首席灯光艺术家</li>
+        <li>性质：课程导论 / 招生说明，技术密度低</li>
+        <li>转写工具：matrix listen_audio，2026-11-12</li>
+        </ul>
+        <hr />
+        <p>大家好，我是 Maria。这将会是我在 Vertex School 的第二次亮相。</p>
+        <p>因为我已经开设虚幻引擎灯光课程有一段时间了。应该是从三年前开始的吧。当然，最新的技术总是由 Epic Games 不断推陈出新的。正因如此，我决定对我的之前的灯光基础课程进行重置。</p>
+        <p>在本次介绍中，我会简要介绍一些课程内容，希望大家能感兴趣看看。在报名我的课程之前，请务必先确认这一点。首先，如果您已经修过我在 Vertex 开设的灯光基础课程，这门课程属于更升级的版本，因为其中会涉及更多软件操作。其次，大部分课程模块的结构仍会与我之前的课程保持一致。如果您不确定的话，或者您之前从未听说过我的课程，这里有之前在 Vertex 发布的课程结构链接。可以直接联系任何工作人员，我相信他们一定会为您解答疑惑。</p>
+        <p>这是我之前制作的课程内容，但请注意，这个课程可能仍在 Vertex 平台提供。而且这门课程是用虚幻引擎 4 制作的。所以我制作这个教程时，虚幻引擎 5 还没上市。这就是第一点要说明的。</p>
+        <p>让我们再回顾一下我的自我介绍。我叫 Maria。目前我在圣莫尼卡的 Deviation Games Studio 担任首席灯光艺术家。这是我的艺术创作工作台。很可能在观看这门课程之前，大家就已经看过我的作品了。如果是初次了解我的人，我先向你们致以诚挚的问候。</p>
+        <p>在我的艺术工作站展示的作品中，除了我之前参与开发的那些游戏作品外，比如《孤岛惊魂》、《鲁滨逊：大冒险》以及《战争机器》，那些更多属于游戏开发与工作相关的内容。但作为一名艺术家，我真正享受的是通过个人作品来创作并表达自己的想法。所以你们可能会发现，我这里展示的大部分作品都是我业余时间创作的。可以肯定的是，这对我而言是最佳方式。而通过分享自我，我觉得这是最有效的参与与学习方式。我真的很享受表达自己的创意。</p>
+        <p>除此之外，我想大家应该都已经了解我了。因为工作关系，我从英国搬到了美国。所幸在疫情期间制片厂终于接纳了我。</p>
+        <p>那么在这里，所有报名参加这门课程的人，或是打算报名的人都可以——如果我没猜错的话，我的大多数学生都是来自大学之外的新人，或者你已经身处这个行业，正在寻求更多关于灯光的知识，那么这门课程可能适合你。我之前那届班上也遇到过几位学生，他们表示要从其他行业转行。但实际上他们大多都具备一些摄影基础，或者他们很喜欢制作游戏艺术，只是完全不知道该从何下手。</p>
+        <p>所以在决定是否加入我的课程之前，还有一件事我必须特别明确说明：我会为这门课程录制视频，因为我目前在美国的一家工作室全职工作。根据美国移民法规，我无法亲自指导大家。所以我请几位业内值得信赖的朋友来帮忙，他们会协助我带领大家完成这门课程。在录制过程中我会提供完整的操作指导，大家还能看到我完成整个过程的完整过程。请确保如果您需要面对面的指导，那我只会出现在这门录播课程中。</p>
+        <p>最后，我想让各位获取一些免费工具。它们会在您的学习过程中提供很大帮助。因为我之前也一直向我的学生推荐这些工具。</p>
+        <p><strong>工具一：DaVinci Resolve</strong>。行业标准的视频剪辑与调色软件。如果仅用于非商业用途，它是完全免费的。它主要用途是调色以及影片的剪辑与编辑。所以我强烈建议你去了解一下它。在课程学习期间，我会分享很多关于那些在调色方面教学极为出色的调色师职业的链接，而这也是我们后期制作内容的一部分。此外，我们还会简单介绍高动态范围成像流程（HDR）。因为在不同的色彩空间下往往需要做出很多妥协。</p>
+        <p><strong>工具二：Pinterest</strong>。它实际上是一个免费的网站。按我的理解，它算不上真正的工具。这就是 Pinterest。我从来都不喜欢那些满屏弹出的广告。另外需要说明的是，我们要使用的这些软件我都没有从中获取任何佣金。因为那些都只是我的个人经验而已，所以我更倾向于用这两个平台来收集灵感。</p>
+        <p>简单来说，如果你之前从未用过 Pinterest，它其实是一个图像搜索引擎。所以如果你有了某些标题之类的内容，通过这里进行搜索，对我来说是最合适的选择，同时也能收集一些初步的灵感。这样我就能很快在我的灯光设计板上展示其中一些内容。</p>
+        <p>当然，如果你的目标是打造特定风格的作品，ArtStation 绝对是绝佳的选择。但这属于另一个选择，旨在让不同媒介的内容相互交叉参考，不必总去查看 3D 艺术作品。这样你就不用一直去浏览 3D 艺术内容了，概念艺术或游戏艺术作品。因为在这里你很可能找到摄影作品的商业封面。此外，还有电影截图任你挑选。所以，我觉得这是个收集灵感的绝佳平台。但如果你在寻找高清高端图像的话，这里并非最佳选择。</p>
+        <p><strong>工具三：PureRef</strong>。如果你们打算使用 PureRef 的话，就能看到里面的内容会实时变化。你们要做的就是下载它。虽然他们确实会要求捐赠，但直接选择自定义金额应该就没问题。</p>
+        <p>所以大家，这就是我希望你们提前准备好的三款基础工具，在加入照明训练营之前。</p>
+        <p>对了，我忘了做自我介绍了。大概从 2013 年开始，我就一直从事视频游戏灯光艺术师的工作。我的第一份工作是在育碧上海分公司。在参与了三部《孤岛惊魂》系列游戏之后，我是该系列的最后一部《孤岛惊魂 4》开发阶段加入的。之后我还参与了《雪人谷》的 DLC 制作。在离开育碧之前，我还参与了《孤岛惊魂：原始》的开发工作。此外，我还负责了该游戏的首个引导任务。</p>
+        <p>之后，我离开了中国前往德国发展。我在 Crytek 法兰克福工作室工作了近一年时间。我们成功推出了两款 PlayStation VR 游戏，分别是《鲁滨逊：大冒险》和《The Climb》。之后我又被调到了英国，因为我之前在那里毕业，并且返回英国学习美术与舞台设计。之后我在两家英国工作室工作过。其中一家就是 Cloud Imperium Games，他们就是最著名的众筹游戏之一《星际公民》的开发者。在这之后大家应该会看到《战争机器 5》，那是我在 Splash Damage 工作的地方。我还结识了很多朋友，而且在那里交到了几乎可以相伴一生的挚友。</p>
+        <p>我其实是几个月前才从英国搬到美国的。我到现在还在布置家居，所以你们可以看到我的住处还挺空的。但在游历了三个国家之后，我确实很享受分享自己的经历和想法。</p>
+        <p>所以再次告诉大家，如果你进入游戏行业是想从事灯光艺术师的工作，这门课程非常适合你。请把这里视为一间初创公司。我会讲解很多与艺术相关的内容。不过，我们也会涉及不同的工作流程。因为你需要掌握那些相关概念，同时还需要知道如何进行管理以及如何一步步完成你的项目。</p>
+        <p>因此，在授课过程中我会讲解大量基础的知识点。包括不同的亮度设置，还有亮度单位以及如何将实际数值导入 Unreal 引擎。而且更具实用性。我们讲解如何处理物理材质与非物理材质。但就像我之前说的，并非完全侧重技术内容。我终究还是个艺术家，所以我更喜欢直接表达想法。</p>
+        <p>有一件事能让我的课程脱颖而出，比其他同类教程更胜一筹。目前已经有许多才华横溢的灯光艺术家在制作技术含量极高的教程。我的课程内容将一半是技术知识，一半是艺术技巧。所以如果您正在寻找高强度的技术培训，或是关于如何使用这款工具的指导，那我建议对于您来说虚幻引擎相关或类似高度侧重技术的教程会比我的课程更合适。但如果您真正想要了解如何最有效地运用这款工具，以及如何构建完整的叙事与创意故事，运用您的灯光设计技能来表达想法，讲述故事并打造出脱颖而出的作品集，我非常有信心能够帮助您做到这一点。因为这正是我的强项。</p>
+        <p>在结束这次介绍之前，请允许我先做个说明，我的博客上的 ArtStation。你也可以查看往届学员所取得的成果。这里有他们所有的 ArtStation 链接，所以如果您不确定这门课程是否适合自己，欢迎随时联系我的往届学员。</p>
+        <p>您会看到那些曾参加过我灯光训练营的往届学员的作品。其中藏着许多美好的回忆。因为我从事教学工作并非仅仅因为我擅长且热爱自己所做的事，与其说是在教学，不如说是在结识新朋友。我会聆听他们的人生故事，这也会给我带来很多正能量。</p>
+        <p>没错，这些都是我之前的一些学生的作品。我在那边办了一个小型展览。他们中的很多人如今其头衔已变为艺术或灯光艺术家、环境艺术家甚至是渲染工程师。</p>
+        <p>还有另一门课程，有很多来自 Vertex 的学生也向我咨询过。所以如果你进入我的应用站点，在进入商店页面就会发现有一门名为 Unreal Engine 高级光照设计的课程。对于那些正在寻找针对性培训的人士，我建议你们可以看看这门课程。但由于我是在搬家前才录制这段内容的，所以确实有点仓促。请注意，这就是那门课程。如果你是虚幻引擎的完全新手，我不会向你推荐它，只是因为我在制作这门课程时会说明它适合有一定基础的学习者。它更侧重于电影感画面与角色设计方面。关于优化的相关内容我几乎不会过多讲解，但我经常讲解的是如何构思创意。</p>
+        <p>在购买之前还有一个视频，你可以通过链接找到它，所以一定要去看看，从而为自己做出最正确的决定。不过我和我们备受喜爱的 Vertex 工作室共同完成的成果，更像是我们来这里分享关于使用 Unreal Engine 开展创业的基础知识，借助 Unreal Engine 这一工具。如果你想从事灯光设计工作，我们还会简要介绍一些摄影和电影摄影的相关内容。</p>
+        <p>因此，请将此课程视为兼顾技术（含 Unreal 引擎及物理灯光）与艺术（侧重叙事表达）的基础课两部分内容的课程，以及我将如何作为艺术家协助你们完成整个创意项目。希望这份介绍能让您在决定是否报名课程之前获得足够的信息。无论如何，我很期待在课堂上见到大家。再见。</p>
+        <h2>A02 理论介绍 · 逐字转写</h2>
+        <ul>
+        <li>来源：B站 BV17Eeq6sEMY P2（【国语】版；P5 为同内容原声版）</li>
+        <li>时长：1693s（28 分 13 秒）</li>
+        <li>性质：理论课，技术密度高，是全课方法论核心</li>
+        <li>转写工具：matrix listen_audio，2026-11-12</li>
+        <li>注：转写为 ASR 原始结果，个别术语有误听（如「Omni」指点光源、「区域光」= Rect Light、「天光」= Skylight），整理稿已校正</li>
+        </ul>
+        <hr />
+        <p>大家好，这是第一场课程，这也是我们的介绍环节，本次虚幻引擎 5 灯光训练营的内容。在开始讲解具体内容之前，我想进一步向大家说明，我建议大家在开始操作室内外灯光之前，先观看这场课程的原因。</p>
+        <p>因此本课程既涵盖理论性的灯光设计知识，也包含实用的灯光操作技能，帮助大家将创意在虚幻引擎中实现。但在向大家展示如何将虚幻引擎 5 与 Lumen 结合使用以实现实时光照之前，我想要先再多解释一点相关内容：这些创意究竟源自何处。所以，无论您是出于进一步学习还是进一步实践的目的，我知道我们大多数人选择参加这门课程，都是因为您和我一样，有着相似的职业规划。您想成为游戏光效艺术家，或者您可能正在从事动画或环境艺术工作，希望进一步提升自己的光效技能。</p>
+        <p>那么我首先想谈的是现实情况，也就是数字照明与现实生活中的照明之间的差异。我相信在参加我的课程之前，大家大多都已使用过或接触过相关软件，比如 Unreal、Unity、Maya、Arnold 之类的。我想大家应该都明白数字光是如何运作的。在数字照明领域，我们基本上采用的是附加法照明（additive lighting）。所谓附加法照明，就是我们可以直接拖入几种不同的光源资源。</p>
+        <p>其实整个场景的渲染通常都是通过全局光照来实现的。这个参考资料是我从 CG Future 那里获取的，他们制作了一幅非常出色的图表，用来解释不同类型的光源。不过我相信大家都明白什么是数字照明或方向光。因为在 Unreal 引擎中，当我们谈论方向光（Directional Light）时，指的通常就是那种直接照射的光线效果。这类光线通常被用来模拟太阳或是月亮以及其他外部主光光源。正因如此，它才会影响整个场景的全局光照效果。它也会与天光（Skylight）协同工作。</p>
+        <p>大家要注意哦，我们现在要采用实时光照的常规工作流程了。也就是说，即便已有方向光这样的主光光源，在整个场景中仍然需要一个辅助的光源，而在 Unreal 引擎中这个角色就是天光。所以通常我们需要方向光，天光与方向光共同作用，从而影响我们所处理的整个环境。至于它们将如何处理彼此之间的关联关系，那就是我们称之为全局光照（GI, Global Illumination）的解决方案。</p>
+        <p>在数字照明领域，全局光照或许会是另一种解决方案。在旧版的虚幻引擎 4 中，如果采用混合工作流的话，我们之后会将全局光照信息烘焙到光照贴图（lightmap）或体积光贴图（volumetric lightmap）中。这就是其中一种方法。之后我们开始使用 Lumen 技术，因此 Lumen 就是虚幻引擎 5 提供的新型全局光照解决方案，而这正是我们将会使用的方案。</p>
+        <p>在这段关于室内与室外照明的整个培训课程中，中间那三张图表里，它们基本上就是在说明——没错，我经常提到 Omni 这个词，在后续的照明操作讲解中你们也会听到它。但当我提到 Omni 时，只是因为那更像是一种舞台术语罢了。我原本来自舞台灯光和摄影领域，所以我已经习惯了使用这个词。不过这完全没有问题，你把它称作点光（Point Light），因为那本质上就是点光。</p>
+        <p>至于 Unreal 引擎里的区域光，它有时被称作 Rect Light。所以如果你打开光源组件选择窗口，稍后我会给你演示，你会在那里看到各种不同的光照组件，其中之一就是区域光。在 Unreal Engine 中它有时也被称作 Rect Light。</p>
+        <p>通常来说，这类光源在视频游戏的照明环境中，我们往往会非常谨慎地使用它们。因为对于区域光这一概念，我们有两个主要的用法。那就是将光源作为驱动光源时，此外我们还需要体积光照（Volumetric Lighting）功能，这也是其中一个术语。另一种用法则是我们可以为角色拍摄一些特写镜头，或者用类似的方式为资产审核提供预览，从而展现资产的最佳细节，或者用来展现极度哑光的材质。而为了呈现柔和的环境表面，就需要使用面光。但在游戏照明的大部分情况下，只要我们仔细计算，它完全可以被聚光灯替代。</p>
+        <p>如果我们能认真地对其进行计算的话，再加上点光。聚光灯（Spot Light）和点光是我们一直在视频游戏照明领域采用的最常见的照明元素，或者说是该领域中最常被使用的照明工具。</p>
+        <p>长话短说，通常在室内环境照明中，我们会使用点光作为基础照明光源。这类光线的衰减程度通常要低得多。如果你还不熟悉 Unreal 引擎的话，我所说的衰减（falloff），指的是半影强度会如何逐渐减弱的现象。简单来说，就是光线亮度会从光源核心逐渐衰减到光线覆盖范围的边缘。</p>
+        <p>至于聚光灯，因为它具备可调节的光束宽度（cone angle）功能，它简直就像一只手电筒，而且如果调整光束宽度，它的照射范围也非常广。正因如此，它在实际应用中对场景和环境以及角色都有好处。因为在电子游戏领域里，我们必须考虑性能问题，同时还得确保光线能覆盖整个游戏区域。毕竟聚光灯的操控性极为出色，它的覆盖范围非常灵活。所以最终来看，我个人认为在视频游戏的数字照明领域，这是最常用的光源之一。也就是说它们就是两种最核心的光源。</p>
+        <p>如果你能用点光实现某种特定的效果，那么对于聚光灯，我的建议是尽量避免使用区域光或是矩形光，因为我们已经用 Lumen 来处理全局光照问题了，而且 Lumen 还能负责处理反射效果。所以如果你使用大量区域光的话，或是矩形灯，你很有可能会看到方形光源的人造光效。因为比如说如果你要为科幻隧道布光，科幻隧道将会是我们室内照明部分里的示例之一。</p>
+        <p>所以这是第一部分，我想带大家了解数字世界中不同类型的光。这类情况在现实世界中也确实存在。</p>
+        <p>没错，下方有图表形式的说明，介绍我们是如何布置摄影棚灯光的，而这实际上就是我们拍摄照片的方式。所以如果你从事商业摄影相关工作，如果我们当中有人有摄影背景的话，在摄影棚里用于柔光箱（softbox）的光源，其实和用来为角色照明的区域光是完全相同的。所以无需多做解释，这张照片本身就能讲述一切。</p>
+        <p>也就是说，我们准备了三组标准的点光或聚光灯组合。我们需要一盏点光来塑造物体轮廓，用于整体均匀照明。在电子游戏这类数字世界中，主光（key light）通常承担着塑造物体形态的功能，同时它还能为场景中的角色提供整体照明覆盖，或者说它能让玩家在场景中自由行走。正因如此，90% 的情况下主光都会是用于室外场景的方向光，也就是处于户外环境时，或是聚光灯。而若是室内场景，那就需要考虑背光（back light）了。</p>
+        <p>在游戏照明中，背光其实是个概念相当模糊的元素。除非你是在进行渲染、预览之类的操作。你需要让角色处于良好的照明状态，同时背景中也需要一些光线信息。但在大多数情况下，背光效果是由我们的 GI 解决方案来处理的，也就是 Lumen 或天光，这取决于场景是室内还是室外。</p>
+        <p>至于环境光（ambient light），在数字世界中，我们通常只使用点光。因为首先点光能覆盖所有空间维度，范围最广。别忘了 3D 世界本身就是三维的，角色可以在各个方向移动。从亮度效果来看，视频游戏的照明要求比电影或预渲染作品更为严格。因为在预渲染流程中，摄像机是固定的，我们有充足的时间来打磨细节，从而将画面品质提升到极高的水平。但就电影或预渲染作品而言，我们只需要考虑特定的拍摄角度即可。但在视频游戏中，尤其是《战地》或《使命召唤》这类多人游戏里则不然，我们得考虑所有可能的视角范围，基本上就是以玩家视野所能覆盖的范围为限。最好的解决方案就是找到合适的光照方案，以确保所有玩家都能拥有良好的视野。</p>
+        <p>因为一旦游戏开始，情况就很难预料了。玩家会在哪里活动，通常会依据游戏场景区域来判定。只要设计师告知我们这是玩家会战斗的区域，无论是战斗、活动还是重生，这些区域都需做好照明处理。我们必须确保一定的能见度，这正是照明设计的核心要义。</p>
+        <p>我知道你们很多人应该看过我的作品。在我的个人项目中，我确实喜欢打造美观的视觉效果，而且极具创意，比如注重场景的深度表现，但说实话，这份工作更侧重技术层面，而非艺术层面。</p>
+        <p>业内通常遵循标准工作流程。因为我参与过多款 3A 级游戏的设计，比如《战争机器》、《孤岛惊魂》。尤其是《孤岛惊魂》，作为一款多人开放世界游戏，其照明的首要任务从来不是打造某个特定的美观角度，而是要找到一天中何时能确保最佳的可视效果，以及怎样的生效角度最能与体积雾效相配合，还有所有的光线散射效果。因为游戏里的照明本身就是游戏内容的一部分。</p>
+        <p>各位，我希望大家都能牢记这一点。无论作品看起来多漂亮，照明设计都必须实用。而且照明必须能够保障一定的可视度，否则再美观的设计在实用性方面也毫无价值。</p>
+        <p>就项目而言，如果要做外观精美的内容，确实需要两种不同的设计理念。在 Unreal 引擎中追求更高创意性的视觉效果用于个人作品完全没问题。不过各位要是正在学习这门课程，且目前准备求职、即将参加面试的话，面试官用游戏领域的术语询问你数字光效的原理，一定要确保自己理解到位。要强调的是，我们必须让游戏内容清晰可见，同时还要为玩家指引方向。这就是我欢迎大家加入我课程的第一个建议。</p>
+        <p>接下来我们快速看一下，现实生活中的光线对比。那么寻找参考素材的最佳方法是什么？当然，我们会查看大量照片。不过这些照片有不同的类型。</p>
+        <p>在左侧部分，我只是想向大家展示，这些照片都是我从 Pinterest 上下载的。但左边的那张更或多或少地展现出翻新后的场景。我觉得这里以前应该是工厂的一部分，后来这里就变成了植物园。那些照片都是用常规时间与标准曝光参数拍摄的，因此我们能够非常清晰地看清材质质地。如果我放大来看的话，就能判断出这是实体的物体，上面有一些分层设计的装饰物。这属于某种粗野主义建筑风格。</p>
+        <p>这张照片并没有太多令人惊叹的效果，但它到底有什么用呢？它清晰地展现了所有的材质。这张照片算好照片吗？我认为是的，因为它的曝光很恰当，而且作为特写，它牺牲了背景的呈现，所以我们其实不会太关注背景。这就是我们所说的优质参考照片，用来查找各类材质或植被的时候。它的功能就是如此。</p>
+        <p>但合适的照片本身也是一张图片。这张照片我记得是从某个夜间摄影或城市摄影网站上下载的。这里发生的情况是摄影师刻意使用了长曝光，再加上小光圈，从而获得极为清晰的图像。此外，它还突出了此处的所有的光线效果。如果我眯眼粗略对比，左边的照片噪点要多得多，但也包含了更多关于材质的信息。而右边的照片则清晰得多，非常干净。颜色则是通过后期处理刻意调整的，让画面更加平滑。因为从艺术家的创作目的来看，显然是为了突出光线与空间感，还有那些宏伟建筑的外观形态。</p>
+        <p>这两种类型的画面表现方式能最好地展现差异。是解释 CGI 灯光与艺术灯光之间差异的最佳方式。所以只要存在表面，光线就会向各处反射，而且光线会以数千种不同的方式发生反射。这都是因为表面的粗糙度（roughness）所致。不过我们可以借鉴摄影领域的做法，运用后期处理、长曝光以及不同镜头等手段来实现我们想要的精准视觉风格。</p>
+        <p>在 Unreal 中我们使用的是灯光工具，我们会不断调整材质，直到找到灯光与表面的最佳搭配。最后我们所有的后期处理工作都是在后期处理体积（Post Process Volume）中完成的。我们可以回溯整个流程，无论使用何种艺术媒介，处理流程始终如一。就像我们先布置灯光，再调整形状，最后确定视觉焦点一样。接着我们将色彩与材质结合在一起，以此呈现我们想要的精确视觉效果。</p>
+        <p>那两张照片都很漂亮，不过我觉得其中一张的艺术感稍弱，但它依然带有某种后期处理痕迹，因为其对比度在我看来实在不真实。所以为了进一步凸显形状，它被大幅强化了处理。</p>
+        <p>这也是我选择这两张照片的原因：就电子游戏照明而言，我们的职责不仅是确保可见性，我们还肩负着另一个极为重要的任务，那就是引导玩家。</p>
+        <p>所以那两张照片上都有不少亮点。当你第一眼看到那些图片时，就能发现某些场景元素格外引人注目。所以左边的那张图里是走廊，还有站在那边的那个人。而这张图里则是天空和井，也就是从天花板延伸出的井状结构。它们都在为我们指引视线方向。就好像，一旦你成为舞台背后的灯光设计师，你就是那个要告诉观众或是玩家该往哪里看的人。</p>
+        <p>长话短说，我可以将艺术灯光或电子游戏灯光设计总结为只有两个目的：我们展现了该关卡最理想的形态，从表面、质感、材质以及其他相关要素来看，就是要确保将空间处理得极为出色，让玩家能够清晰地看清布局。</p>
+        <p>这些就是电子游戏照明设计的两大核心目标。</p>
+        <p>我还有点额外的内容要讲。很久以前我写过一篇关于 XP-Point 的文章，我会把这篇文章的链接分享给大家，这样你们就能免费查看。我之前确实谈过关于理解外部环境的内容，还有 Unreal Engine 中的室内照明。也就是说我其实是把 Unreal Engine 当作 CGI 工具来使用，同时我会对比不同的照明条件，从中寻找创作灵感。</p>
+        <p>这些其实是我用手机拍的一些照片，是在我开始创作《伦敦雾》这个作品之前拍的。这就是我结合所有参考资料完成的作品。如果感兴趣的话，不妨看一看。好了，回到我的灯光博客吧。</p>
+        <p>大家随时欢迎阅读我的灯光日记，因为这基本上是我正在创作中的记录。</p>
+        <p>那我们继续进行同行评审吧。我们刚才说到哪了？好的。第一周的任务就是练习，所有的人都要参与。我建议大家暂时先别碰 Unreal 引擎。在接下来的第二周和第三周，我们会重点关注这个问题。</p>
+        <p>但目前我希望大家，这个周末出门的时候，或者去任何地方，要是进了咖啡店或是商店甚至是超市，都要留意周围的光源情况。</p>
+        <p>因为我无法立刻给出详细的分析，那两张照片拍得如此出色，其实那两张并不是我拍的，是我在洛杉矶寻找当地餐厅的时候偶然发现的。所以实际情况是，我经常会去那些咖啡店看看，毕竟我本身就很喜欢喝咖啡。有时候它们的内部装饰真的非常漂亮，尤其是现在正值圣诞季节。</p>
+        <p>有两点我希望大家注意，那就是直射光源和间接光源。就拿这张照片里的咖啡吧作为例子吧。我得说我们有大量的直射光源，比如天光、咖啡吧台、招牌还有那道巨大的星光。</p>
+        <p>此外，照明设备也分为两种类型。针对那些彩色系列产品，我之后会再详细讲解这个话题，当我们进入室内照明部分时。但我只是想让大家先大致了解一下，未来的内容会是什么。</p>
+        <p>也就是所有没有罩子的灯具类型，我们把这类灯称为裸光（bare light），原理和太阳、月亮类似，因为它们确实没有罩子，所以在这类情况下，我将其归为裸光。天光照射灯泡属裸光源，同球体、太阳类似。</p>
+        <p>而那些光源实际上都属于柔和光线，或者也可以称它们为间接光（indirect light）。因为如果你真的有一盏灯的话，再给它套上一个丝质灯罩或是纸质灯笼。我超喜欢宜家的这类灯笼，它们就是属于间接光源。因为光源会穿过介质，光线会因此发生散射。所以，如果你在没加滤镜的钨丝灯前自拍，再在柔和光源前拍一张不用相机滤镜，你就会发现自己的肤色看起来会好很多很多。</p>
+        <p>还有啊，要是站在柔和灯笼前拍照的话，我们女生就超喜欢这么做。不管怎样大家不妨试试看，我希望每个人都能体验一下。</p>
+        <p>所以我想稍微谈一下第二张图片，是间接光源。因为在现实生活的日常场景里，我们都更喜欢间接光。原因很简单，因为它的光线很柔和，不会直接刺入眼睛。所以在大多数公共场所比如酒吧里，或是这种鸡尾酒吧、或者像餐厅里那样，尤其是那些高档餐厅，唯一可能使用裸灯的地方就是餐桌上方，因为光线会照在食物上。而餐厅当然希望为顾客提供最优异的体验，所以他们可能会使用聚光灯直接照射餐桌。但这类做法已经出现了很多失败案例。</p>
+        <p>我希望大家都能重视这一点，因为这其实是个不错的设计理念。不过这种在餐桌上方照灯的理念，要是场地铺的是大理石，还可能毁了食物的口感，或者是玻璃桌。因为我去过几处这样的地方，实在很不舒适。因为在没有遮盖物的情况下，食物还没端上来时，我基本上是坐在强度极高的裸露聚光灯源与反射光之间。所以有时候我会觉得眼睛仿佛出现了类似光晕的效果。</p>
+        <p>大家注意啊，灯光和光线总是相互影响的。根据我那次糟糕的餐厅用餐体验，我希望大家能更加注意所使用的材料，同时在做室内设计时，也要留意光源的亮度。</p>
+        <p>那么第一周的练习，各位，我希望你们拍些照片并展示给我看。无论是白天还是夜晚，都可能存在黄金时刻（golden hour），其实没必要非得去什么特别棒的地方。比如在早晨打开窗户时就能拍出不错的照片。把窗户打开，无论晴天还是雨天。但我希望你们注意，首先试着去观察照片，试着在窗户的角落之类的地方拍照，并观察窗框以及墙壁是如何随着一天中不同时间的光线变化而变化的。</p>
+        <p>所以如果是室内场景，你们完全可以拍出这样的照片：向大家展示「我觉得这是间接光源，或者这是直接光源」。</p>
+        <p>因为在我训练这项技艺之前，在我教授 Unreal 相关知识之前，我想训练所有人的视觉审美能力。</p>
+        <p>要在游戏灯光设计取得成绩，需具备敏锐视觉力。其实无论在哪个灯光相关领域都是如此。毕竟现有的渲染方法有成千上万种，还有许多软件知识需要我们不断学习。我个人每个月都会学习新知识，因为游戏行业的进步速度实在快得惊人。但首要的一点是，先训练好你的视觉能力，因为你目前还只知道如何把基础工作做好。只要你的眼力够好，就能具备出色的审美能力。对于我们这些灯光艺术家而言，这一点至关重要。</p>
+        <p>另外还要提醒大家，我非常喜爱富有表现力的灯光设计，并且我会一直鼓励大家去尝试。但在开始室外灯光设计之前，稍后你们会和我一起做室内灯光设计，我要对所有人的霓虹灯使用加以严格限制。</p>
+        <p>有两部很不错的电影，就霓虹灯的运用而言，我个人觉得它们表现真的很出色。去看吧。《猫》是一部音乐剧，所以如果你不喜欢音乐剧，可以直接跳过这类影片。它的舞台布光效果非常好，氛围浓郁，极具舞台感，所以我非常喜欢这部电影。尤其是《约翰·威克 3》也是如此。对我来说老版的《约翰·威克》在摄影手法上相当出色。这部色彩处理出色，对过饱和色彩掌控很棒。</p>
+        <p>所以你或许该问问为什么 Maria 一开始就想阻止大家使用霓虹灯，因为霓虹灯的效果实在太美了，它的色彩极具诱惑力，但我不确定所有人的水平如何。我相信之前我们请过渲染工程师，他们很擅长编程和色彩相关的工作。但问题就在我刚才说的这一点上，我想训练大家的眼光。</p>
+        <p>同时我也希望整个训练营都能达到这个目标，大致处于入门级到中等水平的区间。我需要确保每个人都能理解灯光的核心作用，为玩家指引方向，同时还要合理处理空间布局。</p>
+        <p>如果您真的对霓虹灯效果感兴趣，那完全可以在最终作品中加入各类相关课程内容。但我不想在之前就让大家产生困惑，或者说我只是不想让各位自行混淆概念。毕竟在 CGI 灯光制作上，尤其是使用 Unreal 引擎时，可发挥的自由度很高。所以请稍安勿躁，让我们一起逐步了解数字以及印刷色彩理论，直到您搞清楚色彩的运作原理。</p>
+        <p>我不希望有人只凭直觉就贸然行动，从而混淆概念，然后就说「我想用霓虹灯效果」。其实这并没有什么坏处，但问题在于，在进行灯光设计的同时，你也需要具备相关经验。有了经验我们就能尽情享受灯光设计的乐趣啦。</p>
+        <h2>B01 1.0 外景基础（一）· 逐字转写</h2>
+        <ul>
+        <li>来源：B站 BV17Eeq6sEMY P3（【国语】版；P6 为同内容原声版）</li>
+        <li>时长：1094s（18 分 14 秒）</li>
+        <li>性质：实操课，软件操作密度高，全课第一个「动手」环节</li>
+        <li>转写工具：matrix listen_audio，2026-11-12</li>
+        <li>注：ASR 原始结果。「细节追踪 / 全局追踪」= Lumen 的 Detail Tracing / Global Tracing；「天空大气」= Sky Atmosphere；「天光」= Skylight</li>
+        </ul>
+        <hr />
+        <p>大家好，欢迎来到更新后的 Maria 的灯光训练营虚幻引擎 5 版本。</p>
+        <p>如果您是我们之前已完成 UE4 课程的学员，首先，非常感谢您依然继续观看这个更新版的课程。正如我在开场介绍视频中所说的课程内容。如果您还没看过那个视频，可以直接回到 Vertex 官网，查看首页的内容。</p>
+        <p>在开始实操演示之前，我们先来介绍几个关键的灯光组件。</p>
+        <p>因此，虚幻引擎 5 最显著的改动之一就是所有功能都切换为了实时光照。所以如果你原本使用的是混合光照工作流的话，你可能熟悉预烘焙光照贴图的做法，设置二次反射这类方法，至今仍相当常见。这两种不同工作流之间存在不少重叠之处，但在这门针对虚幻引擎 5 升级版本的课程中，我将重点讲解诸多可以利用 Lumen 环境光照功能的技巧与方法。</p>
+        <p>内容将会分为三个不同的部分。我们会介绍几种核心的光源组件。就是默认页面上的内容，那就是天空光（Skylight）。如果我进入默认的细节设置页面，你们就能明白我具体在说什么了。接下来我们将讨论定向光（Directional Light）和天空光，这些是 Unreal Engine 5 默认打开的一些旧版资源，那就是反射效果（Reflection Capture）。只是想让各位知道，这种捕捉方法在很大程度上基于之前的屏幕空间反射（SSR）技术，而那也是 Unreal 公司开发的另一项早期实时反射技术。所以我们在这里不再使用它们了。</p>
+        <p>我首先要做的就是删除那些元素，因为我们其实并不需要它们。我接下来要讲的还有分叉功能，那也是其中的一部分。不过在这里你们会看到大气雾效（Atmospheric Fog）。在真正开始使用这个默认关卡之前，我会先进行彻底清理，因为目前这里可能并不需要它们。我稍后会解释原因。那就假设你们要为资源编辑创建一个空的空白关卡吧，或者在编辑器中预览你自己的网格模型，那么本课程就将从这里开始。</p>
+        <p>好的，我首先要做的就是做一些清理工作。如你们所见，我已经删除了那些反射效果，也就是旧的反射效果。另外我还要在这里替换掉的是默认的 BP 天空球体（BP_Sky_Sphere），它其实就是一个较为简单的默认版本。如果你想使用它，那完全没问题，但我认为这只不过是一个帮助你了解天空高度等相关信息的简易工具而已。对我这个处理光线的人而言，使用更新版本的默认天空球体时，我有更大的操作自由度。我现在就要把它们删除。</p>
+        <p>接下来我要做的就是添加即将使用的正确版本，然后向大家展示它的神奇之处。我要添加的版本在「所有效果」（All Effects）类别之下。我们应该能找到天空大气组件（Sky Atmosphere）。这正是我们今天所需要的组件。</p>
+        <p>没错，这是另一种版本的天空盒。不过这个组件的优势在于，首先，它的效果是完全动态的，而且你可以利用这里的资源演变（Time of Day）轻松创建不同时段的效果。</p>
+        <p>在开始之前，有两件简单的事情需要检查，那就是如果你去查看你的定向光，也就是被称作阳光（Sun）的那个光源，或者直接在光源处输入 atmosphere 这个词。这是 Atmosphere Sun Light 功能的一个非常简化的演示。请确保选中了对应的选项（Atmosphere Sun Light），因为这会告知 Unreal 引擎该执行相应操作。无论是否选中，你的太阳角度都会与天空的散射效果产生关联。</p>
+        <p>所以如果现在我取消选中它，你就会发现该效果根本不会显示出来。因此，这是必须做的。否则你就无法看到天空效果。所以，万一你添加了大气天空效果，却什么都不会像这样显示出来，我认为调试时首先需要检查的就是你的定向光，要确保定向光已与大气阳光效果关联（Atmosphere Sun Light = true）。</p>
+        <p>因为可以把那三个元素看作是一个整体系统。如果我查看环境光照组合的话，你们会看到这和天空大气有关，也就是这里的蓝色背景，还有天空光本身，以及光源。所以这三者被视为一个整体系统。在虚幻引擎 5 的外部照明系统中，它们会协同工作。</p>
+        <p>作为用户我自己注意到的一个区别就是 UE4 和 UE5 之间的差别。因为在 UE4 中，其实不必特意确保天空大气与其它元素联动，你可以自行选择是否要这么做。但关键在于，除非这些组件能正确联动，否则整个系统根本无法运行。</p>
+        <p>简单回顾一下：天空大气、天空光以及我们的定向光源。这些就是开启大气光照，也就是大家常说的外部光照时所需的关键要素。</p>
+        <p>在开始之前各位，我有几项项目检查事项想快速过一遍。这样就能确保大家使用的是虚幻引擎 5，这样就能让 Lumen 功能正常运行了。这是我们今天的主题，但强调这一项还是非常必要的。</p>
+        <p>想必大家都清楚，我们必须启用光线追踪功能。那么有个快速的方法可以判断你是否已启用光线追踪：首先，当然要确保你的硬件配备了支持光线追踪的显卡；第二点则是你可以直接查看项目名称，你会在这里看到我的个人项目名称，因为这是我用来演示的示例项目。在这里你可以快速查看，并确认你的图形驱动是渲染硬件接口（RHI）。这个圆圈中最底下的那一行标注的是 DirectX 12。因为如果版本低于 11，那就无法启用光线追踪功能。</p>
+        <p>第二件事就是我们快速进入「窗口」和「项目设置」（Window → Project Settings），也就是文件选项。因为原来的位置已经不在原来的地方了。我们可以快速进入项目设置，只是想确认一下你是否启用了 Lumen。</p>
+        <p>其实真的非常简单。你可以快速点击选择 Lumen，确保它默认就能被启用即可。全局光照以及反射处理都是通过 Lumen 来完成的。需要记住的是，如果选择 Lumen，我们之所以放弃屏幕空间捕获功能，也是因为那个捕获功能原本是基于 SSR 的，所以是屏幕空间反射。而且它不再以那种方式处理了。如果我们使用 Lumen 的话，它就相当于其中的一个选项而已。所以如果我们选择搭配 Lumen 的全局光照方案，那么反射方式也必须与 Lumen 保持一致。</p>
+        <p>所以这里有两种选择，这其实完全取决于你的项目需求。因为我这里用的示例项目其实是室外照明场景。不过我的场景并没有大到离谱的程度，而且我有大量网格光源彼此紧挨着分布。所以我更倾向于使用光线追踪模式中的细节追踪（Detail Tracing）。</p>
+        <p>另一个简单的判断标准是：如果你正在处理一些较小的室内场景，且其中的网格之间存在大量交互，而且这些网格彼此之间的距离还比较近，我觉得选择细节追踪会是不错的选择。但如果是街道标志这类物体，或是景观类场景，那全局追踪（Global Tracing）会更为省力。</p>
+        <p>只需稍加注意即可，因为这确实关系到你硬件的性能预算。所以如果你为规模较大的场景选择精细追踪，可能会出现性能问题。比如你有一座巨大的街道，或者一个小城镇，而且其规模非常大，使用 Lumen 的话，你依然能够实现极高的画面质量。而就在这种情况下游戏就可能会崩溃。如果你做出了这样的选择，同时又发现加载场景时十分困难，一个简单的解决办法就是改回使用全局追踪。因为不管怎样，我觉得其实并没有太大区别。这就好比光线追踪的实现方式会有不同的侧重而已。不过也要格外小心谨慎，因为这更多取决于你的硬件性能，而非项目的设置方式。简单来说，差不多就是取决于你所做内容的规模。</p>
+        <p>还有另一件事，我肯定会再次谈到曝光问题。没错，曝光可是我最喜欢讨论的主题。不过那要等到几章之后，在我先详细解释外部设置之后才会讲到。所以你们首先需要仔细确认的一点是：在开始学习这门课程之前，只需输入 Exposure 这个词即可。</p>
+        <p>在我的讲座中，我会以自动曝光历史（Auto Exposure Histogram）功能作为讲解重点。是否需要在自动曝光设置中扩展默认亮度范围（Extend default luminance range in Auto Exposure settings），这完全由你们自己决定。因为就我的个人习惯而言，我通常会使用这个选项，并将其保持启用状态，因为大部分内容都是我亲自制作的。我是用电影级摄像机（Cine Camera）来渲染它们的，即便是在实时处理时，我依然会使用电影级摄像机。这样我就能拥有更多手动曝光控制选项，比如景深（DoF）或快门速度（shutter speed）这类参数。所以我觉得扩展这个参数范围能让我有更多掌控力。</p>
+        <p>但如果你目前还处于入门阶段，如果你认为自己是初学者的话，我建议你可以暂时不调整这些设置。因为默认情况下这样设置会使得曝光范围相对较短，这样会让你的工作更轻松。等你完成了任何类型的灯光项目之后，再尝试开启这个功能即可。但我认为一开始还是把事情简化些为好。</p>
+        <p>判断曝光是否合适的最佳方式就是查看曝光表。我们还得靠肉眼来查看，毕竟最终呈现的结果，玩家或观众看到的就是你们的作品。</p>
+        <p>另一件或许能帮大家节省些时间的办法是：通常我会在编辑器偏好设置里自定义快捷键。不过我得说自己算不上快捷键专家，所以我一般更倾向于直接按按钮再去寻找对应位置，因为大多数照明功能的操作都是这么进行的。</p>
+        <p>不过有一个功能我确实经常使用，那通常就是 Visualize HDR and Adaptation 功能。我从这里就能看出我正在使用 Shift 加上 V 键。如果我向上移动鼠标，系统就会展示出这张神秘又漂亮的图表。它日后会作为我们判断曝光值的参考依据。那些复杂的方法和操作，我稍后会再讲解。我只是想让大家明白这个功能到底是什么。要是想把开发工具里的这个功能调出来，也可以。你可以直接去可视化（Visualize）界面，应该就在这附近。可视化 → 适配（Adaptation）。</p>
+        <p>另外还有一个快捷键，也在编辑器设置里。你可能需要进入快捷键设置（Keyboard Shortcuts）页面。你会看到我设置了 Shift 加 C 作为捕捉（Capture）键。不过部分原因也是因为我的手比较小，这样对我来说设置超近距离拍摄会更方便。但这家伙所做的就是：看看如果你切换到天空光模式，就会看到捕捉功能启动。</p>
+        <p>没错，我们确实能够启用实时捕捉（Real Time Capture）功能。你可能会看到很多这类功能，都是为来自 ArchViz 的工具或任何实时变化的内容设计的。但说实话，在游戏里这会非常耗费时间。仅仅因为每秒都要用天空光捕捉整个场景，就会造成巨大的成本开销。即便使用最高级的渲染技术，在游戏制作中，这也绝非省钱的做法。所以我们通常仍然需要借助捕捉功能，然后还得重新进行捕捉。如果我在这里进行捕捉的话，你会看到一个小小的按钮用来重新捕捉内容。它就在天空光设置下方用于执行重新捕捉操作（Recapture）。</p>
+        <p>我快速向大家演示一下这个功能的具体运作方式。看，我正在操作，这样就能生成非常逼真的效果了。如果切换到纯光照模式（Lighting Only）的话，让我来开启这里的实时功能。</p>
+        <p>这还是让我想起灯光需要重新设置，因为默认情况下它是固定不变的（Static），我们不再需要固定状态了，我们要改为动态（Dynamic / Movable）模式。天际线（Sky Light）的处理方式也是一样的。</p>
+        <p>现在你可以看出地面实际上已经发生了变化，从之前那段蓝色的时段变成了天空光状态。这是因为天空光会自动为你捕捉这些变化。那如果我选择重新捕捉的话，我们再也看不到那种效果了。不过我们再试一次吧。你们注意看地面，它依然略带黄色和橙色。当我停止它之后，我得回到天空光模式，然后在这里再次进行重拍。</p>
+        <p>这样就能看到变化了。接下来我要做一个特写演示。大家可要仔细看哦。我们进入日落场景吧。接着选择天际线。注意看阴影区域的蓝色程度，就像这里一样。我现在要点击天空光并重新捕捉画面。</p>
+        <p>你们可以看到场景是如何更新的了。有时候人们会问：「为什么我的场景突然变了？」其实工具本身并没有出问题。</p>
+        <p>那就回到我的项目设置里吧。现在你们应该明白为什么我觉得为自己设置快捷键如此重要了。这样就能不断提醒自己：「我需要更新我的天空光，这就是我更新它的方法。」你们可以设置任意喜欢的按键。</p>
+        <p>它的功能是：告诉天空光「嘿，一天中不同时间太阳的位置已经变了。接下来我们需要你们重新采集数据，并读取相关信息。这样一整天的光照效果才能正常运作。」</p>
+        <p>好了，这也结束了我们这门虚幻引擎 5 升级版光照基础课程的第一部分介绍。下期见。我将为大家讲解如何正确设置，以实现 24 小时不间断的昼夜光照效果。到时候见。</p>
       </>
     ),
   },

@@ -823,6 +823,9 @@
     .action-rail {
       --action-inset: 8px;
       display: flex;
+      /* Volumes with many items (Archive now has seven) wrap onto a second row
+         instead of clipping the last pill; few items still stretch to fill. */
+      flex-wrap: wrap;
       align-items: center;
       gap: var(--action-inset);
       width: 100%;
@@ -836,7 +839,7 @@
 
     .pill {
       display: inline-flex;
-      flex: 1 1 0;
+      flex: 1 1 auto;
       align-items: center;
       justify-content: center;
       min-width: 0;
