@@ -371,4 +371,24 @@ export const CRAFT_WORKS: CraftWork[] = [
     meta: "单文件 · 9.3 MB",
     tags: ["游戏原型", "Three.js"],
   },
+  {
+    id: "march-witness",
+    kind: "互动叙事 · 单文件",
+    title: "随军记 — 560 天的长征见证",
+    description:
+      "薄复礼（Alfred Bosshardt）1934.10—1936.4 随红六军团转战五省：六章、十八则见证，环顾他看见的世界，把发光的见证记入日记。手机转动机身，电脑拖动画面或方向键。",
+    href: "/labs/march-witness/index.html",
+    meta: "单文件 · 775 KB",
+    tags: ["互动叙事", "长征史"],
+  },
+  {
+    id: "saltline-dock",
+    kind: "可走场景 · 程序化材质",
+    title: "雨夜码头 — 一张图都没用",
+    description:
+      "集装箱的波纹与锈、地面的积水、雨丝，全部由代码算出：WASD 走一圈雨夜码头，还能拧「灰模」和「湿度」两个旋钮看材质怎么变。",
+    href: "/labs/saltline-dock/index.html",
+    meta: "单文件 · 15 KB（three.js 走 CDN）",
+    tags: ["程序化材质", "WebGL"],
+  },
 ];
