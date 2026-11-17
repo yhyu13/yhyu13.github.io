@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export type ArchivePost = {
-  slug: "capsule" | "rainbow" | "ai-tutor";
+  slug: "capsule" | "rainbow" | "ai-tutor" | "scene-3d-pipeline" | "stageshow-teardown";
   title: string;
   date: string;
   authors?: string;
@@ -604,6 +604,730 @@ export const ARCHIVE_POSTS: ArchivePost[] = [
         <p>【26】Cepeda, N. J., Pashler, H., Vul, E., Wixted, J. T., &amp; Rohrer, D. (2006). Distributed Practice in Verbal Recall Tasks: A Review and Quantitative Synthesis. <em>Psychological Bulletin</em>, 132(3), 354–380. <a href="https://doi.org/10.1037/0033-2909.132.3.354" target="_blank" rel="noreferrer">https://doi.org/10.1037/0033-2909.132.3.354</a></p>
         <p>【27】教育部、国家发展改革委、工业和信息化部、科技部、国家数据局：《「人工智能+教育」行动计划》，教科信〔2026〕1 号，2026 年 4 月 2 日. <a href="https://www.gov.cn/zhengce/zhengceku/202604/content_7065138.htm" target="_blank" rel="noreferrer">https://www.gov.cn/zhengce/zhengceku/202604/content_7065138.htm</a></p>
         <p>【28】正观新闻网：《狂揽 10 亿美元营收的学而思学习机，AI 批改、卡顿闪退问题投诉不断》（二手财经报道）. <a href="https://zhengguannews.cn/zghnews/416001.html" target="_blank" rel="noreferrer">https://zhengguannews.cn/zghnews/416001.html</a></p>
+      </>
+    ),
+  },
+  {
+    slug: "scene-3d-pipeline",
+    title: "AI 驱动的 3D 场景生成管线：生态与设计",
+    date: "2026-11-07",
+    authors: "Hang Yu",
+    tags: ["3D", "Agent 工具链"],
+    body: (
+      <>
+        <blockquote><p>调研日期：2026-11-07 调研人：MCode 范围：DCC 侧 agent bridge、资产生成（AIGC）、贴图与光照、引擎侧落地、场景级世界模型</p></blockquote>
+        <h2>English rephrase</h2>
+        <p>"How do we build a complete AI-driven 3D scene pipeline — starting from a single poster image or one sentence, going through DCC tools (Blender / Unreal) and AIGC generators, and covering lighting, texturing, and engine handoff? Which MCP servers and agent skills actually exist and are still maintained today?"</p>
+        <hr />
+        <h2>一、结论先行</h2>
+        <ol>
+        <li>Blocker 已经不存在，问题是选型。Blender 侧目前有两条成熟且<em>互斥</em>的 agent bridge：<code>MCP for Blender</code>（ahujasid，社区事实标准，9 个工具）和 <code>DSH × Blender</code>（sixtysevenlf，15 个工具，带多机位盲审与判定门）。两者都监听 <u>127.0.0.1:9876</u>，只能留一个 [来源: 1-mcpforblender][来源: 1-dshreadme]。</li>
+        <li>资产生成层官方 MCP 都存在，但健康度差异很大。<code>Meshy MCP</code> 是这个品类里维护最好的官方选择；<code>Tripo MCP</code>（VAST 官方）自 <u>2025-04-14</u> 起无提交，README 仍写 alpha，PyPI 停在 <u>0.1.2</u>，<u>8</u> 个 issue 未回 —— star 数是历史，不是健康度 [来源: 3-mcpfilm-tripo][来源: 3-mcpso-tripo]。</li>
+        <li>贴图与光照这一层已经彻底程序化，不需要额外预算。<code>Poly Haven</code> 提供约 <u>2,400</u> 个 HDRI / 贴图 / 模型，全部 CC0、无需 API key、无账号 [来源: 1-mcpforblender]。<code>MCP for Blender</code> 的 <code>search_assets</code> / <code>import_asset</code> 直接把 HDRI、Principled 材质、<code>.blend</code> 模型拉进场景 [来源: 1-mcpforblender]。</li>
+        <li>真正能"一句话→可漫游场景"的是世界模型层。<code>World Labs Marble</code> + World API 接受文本 / 单图 / 多图 / 视频 / 全景 / 粗体块布局，输出持久化 3D 世界，可导出 splat（SPZ / PLY）、碰撞网格 GLB、高质量网格 GLB、360 全景 PNG、相机路径视频 [来源: 3-marble-skill]。但它是<em>静态有界</em>场景，没有烘焙进物理与行为逻辑。</li>
+        <li>整条管线的瓶颈不在生成，在验收。<code>DSH × Blender</code> 给出的范式是值得照抄的：把 <code>audit_gate</code> 作为唯一裁决者，<code>doctor → kind=ok</code> 作为唯一安装判据 [来源: 1-dshreadme]。没有机器判定的 gate，AI 自评必然通过。</li>
+        <li>本机现状（<u>2026-11-07</u> 实测）：DSH 插件与 Blender addon <em>都还没装</em>；Blender 装的是 <u>5.2</u>，而插件 README 写明「4.2 LTS 为测试版本，5.x 尚未验证」；本机 Node 为 <u>v22.16.0</u>，低于插件源码构建所需的 <u>24.9</u>（npm 安装路径走 DSH 自带运行时，不受影响）。</li>
+        </ol>
+        <hr />
+        <h2>二、事实层：生态分层地图</h2>
+        <h3>2.1 DCC 侧 agent bridge（模型 ↔ Blender）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项目</th>
+        <th>关键事实</th>
+        <th>维护状态</th>
+        <th>来源</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>ahujasid/mcp-for-blender</code></td><td>9 个工具：<code>execute_blender_code</code> / <code>look</code> / <code>get_scene_info</code> / <code>generate_3d</code> / <code>search_assets</code> / <code>import_asset</code> / <code>get_addon_status</code> / <code>disable_telemetry</code> / <code>record_trajectory_feedback</code>。<code>generate_3d</code> 一键接入 Tripo / Hunyuan3D / Hyper3D Rodin / Meshy。端口 9876，支持 safe mode 与多实例端口</td><td>活跃；Windows 有 <code>install.ps1</code> 一键装</td><td>1-mcpforblender</td></tr>
+        <tr><td><code>sixtysevenlf/dsh-blender-plugin</code></td><td>15 个工具，含 <code>blender_rt_see/do/watch/worker/headless/job/loop/txn/preset/perf/opt/cmd/plan</code>、<code>blender_viewport</code>。参考图量测、参数化曲面（loft / sweep / 四边片）、装配审计与修复、blockout + turntable、视觉验收门</td><td>活跃；npm 当前 <u>3.0.6</u></td><td>1-dshreadme</td></tr>
+        <tr><td><code>dcc-mcp/dcc-mcp-core</code></td><td>一个网关 + CLI 覆盖多个 DCC，带 typed tools 与 Claude Code / Codex agent skills。core <u>53</u> stars，blender <u>45</u>，maya <u>58</u></td><td>2026-10 仍有推送</td><td>3-polywright</td></tr>
+        <tr><td><code>yuri-schmaltz/mcp_blender</code></td><td>v2.18.0，含空间工具、local AI 3D generator、Poly Haven / AmbientCG / Sketchfab PBR 接入、产品摄影棚自动布光、视口实时截图、内嵌 WebUI</td><td>活跃</td><td>3-search1</td></tr>
+        <tr><td><code>djeada/blender-mcp-server</code></td><td>27 个工具分 7 个命名空间，异步作业不冻结视口，支持 headless</td><td>活跃</td><td>3-search1</td></tr>
+        <tr><td><code>zorak1103/blender-mcp</code></td><td>工具面覆盖 Scene / Objects / Materials / Render / Shader / Modifiers / Animation / Lighting / Camera / World / Scripting，HTTP MCP + Bearer token</td><td>活跃</td><td>3-search1</td></tr>
+        <tr><td><code>RobLe3/cc-blender-skill</code></td><td>29 个 Claude Code skill：路由、text-to-blender、建模、材质、灯光、导出、参考图重建、多视图拟合循环、质量精修自循环</td><td>依赖 blender-mcp 占用 9876</td><td>3-polywright</td></tr>
+        <tr><td>Blender 官方 <code>blender.org/lab/mcp-server</code></td><td>Blender 基金会自有的 MCP server</td><td>官方</td><td>3-polywright</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>2.2 引擎侧</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项目</th>
+        <th>关键事实</th>
+        <th>来源</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>ChiR24/Unreal_mcp</code></td><td>用 Geometry Script 管几何：primitives / booleans / extrude / Nanite。<u>916</u> stars</td><td>3-polywright</td></tr>
+        <tr><td>Unreal 官方 MCP</td><td>随 UE <u>5.8</u> 出货；UEFN 于 <u>2026-08-20</u> 上线</td><td>3-polywright</td></tr>
+        <tr><td><code>CoplayDev/unity-mcp</code></td><td>Unity Package Manager 从 git URL 安装，TS → 6.x，面向 Claude Desktop / Code / Cursor / VS Code / Windsurf / Cline / Gemini CLI</td><td>3-search2</td></tr>
+        <tr><td><code>Coding-Solo/godot-mcp</code></td><td>Godot 侧最流行，<u>5,948</u> stars，可修脚本、读报错、跑游戏、用截图验证输出</td><td>3-search2</td></tr>
+        <tr><td><code>capoomgit/houdini-mcp</code></td><td>节点 / 参数 / Python</td><td>3-polywright</td></tr>
+        <tr><td><code>neka-nat/freecad-mcp</code> · <code>RobertCoop/openscad-mcp</code> · <code>cl0nazepamm/3dsmax-mcp</code> · Maya MCP 三家</td><td>CAD / DCC 侧补充</td><td>3-polywright</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>2.3 资产生成（AIGC）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项目</th>
+        <th>关键事实</th>
+        <th>来源</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>Tripo</td><td>官方 MCP（<code>uvx tripo-mcp</code>）+ Python SDK（PyPI <code>tripo3d</code>）+ 官方 Blender 扩展 <code>tripo-3d-for-blender</code>。价格 <u>1 credit = $0.01</u>；text-to-3D <u>10–20</u> credits，image-to-3D <u>20–30</u>；附加项 HD 贴图 +10、8K 贴图 +20、HD 几何 +20、quad mesh +5</td><td>3-mcpfilm-tripo · 3-agentgid</td></tr>
+        <tr><td>Tripo MCP 健康度</td><td>最后提交 <u>2025-04-14</u>，PyPI <u>0.1.2</u>，README 仍写 alpha，<u>8</u> 个 issue 未回。社区策展明确写「把 star 当历史，不要当健康度」</td><td>3-mcpfilm-tripo</td></tr>
+        <tr><td>Meshy</td><td>官方 MCP + <code>meshy-3d-agent</code> skills：文本 / 图 / 多图 → 3D，remesh、retexture、rig、animate、送切片器。MCP <u>50</u> stars，skills <u>98</u> stars，2026-10 有推送 —— 同品类里维护最好</td><td>3-polywright</td></tr>
+        <tr><td>Hunyuan3D</td><td>腾讯云官方 API，国内 <code>ai3d</code> / 国际 <code>hunyuan</code> 两套端点；PBR 可选</td><td>1-mcpforblender</td></tr>
+        <tr><td>Hyper3D Rodin</td><td>MCP for Blender 内建接入</td><td>1-mcpforblender</td></tr>
+        <tr><td>TRELLIS.2</td><td>Microsoft 开源，<u>11,849</u> stars，ComfyUI 原生</td><td>3-polywright</td></tr>
+        <tr><td>Meshwright（seena18）</td><td>LangGraph 管线 + MCP + CLI：prompt → 参考图 → TRELLIS.2 → GLB，每步带视觉复审，Blender 四视图 turntable + 网格统计，异步作业工具</td><td>3-polywright</td></tr>
+        <tr><td>ShapeWright</td><td>Python CLI + MCP，<u>18</u> 个工具，基于 build123d / OCP</td><td>3-polywright</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>2.4 贴图与光照（可程序化，无需额外预算）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>来源</th>
+        <th>关键事实</th>
+        <th>来源</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>Poly Haven</td><td>约 <u>2,400</u> 个 HDRI / 贴图 / 模型，全部 CC0，捐赠资助，无 API key、无账号。导入时把 <code>polyhaven_id / url / authors / resolution / licence</code> 写成自定义属性留在 <code>.blend</code> 里</td><td>1-mcpforblender</td></tr>
+        <tr><td>Sketchfab / Poly Pizza</td><td>Sketchfab 模型；Poly Pizza 约 <u>10,600</u> 个免费低模（含 Google Poly 存档），但约 <u>69 %</u> 是 CC-BY，需要署名。<code>static.poly.pizza</code> 有 Cloudflare 挡机房 / VPN IP</td><td>1-mcpforblender</td></tr>
+        <tr><td>Meshy retexture</td><td>官方 MCP 内建重贴图能力</td><td>3-polywright</td></tr>
+        <tr><td>AmbientCG</td><td><code>mcp_blender</code> 内建 PBR provider</td><td>3-search1</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>2.5 场景级（世界模型）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>项目</th>
+        <th>关键事实</th>
+        <th>来源</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>World Labs Marble</td><td>多模态世界模型，GA <u>2025-11-12</u>，World API 公告 <u>2026-01-21</u>。输入模式：文本 / 单图 / 多图（最多 4 张，API 重建模式最多 8 张）/ 视频（≤100 MB）/ 360 全景 / 粗体块布局</td><td>3-marble-skill</td></tr>
+        <tr><td>Chisel</td><td>Marble 的粗体块工具，把结构与风格解耦：box / plane / wall / extrude，可导入 GLB / FBX 当体块，摆放全景相机</td><td>3-marble-skill</td></tr>
+        <tr><td>导出格式</td><td>SPZ（Marble 原生 splat）/ PLY（通用 splat）/ 碰撞网格 GLB（约 <u>100–200k</u> 三角，<u>3–4 MB</u>）/ 高质量网格 GLB（约 <u>600k</u> 三角带贴图，或约 <u>1M</u> 顶点着色，<u>100–200 MB</u>）/ 360 全景 PNG / 相机路径视频</td><td>3-marble-skill</td></tr>
+        <tr><td>成本</td><td>App 档位 Free 约 4 次 / Standard 约 $20 约 12 次 / Pro 约 $35 约 25 次 / Max 约 $95 约 75 次（每月）。API 单独钱包，<u>$1.00 / 1,250 credits</u>，起充 <u>$5</u>。draft 约 150–250 credits（<u>约 $0.12–0.20</u>），1.0 / 1.1 约 <u>1,500–1,600</u> credits（<u>约 $1.20</u>），1.1 Plus 按体积涨到约 <u>3,000</u></td><td>3-marble-skill</td></tr>
+        <tr><td>权利</td><td>Free 档输出 World Labs 保留权利、仅个人非商用。商用需 Pro / Max，或付费 API 权益。<strong>App 积分与 API 积分是两个钱包，不能互花</strong></td><td>3-marble-skill</td></tr>
+        <tr><td>坑</td><td>导出默认 OpenCV 坐标系，OpenGL 侧要把 Y 与 Z 乘 −1，否则场景上下颠倒。薄结构 / 透明 / 反射面重建伪影多。高质量网格耗时最长约 <u>1 小时</u>，限流约 <u>4 次/小时</u>，仅 Pro 档</td><td>3-marble-skill</td></tr>
+        <tr><td>Genie 3</td><td>DeepMind，<u>20–24 fps</u> @720p，可实时导航；官方自述动作空间有限、连续交互仅几分钟</td><td>3-elseland</td></tr>
+        <tr><td>NVIDIA Cosmos</td><td>世界基础模型，下载量超 <u>200 万</u> 次</td><td>3-algoryte</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <h3>2.6 本机已有资产（grounding，非网络信息）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>资产</th>
+        <th>位置</th>
+        <th>状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>ai-3d-scene-pipeline</code></td><td><code>C:\Git-repo-AI\4_Skill\AgentSkillsVault\SKILL\game-dev\</code></td><td>已有。链路是：概念参考图 → 资产拆解分流 → Tripo 生成 → Blender/Unity 组装 → 多机位盲审迭代</td></tr>
+        <tr><td><code>ai-3d-character-pipeline</code> · <code>blender-game-assets-v2</code> · <code>procedural-3d-scenes</code> · <code>three-procedural-scenes</code></td><td>同上</td><td>已有</td></tr>
+        <tr><td><code>tripo-3d-generation</code></td><td>—</td><td><em>不存在</em>。但 <code>ai-3d-scene-pipeline</code> 正文写着「批量生成用 API（见已装 skill <code>tripo-3d-generation</code>）」—— 这是一条失效引用</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <hr />
+        <h2>三、[判断与建议]</h2>
+        <p>以下为判断，不是已核实事实。</p>
+        <h3>3.1 推荐主架构</h3>
+        <p>以 <code>DSH × Blender</code> 作为 DCC 侧 agent bridge，理由是它把<em>验收</em>做进了一等公民，而这正是当前所有公开方案里最稀缺的一环。<code>MCP for Blender</code> 的 <code>generate_3d</code> / <code>search_assets</code> / <code>import_asset</code> 三件套更成熟（Poly Haven + Tripo + Meshy + Rodin + Hunyuan3D 一个入口），可作为资产层补充——但两者抢同一个 9876 端口，不能并存。</p>
+        <p>如果不想依赖 DSH，另一条等效路线是 <code>MCP for Blender</code> + 自己写 <code>blender_rt_see/audit_*</code> 等价的验收脚本。代价是要自建盲审闭环，工作量比装 DSH 插件大一个量级。</p>
+        <h3>3.2 关于 Tripo 怎么接</h3>
+        <p>Tripo 的 <em>API</em> 是活 的（SDK 2026-10 仍有推送），死的是官方 <em>MCP 包装</em>。所以更稳的接法是：不用 <code>tripo-mcp</code>，直接用 <code>tripo3d</code> Python SDK 或 <code>tripo-cli</code>（npm），在管线里当一个命令行步骤调用，产出 GLB 交给 Blender 导入。这样绕开了那个 18 个月没动的 alpha 包，同时保留 Tripo 的生成质量和价格优势。</p>
+        <h3>3.3 三档落地路径</h3>
+        <ul>
+        <li><em>最省事</em>：先只装 DSH 插件 + addon，用它的 headless 作业区把「参考图 → 装配 → 判定」这条主干跑通，资产先用 Poly Haven + 参数化搭建，不接任何付费生成。</li>
+        <li><em>中等</em>：主干跑通后接 Tripo SDK 只做有机/雕塑感道具，规则几何仍用代码搭。</li>
+        <li><em>最远</em>：接 Marble World API 做场景底稿，用 Blender 修结构、补光照、贴图，再进引擎。</li>
+        </ul>
+        <h3>3.4 三个必须先解决的现实问题</h3>
+        <ol>
+        <li><em>端口独占</em>：DSH Blender Bridge 与 MCP for Blender 都占 <u>127.0.0.1:9876</u>。同时装会互相抢，表现是「时好时坏」。必须二选一。</li>
+        <li><em>Blender 版本</em>：本机是 <u>5.2</u>，插件 README 明确「4.2 LTS 为测试版本，5.x 尚未验证」。要么装 <u>4.2 LTS</u> 并等插件验证 5.x，要么接受首跑可能踩 addon API 变更。</li>
+        <li><em>Node 版本</em>：本机 <u>v22.16.0</u>，插件源码构建要求 <u>≥ 24.9</u>。走 npm 安装路径不受影响（用 DSH 自带运行时），但如果要本地改插件源码，得先升 Node。</li>
+        </ol>
+        <hr />
+        <h2>四、表格总结</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>选项</th>
+        <th>代价</th>
+        <th>影响</th>
+        <th>ROI</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>我1：只装 DSH 插件 + addon，跑通「参考图→装配→判定」主干</td><td>装插件约 <u>30–60 分钟</u>（估算，含重启 DSH 与 doctor 校验）；需降级 Blender 或接受 5.2 未验证</td><td>拿到完整验收闭环，资产先靠 Poly Haven + 参数化搭建；生成质量暂不追求</td><td>投入 1 人时 → 产出可复用管线主干 → 回收周期 <u>当次任务内</u>（估算）</td></tr>
+        <tr><td>我2：主干之上接 Tripo SDK 做有机道具</td><td>需申请 API key；单资产 <u>10–30 credits</u>（<u>约 $0.10–0.30</u>）；布线约 <u>2–4 小时</u>（估算）</td><td>有机/雕塑感资产质量到位，拓扑仍需 Blender 侧清理</td><td>投入约 <u>$0.30–1.20</u> + <u>2–4 小时</u> → 产出场景道具库 → 回收周期 <u>首个客户场景</u>（估算）</td></tr>
+        <tr><td>你1：接 Marble World API 做场景底稿</td><td>商用需 Pro 档约 <u>$35/月</u>；单世界 draft 约 <u>$0.12–0.20</u>、1.1 约 <u>$1.20</u>；高质量网格限 <u>4 次/小时</u></td><td>「一句话→可漫游场景」成立，但拿到的是静态有界世界，物理与行为逻辑仍需在引擎里补</td><td>投入约 <u>$1.20</u>/世界 + 修整工时 → 产出可进引擎的场景底稿 → 回收周期 <u>每场景一次</u>（估算）</td></tr>
+        <tr><td>你2：全链路（Marble 底稿 + Tripo 道具 + Blender 精修 + 引擎落地 + 盲审）</td><td>首条链路搭建约 <u>1–2 周</u>（估算）；月度生成成本约 <u>$5–40</u>（估算）；场景数量受限</td><td>唯一能同时满足「一句话/海报 → 生产可用 3D 场景」的路子，但依赖多、任一环掉链子就断</td><td>投入 <u>1–2 周</u> + 月度 <u>$5–40</u> → 产出可交付场景流水线 → 回收周期 <u>第 2 条场景起</u>（估算）</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <hr />
+        <h2>五、来源清单</h2>
+        <p><strong>一手（项目官方仓库 / 官方文档，本轮直接抓取）</strong></p>
+        <ul>
+        <li>[1-mcpforblender] <code>ahujasid/mcp-for-blender</code> README — <a href="https://github.com/ahujasid/mcp-for-blender" target="_blank" rel="noreferrer">https://github.com/ahujasid/mcp-for-blender</a></li>
+        <li>[1-dshreadme] <code>sixtysevenlf/dsh-blender-plugin</code> README — <a href="https://github.com/sixtysevenlf/dsh-blender-plugin" target="_blank" rel="noreferrer">https://github.com/sixtysevenlf/dsh-blender-plugin</a></li>
+        </ul>
+        <p><strong>策展目录 / 社区汇总（仅供参考，已在正文标注）</strong></p>
+        <ul>
+        <li>[3-mcpfilm-tripo] mcp.film Tripo MCP 条目（策展核实于 2026-10-16）— <a href="https://mcp.film/mcps/tripo" target="_blank" rel="noreferrer">https://mcp.film/mcps/tripo</a></li>
+        <li>[3-mcpso-tripo] MCP Servers / Tripo MCP Server 条目 — <a href="https://mcp.so/servers/tripo-mcp" target="_blank" rel="noreferrer">https://mcp.so/servers/tripo-mcp</a></li>
+        <li>[3-agentgid] agentgid Tripo API 定价页（核对于 2026-10-09）— <a href="https://agentgid.com/apis/tripo" target="_blank" rel="noreferrer">https://agentgid.com/apis/tripo</a></li>
+        <li>[3-marble-skill] 社区整理的 World Labs Marble skill（逐条标注一手出处与核实日期）— <a href="https://github.com/calesthio/generative-media-skills/blob/HEAD/skills/providers/world-models/world-labs-marble/SKILL.md" target="_blank" rel="noreferrer">https://github.com/calesthio/generative-media-skills/blob/HEAD/skills/providers/world-models/world-labs-marble/SKILL.md</a></li>
+        <li>[3-polywright] <code>m4bwav/polywright</code> AI-agents-and-3d 调研（GitHub 数据采集于 2026-10-11）— <a href="https://github.com/m4bwav/polywright/blob/main/ai-docs/research/2026-10-11-ai-agents-and-3d.md" target="_blank" rel="noreferrer">https://github.com/m4bwav/polywright/blob/main/ai-docs/research/2026-10-11-ai-agents-and-3d.md</a></li>
+        <li>[3-search1] / [3-search2] / [3-elseland] / [3-algoryte] — 本轮检索返回的社区文章与目录页</li>
+        </ul>
+        <p><strong>本机实测</strong></p>
+        <ul>
+        <li>Blender 安装目录、<code>.dsh\profiles\desktop\package.json</code>、Blender 5.2 用户扩展目录、<code>node -v</code>、三个 DASH 音轨的波形与 ASR 结果</li>
+        </ul>
+        <hr />
+        <p>免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p>
+        <h2>一句话 / 一张海报 → 完整 3D 场景 · 管线设计</h2>
+        <blockquote><p>版本：v1.0 · 2026-11-07 目标：把「从海报或一句话，用 DCC 工具和 AIGC 工具，生成整个 3D 场景」变成一条<em>可重复、可验收、可交付</em>的链路，而不是一次性 demo。 配套调研：<code>3D场景生成生态调研.md</code></p></blockquote>
+        <h2>English rephrase</h2>
+        <p>"Design a complete, repeatable 3D scene pipeline: from a poster image or one sentence, through reference normalization, asset triage, generative asset production, scene assembly, texturing, lighting, blind multi-view validation, and engine handoff — with machine-checkable gates at every stage."</p>
+        <hr />
+        <h2>零、一句话架构</h2>
+        <blockquote><p>参考层 → 分流层 → 资产层 → 场景层 → 表现层 → 验收层 → 交付层</p></blockquote>
+        <p>每层只有一个职责，每层只有一个产出物，每层只有一个机器判据。判据不过就退回上一层，不许带着问题往下走。</p>
+        <hr />
+        <h2>一、输入契约：把海报和一句话拉平成同一种输入</h2>
+        <p>两种入口最终必须收敛到同一份<strong>统一中间表示</strong> <code>scene-spec.yaml</code> + 一组参考图。</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>入口</th>
+        <th>归一化步骤</th>
+        <th>产出</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>一句话</td><td>文本 → 场景类型 / 主体 / 时代 / 情绪 / 光照假设 → 反推主视角描述</td><td>参考图集（至少 3 张）+ <code>scene-spec.yaml</code> 草稿</td></tr>
+        <tr><td>一张海报</td><td>海报 → 分割出主体 / 背景 / 光源方向 → 色彩与材质采样 → 重建缺失角度</td><td>参考图集（至少 3 张）+ <code>scene-spec.yaml</code> 草稿</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p><code>scene-spec.yaml</code> 的最小字段（这是整条管线的"契约"，缺字段就补图不补猜）：</p>
+        <pre data-lang="yaml"><code>scene_id: &lt;slug&gt;
+        intent: &lt;一句话意图，原样保留，不改写&gt;
+        layout:                     # 平面布局，单位米
+          - &#123; name: floor,   type: plane,  size: [12, 12], origin: [0, 0, 0] &#125;
+          - &#123; name: wall_n,  type: wall,   size: [12, 3.2], origin: [0, 6, 1.6] &#125;
+        props:                      # 资产清单，含分流结论
+          - name: statue_01
+            brief: "风化石雕像，高 2.4m，躯干有横向裂纹"
+            route: generate         # generate | parametric | library
+            generator: tripo        # tripo | meshy | trellis | none
+            ref_images: [ref/front.png, ref/side.png]
+            size_hint: [0.9, 0.9, 2.4]
+            material_intent: "风化石灰，无涂装，中等粗糙度"
+        lighting:
+          key:   &#123; kind: hdri, source: polyhaven, query: "overcast afternoon" &#125;
+          fill:  &#123; kind: area,  energy: 120, size: 3.0 &#125;
+          world: &#123; hdri_intensity: 0.6, exposure: 0.0 &#125;
+        camera:
+          views: [ &#123; name: iso,   type: ortho, azimuth: 45,  elevation: 35 &#125;,
+                   &#123; name: front, type: ortho, azimuth: 0,   elevation: 0  &#125;,
+                   &#123; name: right, type: ortho, azimuth: 90,  elevation: 0  &#125; ]</code></pre>
+        <p>约定三条：</p>
+        <ol>
+        <li><em>场景结构用数字表达，不用形容词表达</em>。灯光写 HDRI 查询词，材质写"风化石灰、中等粗糙度"，不写"好看的石头"。</li>
+        <li><em>每条 prop 必须带 <code>route</code> 字段</em>，不填不允许进入资产层。</li>
+        <li><em>相机位在 spec 里先定死</em>。后面对比参考图时同机位对比，否则盲审无效。</li>
+        </ol>
+        <hr />
+        <h2>二、管线总览</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>#</th>
+        <th>阶段</th>
+        <th>产出物</th>
+        <th>机器判据（gate）</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>0</td><td>输入归一化</td><td><code>scene-spec.yaml</code> + 参考图集</td><td>参考图 ≥ <u>3</u> 张且视角互不重复；spec 字段无空缺</td></tr>
+        <tr><td>1</td><td>资产分流</td><td>带 <code>route</code> 标注的 spec</td><td>每条 prop 都有 route；可参数化项 ≥ <u>50 %</u>（估算阈值，可调）</td></tr>
+        <tr><td>2</td><td>资产生成</td><td><code>&lt;name&gt;.glb</code> 集合</td><td>每个资产存在、面数与尺寸在区间内、无非流形</td></tr>
+        <tr><td>3</td><td>场景搭建</td><td><code>scene.blend</code></td><td><code>audit_connectivity</code> 通过；<code>audit_interference</code> 无遮挡</td></tr>
+        <tr><td>4</td><td>贴图</td><td>Principled 材质 + 贴图集</td><td>每个 mesh 材质非空；贴图全部来自可署名来源</td></tr>
+        <tr><td>5</td><td>光照</td><td>World + 灯组</td><td>三机位渲染亮度方差在目标区间</td></tr>
+        <tr><td>6</td><td>盲审</td><td>差异清单</td><td>差异清单为空，或剩余差异被显式接受并记录</td></tr>
+        <tr><td>7</td><td>交付</td><td>GLB / FBX + manifest</td><td>引擎内可加载；manifest 与 spec 一致</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <hr />
+        <h2>三、逐阶段规格</h2>
+        <h3>阶段 0 · 输入归一化</h3>
+        <p><em>做什么</em>：把海报或一句话变成参考图集 + spec 草稿。</p>
+        <ul>
+        <li>一句话入口：用图像模型按 spec 的三个相机位各出一张参考图（iso / front / right）。这一步是<strong>最容易被跳过也最值钱</strong>的一步——没有多视角，后面全是猜。</li>
+        <li>海报入口：先分割海报，提取主体轮廓与光源方向；再补两个缺失角度的反推图。</li>
+        <li>一致性检查：三张参考图里服装 / 比例 / 配色必须一致。不一致就重出，不要硬着头皮往下走。</li>
+        </ul>
+        <p><em>判据</em>：三视角参考图存在；同一元素的横向像素占比在三图之间偏差 ≤ <u>10 %</u>（估算，可调）。</p>
+        <h3>阶段 1 · 资产分流（最值钱的一步）</h3>
+        <p>核心判据一句话：<em>这个形状能被参数化描述吗？能 → 代码；不能 → 生成。</em></p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>资产类型</th>
+        <th>route</th>
+        <th>工具</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>墙 / 台阶 / 箱 / 路 / 柱 / 栏杆等规则几何</td><td><code>parametric</code></td><td>Blender <code>bpy</code> 脚本、阵列 / 布尔 / 挤出</td></tr>
+        <tr><td>有机、雕塑感、纹理复杂（雕像、异形植物、软装）</td><td><code>generate</code></td><td>Tripo / Meshy / TRELLIS.2</td></tr>
+        <tr><td>通用家具 / 道具 / 植被</td><td><code>library</code></td><td>Poly Haven / Sketchfab / Poly Pizza</td></tr>
+        <tr><td>角色</td><td><code>generate</code> + 单独绑定</td><td>见 <code>ai-3d-character-pipeline</code></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p><em>为什么必须分流</em>：全丢给生成模型，拓扑不可控、风格不统一、且每个资产都花钱。全用代码搭，有机形状做不出来。</p>
+        <p><em>判据</em>：spec 里每条 prop 的 route 非空；<code>parametric</code> 项占比达标；每条 <code>generate</code> 项有 ≤ <u>2</u> 张参考图与一句 <code>brief</code>。</p>
+        <h3>阶段 2 · 资产生成</h3>
+        <p>推荐接法：<strong>绕开官方 MCP 包，直接用 API / SDK</strong>，因为 Tripo 官方 MCP 自 <u>2025-04</u> 起无提交。</p>
+        <pre data-lang="bash"><code># Tripo：文本 → GLB（官方 Python SDK，PyPI: tripo3d）
+        python -c "from tripo3d.client import Client; ..."
+        # 或 npm: tripo-cli
+
+        # Meshy：官方 MCP（这层维护最好）
+        # TRELLIS.2：本地跑，适合要隐私或大批量的批量道具</code></pre>
+        <p><em>判据</em>：资产 GLB 落盘；三角面数落在 <code>[min, max]</code> 区间（按 <code>size_hint</code> 估）；包围盒尺寸与 <code>size_hint</code> 偏差 ≤ <u>15 %</u>（估算）；无非流形边。</p>
+        <p><em>失败处理</em>：生成结果不合格时，<strong>优先改 brief 而不是换生成器</strong>。Tripo 支持 text / single image / multiview（front / left / right / back）三种输入——有参考图就一定用 multiview，不要只靠文本。</p>
+        <h3>阶段 3 · 场景搭建</h3>
+        <ul>
+        <li>全部用脚本搭建，重复摆放用阵列 / 复制，材质分配用批量接口。手点的东西不进入管线。</li>
+        <li>结构清理（减面、法线、重拓扑）在这里做完，引擎侧只做场景与交互。</li>
+        <li>用 DSH × Blender 的 <code>blender_rt_do</code>（持久 Python kernel）执行，<strong>不要</strong>用一次性 <code>blender -b</code> 脚本跑完就散——持久 kernel 才能增量迭代。</li>
+        </ul>
+        <p><em>判据</em>：<code>audit_connectivity</code> 通过（<u>0</u> 错误）；<code>audit_interference</code> 无遮挡（<u>0 mm³</u>）；同机位渲染与参考图比对，构件位置偏差在容差内。</p>
+        <h3>阶段 4 · 贴图</h3>
+        <ul>
+        <li>底子用 <code>Poly Haven</code>（CC0，无需 key）：<code>search_assets(source="polyhaven", query=..., asset_type="textures")</code> → <code>import_asset(...)</code>。导入时把来源写进自定义属性，署名问题在源头解决。</li>
+        <li>生成的资产自带贴图不够时，用 Meshy 的 <code>retexture</code>，或本地跑生成式贴图模型。</li>
+        <li>每个 mesh 必须有非空材质；纯默认灰材质视为未完成。</li>
+        </ul>
+        <p><em>判据</em>：mesh 材质槽非空；贴图来源可追溯（写进 manifest）；贴图分辨率 ≤ <u>2K</u>（除非近景特写，否则 ≤ <u>1K</u>——文件大小每档翻 <u>4</u> 倍）。</p>
+        <h3>阶段 5 · 光照</h3>
+        <p>三件套，按顺序：</p>
+        <ol>
+        <li><em>环境</em>：Poly Haven HDRI 打底，<code>world</code> 强度可调，HDRI 打包进 <code>.blend</code>（保存后仍有效）。</li>
+        <li><em>主光</em>：按 spec 的 <code>key</code>，用 area light 或 sun，对齐参考图的光源方向。</li>
+        <li><em>补光 / 轮廓光</em>：单侧场景必须补，否则渲染发闷。</li>
+        </ol>
+        <p><em>判据</em>：三个机位渲染图的亮度均值落在参考图 ±<u>15 %</u>（估算）；直方图不出现大面积死黑或过曝。</p>
+        <h3>阶段 6 · 盲审（质量闸，不可省）</h3>
+        <p>这是整条链路的价值所在，也是最容易被跳过的一步。</p>
+        <p>规则：</p>
+        <ul>
+        <li>审查方<em>独立于</em>实现方，不共享实现过程，只拿<strong>渲染图 vs 参考图</strong>。</li>
+        <li>逐机位、逐角度找差异，不做整体印象打分。</li>
+        <li>差异清单为空（或剩余差异被显式接受并记录）才算过。</li>
+        </ul>
+        <p>实操上，DSH × Blender 已经把这条做成了工具链：<code>ac_render_views</code>（iso / front / right）+ <code>audit_gate</code>（<code>ok=true</code>）+ <code>blender_rt_txn</code>（快照回滚）+ 轨迹回溯。直接用，不要自己重造。</p>
+        <p><em>判据</em>：<code>audit_gate</code> 返回 <code>ok=true</code> 且失败数 <u>0</u>；差异清单为空或已签字接受。</p>
+        <h3>阶段 7 · 交付</h3>
+        <ul>
+        <li>导出 GLB（通用）/ FBX（引擎）/ OBJ（老管线），同时输出 <code>manifest.json</code>：每个资产来源、生成器、模型版本、prompt、参考图、变换、授权、日期、审查人、用途。</li>
+        <li>引擎内也要截一次图复核——只看 Blender 会漏掉引擎里的穿帮与光照差异。</li>
+        </ul>
+        <p><em>判据</em>：引擎内可加载并走通；引擎内截图与 Blender 渲染无明显差异；manifest 覆盖全部资产。</p>
+        <hr />
+        <h2>四、工具与端口配置</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>角色</th>
+        <th>选型</th>
+        <th>端口</th>
+        <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>DCC 侧 agent bridge</td><td><code>DSH × Blender</code>（sixtysevenlf）</td><td>addon <u>9876</u> / host <u>9877</u></td><td>自带验收门与盲审工具</td></tr>
+        <tr><td><em>互斥备选</em></td><td><code>MCP for Blender</code>（ahujasid）</td><td><u>9876</u></td><td>资产工具面更成熟；<strong>不能与上行并存</strong></td></tr>
+        <tr><td>资产生成</td><td>Tripo API / Meshy MCP / TRELLIS.2</td><td>—</td><td>建议直接调 API，不走官方 MCP 包</td></tr>
+        <tr><td>贴图 / HDRI</td><td>Poly Haven（CC0）</td><td>—</td><td>无 key、无账号</td></tr>
+        <tr><td>几何库</td><td>Poly Pizza / Sketchfab</td><td>—</td><td>注意 CC-BY 署名</td></tr>
+        <tr><td>场景底稿（可选）</td><td>Marble World API</td><td>—</td><td>商用需 Pro 档</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>端口约束：<code>127.0.0.1:9876</code> 只能被一个 agent bridge 占用。同时装 DSH Blender Bridge 与 MCP for Blender 的表现是"时好时坏"，不是稳定报错——这是最难查的一类问题。</p>
+        <hr />
+        <h2>五、本机落地步骤</h2>
+        <p>按顺序，每步都有可判定的检查点：</p>
+        <ol>
+        <li><em>解 Blender 版本</em>。本机是 <u>5.2</u>，插件 README 写明 4.2 LTS 是测试版本、5.x 未验证。先决定：装 <u>4.2 LTS</u>，还是接受 5.2 首发踩坑。</li>
+        <li><em>装 addon</em>。下载 <code>dsh_blender_bridge.zip</code>（GitHub Release），Blender → Edit → Preferences → Add-ons → Install → 启用 <strong>DSH Blender Bridge</strong> → 3D 视图按 <u>N</u> 打开侧栏 → Connect。</li>
+        <li><em>装 DSH 插件</em>。<code>dsh plugin --profile &lt;profile&gt; add dsh-blender-plugin@3.0.6</code>（DSH Desktop 走 Plugins 页面，装完不用重启；DSH Web / TUI 需要重启）。</li>
+        <li><em>验收</em>。<code>curl -sS <a href="http://127.0.0.1:9877/doctor" target="_blank" rel="noreferrer">http://127.0.0.1:9877/doctor</a></code>，<code>kind</code> 必须等于 <code>ok</code>。<strong>这一条不过就不要往下走。</strong></li>
+        <li><em>无 GUI 降级</em>。<code>blender_rt_worker(op="start")</code> → <code>op="see"</code> 必须回一帧。</li>
+        <li><em>跑通最小场景</em>。用阶段 0 的一张参考图 + 一个 parametric 资产 + 一张 Poly Haven 贴图 + 一个 HDRI，跑完阶段 3–6 的判据。</li>
+        <li><em>再接生成</em>。先 Tripo 单个资产（成本约 <u>$0.10–0.30</u>），跑通再批量。</li>
+        </ol>
+        <p>升级期的两个已知坑（来自视频原文）：addon 升级后要在 Add-ons 里重新勾选一次；插件升级后必须重启 DSH。</p>
+        <hr />
+        <h2>六、成本与时间模型（估算）</h2>
+        <p>单场景，假设参考图已就绪、资产 <u>12</u> 件：</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>阶段</th>
+        <th>时间（估算）</th>
+        <th>直接成本（估算）</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>0 输入归一化</td><td><u>15–30 分钟</u></td><td><u>$0</u>（图像生成可复用现有额度）</td></tr>
+        <tr><td>1 资产分流</td><td><u>10–20 分钟</u></td><td><u>$0</u></td></tr>
+        <tr><td>2 资产生成</td><td><u>3–6 分钟/件</u></td><td>Tripo <u>$0.10–0.30</u>/件 → 约 <u>$1.20–3.60</u></td></tr>
+        <tr><td>3 场景搭建</td><td><u>30–60 分钟</u></td><td><u>$0</u></td></tr>
+        <tr><td>4 贴图</td><td><u>15–30 分钟</u></td><td><u>$0</u>（Poly Haven 全 CC0）</td></tr>
+        <tr><td>5 光照</td><td><u>15–30 分钟</u></td><td><u>$0</u></td></tr>
+        <tr><td>6 盲审迭代</td><td><u>20–40 分钟</u> × 迭代轮次</td><td><u>$0</u></td></tr>
+        <tr><td>7 交付</td><td><u>10–20 分钟</u></td><td><u>$0</u></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>单场景合计：约 <u>2–4 小时</u>（估算），直接生成成本约 <u>$1.20–3.60</u>（估算）。如果底稿走 Marble World API，另加约 <u>$1.20</u>/世界（draft 约 <u>$0.12–0.20</u>）。</p>
+        <hr />
+        <h2>七、表格总结</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>选项</th>
+        <th>代价</th>
+        <th>影响</th>
+        <th>ROI</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>我1：只跑阶段 0/1/3/4/5/7（零生成，全代码 + Poly Haven）</td><td>单场景约 <u>1.5–3 小时</u>（估算），成本 <u>$0</u></td><td>只对规则几何场景成立；有机资产做不出来，但验收闭环与工具链全部验证过</td><td>投入 <u>1 人时</u> 起 → 产出验证过的管线主干 → 回收周期 <u>当次任务内</u>（估算）</td></tr>
+        <tr><td>我2：主干 + Tripo SDK 接单个有机资产</td><td>约 <u>3–6 分钟</u>/件 + <u>$0.10–0.30</u>/件（估算）；API key 申请与接线 <u>2–4 小时</u>（一次性）</td><td>有机资产可用，场景完整度显著上升</td><td>投入 <u>2–4 小时</u> 一次性 + <u>$0.30</u> → 产出可交付场景 → 回收周期 <u>首个真实场景</u>（估算）</td></tr>
+        <tr><td>你1：主干 + Marble World API 底稿 + Blender 精修</td><td>商用需 Pro 档约 <u>$35/月</u>；单世界 <u>约 $1.20</u>（1.1 档）；高质量网格限 <u>4 次/小时</u>；坐标需做 Y/Z 翻转修正</td><td>「一句话→可漫游场景」成立，美术起手快；但拿到的是静态有界世界</td><td>投入约 <u>$1.20</u>/世界 + <u>1–2 小时</u> 精修 → 产出场景底稿 → 回收周期 <u>每个新场景</u>（估算）</td></tr>
+        <tr><td>你2：全链路产品化（上述全部 + 引擎落地 + 盲审自循环 + 沉淀成 skill）</td><td>首建约 <u>1–2 周</u>（估算）；月度生成成本约 <u>$5–40</u>（估算）；需一条真实业务线持续喂数据</td><td>唯一能规模化交付「海报/一句话 → 生产可用 3D 场景」的形态；依赖链长，任一环断链都要有降级路径</td><td>投入 <u>1–2 周</u> + 月度 <u>$5–40</u> → 产出可复用管线与 skill → 回收周期 <u>第 2 条场景起</u>（估算）</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <hr />
+        <h2>八、这份设计里最容易被跳过、但最不能省的三处</h2>
+        <ol>
+        <li><em>资产分流</em>（阶段 1）。跳过它，全靠生成，风格不统一 + 拓扑不可控 + 成本翻几倍。</li>
+        <li><em>多视角参考图</em>（阶段 0）。只有一张图，后面全是靠猜。</li>
+        <li><em>独立盲审</em>（阶段 6）。没有它，AI 会给自己打满分——这不是模型能力问题，是自我确认偏误。</li>
+        </ol>
+        <hr />
+        <p>免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p>
+      </>
+    ),
+  },
+  {
+    slug: "stageshow-teardown",
+    title: "Stageshow 技能拆解 · 研究笔记",
+    date: "2026-11-12",
+    authors: "Hang Yu",
+    tags: ["Agent Skills", "逆向拆解"],
+    body: (
+      <>
+        <blockquote><p><strong>English rephrase.</strong> How do I reverse-engineer the Stageshow agent skill from this Bilibili video, grab the real skill rather than guessing at it, and write up what it actually does — including whether the self-check loop it advertises really works?</p></blockquote>
+        <hr />
+        <h2>结论先行</h2>
+        <p>Stageshow 是 X / SpaceXSI 设计负责人 Benji Taylor 于 2026-10-31 开源的 agent skill（MIT），装法一行 <code>npx skills add benjitaylor/skills --skill stageshow</code> [来源: 1-官方博客]。它的定位不是「生成 UI」，而是把设计师手做假界面时那「上百个小决定」写成一组可执行文件：<u>1 份主文档 + 15 份规则参考 + 155 个示例文件 + 30 个 React 零件 + 12 个自检脚本</u>，合计 <u>372 个文件 / 2,413,934 字节</u> [来源: 0-本机实测]。</p>
+        <p>我在本机把它完整跑通了，并且做了对照实验，结论分三句：</p>
+        <ol>
+        <li><em>自检闭环是真的。</em> 我把作者自己的金标准示例 <code>static-card</code> 故意改坏，gate 以退出码 <u>1</u> 拦下，并逐条点名 <code>span.ss-text "$1,240" sits 4.0px from the right edge of div.ss-window</code> 这种带 CSS 选择器和像素值的诊断——不是泛泛说「排版有问题」。</li>
+        <li><em>但它自己的金标准示例，在单帧模式下只有一半过 gate。</em> 我跑了 <u>20 个示例</u>，<u>10 个通过 / 10 个不通过</u>，且其中 <u>3 个</u> 触发的是 kit 自带 <code>Window</code> 组件（<code>.ss-window__bar</code>）踩了 kit 自己的 <code>uneven inset</code> 规则。</li>
+        <li><em>判定不可复现，且本机达不到它的采样门槛。</em> 同一个 <code>linear</code> 示例连跑 <u>4 次</u>，<u>2 次通过 / 2 次失败</u>；整圈拍摄时采样间隙 <u>101.7 ms</u>，远超它 <u>16 ms</u> 的判定线，工具自己判为 <code>inconclusive</code>。</li>
+        </ol>
+        <p>所以它<em>能治几何失误，治不了「一眼假」的主因</em>——后者是构图和信息密度，人眼的事。作者自己也这么写：「The checks catch mistakes, not dull ideas. A demo can pass every one and still not be worth watching, so you still have to look at it yourself.」[来源: 1-官方博客]</p>
+        <p><em>一个前置说明：视频本身没有可逆向的隐藏信息——Stageshow 是公开仓库，拿到源码比听讲解更准。所以我两条路都走了：视频下载+逐字稿留作对照，skill 直接从 GitHub 取源码。</em></p>
+        <hr />
+        <h2>一、素材侧：视频下载与逐字稿</h2>
+        <h3>下载产物</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>文件</th>
+        <th>规格</th>
+        <th>体积</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>Stageshow技能拆解.mp4</code></td><td>480×852，时长 <u>4 分 38.53 秒</u></td><td><u>12,048,542 字节</u></td></tr>
+        <tr><td><code>audio.mp3</code></td><td>16 kHz 单声道，48 kbps</td><td><u>1,672,691 字节</u></td></tr>
+        <tr><td>源音频流</td><td>AAC LC 48 kHz 立体声，182 kbps</td><td><u>6,371,642 字节</u></td></tr>
+        <tr><td>源视频流</td><td>avc1.640033，157 kbps</td><td><u>5,492,627 字节</u></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>视频元数据：<code>BV1ujWb6tEsg</code>，标题《让 AI 做的界面不再一眼假——Stageshow 技能拆解》，UP 主「翻车老头」（mid 437853937），发布 <u>2026-11-11</u>，发布约一天时播放 <u>408</u>、点赞 <u>8</u>、收藏 <u>22</u>、弹幕 <u>0</u> [来源: 0-本机实测]。</p>
+        <h3>视频讲了什么</h3>
+        <p>作者自建了 <u>16 段</u>章节（0:00 开场四种翻车 → 0:28 一条命令 → 0:52 五种失败模式 → 1:15 一句话总纲 → 1:25 参考库 → 1:41 黄金示例 → 1:53 薄零件 → 2:15 验收拍成胶片 → 2:32 两帧之间的问题 → 2:44 七步工作流 → 3:10 取景细节 → 3:44 十款真实产品 → 3:59 局限 → 4:11 收束）。</p>
+        <p>逐字稿里最值得摘的三句（我的转写，非原文字幕）：</p>
+        <ul>
+        <li>「技术没变，组件也没变。模型很会写组件，但他常常不知道什么叫像真的。他缺的是一套界面判断。」</li>
+        <li>「他给智能体的是七步：先定媒介……先决定再动手，大部分演示就死在动手太早。」</li>
+        <li>「检查只能抓错误，抓不了无聊；检查能过，不代表值得看。」</li>
+        </ul>
+        <p>这三条与源码完全对得上，不是二手转述。</p>
+        <hr />
+        <h2>二、结构解剖：这个 skill 到底由什么组成</h2>
+        <p>仓库 <code>github.com/benjitaylor/skills</code>，HEAD <code>299140f</code>，MIT 许可 [来源: 0-本机实测]。</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>层</th>
+        <th>文件数</th>
+        <th>体积</th>
+        <th>职责</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>SKILL.md</code></td><td>1</td><td><u>153 行</u>，version 1.1.1</td><td>总纲：中心句、五种失败、七步工作流、金标准表、kit 概览</td></tr>
+        <tr><td><code>references/</code></td><td>15</td><td><u>165,290 字节</u></td><td>规则库：craft / motion / framing / bento / looks / backgrounds / annotations / products / brands / rehearse / review / verify / teaching / kit / choreography</td></tr>
+        <tr><td><code>examples/</code></td><td>155</td><td>—</td><td>金标准示例、真实产品研究、零件样本</td></tr>
+        <tr><td><code>kit/</code></td><td>30</td><td>—</td><td>React 零件：舞台、窗口、手机、光标、动作原语、小组件</td></tr>
+        <tr><td><code>scripts/</code></td><td>12</td><td><u>262,105 字节</u></td><td>自检：<code>film.mjs</code>、<code>jumps.mjs</code>、<code>layout.mjs</code>、<code>motion-watch.mjs</code> 等</td></tr>
+        <tr><td><code>teaching/</code></td><td>18</td><td>—</td><td><u>9 组</u>坏/好配对，用于诊断</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>两个关键体量数字：<code>film-checks.mjs</code> 一个文件 <u>139,488 字节</u>，是全部自动规则的实现；<code>act.ts</code> <u>32,038 字节</u>，是动作编排 API。</p>
+        <p><code>kit/</code> 里最重的几个零件：<code>act.ts</code>（<u>32,038 字节</u>）、<code>stage.tsx</code>（<u>26,646 字节</u>）、<code>phone.tsx</code>（<u>18,757 字节</u>）、<code>window.tsx</code>（<u>13,222 字节</u>）。</p>
+        <p>关于 git 历史：仓库只有 <u>3 次提交</u>（2026-10-30 / 11-03 / 11-04），作者显然做过 rebase 或强推，<em>所以「迭代速度有多快」这个问题用 git 答不了</em> [来源: 0-本机实测]。</p>
+        <hr />
+        <h2>三、机制：它凭什么能治「一眼假」</h2>
+        <h3>1. 五种失败模式 = 一张负向清单</h3>
+        <p>SKILL.md 开篇就钉死五种翻车：<em>Too much</em>（每格都塞真词）、<em>Wireframe</em>（两个灰块加按钮）、<em>Boxed</em>（整扇窗口缩进卡片，像贴了张截图）、<em>Flat</em>（所有东西同权重）、<em>Bland</em>（brief 要的风格没出现）。这五条不是描述，是<em>验收标准</em>——任何一条命中就是不合格。</p>
+        <p>作者原话解释了为什么这五条值得单独列：「Most good models can do this now without a dedicated skill, but the results often look sloppy and heavy-handed, and that's the gap Stageshow is for.」[来源: 1-官方博客]</p>
+        <h3>2. 七步工作流 = 顺序约束</h3>
+        <p>Medium（静帧还是动画、放哪、多大）→ Look（light / dark / blueprint / glass + 保真度）→ Story（三到五拍故事）→ Examples（拷最接近的金标准）→ Screen（只留 <u>3 到 7</u> 条真字，其余占位线）→ Choreograph（节拍重叠、错开、循环闭合）→ Rehearse（拍片、逐帧读、并排比金标准）。</p>
+        <p>七步里<em>只有第 5、6 步需要写代码</em>，前四步是定方向，第七步是验货。这个排序本身就是它治「一眼假」的核心——<em>大部分演示死在动手太早</em>。</p>
+        <h3>3. references = 每条规则都带「为什么」</h3>
+        <p><code>craft.md</code> 里的条目几乎全是可断言的数值判据，不是形容词：</p>
+        <ul>
+        <li>「Words keep a 12px inset from the edge of a window, card, panel or hovered row」</li>
+        <li>「Row padding is 12px, 8px for a dense list; a one-line row three times taller than its words is a <code>fat row</code>」</li>
+        <li>「Icons come from a set, never from your hand… A glyph drawn by hand is the first tell of generated UI」</li>
+        <li>「AI features get no sparkle, wand or star, and no purple as the AI color」</li>
+        </ul>
+        <p>作者在博客里点明了这一层的来历：「Most of the rules started as a note on a real demo, like "the shadow is too harsh" or "this title isn't centred." Once a note is in the skill, every demo after it gets it for free.」[来源: 1-官方博客]</p>
+        <h3>4. kit = 把「手工容易做错」的部分预置</h3>
+        <p>不是让 agent 从零画窗口，而是给真实几何：<code>Window</code> / <code>Phone</code> / <code>LockScreen</code> / <code>Thread</code> / <code>Bubble</code>，动作原语 <code>Collapse</code> / <code>Roll</code> / <code>Swap</code> / <code>Count</code> / <code>Connector</code> / <code>Fly</code> / <code>Camera</code> / <code>Expand</code>，小零件 <code>Bar</code> / <code>Text</code> / <code>Row</code> / <code>Card</code> / <code>Button</code> / <code>Chip</code> / <code>Toast</code>。SKILL.md 里有一条硬约束：<em>「Use the kit part, never a lookalike」</em>——自己手搓一个按钮，就是间距不齐、文字被挤的来源。</p>
+        <p>光标可以按名字瞄准（<code>data-target</code> / <code>data-cursor</code>），位置一律 <code>rect()</code> 实测，禁止硬编码。</p>
+        <h3>5. 自检闭环 = 拍片 + <u>51</u> 条规则 + <u>24</u> 条硬伤清单</h3>
+        <p>这是整个 skill 最有价值的部分，也是我重点验证的部分。</p>
+        <ul>
+        <li><code>film.mjs</code> 用 headless Chrome 按固定间隔拍舞台，拼成一张接触印样（contact sheet），同时输出可量化的报告。</li>
+        <li><code>film-checks.mjs</code> 里实现了 <u>51 个</u> <code>detect*</code> 规则函数（<code>detectFatRow</code>、<code>detectEmojiIcon</code>、<code>detectHeroFraming</code>、<code>detectTightInset</code>……）。</li>
+        <li><code>references/rehearse.md</code> 列了 <u>24 条</u> <em>never intentional</em> 硬伤：命中即失败，不接受「这是故意的」辩解。</li>
+        <li><code>--gate</code> 模式下，全部硬伤归零才输出 <code>rehearsal passed</code>，否则退出码 <u>1</u>。</li>
+        <li>覆盖度不足时输出 <code>inconclusive</code> 并退出码 <u>2</u>——<em>它拒绝把没测全当成通过</em>。</li>
+        </ul>
+        <p>作者博客对为什么要这样做的解释很直接：「Neither shows the motion in between, which is where the bugs often are: a pill that hops 4px on its way in, or one frame where everything has faded out.」[来源: 1-官方博客]</p>
+        <hr />
+        <h2>四、实测：本机跑通了什么</h2>
+        <h3>环境</h3>
+        <p>Windows / PowerShell 5.1，Node <u>v22.16.0</u>，npm <u>10.9.2</u>，Vite 6.4.5（ready in <u>1117 ms</u>），Chrome（通过 <code>CHROME_PATH</code> 指向 playwright-core），imageio-ffmpeg 7.1。依赖安装 <u>73 个包 / 7 秒</u>。</p>
+        <h3>复现命令</h3>
+        <pre data-lang="sh"><code>git clone --depth 1 https://github.com/benjitaylor/skills.git
+        cd skills/stageshow &amp;&amp; npm install &amp;&amp; npm run dev        # → http://127.0.0.1:5173
+        node scripts/film.mjs "http://127.0.0.1:5173/?capture=static-card" --out shots/a.png --still --gate</code></pre>
+        <p>Windows 上两个坑：npm 的 <code>--prefix</code> 会被中文路径吃掉（报 <code>ENOENT</code>），要用 <code>Set-Location</code> 进目录；<code>imageio-ffmpeg</code> 自带的 ffmpeg 编 mp3 要用 <code>-c:a libmp3lame</code>，用 <code>-c:a aac</code> 会以 <code>-22</code> 报错但仍能读源文件。</p>
+        <h3>结果一：自检闭环是真的（对照实验）</h3>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>组</th>
+        <th>对象</th>
+        <th>gate 判定</th>
+        <th>退出码</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>对照组</td><td><code>static-card</code> 原版</td><td><code>rehearsal passed</code>，仅 1 条 <code>lopsided</code> 候选，coverage complete</td><td><u>0</u></td></tr>
+        <tr><td>实验组 v1</td><td>改坏版 <code>static-card</code></td><td><code>rehearsal failed: 2 never-intentional line(s)</code></td><td><u>1</u></td></tr>
+        <tr><td>实验组 v2</td><td>按规则前置条件重做的突变体</td><td><code>rehearsal failed: 4 never-intentional line(s)</code></td><td><u>1</u></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>实验组 v1 被抓到的诊断（原文）：</p>
+        <pre><code>tight inset: span.ss-text "$1,240" sits 4.0px from the right edge of div.ss-window;
+                     words keep the container's inset (12px or more on a row, card or window), only filler bleeds
+        clipped: span.ss-bar clipped bottom by 17px by div.ss-window</code></pre>
+        <p>实验组 v2 我按 <code>film-checks.mjs</code> 的前置条件精确构造，三条注入故障全部被点名：</p>
+        <pre><code>emoji icon: span "✨" stands where an icon belongs (a 24px seat beside words);
+                     emoji are content, icons are drawn, one family tinted to the look
+        fat row:    div.mv-row "Halvorsen &amp; Company Inte" is 60px tall for one 13px line
+                     (2 of 3 rows in div.mv-list are); a one-line row is its words plus 8 to 12px of padding each side
+        framing:    div.ss-window floats whole in the stage with 60/60/20/20px of air around it;
+                     a hero's window bleeds off one or two edges with one gutter, or fills the stage</code></pre>
+        <p><em>每一条都带元素选择器、像素测量值、以及对应的规则出处。</em>这是可执行的判据，不是建议。</p>
+        <h3>结果二：它自己的金标准示例，只有 <u>50%</u> 过 gate</h3>
+        <p>对 <u>20 个</u>示例跑 <code>--still --gate</code>：</p>
+        <ul>
+        <li>通过（<u>10 个</u>）：<code>static-card</code> <code>hero-demo</code> <code>payout-flow</code> <code>form-error</code> <code>presence</code> <code>subscriptions</code> <code>close-up</code> <code>dynamic-island</code> <code>spotify</code> <code>gmail</code></li>
+        <li>不通过（<u>10 个</u>）：<code>dark-bento</code> <code>ai-chat</code> <code>reorder</code> <code>chart-scrub</code> <code>dark-hero</code> <code>bento</code> <code>messages</code> <code>upload</code> <code>swipe</code> <code>linear</code></li>
+        </ul>
+        <p>失败项的具体触发规则：</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>示例</th>
+        <th>触发的规则</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>ai-chat</code> / <code>reorder</code></td><td><code>uneven inset: div.ss-window__bar holds its children 15px from its left edge and 51px from its right</code></td></tr>
+        <tr><td><code>dark-hero</code></td><td><code>uneven inset: span.dh-nav holds its children 8px from its left edge and 30px from its right</code></td></tr>
+        <tr><td><code>dark-bento</code></td><td><code>uneven inset</code>（头像上下 12px、左 25px）+ <code>touching</code>（占位条距头像 5px）</td></tr>
+        <tr><td><code>chart-scrub</code></td><td><code>loose stack: div.cs-label "Last 14 days" sits 10.3px of ink above div.cs-value "$68,200"</code></td></tr>
+        <tr><td><code>messages</code></td><td><code>uneven gutters: div.ss-phone sits 47px from the left … 16px from the bottom</code></td></tr>
+        <tr><td><code>upload</code></td><td><code>framing: corner bleed with a 40px gutter above div.ss-window but 184px to its left</code></td></tr>
+        <tr><td><code>swipe</code></td><td><code>framing: div.ss-phone ends 10px short of the right edge</code> + 2 条 <code>touching</code></td></tr>
+        <tr><td><code>bento</code></td><td><code>translucent icon</code> + <code>half-pixel glyph</code> + <code>avatar alignment</code> + 3 条 <code>lopsided</code></td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p>其中 <code><u>3 个</u></code>示例触发的是 <code>.ss-window__bar</code>——<em>kit 自带的窗口工具栏</em>。我查了 <code>kit/window.css</code>，它用的是对称 padding（<code>padding: 0 calc(var(--ss-lights-y) - var(--ss-dot) / 2)</code>），右侧那 51px 是 URL 字段的刻意留白。<em>kit 踩了 kit 自己的规则。</em></p>
+        <h3>结果三：判定不可复现</h3>
+        <p>同一个 <code>linear</code> 示例、同一台机器、同一命令，连跑 <u>4 次</u>：</p>
+        <pre><code>run 1 : rehearsal passed
+        run 2 : rehearsal passed
+        run 3 : rehearsal failed: 1 never-intentional line(s)
+                 -&gt; uneven inset: div.ln-row holds its children 12px from its left edge and 68px from its right
+        run 4 : rehearsal failed: 1 never-intentional line(s)   ← 与 run 3 同一条</code></pre>
+        <h3>结果四：本机达不到它自己的采样门槛</h3>
+        <p>整圈拍摄 <code>hero-demo</code>（<code>--every 1000 --count 18</code>）：</p>
+        <pre><code>coverage stage-1: 1736 frames, 17.85s, largest gap 101.7ms (inconclusive)
+          incomplete: 36 sampling gap(s) exceeded 16ms; motion during those gaps was not judged</code></pre>
+        <p>放慢时钟重拍（<code>--slow 6 --every 40 --count 60</code>）把最大间隙压到 <u>28.5 ms</u>，但仍有 <u>25 处</u>超过 16 ms，结论依旧是 <code>inconclusive</code>。<em>它宁可说「没测全」，也不把没测全当通过——这点是对的，但代价是在本机基本拿不到确定性结论。</em></p>
+        <p>值得注意的是，<code>hero-demo</code> 在单帧模式下通过、在整圈模式下反而报出两条硬伤：<code>dashed edge resizes</code>（<code>div.hd-dragbox</code> 虚线边框每帧重排）和 <code>vanishes with no exit</code>（<code>div.hd-selection</code> 一帧内消失无退场）。<em>这正是这个 skill 主张的场景：问题藏在两帧之间，单帧截图抓不到。</em></p>
+        <hr />
+        <h2>五、盲区与局限</h2>
+        <h3>5.1 规则有很硬的前置条件，不是通用判据</h3>
+        <p>我第一版突变体注入了 <u>4 个</u>故障，只被抓到 <u>1 个</u>。读源码才明白原因：</p>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>规则</th>
+        <th>前置条件</th>
+        <th>后果</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><code>fat row</code></td><td>行内<strong>不能含 <code>.ss-bar</code></strong>；文字宽 ≥ 行宽 40%；行宽 ≥ 120px；高 &gt; <code>fs×3.4</code> 且 &gt; 48px；同容器内 rows≥3 且 fat≥2</td><td>用占位条填充的列表永远不会触发</td></tr>
+        <tr><td><code>emoji icon</code></td><td>emoji 须为叶子节点、文本 ≤3 字符、命中 emoji 正则；<strong>父盒 ≤56×56 且不含字母</strong>；祖父级含 ≥3 连续字母</td><td>放在带文字容器里的 emoji 漏检</td></tr>
+        <tr><td><code>framing: floats whole</code></td><td><strong>仅当 stage 宽 ≥560px</strong>；四边留白 ≥12px；窗口面积 &lt; 舞台面积 0.82</td><td>卡片尺寸（400px）的舞台不适用</td></tr>
+        <tr><td><code>invented mark</code></td><td>品牌色字母块 + 同行出现真公司名</td><td>纯虚构品牌不触发</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p><em>这不是 bug，是设计——规则要精准就必须有前提。</em>但代价是使用者必须知道前提，否则会误以为「工具没抓到 = 没问题」。</p>
+        <h3>5.2 kit 与规则存在版本错位</h3>
+        <p><code>ai-chat</code> / <code>reorder</code> / <code>dark-hero</code> 三个示例触发的是 kit 自己的 <code>.ss-window__bar</code>。仓库最新一次提交写的是「Stageshow 1.1.0: new kit parts and a stricter gate」——<em>gate 收紧了，kit 没跟上</em>。严格照 skill 执行的用户，会被卡在一个作者自己都没走完的修复循环里。</p>
+        <h3>5.3 判定不确定</h3>
+        <p><code>linear</code> 4 跑 2 过 2 不过，说明判定存在时序依赖（可能是 still 捕获时动画尚未完全落定）。<strong>不能把单次 gate 结果当作结论。</strong></p>
+        <h3>5.4 覆盖度不足时结论不可用</h3>
+        <p>本机 headless Chrome 达不到 <u>16 ms</u> 的采样间隙要求，动画类检查基本只能拿到 <code>inconclusive</code>。<em>静态构图类检查（tight inset / fat row / framing）可靠，运动类检查（jump / loop seam / selection drift）在本机基本不可用。</em></p>
+        <h3>5.5 检查抓不了「无聊」</h3>
+        <p>作者自陈：「The checks catch mistakes, not dull ideas. A demo can pass every one and still not be worth watching.」并且「It also can't draw, so anything that needs illustration or photography is better made by hand and dropped in.」[来源: 1-官方博客]</p>
+        <h3>5.6 它是个人品味，不是中立标准</h3>
+        <p>作者脚注原话：「It also means Stageshow is my taste, not a neutral one.」[来源: 1-官方博客] 这决定了它适合做<em>下限</em>（避免几何失误），不适合做<em>上限</em>（创意与风格）。</p>
+        <h3>5.7 作者自己预期它会被淘汰</h3>
+        <p>「Model taste is getting better with every release, and I suspect a skill like this is only useful for a while, since much of what it teaches and includes could soon come built in.」他同时补充：关于取景和运动的规则最耐久，因为「Models are perfectly capable of getting those right, but they don't seem to know that they matter until something tells them.」[来源: 1-官方博客]</p>
+        <hr />
+        <h2>六、判断与建议</h2>
+        <p><em>[判断与建议]</em> 以下是我的判断，不是已核实事实。</p>
+        <ol>
+        <li><em>值得抄的是「机制」，不是「文件」。</em> 真正的可复用资产是三件事：<strong>负向清单</strong>（先列出会怎么错）、<strong>带理由的数值规则</strong>（12px inset / 3× 行高 / 一族图标）、<strong>强制自检回路</strong>（拍片 → 逐帧 → 修 → 再拍）。这三条跟 React 无关，换成 Godot / UE 的 UI 也成立。</li>
+        <li><em>规则要带前置条件才可用。</em> 抄规则时必须连前置条件一起抄，否则会得到大量漏检。</li>
+        <li><em>别指望它替代判断。</em> 它的价值在「下限」，「上限」仍然是人和模型的品味。</li>
+        <li><em>接进工作流时，把 gate 当 lint 用，不要当验收。</em> 单次结果不可复现（本机 2/4），合理用法是「反复跑 + 看趋势」，或者只信静态构图类规则。</li>
+        <li><em>对本机的具体建议：</em> 它的 <code>playwright-core</code> 依赖在 Windows 上表现不理想（采样间隙过大），若要正式接入，需要换更高性能的截图路径或降低采样密度要求。</li>
+        </ol>
+        <h3>相关 skill（顺手核实过）</h3>
+        <p>同类的 <code>fun-isometric</code>（作者 Kelvin Adithya，MIT，仓库 <code>kelvinkn17/skills</code> @ <code>7c8a752</code>）我也拉下来看了：它走的是<strong>另一个方向</strong>——不治「假」，治「不会动」，把 After Effects 关键帧预设做成 lottie 式插值，产出可实时播放的等距贴纸图标模块。两者不冲突：<code>Stageshow</code> 管<em>界面像不像产品</em>，<code>fun-isometric</code> 管<em>插画动得动不动</em>。后者需要 Bun + ffmpeg 做视频导出。</p>
+        <p><em>另外注意：外媒报道的 Stageshow 版本是 0.1.0 / 2026-10-31 发布，当前仓库已经是 1.1.1 / 2026-11-04。凡是引用「Stageshow 怎么装、包含什么」的二手文章，请以仓库现状为准。</em></p>
+        <hr />
+        <h2>表格总结：</h2>
+        <div className="article-table-wrap">
+        <table>
+        <thead>
+        <tr>
+        <th>选项</th>
+        <th>代价</th>
+        <th>影响</th>
+        <th>ROI</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td>我1（agent 侧）：把 Stageshow 装进本机 skill 库，接到本仓库的界面产出流程</td><td>磁盘 <u>约 2.4 MB</u> + 73 个 npm 包；需 Node ≥20.19（本机 v22.16.0 满足）；多一个 React/Vite/playwright-core 依赖树</td><td>界面产出从「模型自由发挥」变成「先定七步再写码」，几何失误显著下降；本机动画类 gate 仍不可用，只有静态构图类规则可依赖</td><td>投入 <u>约 30 分钟</u>接入 + 每次产出多 <u>1 到 2 轮</u>拍摄自检；产出=几何失误率下降；回收周期 <u>1 个界面产出即回本（估算）</u></td></tr>
+        <tr><td>我2（agent 侧）：不装，只把五种失败模式 + 七步 + 24 条硬伤清单抽成自用 review 清单</td><td><u>约 1 小时</u>整理；无新依赖</td><td>拿到 70% 的收益（避免装盒/装满/太扁/风格丢失），失去 51 条自动规则与像素级测量；「机器检查」退化为「人工核对」</td><td>投入 <u>约 1 小时</u>；产出=返工率下降，回收周期 <u>2 到 3 个界面产出（估算）</u>；但零依赖、零维护成本，长期 ROI 更高</td></tr>
+        <tr><td>你1（你这边）：用 Stageshow 重做一个具体的界面产出（营销页 hero / feature card）</td><td><u>约 1 到 2 小时</u>人工 review + <u>2 到 3 轮</u>反馈；产出是普通 React 组件，可直接进项目</td><td>一次能验证「这技能在你的产品语境里成不成立」，比读文档可靠；但作者自陈多数 demo 仍需多轮反馈</td><td>投入 <u>1 到 2 小时</u>；产出=1 个可用的 demo + 一份判断依据；回收周期 <u>1 次即回本（估算）</u></td></tr>
+        <tr><td>你2（你这边）：维持现状，只把它当参考读物</td><td><u>0</u></td><td>什么都不变；继续踩「信息塞满 / 整窗缩卡片 / 所有东西同权重」这些老坑</td><td>投入 <u>0</u>；产出=0；回收周期<u>不适用</u>；但也避免了 <u>约 2.4 MB</u>依赖和版本跟不上的维护负担</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <hr />
+        <h2>参考来源</h2>
+        <ul>
+        <li>[来源: 0-本机实测] 2026-11-12 在本机（Windows / Node v22.16.0 / Chrome）克隆 <code>benjitaylor/skills</code> @ <code>299140f</code>，安装依赖、起 playground、跑 <code>film.mjs --gate</code> 共 <u>40 次</u>，并构造两组突变体做对照实验。原始产物见 <code>evidence/</code> 目录。</li>
+        <li>[来源: 1-官方博客] Benji Taylor,《Stageshow》, 2026-10-31, <a href="https://benji.org/stageshow" target="_blank" rel="noreferrer">https://benji.org/stageshow</a> —— 作者自述，含中心句、七步表、五种失败、局限与脚注。</li>
+        <li>[来源: 1-官方仓库] <a href="https://github.com/benjitaylor/skills" target="_blank" rel="noreferrer">https://github.com/benjitaylor/skills</a> —— SKILL.md、references/、scripts/、kit/ 全部规则与实现，MIT 许可。</li>
+        <li>[来源: 1-相关仓库] <a href="https://github.com/kelvinkn17/skills" target="_blank" rel="noreferrer">https://github.com/kelvinkn17/skills</a> —— <code>skills/fun-isometric/SKILL.md</code>，MIT，作者 Kelvin Adithya。</li>
+        <li>[来源: 3-二手报道，仅供参考] nvdium.com、aicoder.com、mlllm.io、creatorstoolbox.com 关于发布首帖点赞/收藏数与仓库 star 数的报道。<em>各家数字互相冲突（如首帖点赞 <u>3400 / 4521 / 4700</u>），且均为作者自述或媒体转述，未见第三方评测；本报告未采信任何一项作为结论。</em></li>
+        </ul>
+        <hr />
+        <p>免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p>
       </>
     ),
   },

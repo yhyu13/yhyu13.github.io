@@ -318,6 +318,43 @@ body:has(.article-page) {
   background: rgba(52, 48, 37, 0.62);
 }
 
+/* Code blocks in long reads (pipeline YAML, shell one-liners). */
+.article-body pre {
+  margin: 18px 0 22px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border: 1px solid rgba(220, 200, 164, 0.16);
+  border-radius: 8px;
+  background: rgba(28, 25, 19, 0.72);
+  font: 13px/1.6 ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+  color: #d8cbb2;
+}
+
+.article-body pre code {
+  font: inherit;
+  color: inherit;
+  white-space: pre;
+}
+
+.article-body :not(pre) > code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(220, 200, 164, 0.12);
+  color: #e2d3b4;
+  font: 13px/1.5 ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+}
+
+.article-body hr {
+  margin: 34px 0;
+  border: 0;
+  border-top: 1px solid rgba(220, 200, 164, 0.18);
+}
+
+.article-body u {
+  text-decoration-color: rgba(219, 195, 156, 0.6);
+  text-underline-offset: 3px;
+}
+
 .article-body img {
   max-width: 100%;
   height: auto;

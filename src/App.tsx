@@ -42,6 +42,22 @@ export default function App() {
         }
       />
       <Route
+        path="/archive/scene-3d-pipeline"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="scene-3d-pipeline" />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/archive/stageshow-teardown"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="stageshow-teardown" />
+          </Suspense>
+        }
+      />
+      <Route
         path="/archive/ai-tutor"
         element={
           <Suspense fallback={null}>
