@@ -391,4 +391,14 @@ export const CRAFT_WORKS: CraftWork[] = [
     meta: "单文件 · 15 KB（three.js 走 CDN）",
     tags: ["程序化材质", "WebGL"],
   },
+  {
+    id: "march-witness-showreel",
+    kind: "口播影院 · 单页",
+    title: "随军记 · 口播影院",
+    description:
+      "同一段 560 天的见证，换成影院坐席：一页排完六个章节的旁白与画面节拍，按下播放就跟着走完。",
+    href: "/labs/march-witness-showreel/index.html",
+    meta: "index.html + 旁白 m4a · 3.4 MB",
+    tags: ["口播", "长征史"],
+  },
 ];

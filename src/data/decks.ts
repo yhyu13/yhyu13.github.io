@@ -520,6 +520,66 @@ export const DECKS: Deck[] = [
       { label: "口播片", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v2/skill-trigger-voiced.mp4" },
     ],
   },
+  {
+    slug: "agent-eval-skills",
+    title: "Agent 评测 — Skill、Eval 与验证",
+    year: "2026",
+    date: "2026-09-12",
+    source: "Bilibili · AI变局",
+    sourceUrl: "https://www.bilibili.com/video/BV1ceYR65EmK",
+    pdf: "/decks/agent-eval-skills.pdf",
+    description:
+      "SpaceXAI 工程师公开的 Agent 秘诀：为什么模型总在瞎编、一道可执行的检查为什么比一段说明更值钱，以及 skill 该怎么写成能被验证的样子。11 页。",
+  },
+  {
+    slug: "ai-bubble-not-yet",
+    title: "AI 泡沫未至 — Wei Li × Joe Cass",
+    year: "",
+    date: "",
+    source: "Bilibili · 英语学习小助理沐沐",
+    sourceUrl: "https://www.bilibili.com/video/BV1G2bW6cEWg",
+    pdf: "/decks/ai-bubble-not-yet.pdf",
+    description:
+      "贝莱德全球首席投资策略师 Wei Li 与 Joe Cass 的对谈：AI 资本开支处在周期哪一段、泡沫的判据是什么、什么时候才该担心。23 页。",
+  },
+  {
+    slug: "one-container-intl-econ-law",
+    title: "一个集装箱讲完国际经济法",
+    year: "",
+    date: "",
+    source: "Bilibili · 科普观察室",
+    sourceUrl: "https://www.bilibili.com/video/BV1oCxr65EfQ",
+    pdf: "/decks/one-container-intl-econ-law.pdf",
+    description:
+      "用一只集装箱的旅程串起国际经济法：谁在定规则、争端怎么解决、为什么关税只是最表层的那一刀。20 页精读。",
+  },
+  {
+    slug: "thousand-town-engine",
+    title: "千人小镇 — 技术栈与制作方法拆解",
+    year: "2026",
+    date: "2026-10-19",
+    source: "Bilibili · 仪绘士BY",
+    sourceUrl: "https://www.bilibili.com/video/BV1ArJ96CE3P",
+    pdf: "/decks/thousand-town-engine.pdf",
+    description:
+      "一部 5 分钟的「AI 搭了一座千人小镇」视频，拆成 22,054 行源码、4 个 vendor 库和一份可跑 Demo：证据链四条腿，每条都指回可核对的字节。13 页。",
+    links: [
+      { label: "成片 · 1:39", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v3/thousand-town-showreel.mp4" },
+    ],
+  },
+  {
+    slug: "wuxia-town-pitch",
+    title: "武侠世界 — Demo Day Pitch",
+    year: "2026",
+    date: "",
+    source: "首届 AI 产品挑战赛 · Demo Day",
+    pdf: "/decks/wuxia-town-pitch.pdf",
+    description:
+      "不在场（While You're Away）：用户离开时世界继续活着，回来时一切可交付。村/城/塞三块场景、240 名自主 agent、昼夜时辰、种子即内容。9 页 pitch。",
+    links: [
+      { label: "演示片段 · 0:34", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v3/wuxia-town-demo.mp4" },
+    ],
+  },
 ];
 
 // The shelf reads in array order; sorting by slug means a deck lands
