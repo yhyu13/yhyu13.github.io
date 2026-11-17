@@ -27,7 +27,7 @@ export function ArticlePage({ slug }: { slug: ArchivePost["slug"] }) {
         <QrTrigger onClick={() => setQrOpen(true)} />
       </div>
       <div className="article-inner">
-        <p className="article-kicker">Field Notes · 2017</p>
+        <p className="article-kicker">Field Notes · {post.date.slice(0, 4)}</p>
         <h1>{post.title}</h1>
         <p className="article-meta">
           {post.date}
