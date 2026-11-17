@@ -3,7 +3,7 @@
  "title": "MIT 14.13 · 心理学与经济学",
  "exportedAt": "2026-11-18T00:00:00+00:00",
  "source": "个人成长/mit-psych-econ-14-13",
- "releaseTag": null,
+ "releaseTag": "courseware-mit1413-v1",
  "groups": {
   "decks": [
    {
@@ -155,6 +155,176 @@
     "href": "decks/master.pdf",
     "bytes": 13995940,
     "slides": 281
+   }
+  ],
+  "videos": [
+   {
+    "label": "第 01 讲 · 介绍与概述 I",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec01.mp4",
+    "poster": "posters/lec01.jpg",
+    "meta": "8:21 · 720p · 23 MB"
+   },
+   {
+    "label": "第 02 讲 · 介绍与概述 II",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec02.mp4",
+    "poster": "posters/lec02.jpg",
+    "meta": "11:31 · 720p · 27 MB"
+   },
+   {
+    "label": "第 03 讲 · 时间偏好（理论）I",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec03.mp4",
+    "poster": "posters/lec03.jpg",
+    "meta": "10:44 · 720p · 28 MB"
+   },
+   {
+    "label": "第 04 讲 · 时间偏好（理论）II",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec04.mp4",
+    "poster": "posters/lec04.jpg",
+    "meta": "9:59 · 720p · 27 MB"
+   },
+   {
+    "label": "第 05 讲 · 时间偏好（应用）I",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec05.mp4",
+    "poster": "posters/lec05.jpg",
+    "meta": "8:16 · 720p · 20 MB"
+   },
+   {
+    "label": "第 06 讲 · 时间偏好（应用）II",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec06.mp4",
+    "poster": "posters/lec06.jpg",
+    "meta": "8:08 · 720p · 23 MB"
+   },
+   {
+    "label": "第 07 讲 · 风险偏好I",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec07.mp4",
+    "poster": "posters/lec07.jpg",
+    "meta": "7:52 · 720p · 22 MB"
+   },
+   {
+    "label": "第 08 讲 · 风险偏好 II",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec08.mp4",
+    "poster": "posters/lec08.jpg",
+    "meta": "8:54 · 720p · 23 MB"
+   },
+   {
+    "label": "第 09 讲 · 参照依赖偏好",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec09.mp4",
+    "poster": "posters/lec09.jpg",
+    "meta": "10:45 · 720p · 26 MB"
+   },
+   {
+    "label": "第 10 讲 · 社会偏好 I",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec10.mp4",
+    "poster": "posters/lec10.jpg",
+    "meta": "7:28 · 720p · 18 MB"
+   },
+   {
+    "label": "第 11 讲 · 社会偏好 II",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec11.mp4",
+    "poster": "posters/lec11.jpg",
+    "meta": "8:22 · 720p · 21 MB"
+   },
+   {
+    "label": "第 12 讲 · 社会偏好 III",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec12.mp4",
+    "poster": "posters/lec12.jpg",
+    "meta": "10:08 · 720p · 27 MB"
+   },
+   {
+    "label": "第 13 讲 · 期中复习",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec13.mp4",
+    "poster": "posters/lec13.jpg",
+    "meta": "11:00 · 720p · 27 MB"
+   },
+   {
+    "label": "第 14 讲 · 社会偏好 IV",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec14.mp4",
+    "poster": "posters/lec14.jpg",
+    "meta": "9:08 · 720p · 22 MB"
+   },
+   {
+    "label": "第 15 讲 · 有限注意力",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec15.mp4",
+    "poster": "posters/lec15.jpg",
+    "meta": "9:09 · 720p · 23 MB"
+   },
+   {
+    "label": "第 16 讲 · 信念效用；学习 I",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec16.mp4",
+    "poster": "posters/lec16.jpg",
+    "meta": "9:34 · 720p · 25 MB"
+   },
+   {
+    "label": "第 17 讲 · 信念的效用；学习 II",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec17.mp4",
+    "poster": "posters/lec17.jpg",
+    "meta": "11:57 · 720p · 30 MB"
+   },
+   {
+    "label": "第 18 讲 · 状态依赖偏好、投射与归因偏差",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec18.mp4",
+    "poster": "posters/lec18.jpg",
+    "meta": "8:29 · 720p · 23 MB"
+   },
+   {
+    "label": "第 19 讲 · 性别、歧视与身份",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec19.mp4",
+    "poster": "posters/lec19.jpg",
+    "meta": "8:29 · 720p · 20 MB"
+   },
+   {
+    "label": "第 20 讲 · 默认选项、助推与框架",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec20.mp4",
+    "poster": "posters/lec20.jpg",
+    "meta": "9:07 · 720p · 23 MB"
+   },
+   {
+    "label": "第 21 讲 · 偏好的可塑与不可达",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec21.mp4",
+    "poster": "posters/lec21.jpg",
+    "meta": "8:39 · 720p · 23 MB"
+   },
+   {
+    "label": "第 22 讲 · 心理学视角下的贫困",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec22.mp4",
+    "poster": "posters/lec22.jpg",
+    "meta": "8:54 · 720p · 22 MB"
+   },
+   {
+    "label": "第 23 讲 · 幸福与心理健康",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec23.mp4",
+    "poster": "posters/lec23.jpg",
+    "meta": "7:54 · 720p · 21 MB"
+   },
+   {
+    "label": "第 24 讲 · 行为代理人的政策",
+    "desc": "原讲转写 → 中文讲义 → 口播，内嵌可开关字幕",
+    "href": "https://github.com/yhyu13/yhyu13.github.io/releases/download/courseware-mit1413-v1/mit1413-lec24.mp4",
+    "poster": "posters/lec24.jpg",
+    "meta": "10:19 · 720p · 28 MB"
    }
   ],
   "text": [
