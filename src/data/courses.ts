@@ -154,16 +154,22 @@ export const COURSES: Course[] = [
     sourceUrl:
       "https://ocw.mit.edu/courses/14-13-psychology-and-economics-spring-2020/",
     licence:
-      "课程材料由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布；本站只收录个人整理的讲义、逐字转写与清单，原课程视频与音频未收录。",
+      "课程材料由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布；本站收录个人整理的讲义、讲解视频、逐字转写与清单，未收录 MIT 官方课程录像与音频。",
     color: "#3d5a4c",
     blurb:
-      "24 讲行为经济学：533 页自制讲义（含 281 页课程总册）、24 份逐字转写与字幕。",
+      "24 讲行为经济学：533 页自制讲义（含 281 页课程总册）、24 段 720p 讲解视频、24 份逐字转写与字幕。",
     sections: [
       {
         kind: "decks",
         label: "讲义",
         description:
           "25 份 PDF，共 533 页：24 讲各 10–12 页，外加一份 281 页的课程总册（封面 + 课程地图 + 24 章 + 全课总结）。讲义由个人笔记重排生成，不是 OCW 原始课件。",
+      },
+      {
+        kind: "videos",
+        label: "视频",
+        description:
+          "24 段讲解视频，共 3 小时 43 分，1280×720，带口播与可开关字幕。源片为 1080p（合计 11 GB），这里转成 720p 以便在线播放；视频存放在 GitHub Release，不在本站。",
       },
       {
         kind: "text",
@@ -180,7 +186,7 @@ export const COURSES: Course[] = [
         kind: "notice",
         label: "版权与出处",
         description:
-          "课程由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布；原课程视频与音频体量约 11 GB，本站未收录，请访问 OCW 课程页。",
+          "课程由 MIT OpenCourseWare 以 CC BY-NC-SA 4.0 发布。站上的 24 段视频是个人整理讲解（720p，存放于 GitHub Release），不是 MIT 官方录像；官方录像请访问 OCW 课程页。",
       },
     ],
   },
