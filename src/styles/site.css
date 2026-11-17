@@ -325,6 +325,53 @@ body:has(.article-page) {
   border: 1px solid rgba(220, 200, 164, 0.18);
 }
 
+/* Long-read tables (the 2026 review is mostly tables). The wrapper scrolls on
+   narrow screens; the table itself keeps its columns readable instead of
+   squeezing every cell onto one word per line. */
+.article-table-wrap {
+  margin: 20px 0 26px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-body table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.article-body thead th {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(220, 200, 164, 0.38);
+  color: #e8dcc4;
+  font-weight: 650;
+  text-align: left;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+.article-body tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(220, 200, 164, 0.14);
+  color: #c5b79e;
+  vertical-align: top;
+}
+
+.article-body tbody tr:nth-child(even) {
+  background: rgba(52, 48, 37, 0.42);
+}
+
+.article-body tbody td strong {
+  color: #e8dcc4;
+}
+
+@media (max-width: 720px) {
+  .article-body table { font-size: 13px; min-width: 560px; }
+  .article-body thead th, .article-body tbody td { padding: 8px 10px; }
+}
+
 .article-tags {
   display: flex;
   flex-wrap: wrap;

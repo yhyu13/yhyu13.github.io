@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Library } from "./pages/Library";
-import { ArticlePage } from "./pages/ArticlePage";
 
 // pdf.js is only needed on a deck detail route. Importing the reader eagerly
 // pulled it into the entry chunk, so every route (Archive included) paid for it.
@@ -13,6 +12,12 @@ const CoursePage = lazy(() =>
   import("./pages/CoursePage").then((m) => ({ default: m.CoursePage })),
 );
 
+// Archive posts are reading pages with a lot of JSX; they belong in their own
+// chunk so the shelf routes do not carry them.
+const ArticlePage = lazy(() =>
+  import("./pages/ArticlePage").then((m) => ({ default: m.ArticlePage })),
+);
+
 export default function App() {
   return (
     <Routes>
@@ -20,8 +25,30 @@ export default function App() {
       <Route path="/identity" element={<Library openId="identity" />} />
       <Route path="/craft" element={<Library openId="craft" />} />
       <Route path="/archive" element={<Library openId="archive" />} />
-      <Route path="/archive/capsule" element={<ArticlePage slug="capsule" />} />
-      <Route path="/archive/rainbow" element={<ArticlePage slug="rainbow" />} />
+      <Route
+        path="/archive/capsule"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="capsule" />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/archive/rainbow"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="rainbow" />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/archive/ai-tutor"
+        element={
+          <Suspense fallback={null}>
+            <ArticlePage slug="ai-tutor" />
+          </Suspense>
+        }
+      />
       <Route path="/decks" element={<Library openId="decks" />} />
       <Route
         path="/decks/:slug"

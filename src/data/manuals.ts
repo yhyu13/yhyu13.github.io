@@ -115,13 +115,13 @@ export const MANUALS: Manual[] = [
     id: "archive",
     kicker: "Field Manual · III",
     coverTitle: "Archive",
-    subtitle: "2017 Notes",
-    footer: "Capsule · Rainbow",
+    subtitle: "2017 · 2026",
+    footer: "Capsule · Rainbow · Tutor",
     coverColor: "#566044",
     coverInk: "#293024",
-    year: "2017",
+    year: "2017–2026",
     description:
-      "Two 2017 field notes. A reproducibility report on Matrix Capsules with EM routing, and a review of DeepMind Rainbow. The Hexo Hello World post is omitted.",
+      "Two 2017 field notes and one 2026 research review: a reproducibility report on Matrix Capsules with EM routing, a review of DeepMind Rainbow, and a study of how far AI tutors actually close the gap to human 1:1 tutoring.",
     stepsLabel: "How to read this volume",
     steps: [
       {
@@ -132,15 +132,20 @@ export const MANUALS: Manual[] = [
         title: "DeepMind Rainbow: Review",
         body: "2017-12-16. Six DQN extensions stacked. The note’s claim: for a value-based method, having a better target to learn is generally more effective than learning the target better.",
       },
+      {
+        title: "AI 导师与人类导师的差距",
+        body: "2026-10-01. Hang Yu. Four separable components of 1:1 tutoring, the evidence spectrum behind 2 sigma, and why the motivation component is the one AI cannot replace. Open the full review.",
+      },
     ],
     excerptLabel: "Period notes",
-    excerpt: "Capsule: tensor in, pose out. Rainbow: six DQN extensions. Open the reports below.",
+    excerpt: "Capsule: tensor in, pose out. Rainbow: six DQN extensions. AI tutor: 2 sigma is mostly a misquote. Open the reports below.",
     reviewLabel: "Before you leave",
     review:
       "These are period notes, not a claim that the 2017 numbers still lead the field. Read the reports; do not treat the shelf cards as the papers.",
     actions: [
       { label: "Open Capsule", href: "/archive/capsule" },
       { label: "Open Rainbow", href: "/archive/rainbow" },
+      { label: "Open AI Tutor", href: "/archive/ai-tutor" },
     ],
   },
   {
