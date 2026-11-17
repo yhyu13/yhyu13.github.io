@@ -116,12 +116,12 @@ export const MANUALS: Manual[] = [
     kicker: "Field Manual · III",
     coverTitle: "Archive",
     subtitle: "2017 · 2026",
-    footer: "Capsule · Rainbow · Tutor",
+    footer: "Capsule · Rainbow · Tutor · 3D · Stageshow",
     coverColor: "#566044",
     coverInk: "#293024",
     year: "2017–2026",
     description:
-      "Two 2017 field notes and one 2026 research review: a reproducibility report on Matrix Capsules with EM routing, a review of DeepMind Rainbow, and a study of how far AI tutors actually close the gap to human 1:1 tutoring.",
+      "Two 2017 field notes and three recent research notes: a reproducibility report on Matrix Capsules, a review of DeepMind Rainbow, a study of how far AI tutors close the gap to human 1:1 tutoring, a survey-plus-design for AI-driven 3D scene pipelines, and a teardown of the Stageshow agent skill.",
     stepsLabel: "How to read this volume",
     steps: [
       {
@@ -136,16 +136,26 @@ export const MANUALS: Manual[] = [
         title: "AI 导师与人类导师的差距",
         body: "2026-10-01. Hang Yu. Four separable components of 1:1 tutoring, the evidence spectrum behind 2 sigma, and why the motivation component is the one AI cannot replace. Open the full review.",
       },
+      {
+        title: "AI 驱动的 3D 场景生成管线",
+        body: "2026-11-07. Hang Yu. Which Blender bridges and asset MCPs are actually maintained, the 2,400-asset CC0 texture stack, and a one-sentence-to-scene pipeline design with an audit gate.",
+      },
+      {
+        title: "Stageshow 技能拆解",
+        body: "2026-11-12. Hang Yu. Reverse-engineering an agent skill from a video: what it actually does, and whether its advertised self-check loop holds up.",
+      },
     ],
     excerptLabel: "Period notes",
-    excerpt: "Capsule: tensor in, pose out. Rainbow: six DQN extensions. AI tutor: 2 sigma is mostly a misquote. Open the reports below.",
+    excerpt: "Capsule: tensor in, pose out. Rainbow: six DQN extensions. AI tutor: 2 sigma is mostly a misquote. 3D: one sentence to a scene, with an audit gate. Stageshow: read the skill, not the video.",
     reviewLabel: "Before you leave",
     review:
       "These are period notes, not a claim that the 2017 numbers still lead the field. Read the reports; do not treat the shelf cards as the papers.",
     actions: [
-      { label: "Open Capsule", href: "/archive/capsule" },
-      { label: "Open Rainbow", href: "/archive/rainbow" },
-      { label: "Open AI Tutor", href: "/archive/ai-tutor" },
+      { label: "Capsule", href: "/archive/capsule" },
+      { label: "Rainbow", href: "/archive/rainbow" },
+      { label: "AI Tutor", href: "/archive/ai-tutor" },
+      { label: "3D Pipeline", href: "/archive/scene-3d-pipeline" },
+      { label: "Stageshow", href: "/archive/stageshow-teardown" },
     ],
   },
   {
