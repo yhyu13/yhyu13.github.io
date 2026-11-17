@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0E0C0A">
+<title>随军记 · 口播影院 | The Journey Witnesses</title>
+<style>
+:root{
+  --ink:#0E0C0A;--ink2:#161310;--parch:#E8DCC8;--dim:#B8AC96;--mut:#8A7F6C;
+  --amber:#E0A458;--amber2:#C99B3F;--red:#B83A2E;--snow:#7A93AC;--green:#7FA653;
+  --line:rgba(224,164,88,.3);--serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --sans:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--ink);color:var(--parch);font-family:var(--sans);overflow:hidden}
+#wrap{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px}
+#stage{position:relative;width:min(100%,calc((100vh - 150px)*16/9));aspect-ratio:16/9;background:#000;
+  border-radius:14px;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.7),0 0 0 1px var(--line)}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,transparent 50%,rgba(6,4,2,.6) 100%)}
+#txt{position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(16px,3.4%,40px)}
+#kick{font-size:clamp(10px,1.5vw,14px);letter-spacing:.3em;color:var(--amber);font-weight:600;opacity:0;transform:translateY(-8px);transition:.6s}
+#big{font-family:var(--serif);font-size:clamp(26px,5.4vw,58px);font-weight:900;color:var(--parch);line-height:1.15;margin-top:6px;
+  text-shadow:0 3px 24px rgba(0,0,0,.7);opacity:0;transform:translateY(12px);transition:.7s .1s}
+#bigEn{font-family:var(--serif);font-style:italic;font-size:clamp(12px,2vw,20px);color:var(--amber2);margin-top:4px;opacity:0;transition:.7s .2s}
+#txt.show #kick,#txt.show #big{opacity:1;transform:translateY(0)}
+#txt.show #bigEn{opacity:1}
+#subWrap{align-self:center;max-width:88%;text-align:center}
+#sub{font-family:var(--serif);font-size:clamp(13px,2.1vw,21px);line-height:1.7;color:var(--dim);
+  background:rgba(10,8,6,.55);padding:10px 18px;border-radius:12px;backdrop-filter:blur(4px);display:inline-block;text-align:left}
+#sub .hl{color:var(--parch)}
+#chapTag{position:absolute;top:clamp(14px,3%,32px);right:clamp(16px,3.4%,40px);font-family:var(--serif);font-size:clamp(11px,1.6vw,15px);
+  color:var(--amber);border:1px solid var(--line);border-radius:16px;padding:5px 14px;background:rgba(10,8,6,.5);pointer-events:none}
+#replay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;background:rgba(8,6,4,.72);backdrop-filter:blur(4px)}
+#replay.on{display:flex}
+#replay h2{font-family:var(--serif);font-size:clamp(24px,4vw,40px);color:var(--parch)}
+#replay p{color:var(--dim);font-size:14px}
+#replayBtn{min-height:50px;padding:0 36px;border:none;border-radius:25px;background:var(--red);color:var(--parch);font-size:16px;font-family:var(--serif);font-weight:700;letter-spacing:.1em;cursor:pointer}
+/* controls */
+#ctrl{width:min(100%,calc((100vh - 150px)*16/9));display:flex;flex-direction:column;gap:10px}
+#row1{display:flex;align-items:center;gap:12px}
+#play{width:48px;height:48px;flex:0 0 auto;border-radius:50%;border:1px solid var(--line);background:var(--amber);color:var(--ink);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#play:active{transform:scale(.93)}
+#seekWrap{flex:1;position:relative;height:32px;display:flex;align-items:center}
+#seek{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:rgba(232,220,200,.18);outline:none;cursor:pointer}
+#seek::-webkit-scrollbar{display:none}
+#seek::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber);cursor:pointer;box-shadow:0 0 10px rgba(224,164,88,.6)}
+#seek::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:50%;background:var(--amber);cursor:pointer}
+#ticks{position:absolute;left:0;right:0;top:50%;height:0;pointer-events:none}
+#ticks i{position:absolute;width:2px;height:11px;background:rgba(232,220,200,.4);transform:translate(-50%,-50%)}
+#time{font-family:var(--serif);font-size:13px;color:var(--dim);min-width:96px;text-align:right;flex:0 0 auto}
+#mute{width:42px;height:42px;flex:0 0 auto;border-radius:50%;border:1px solid var(--line);background:var(--ink2);color:var(--parch);font-size:16px;cursor:pointer}
+#mute.off{color:var(--mut);text-decoration:line-through}
+#rail{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+#rail::-webkit-scrollbar{display:none}
+.cb{flex:0 0 auto;min-height:40px;border-radius:9px;border:1px solid rgba(232,220,200,.14);background:var(--ink2);color:var(--dim);
+  font-size:12px;padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s;white-space:nowrap}
+.cb b{font-family:var(--serif);color:var(--amber2)}
+.cb.active{border-color:var(--amber);color:var(--parch);background:rgba(224,164,88,.16)}
+.cb:active{transform:scale(.95)}
+#hint{font-size:11px;color:var(--mut);text-align:center;letter-spacing:.04em}
+@media (max-width:640px){ #wrap{padding:10px;gap:10px} #stage,#ctrl{width:100%} #time{min-width:78px;font-size:12px} }
+@media (prefers-reduced-motion:reduce){ #kick,#big,#bigEn{transition:none} }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <canvas id="cv"></canvas>
+    <div id="vig"></div>
+    <div id="txt">
+      <div>
+        <div id="kick"></div>
+        <div id="big"></div>
+        <div id="bigEn"></div>
+      </div>
+      <div id="subWrap"><div id="sub"></div></div>
+    </div>
+    <div id="chapTag"></div>
+    <div id="replay"><h2>见证完毕</h2><p>560 天 · 转战五省 · 1936 伦敦</p><button id="replayBtn">重新播放 ↺</button></div>
+  </div>
+  <div id="ctrl">
+    <div id="row1">
+      <button id="play" aria-label="播放/暂停">▶</button>
+      <div id="seekWrap"><input id="seek" type="range" min="0" max="1000" value="0" aria-label="进度"><div id="ticks"></div></div>
+      <div id="time">0:00 / 0:00</div>
+      <button id="mute" aria-label="静音">♪</button>
+    </div>
+    <div id="rail"></div>
+    <div id="hint">空格 播放/暂停 · ←→ 快退/快进 · 数字 1–9 跳转章节 · 旁白：Edge TTS 云健男声</div>
+  </div>
+</div>
+<audio id="au" src="voiceover.m4a" preload="auto"></audio>
+<script>
+'use strict';
+const TIMELINE = {
+  "scenes": [
+    {
+      "id": "s1",
+      "visual": "旧书与烛光·开场",
+      "line": "1936年，伦敦，一本薄薄的小书出版了。书名《神灵之手》，作者是一个瑞士传教士，薄复礼。它比埃德加·斯诺的《红星照耀中国》早了整整一年，是西方世界第一部亲历长征的著作。而这本书的全部素材，来自他被红军扣留的五百六十天。",
+      "audio": "narration/s1.mp3",
+      "duration": 24.41,
+      "start": 0.0
+    },
+    {
+      "id": "s2",
+      "visual": "旧州县城·被扣",
+      "line": "故事回到1934年10月，贵州黄平旧州。红六军团攻占了这座县城。传教士薄复礼在途中被当作间谍扣留；次日，海曼等传教士也被扣留。红军怀疑外国传教士与帝国主义势力相连，要求教会以药品和经费作赎；妇女和儿童，全部当场释放。",
+      "audio": "narration/s2.mp3",
+      "duration": 25.34,
+      "start": 24.81
+    },
+    {
+      "id": "s3",
+      "visual": "教堂烛光·地图之夜",
+      "line": "在旧州教堂，红军找到一张巨大的法文版贵州地图。部队急需它，却没有人读得懂那些法文地名。薄复礼懂法文，也懂中文。那一夜，他和萧克一起，把地名逐个译成中文。萧克晚年多次回忆这件事。这张地图，在乌蒙山回旋战和转战云贵中，派上了大用场。",
+      "audio": "narration/s3.mp3",
+      "duration": 27.5,
+      "start": 50.55
+    },
+    {
+      "id": "s4",
+      "visual": "群山行军·迟行",
+      "line": "从此，他跟着队伍上路。贵州、湖南、湖北、四川、云南，翻山、淋雨、饿肚子。他不是战士，是被看管的人质，多数时候步行，病重时获马骡代步，途中大病一场。五百六十天，转战五省。MV里唱道：攀山共远征，步步却迟行。一个传教士，用脚丈量了长征。",
+      "audio": "narration/s4.mp3",
+      "duration": 28.58,
+      "start": 78.45
+    },
+    {
+      "id": "s5",
+      "visual": "白马·相待",
+      "line": "红军没有虐待他。生病时给他治疗，走不动时给他马匹代步。他看见指挥员和士兵一样步行，一样吃粗粮；看见部队不抢群众财物，买卖公平。MV里那句\"相待见真诚\"，不是宣传，是他逐日记下的亲眼所见。",
+      "audio": "narration/s5.mp3",
+      "duration": 20.69,
+      "start": 107.43
+    },
+    {
+      "id": "s6",
+      "visual": "村寨·纪律与歌声",
+      "line": "在县城和村寨，红军打土豪、分浮财，扶助贫弱，动员青年参军。宿营的夜里，队伍唱起歌。这些日常细节，后来都写进了《神灵之手》。在西方媒体大量抹黑红军的年代，一个\"人质\"的证词，比任何宣传都更有力。",
+      "audio": "narration/s6.mp3",
+      "duration": 22.22,
+      "start": 128.52
+    },
+    {
+      "id": "s7",
+      "visual": "雪山·乌蒙山",
+      "line": "1936年3月，乌蒙山回旋战。红二、六军团在云贵交界的崇山峻岭间与敌周旋。薄复礼跟着队伍，走过这段春寒料峭、积雪未消的山路。他看见的不是\"流寇\"，而是一支有信念、有纪律的军队。万里见忠诚，这是他的结论。",
+      "audio": "narration/s7.mp3",
+      "duration": 24.07,
+      "start": 151.14
+    },
+    {
+      "id": "s8",
+      "visual": "复活节·释放",
+      "line": "1936年4月，云南。红军判断：瑞士不属于帝国主义国家，没有与中国签订不平等条约。复活节前后，薄复礼获释。临别，萧克专门设宴招待，还给了他十块银元作路费。从\"人质\"到\"旧友\"，五百六十天，一支军队用行动写下了答案。",
+      "audio": "narration/s8.mp3",
+      "duration": 23.93,
+      "start": 175.61
+    },
+    {
+      "id": "s9",
+      "visual": "合书·回响",
+      "line": "获释同年，《神灵之手》在伦敦出版。多年以后，这本书被重新发现，译介回中国；萧克读后，想起了旧州教堂里的那个夜晚。今天，中国军号把它做成英文MV《随军记》，唱给海外听众。他跟着队伍转战五省，历时五百六十天，然后用余生，把这条路讲给世界听。",
+      "audio": "narration/s9.mp3",
+      "duration": 25.66,
+      "start": 199.94
+    }
+  ],
+  "total_duration": 225.6,
+  "gap": 0.4,
+  "voice": "zh-CN-YunjianNeural",
+  "rate": "-4%"
+};
+const SCENES = TIMELINE.scenes, TOTAL = TIMELINE.total_duration;
+const REDUCED = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const au = document.getElementById('au');
+const W = 1280, H = 720;
+let dpr = Math.min(window.devicePixelRatio || 1, 2);
+function fit(){ const r = cv.getBoundingClientRect(); cv.width = Math.round(r.width*dpr); cv.height = Math.round(r.height*dpr); }
+window.addEventListener('resize', fit); fit();
+function mulberry32(a){return function(){a|=0;a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+const C = {ink:'#0E0C0A',parch:'#E8DCC8',dim:'#B8AC96',amber:'#E0A458',amber2:'#C99B3F',red:'#B83A2E',snow:'#9FB4C8',green:'#7FA653',wood:'#6B4A32',night:'#141A24'};
+const ease = t => t<0?0:t>1?1:t*t*(3-2*t);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* ---- draw helpers (logical 1280x720) ---- */
+function bg(g,top,bot){const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,top);gr.addColorStop(1,bot);g.fillStyle=gr;g.fillRect(0,0,W,H);}
+function glow(g,x,y,r,col,a){const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,col);gr.addColorStop(1,'rgba(0,0,0,0)');g.globalAlpha=a;g.fillStyle=gr;g.beginPath();g.arc(x,y,r,0,7);g.fill();g.globalAlpha=1;}
+function figure(g,x,y,s,col,walk,phase){ // y = feet
+  g.save();g.translate(x,y);g.scale(s,s);g.fillStyle=col;
+  const sw=walk?Math.sin(phase)*0.3:0;
+  g.fillRect(-7,-46,14,26); // body
+  g.beginPath();g.arc(0,-52,7,0,7);g.fill(); // head
+  g.fillRect(-8,-58,16,4); // cap
+  g.save();g.translate(-4,-20);g.rotate(sw);g.fillRect(-3,0,6,20);g.restore();
+  g.save();g.translate(4,-20);g.rotate(-sw);g.fillRect(-3,0,6,20);g.restore();
+  g.fillStyle=C.red;g.fillRect(-2,-56,4,3); // star
+  g.restore();
+}
+function mountains(g,baseY,col,seed,amp,off){const r=mulberry32(seed);g.fillStyle=col;g.beginPath();g.moveTo(0,H);g.lineTo(0,baseY);
+  let x=0;while(x<W+80){const w=80+r()*120,h=amp*(0.5+r());g.lineTo(x+w/2,baseY-h);g.lineTo(x+w,baseY-r()*amp*0.2);x+=w;}
+  g.lineTo(W,H);g.closePath();g.fill();}
+function snowMountains(g,baseY,seed,off){const r=mulberry32(seed);
+  for(let i=0;i<6;i++){const cx=((i*230+off)% (W+300))-150,w=180+r()*120,h=160+r()*140;
+    g.fillStyle='#5E6E80';g.beginPath();g.moveTo(cx-w,baseY);g.lineTo(cx,baseY-h);g.lineTo(cx+w,baseY);g.closePath();g.fill();
+    g.fillStyle='#E8EEF4';g.beginPath();g.moveTo(cx-w*0.32,baseY-h*0.62);g.lineTo(cx,baseY-h);g.lineTo(cx+w*0.32,baseY-h*0.62);g.lineTo(cx+w*0.18,baseY-h*0.55);g.lineTo(cx,baseY-h*0.66);g.lineTo(cx-w*0.18,baseY-h*0.55);g.closePath();g.fill();}}
+function house(g,x,y,s,lit){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle='#3A332C';g.fillRect(-30,-40,60,40);
+  g.fillStyle='#2A241E';g.beginPath();g.moveTo(-38,-40);g.lineTo(0,-66);g.lineTo(38,-40);g.closePath();g.fill();
+  g.fillStyle='#1A1612';g.fillRect(-8,-26,16,26);
+  if(lit){g.fillStyle='#FFC978';g.fillRect(-24,-32,12,12);g.fillRect(12,-32,12,12);}g.restore();}
+function candle(g,x,y,s,t){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle='#E8DCC8';g.fillRect(-3,-22,6,22);
+  const f=0.8+Math.sin(t*9)*0.15+Math.sin(t*23)*0.06;glow(g,0,-30,60,'rgba(255,168,69,0.5)',0.5*f);
+  g.fillStyle='#FFB347';g.beginPath();g.ellipse(0,-28,4*f,9*f,0,0,7);g.fill();g.restore();}
+function flag(g,x,y,s,t){g.save();g.translate(x,y);g.scale(s,s);g.strokeStyle='#4A3322';g.lineWidth=3;g.beginPath();g.moveTo(0,0);g.lineTo(0,-70);g.stroke();
+  const w=Math.sin(t*2.5)*4;g.fillStyle=C.red;g.beginPath();g.moveTo(0,-70);g.lineTo(46,-62+w);g.lineTo(46,-40+w);g.lineTo(0,-48);g.closePath();g.fill();
+  g.fillStyle=C.amber;g.fillRect(8,-62,7,7);g.restore();}
+function horse(g,x,y,s,col,walk,phase){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle=col;
+  g.fillRect(-26,-40,52,24); // body
+  g.save();g.translate(24,-40);g.rotate(-0.5);g.fillRect(-5,-22,10,24);g.restore(); // neck
+  g.fillRect(30,-66,20,12); // head
+  const sw=walk?Math.sin(phase)*0.25:0;
+  [[-20,-16],[-8,-16],[10,-16],[22,-16]].forEach(([lx,ly],i)=>{g.save();g.translate(lx,ly);g.rotate(i%2?sw:-sw);g.fillRect(-3,0,6,18);g.restore();});
+  g.fillStyle='#8A7F6C';g.fillRect(20,-58,6,18);g.restore();}
+function book(g,x,y,s,open,t){g.save();g.translate(x,y);g.scale(s,s);
+  g.fillStyle='#6B2419';g.fillRect(-60,-6,120,12);
+  const a=open*0.9;g.fillStyle='#E8DCC8';
+  g.save();g.rotate(-a);g.fillRect(-58,-8,58,8);g.restore();
+  g.save();g.rotate(a);g.fillRect(0,-8,58,8);g.restore();
+  g.fillStyle=C.red;g.fillRect(-2,-10,4,16);g.restore();}
+function notes(g,x,y,t,col){for(let i=0;i<3;i++){const p=((t*0.4+i*0.33)%1);const yy=y-p*70,xx=x+Math.sin(p*6+i)*14;
+  g.globalAlpha=(1-p)*0.8;g.fillStyle=col;g.font='20px serif';g.fillText(i%2?'♪':'♫',xx,yy);}g.globalAlpha=1;}
+function snowfall(g,t,n,seed){const r=mulberry32(seed);g.fillStyle='rgba(255,255,255,0.85)';
+  for(let i=0;i<n;i++){const x=(r()*W+Math.sin(t*0.7+i)*20)%W;const y=(r()*H+t*(30+r()*40))%H;g.beginPath();g.arc(x,y,1+r()*2,0,7);g.fill();}}
+function rain(g,t,n,seed){const r=mulberry32(seed);g.strokeStyle='rgba(180,200,220,0.3)';g.lineWidth=1;
+  for(let i=0;i<n;i++){const x=(r()*W+t*60)%W;const y=(r()*H+t*400)%H;g.beginPath();g.moveTo(x,y);g.lineTo(x-4,y+14);g.stroke();}}
+function dust(g,t,n,seed,col){const r=mulberry32(seed);g.fillStyle=col;
+  for(let i=0;i<n;i++){const x=(r()*W+Math.sin(t*0.3+i)*30)%W;const y=(r()*H+Math.cos(t*0.2+i)*20)%H;g.globalAlpha=0.3+Math.sin(t+i)*0.2;g.beginPath();g.arc(x,y,1.2,0,7);g.fill();}g.globalAlpha=1;}
+function silver(g,x,y,n){for(let i=0;i<n;i++){const col=i%3,row=Math.floor(i/3);g.fillStyle='#C8CDD4';g.beginPath();g.ellipse(x+col*22,y-row*7,11,4,0,0,7);g.fill();g.fillStyle='#9AA0A8';g.fillRect(x+col*22-11,y-row*7,22,3);}}
+
+/* ---- scenes ---- */
+const R = [
+ // s1 旧书烛光
+ (g,τ,d)=>{bg(g,'#1A140E','#0A0806');glow(g,640,430,420,'rgba(224,164,88,0.16)',1);
+   dust(g,τ,50,3,'rgba(224,164,88,0.5)');
+   const open=ease(clamp(τ/3,0,1));book(g,640,470,2.4,open,τ);
+   candle(g,420,470,2,τ);candle(g,860,470,2,τ+1);
+   g.textAlign='center';g.globalAlpha=ease(clamp((τ-5)/2,0,1));g.fillStyle=C.amber;g.font='700 24px '+SANS;
+   g.fillText('比《红星照耀中国》早一年 · 西方第一部亲历长征著作',640,620);g.globalAlpha=1;g.textAlign='left';},
+ // s2 旧州县城
+ (g,τ,d)=>{bg(g,'#3A3226','#1A1612');mountains(g,420,'#2A241C',5,120,0);
+   g.fillStyle='#221C16';g.fillRect(0,470,W,250);
+   // 城门
+   g.fillStyle='#3A332C';g.fillRect(540,300,200,170);g.fillStyle='#2A241E';g.beginPath();g.moveTo(520,300);g.lineTo(640,250);g.lineTo(760,300);g.closePath();g.fill();
+   g.fillStyle='#14100C';g.beginPath();g.arc(640,470,50,Math.PI,0);g.fill();g.fillRect(590,470,100,0);
+   flag(g,640,250,1,τ);
+   // 行军纵队
+   for(let i=0;i<10;i++){const x=((τ*40+i*70)%(W+100))-50;figure(g,x,560,1.1,'#5A6072',true,τ*4+i);}
+   // 被扣两人 + 释放妇孺
+   const pull=ease(clamp((τ-6)/3,0,1));
+   figure(g,300,600,1.4,'#2A2622',false,0);figure(g,360,600,1.4,'#2A2622',false,0);
+   g.fillStyle=C.amber;g.globalAlpha=0.5+Math.sin(τ*3)*0.3;g.beginPath();g.arc(330,540,46,0,7);g.stroke();g.globalAlpha=1;
+   for(let i=0;i<4;i++){const x=900+pull*200+i*40;figure(g,x,600,0.9+i*0.05,'#8A7F6C',true,τ*3+i);}},
+ // s3 地图之夜
+ (g,τ,d)=>{bg(g,'#160F08','#0A0604');glow(g,640,430,360,'rgba(255,168,69,0.2)',1);
+   g.fillStyle='#3A2A18';g.fillRect(340,470,600,20);g.fillRect(380,490,20,120);g.fillRect(880,490,20,120);
+   // 地图
+   g.fillStyle='#D8C9A8';g.fillRect(420,360,440,110);g.strokeStyle='rgba(120,100,70,0.4)';g.lineWidth=1;
+   for(let x=420;x<=860;x+=40){g.beginPath();g.moveTo(x,360);g.lineTo(x,470);g.stroke();}
+   for(let y=360;y<=470;y+=28){g.beginPath();g.moveTo(420,y);g.lineTo(860,y);g.stroke();}
+   g.strokeStyle='rgba(70,90,120,0.7)';g.lineWidth=2;g.beginPath();g.moveTo(440,450);g.bezierCurveTo(560,400,680,430,840,380);g.stroke();
+   const labels=[['Kouei-Tcheou','贵州'],['Tsen-Yuen','镇远'],['Huang-Ping','黄平'],['Wou-Mong','乌蒙']];
+   labels.forEach(([fr,zh],i)=>{const x=470+i*100,y=400+(i%2)*30;const flip=ease(clamp((τ-4-i*2.5)/1.5,0,1));
+     g.font='italic 15px Georgia';g.fillStyle='#5A4632';g.globalAlpha=1-flip;g.fillText(fr,x,y);
+     g.font='700 17px '+SANS;g.fillStyle=C.red;g.globalAlpha=flip;g.fillText(zh,x,y);g.globalAlpha=1;});
+   candle(g,400,470,1.6,τ);candle(g,880,470,1.6,τ+2);
+   figure(g,560,600,1.5,'#2A2622',false,0);figure(g,720,600,1.5,'#5A6072',false,0);},
+ // s4 群山行军
+ (g,τ,d)=>{bg(g,'#5A6A72','#2A3238');mountains(g,380,'#3E4A52',7,200,τ*6);mountains(g,460,'#2E3840',9,160,τ*12);
+   g.fillStyle='#222A30';g.fillRect(0,540,W,180);
+   rain(g,τ,70,11);
+   for(let i=0;i<9;i++){const x=((τ*30+i*80)%(W+100))-50;figure(g,x,600,1.0,'#4E5560',true,τ*3+i);}
+   const lag=120+Math.sin(τ*0.5)*20;figure(g,lag,640,1.3,'#2A2622',true,τ*2);
+   const days=Math.round(clamp(τ/d,0,1)*560);g.textAlign='right';g.fillStyle=C.amber;g.font='900 44px '+SERIF;g.fillText(days+' 天',1220,600);
+   g.fillStyle=C.dim;g.font='18px '+SANS;g.fillText('转战 黔 · 湘 · 鄂 · 川 · 滇',1220,636);g.textAlign='left';},
+ // s5 白马相待
+ (g,τ,d)=>{bg(g,'#6E8B5E','#2E3A28');mountains(g,400,'#4A5E40',4,150,τ*4);
+   g.fillStyle='#3E4E34';g.fillRect(0,520,W,200);
+   const x=300+τ*12;horse(g,x,600,1.8,'#E8E2D8',true,τ*2);figure(g,x+6,540,1.1,'#2A2622',false,0);
+   for(let i=0;i<4;i++){figure(g,x-120-i*60,620,1.1,'#5A6072',true,τ*3+i);}
+   glow(g,x,560,120,'rgba(232,226,216,0.15)',1);},
+ // s6 村寨歌声
+ (g,τ,d)=>{bg(g,'#1E2430','#0E1218');house(g,200,520,1.6,true);house(g,1050,520,1.8,true);house(g,640,500,1.2,true);
+   g.fillStyle='#1A1E24';g.fillRect(0,560,W,160);
+   const f=0.8+Math.sin(τ*10)*0.15;glow(g,640,600,200*f,'rgba(255,140,26,0.3)',1);
+   g.fillStyle='#FF8C1A';g.beginPath();g.moveTo(620,620);g.lineTo(640,580-20*f);g.lineTo(660,620);g.closePath();g.fill();
+   for(let i=0;i<6;i++){const a=i/6*Math.PI*2;figure(g,640+Math.cos(a)*130,640+Math.sin(a)*30,1.0,'#4E5560',false,0);}
+   notes(g,640,560,τ,C.amber);
+   // 分浮财
+   for(let i=0;i<3;i++){const p=ease(clamp((τ-3-i*2)/2,0,1));const bx=300+p*120;g.fillStyle=C.dim;g.fillRect(bx,600,20,16);}
+   figure(g,260,640,1.1,'#5A6072',false,0);figure(g,460,640,1.0,'#8A7F6C',false,0);},
+ // s7 雪山乌蒙
+ (g,τ,d)=>{bg(g,'#8FA3B8','#3E4E5E');snowMountains(g,520,13,τ*8);
+   g.fillStyle='#E8EEF4';g.fillRect(0,560,W,160);snowfall(g,τ,120,21);
+   for(let i=0;i<10;i++){const x=((τ*24+i*70)%(W+100))-50;const y=600+Math.sin(x*0.01)*20;figure(g,x,y,0.95,'#4E5560',true,τ*3+i);}
+   flag(g,((τ*24)%(W+100))-50,560,1,τ);},
+ // s8 复活节释放
+ (g,τ,d)=>{bg(g,'#C9D8C0','#6E8B5E');
+   for(let i=0;i<7;i++){g.globalAlpha=0.06;g.fillStyle='#FFF4D8';g.beginPath();g.moveTo(640,120);g.lineTo(200+i*150,720);g.lineTo(260+i*150,720);g.closePath();g.fill();}g.globalAlpha=1;
+   glow(g,640,140,200,'rgba(255,244,216,0.5)',1);mountains(g,440,'#7FA653',6,140,0);
+   g.fillStyle='#5E7A50';g.fillRect(0,540,W,180);
+   g.fillStyle=C.wood;g.fillRect(480,560,320,16);g.fillRect(500,576,16,80);g.fillRect(764,576,16,80);
+   silver(g,560,556,Math.round(ease(clamp((τ-3)/6,0,1))*10));
+   figure(g,560,660,1.4,'#5A6072',false,0);figure(g,720,660,1.4,'#2A2622',false,0);
+   g.fillStyle=C.amber;g.globalAlpha=0.6;g.beginPath();g.arc(640,600,30+Math.sin(τ*2)*4,0,7);g.stroke();g.globalAlpha=1;},
+ // s9 合书回响
+ (g,τ,d)=>{bg(g,'#1A140E','#0A0806');glow(g,640,400,400,'rgba(224,164,88,0.14)',1);dust(g,τ,40,9,'rgba(224,164,88,0.4)');
+   const close=ease(clamp((τ-2)/3,0,1));book(g,640,440,2.6,1-close,τ);
+   // 世界弧线
+   g.strokeStyle=C.amber2;g.lineWidth=2;g.globalAlpha=0.6;g.beginPath();g.moveTo(380,300);g.quadraticCurveTo(640,160,900,300);g.stroke();g.globalAlpha=1;
+   g.fillStyle=C.amber;g.beginPath();g.arc(380,300,5,0,7);g.fill();g.beginPath();g.arc(900,300,5,0,7);g.fill();
+   g.fillStyle=C.dim;g.font='16px '+SANS;g.fillText('伦敦',350,330);g.fillText('中国',880,330);
+   // MV 波形
+   for(let i=0;i<40;i++){const h=10+Math.abs(Math.sin(τ*3+i*0.5))*40;g.fillStyle=i%4?C.amber2:C.red;g.fillRect(440+i*10,640-h,6,h);}
+   g.fillStyle=C.parch;g.font='900 40px '+SERIF;g.textAlign='center';g.globalAlpha=ease(clamp((τ-5)/2,0,1));
+   g.fillText('他用余生，把这条路讲给世界听',640,240);g.globalAlpha=1;g.textAlign='left';},
+];
+const SERIF='"Noto Serif SC","Songti SC","SimSun",serif', SANS='"PingFang SC","Microsoft YaHei",sans-serif';
+const META = [
+ ['开场 · 1936 伦敦','神灵之手','The Restraining Hand'],
+ ['第一幕 · 1934.10 旧州','被扣留的那一天','They stopped at a county'],
+ ['第二幕 · 旧州教堂','地图之夜','One night, one map'],
+ ['第三幕 · 1934–1936','步步迟行','They trekked through mountains'],
+ ['第四幕 · 行军途中','相待见真诚','Never treated me as the captured'],
+ ['第五幕 · 黔滇村寨','夜半起歌声','Still, they sang at night'],
+ ['第六幕 · 1936.3 乌蒙山','万里见忠诚','They were faithful soldiers'],
+ ['第七幕 · 1936.4 富民','复活节的早晨','On an Easter morning'],
+ ['尾声 · 回响','从见证到讲述','The Journey Witnesses'],
+];
+
+/* ---- playback ---- */
+let playing=false, heldT=0, curScene=-1, ended=false;
+const $=id=>document.getElementById(id);
+const seek=$('seek'), playBtn=$('play'), timeEl=$('time'), subEl=$('sub'), txtEl=$('txt');
+function fmt(s){s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function sceneAt(t){for(let i=SCENES.length-1;i>=0;i--){if(t>=SCENES[i].start)return i;}return 0;}
+// rail + ticks
+const rail=$('rail'), ticks=$('ticks');
+SCENES.forEach((s,i)=>{
+  const b=document.createElement('button');b.className='cb';b.innerHTML='<b>'+(i+1)+'</b>'+META[i][1];
+  b.onclick=()=>{jump(s.start+0.01);};rail.appendChild(b);
+  const tk=document.createElement('i');tk.style.left=(s.start/TOTAL*100)+'%';ticks.appendChild(tk);
+});
+function setSceneUI(i){
+  if(i===curScene)return;curScene=i;
+  txtEl.classList.remove('show');
+  setTimeout(()=>{$('kick').textContent=META[i][0];$('big').textContent=META[i][1];$('bigEn').textContent=META[i][2];
+    $('chapTag').textContent='第 '+(i+1)+' / 9 章';txtEl.classList.add('show');},120);
+  document.querySelectorAll('.cb').forEach((b,k)=>b.classList.toggle('active',k===i));
+}
+function jump(t){t=clamp(t,0,TOTAL);heldT=t;try{au.currentTime=t;}catch(e){}ended=false;$('replay').classList.remove('on');if(!playing)draw(heldT);}
+function play(){au.play().then(()=>{playing=true;playBtn.textContent='❚❚';}).catch(()=>{});}
+function pause(){au.pause();playing=false;playBtn.textContent='▶';heldT=au.currentTime;}
+playBtn.onclick=()=>{if(ended){jump(0);play();return;}playing?pause():play();};
+$('replayBtn').onclick=()=>{jump(0);play();};
+$('mute').onclick=()=>{au.muted=!au.muted;$('mute').classList.toggle('off',au.muted);};
+seek.addEventListener('input',()=>{jump(seek.value/1000*TOTAL);});
+au.addEventListener('ended',()=>{playing=false;playBtn.textContent='▶';ended=true;$('replay').classList.add('on');});
+document.addEventListener('keydown',e=>{
+  if(e.key===' '){e.preventDefault();playing?pause():play();}
+  else if(e.key==='ArrowRight')jump(au.currentTime+5);
+  else if(e.key==='ArrowLeft')jump(au.currentTime-5);
+  else if(e.key>='1'&&e.key<='9')jump(SCENES[+e.key-1].start+0.01);
+});
+function draw(t){
+  const i=sceneAt(t), s=SCENES[i], τ=t-s.start;
+  setSceneUI(i);
+  ctx.setTransform(cv.width/W,0,0,cv.height/H,0,0);
+  ctx.clearRect(0,0,W,H);
+  R[i](ctx,REDUCED?s.duration*0.5:τ,s.duration);
+  // subtitle karaoke
+  const prog=clamp(τ/s.duration,0,1);
+  const n=Math.floor(s.line.length*prog);
+  subEl.innerHTML='<span class="hl">'+s.line.slice(0,n)+'</span>'+s.line.slice(n);
+  seek.value=Math.round(t/TOTAL*1000);
+  timeEl.textContent=fmt(t)+' / '+fmt(TOTAL);
+}
+function loop(){requestAnimationFrame(loop);const t=playing?au.currentTime:heldT;if(playing)heldT=t;draw(t);}
+draw(0);loop();
+</script>
+</body>
+</html>
