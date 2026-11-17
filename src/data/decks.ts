@@ -580,6 +580,18 @@ export const DECKS: Deck[] = [
       { label: "演示片段 · 0:34", href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v3/wuxia-town-demo.mp4" },
     ],
   },
+
+  {
+    slug: "wharton-mollick-ai-startups",
+    title: "沃顿 AI 教授 — 别再创办软件公司了",
+    year: "",
+    date: "",
+    source: "Bilibili · -spacecaps-",
+    sourceUrl: "https://www.bilibili.com/video/BV1do4h6UEMu",
+    pdf: "/decks/wharton-mollick-ai-startups.pdf",
+    description:
+      "Ethan Mollick 那期访谈的 16 页整理：AI 把「做产品」的门槛压平之后，能赚钱的活儿挪到了理解场景、做判断和学摩尔定律上。",
+  },
 ];
 
 // The shelf reads in array order; sorting by slug means a deck lands
