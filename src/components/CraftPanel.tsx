@@ -127,6 +127,15 @@ export function CraftPanel({ manual }: { manual: Manual }) {
   );
 }
 
+/** Renders a plain anchor for static pages that live outside the router. */
+function StaticLink({ to, className, children }: { to: string; className?: string; children: React.ReactNode }) {
+  return (
+    <a className={className} href={to}>
+      {children}
+    </a>
+  );
+}
+
 function CraftOverview({ manual }: { manual: Manual }) {
   return (
     <div className="craft-tab-panel">
@@ -135,8 +144,13 @@ function CraftOverview({ manual }: { manual: Manual }) {
       <section className="craft-works" aria-label="Works">
         <h3 className="craft-stats-heading">Works · self-hosted</h3>
         <div className="craft-works-grid">
-          {CRAFT_WORKS.map((work, index) => (
-            <Link className="craft-work-card" to={work.href} key={work.id}>
+          {CRAFT_WORKS.map((work, index) => {
+            // A work lives outside the SPA (a static page under /labs/), so it
+            // must be a real anchor: react-router would push a path it cannot
+            // render and leave a blank route.
+            const Card = work.href.startsWith("/labs/") ? StaticLink : Link;
+            return (
+            <Card className="craft-work-card" to={work.href} key={work.id}>
               <span className="craft-work-index" aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -149,8 +163,9 @@ function CraftOverview({ manual }: { manual: Manual }) {
                 ))}
                 {work.meta ? <span className="craft-work-meta">{work.meta}</span> : null}
               </span>
-            </Link>
-          ))}
+            </Card>
+            );
+          })}
         </div>
       </section>
 

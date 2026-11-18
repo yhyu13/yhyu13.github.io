@@ -50,6 +50,21 @@ export function Library({ openId }: LibraryProps) {
   // 492 kB three.js chunk for a backdrop it can barely see.
   const [washEnabled, setWashEnabled] = useState(stageWashAllowed);
   const selected = openId ? getManual(openId) : undefined;
+
+  // "/" or ⌘K anywhere on the shelves jumps to the site index.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+      const wantsIndex =
+        event.key === "/" || ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k");
+      if (!wantsIndex) return;
+      event.preventDefault();
+      navigate("/browse");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [navigate]);
   const mode = selected ? "detail" : "gallery";
   const stageRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -299,6 +314,9 @@ export function Library({ openId }: LibraryProps) {
           Hang Yu
         </Link>
         <div className="nav-actions">
+          <Link className="icon-button" to="/browse" aria-label="Search everything on this site" title="Search everything (/)">
+            <span className="search-glyph" aria-hidden="true" />
+          </Link>
           <QrTrigger onClick={() => setQrOpen(true)} />
           <button
             className="icon-button"
@@ -413,6 +431,11 @@ export function Library({ openId }: LibraryProps) {
               </Link>
             </li>
           ))}
+          <li>
+            <Link className="menu-link menu-link-index" to="/browse" onClick={() => setMenuOpen(false)}>
+              Index
+            </Link>
+          </li>
         </ul>
       </nav>
 

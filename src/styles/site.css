@@ -522,6 +522,12 @@ body:has(.article-page) {
   margin-bottom: 0;
 }
 
+.article-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .article-toolbar .icon-button {
   width: 44px;
   height: 44px;

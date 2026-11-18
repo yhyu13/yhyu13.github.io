@@ -102,7 +102,12 @@ export function CoursePage() {
         <Link className="article-back" to="/courses">
           ← Courses
         </Link>
-        <QrTrigger onClick={() => setQrOpen(true)} />
+        <div className="article-toolbar-actions">
+          <Link className="article-back" to="/browse">
+            ⌕ Index
+          </Link>
+          <QrTrigger onClick={() => setQrOpen(true)} />
+        </div>
       </div>
       <div className="article-inner">
         <p className="article-kicker">

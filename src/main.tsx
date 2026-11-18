@@ -7,6 +7,7 @@ import "./styles/site.css";
 import "./styles/decks.css";
 import "./styles/courses.css";
 import "./styles/craft.css";
+import "./styles/browse.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
