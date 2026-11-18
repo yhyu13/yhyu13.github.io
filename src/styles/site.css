@@ -223,7 +223,11 @@ body:has(.article-page) {
   height: auto;
 }
 
+/* A wide table lives in its own scroller; clip the page so a stray wide row
+   can never drag the whole document sideways on a phone. `clip` keeps
+   position: sticky working, unlike `hidden`. */
 .article-page {
+  overflow-x: clip;
   min-height: 100svh;
   background:
     radial-gradient(circle at 49% 8%, rgba(117, 102, 71, 0.18), transparent 34%),

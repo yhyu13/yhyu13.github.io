@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ARCHIVE_POSTS } from "../data/archivePosts";
 import { COURSES } from "../data/courses";
 import { CRAFT_WORKS } from "../data/craft";
@@ -123,14 +123,32 @@ function score(entry: Entry, needle: string) {
 
 export function BrowsePage() {
   const navigate = useNavigate();
-  const [query, setQuery] = useState(() => {
-    const q = new URLSearchParams(window.location.search).get("q");
-    return q ?? "";
+  // Typing is held in local state so no keystroke ever waits on the router;
+  // the URL mirrors it (replace, not push) so the back gesture out of a work
+  // page returns to the same search instead of an empty index.
+  const [params, setParams] = useSearchParams();
+  const [query, setQuery] = useState(() => params.get("q") ?? "");
+  const [filter, setFilter] = useState<Filter>(() => {
+    const kind = params.get("kind");
+    return FILTERS.includes(kind as Filter) ? (kind as Filter) : "all";
   });
-  const [filter, setFilter] = useState<Filter>("all");
+
+  useEffect(() => {
+    const current = params.toString();
+    const next = new URLSearchParams();
+    if (query) next.set("q", query);
+    if (filter !== "all") next.set("kind", filter);
+    const target = next.toString();
+    if (target === current) return;
+    const timer = window.setTimeout(() => setParams(next, { replace: true }), 120);
+    return () => window.clearTimeout(timer);
+  }, [query, filter, params, setParams]);
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  // Only scroll the list once the reader has moved the selection themselves;
+  // scrolling on mount pushed the whole page down on short viewports.
+  const moved = useRef(false);
 
   const needle = query.trim().toLowerCase();
 
@@ -170,12 +188,18 @@ export function BrowsePage() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Keep the highlighted row in view while arrowing through the list.
+  // Keep the highlighted row in view — under the sticky field, not behind it.
   useEffect(() => {
-    const list = listRef.current;
-    const row = list?.querySelectorAll<HTMLElement>(".browse-row")[active];
-    row?.scrollIntoView({ block: "nearest" });
-  }, [active, results]);
+    if (!moved.current) return;
+    const row = listRef.current?.querySelectorAll<HTMLElement>(".browse-row")[active];
+    if (!row) return;
+    const box = row.getBoundingClientRect();
+    const bar = document.querySelector(".browse-bar")?.getBoundingClientRect().bottom ?? 0;
+    const top = bar + 8;
+    const bottom = window.innerHeight - 8;
+    if (box.top < top) window.scrollBy({ top: box.top - top });
+    else if (box.bottom > bottom) window.scrollBy({ top: Math.min(box.bottom - bottom, box.top - top) });
+  }, [active]);
 
   const open = (entry: Entry) => {
     // A static page under /labs/ is outside the router; a full load is correct.
@@ -186,9 +210,11 @@ export function BrowsePage() {
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
       event.preventDefault();
+      moved.current = true;
       setActive((i) => Math.min(results.length - 1, i + 1));
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
+      moved.current = true;
       setActive((i) => Math.max(0, i - 1));
     } else if (event.key === "Enter") {
       const entry = results[active];

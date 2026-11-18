@@ -378,7 +378,7 @@ export const CRAFT_WORKS: CraftWork[] = [
     description:
       "薄复礼（Alfred Bosshardt）1934.10—1936.4 随红六军团转战五省：六章、十八则见证，环顾他看见的世界，把发光的见证记入日记。手机转动机身，电脑拖动画面或方向键。",
     href: "/labs/march-witness/index.html",
-    meta: "单文件 · 775 KB",
+    meta: "775 KB",
     tags: ["互动叙事", "长征史"],
   },
   {
@@ -388,7 +388,7 @@ export const CRAFT_WORKS: CraftWork[] = [
     description:
       "集装箱的波纹与锈、地面的积水、雨丝，全部由代码算出：WASD 走一圈雨夜码头，还能拧「灰模」和「湿度」两个旋钮看材质怎么变。",
     href: "/labs/saltline-dock/index.html",
-    meta: "单文件 · 15 KB（three.js 走 CDN）",
+    meta: "15 KB · three.js 走 CDN",
     tags: ["程序化材质", "WebGL"],
   },
   {
@@ -408,7 +408,7 @@ export const CRAFT_WORKS: CraftWork[] = [
     description:
       "把 a16z 2010–2026 的 793 篇 posts 做成一张可检索的表：按标题/作者/分类搜、只看 AI 相关（516 篇）、或按字数翻长文，共 163 万词。只存标题与链接，正文回原文读。",
     href: "/labs/a16z-radar/index.html",
-    meta: "单文件 · 191 KB · 零依赖",
+    meta: "191 KB · 零依赖",
     tags: ["索引", "a16z"],
   },
 ];
