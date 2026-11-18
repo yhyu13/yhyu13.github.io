@@ -1,0 +1,341 @@
+/* /browse — the one screen that lists everything the site publishes. */
+
+.browse {
+  min-height: 100vh;
+  padding: 96px 0 96px;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(111, 91, 61, 0.22), transparent 46%),
+    radial-gradient(circle at 82% 4%, rgba(86, 96, 68, 0.18), transparent 42%),
+    #29251d;
+  color: #eee2ca;
+}
+
+.browse-top {
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 3.2vw;
+  pointer-events: none;
+}
+
+.browse-top .brand {
+  pointer-events: auto;
+}
+
+.browse-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.browse-close {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(238, 226, 202, 0.22);
+  border-radius: 50%;
+  background: rgba(32, 28, 22, 0.72);
+  color: #eee2ca;
+  font-size: 20px;
+  line-height: 1;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+}
+
+.browse-close:hover,
+.browse-close:focus-visible {
+  background: rgba(64, 58, 43, 0.9);
+}
+
+.browse-inner {
+  width: min(920px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.browse-kicker {
+  margin: 0 0 10px;
+  color: #c3a47b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.browse-title {
+  margin: 0 0 12px;
+  color: #f2f1ec;
+  font-size: clamp(30px, 4.6vw, 46px);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.browse-lede {
+  margin: 0 0 26px;
+  max-width: 62ch;
+  color: #b7a992;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.browse-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 12px 0 10px;
+  background: linear-gradient(#29251d 72%, rgba(41, 37, 29, 0));
+}
+
+.browse-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  border: 1px solid rgba(238, 226, 202, 0.18);
+  border-radius: 999px;
+  background: rgba(64, 58, 43, 0.82);
+  backdrop-filter: blur(10px);
+}
+
+.browse-search:focus-within {
+  border-color: rgba(195, 164, 123, 0.7);
+}
+
+.browse-search > span {
+  color: #c3a47b;
+  font-size: 17px;
+}
+
+.browse-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 15px 0;
+  border: 0;
+  background: none;
+  color: #f2f1ec;
+  font: inherit;
+  font-size: 16px;
+  outline: none;
+}
+
+.browse-search input::placeholder {
+  color: #8d8271;
+}
+
+.browse-search input::-webkit-search-cancel-button {
+  filter: invert(0.7);
+}
+
+.browse-kbd {
+  padding: 2px 7px;
+  border: 1px solid rgba(238, 226, 202, 0.24);
+  border-radius: 6px;
+  color: #a89c85;
+  font: 11px/1.6 ui-monospace, Consolas, monospace;
+}
+
+.browse-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.browse-chip {
+  padding: 8px 14px;
+  border: 1px solid rgba(238, 226, 202, 0.16);
+  border-radius: 999px;
+  background: rgba(64, 58, 43, 0.6);
+  color: #b7a992;
+  cursor: pointer;
+  font: 13px/1 inherit;
+  white-space: nowrap;
+}
+
+.browse-chip span {
+  color: #8d8271;
+  font-variant-numeric: tabular-nums;
+}
+
+.browse-chip[aria-pressed="true"] {
+  border-color: #c3a47b;
+  background: #c3a47b;
+  color: #29251d;
+}
+
+.browse-chip[aria-pressed="true"] span {
+  color: rgba(41, 37, 29, 0.65);
+}
+
+.browse-count {
+  margin: 0 0 8px;
+  color: #8d8271;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.browse-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.browse-row {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 6px 16px;
+  padding: 15px 14px;
+  border-top: 1px solid rgba(238, 226, 202, 0.1);
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.browse-row:last-child {
+  border-bottom: 1px solid rgba(238, 226, 202, 0.1);
+}
+
+.browse-row[data-active="true"] {
+  border-top-color: transparent;
+  background: rgba(195, 164, 123, 0.12);
+}
+
+.browse-kind {
+  align-self: start;
+  justify-self: start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(238, 226, 202, 0.18);
+  color: #b7a992;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.browse-kind-deck {
+  border-color: rgba(97, 124, 132, 0.6);
+  color: #9fb6bd;
+}
+
+.browse-kind-course {
+  border-color: rgba(122, 143, 92, 0.6);
+  color: #b2c58f;
+}
+
+.browse-kind-work {
+  border-color: rgba(195, 164, 123, 0.65);
+  color: #d8bd93;
+}
+
+.browse-kind-note {
+  border-color: rgba(154, 128, 148, 0.6);
+  color: #c3aec0;
+}
+
+.browse-body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.browse-row-title {
+  color: #f2f1ec;
+  font-family: var(--serif, "Iowan Old Style", "Palatino Linotype", serif);
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.browse-row-meta {
+  color: #a89c85;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.browse-row-desc {
+  color: #8d8271;
+  font-size: 13px;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.browse-empty {
+  margin: 26px 0;
+  color: #a89c85;
+  font-size: 14px;
+}
+
+.browse-empty button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #c3a47b;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+}
+
+.browse-foot {
+  margin: 34px 0 0;
+  color: #8d8271;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.browse-foot a {
+  color: #c3a47b;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(195, 164, 123, 0.4);
+}
+
+.browse-foot a:hover {
+  border-bottom-color: #c3a47b;
+}
+
+@media (max-width: 620px) {
+  .browse {
+    padding: 78px 0 72px;
+  }
+
+  .browse-inner {
+    width: calc(100% - 28px);
+  }
+
+  .browse-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    padding: 14px 10px;
+  }
+
+  .browse-row-desc {
+    -webkit-line-clamp: 3;
+  }
+
+  .browse-kbd {
+    display: none;
+  }
+}
+
+/* The index sits after the five volumes in the site menu, a notch quieter. */
+.menu-link-index {
+  font-size: clamp(28px, 3.4vw, 46px) !important;
+  opacity: 0.72;
+}
+
+.menu-link-index:hover,
+.menu-link-index:focus-visible {
+  opacity: 1;
+}

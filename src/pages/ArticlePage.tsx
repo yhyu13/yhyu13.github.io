@@ -24,7 +24,12 @@ export function ArticlePage({ slug }: { slug: ArchivePost["slug"] }) {
         <Link className="article-back" to="/archive">
           ← Archive
         </Link>
-        <QrTrigger onClick={() => setQrOpen(true)} />
+        <div className="article-toolbar-actions">
+          <Link className="article-back" to="/browse">
+            ⌕ Index
+          </Link>
+          <QrTrigger onClick={() => setQrOpen(true)} />
+        </div>
       </div>
       <div className="article-inner">
         <p className="article-kicker">Field Notes · {post.date.slice(0, 4)}</p>

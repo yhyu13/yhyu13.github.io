@@ -164,6 +164,9 @@ export function DeckReader() {
             </a>
           ))}
           <a className="pill" href={deck.pdf} download>Download PDF</a>
+          <Link className="icon-button" to="/browse" aria-label="Search everything on this site">
+            <span className="search-glyph" aria-hidden="true" />
+          </Link>
           <Link className="icon-button" to="/decks" aria-label="Back to video slides">×</Link>
         </div>
       </header>

@@ -18,10 +18,23 @@ const ArticlePage = lazy(() =>
   import("./pages/ArticlePage").then((m) => ({ default: m.ArticlePage })),
 );
 
+// One screen listing every deck, course, work and note.
+const BrowsePage = lazy(() =>
+  import("./pages/BrowsePage").then((m) => ({ default: m.BrowsePage })),
+);
+
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Library />} />
+      <Route
+        path="/browse"
+        element={
+          <Suspense fallback={null}>
+            <BrowsePage />
+          </Suspense>
+        }
+      />
       <Route path="/identity" element={<Library openId="identity" />} />
       <Route path="/craft" element={<Library openId="craft" />} />
       <Route path="/archive" element={<Library openId="archive" />} />
