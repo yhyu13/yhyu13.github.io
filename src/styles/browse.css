@@ -1,8 +1,10 @@
 /* /browse — the one screen that lists everything the site publishes. */
 
 .browse {
+  /* Fixed header height; the sticky search bar parks just under it. */
+  --browse-header: 84px;
   min-height: 100vh;
-  padding: 96px 0 96px;
+  padding: calc(96px + env(safe-area-inset-top, 0px)) 0 96px;
   background:
     radial-gradient(circle at 18% 12%, rgba(111, 91, 61, 0.22), transparent 46%),
     radial-gradient(circle at 82% 4%, rgba(86, 96, 68, 0.18), transparent 42%),
@@ -19,7 +21,10 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 20px 3.2vw;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 3.2vw 20px;
+  /* Rows scroll underneath this bar; without a scrim they collided with the
+     wordmark and the close button. */
+  background: linear-gradient(#29251d 0 62%, rgba(41, 37, 29, 0.86) 82%, rgba(41, 37, 29, 0) 100%);
   pointer-events: none;
 }
 
@@ -88,10 +93,24 @@
 
 .browse-bar {
   position: sticky;
-  top: 0;
+  /* Below the fixed top bar, not under it — on a phone the field used to slide
+     behind the brand and the close button. */
+  top: calc(var(--browse-header) + env(safe-area-inset-top, 0px));
   z-index: 10;
-  padding: 12px 0 10px;
-  background: linear-gradient(#29251d 72%, rgba(41, 37, 29, 0));
+  padding: 10px 0 20px;
+  background: #29251d;
+}
+
+/* Fade the list out just under the field instead of cutting it off. */
+.browse-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 12px;
+  background: linear-gradient(rgba(41, 37, 29, 0.9), rgba(41, 37, 29, 0));
+  pointer-events: none;
 }
 
 .browse-search {
@@ -305,9 +324,45 @@
   border-bottom-color: #c3a47b;
 }
 
+@media (max-height: 460px) {
+  .browse {
+    --browse-header: 56px;
+    padding: calc(66px + env(safe-area-inset-top, 0px)) 0 40px;
+  }
+
+  .browse-top {
+    padding: calc(6px + env(safe-area-inset-top, 0px)) 3.2vw 6px;
+  }
+
+  .browse-close {
+    width: 36px;
+    height: 36px;
+    font-size: 17px;
+  }
+
+  .browse-kicker,
+  .browse-lede {
+    display: none;
+  }
+
+  .browse-title {
+    margin-bottom: 8px;
+    font-size: 24px;
+  }
+
+  .browse-bar {
+    padding: 8px 0 14px;
+  }
+
+  .browse-search input {
+    padding: 11px 0;
+  }
+}
+
 @media (max-width: 620px) {
   .browse {
-    padding: 78px 0 72px;
+    --browse-header: 74px;
+    padding: calc(86px + env(safe-area-inset-top, 0px)) 0 72px;
   }
 
   .browse-inner {
