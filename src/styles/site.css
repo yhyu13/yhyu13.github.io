@@ -555,3 +555,94 @@ body:has(.article-page) {
     display: none;
   }
 }
+
+/* Share dialog: the text that travels with the link, then the QR fallback. */
+.share-dialog {
+  width: min(520px, 100%);
+  text-align: left;
+}
+
+.share-dialog .qr-title {
+  margin: 0 0 14px;
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.share-field {
+  display: block;
+  margin: 0 0 12px;
+}
+
+.share-field-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #bcae92;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.share-text {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(220, 200, 164, 0.22);
+  border-radius: 12px;
+  background: rgba(24, 21, 16, 0.55);
+  color: #eadfc7;
+  font: 13px/1.7 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  resize: vertical;
+}
+
+.share-text:focus {
+  outline: 2px solid rgba(195, 164, 123, 0.7);
+  outline-offset: 2px;
+}
+
+.share-actions {
+  flex-wrap: wrap;
+}
+
+.share-actions .pill {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 0 16px;
+}
+
+.share-qr {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(220, 200, 164, 0.16);
+  text-align: center;
+}
+
+.share-qr summary {
+  color: #bcae92;
+  cursor: pointer;
+  font-size: 13px;
+  list-style: none;
+}
+
+.share-qr summary::-webkit-details-marker {
+  display: none;
+}
+
+.share-qr .qr-image {
+  margin-top: 12px;
+}
+
+.share-qr .qr-url {
+  margin: 10px 0 12px;
+}
+
+@media (max-width: 620px) {
+  .share-dialog {
+    padding: 22px 18px 18px;
+  }
+
+  .share-actions .pill {
+    flex: 1 1 40%;
+  }
+}

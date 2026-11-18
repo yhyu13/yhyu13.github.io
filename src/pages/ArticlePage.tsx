@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { QrShare, QrTrigger } from "../components/QrShare";
+import { ShareDialog } from "../components/ShareDialog";
+import { ShareTrigger } from "../components/ShareTrigger";
+import { getShareEntry } from "../data/share";
 import { getArchivePost, type ArchivePost } from "../data/archivePosts";
 
 export function ArticlePage({ slug }: { slug: ArchivePost["slug"] }) {
   const post = getArchivePost(slug);
-  const [qrOpen, setQrOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   useEffect(() => {
     document.title = post ? `${post.title} · Hang Yu` : "Hang Yu";
@@ -28,7 +30,7 @@ export function ArticlePage({ slug }: { slug: ArchivePost["slug"] }) {
           <Link className="article-back" to="/browse">
             ⌕ Index
           </Link>
-          <QrTrigger onClick={() => setQrOpen(true)} />
+          <ShareTrigger onClick={() => setShareOpen(true)} />
         </div>
       </div>
       <div className="article-inner">
@@ -45,7 +47,7 @@ export function ArticlePage({ slug }: { slug: ArchivePost["slug"] }) {
           ))}
         </p>
       </div>
-      <QrShare open={qrOpen} onClose={() => setQrOpen(false)} />
+      <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} entry={getShareEntry(`/archive/${slug}`)} />
     </article>
   );
 }

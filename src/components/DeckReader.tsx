@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as
 import { Link, useParams } from "react-router-dom";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 import { getDeck } from "../data/decks";
+import { getShareEntry } from "../data/share";
+import { ShareDialog } from "./ShareDialog";
+import { ShareTrigger } from "./ShareTrigger";
 import { destroyPdf, getNumPages, loadPdf, renderPage } from "../lib/pdf";
 
 export function DeckReader() {
@@ -11,6 +14,7 @@ export function DeckReader() {
   const [page, setPage] = useState(1);
   const [num, setNum] = useState(0);
   const [error, setError] = useState("");
+  const [shareOpen, setShareOpen] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const rootRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -164,6 +168,7 @@ export function DeckReader() {
             </a>
           ))}
           <a className="pill" href={deck.pdf} download>Download PDF</a>
+          <ShareTrigger onClick={() => setShareOpen(true)} />
           <Link className="icon-button" to="/browse" aria-label="Search everything on this site">
             <span className="search-glyph" aria-hidden="true" />
           </Link>
@@ -190,6 +195,12 @@ export function DeckReader() {
         </div>
         <button className="reader-arrow reader-next" type="button" aria-label="Next page" disabled={page >= num} onClick={() => setPage((p) => Math.min(num, p + 1))}>›</button>
       </div>
+
+      <ShareDialog
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        entry={getShareEntry(`/decks/${deck.slug}`)}
+      />
 
       <footer className="reader-foot">
         <span className="reader-count">{page} / {num}</span>
