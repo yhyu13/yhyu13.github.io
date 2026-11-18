@@ -23,7 +23,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC = join(root, "public");
 const DATA = join(root, "src", "data");
 
-const SPA_ROUTES = ["/", "/identity", "/craft", "/archive", "/decks", "/courses"];
+const SPA_ROUTES = ["/", "/identity", "/craft", "/archive", "/decks", "/courses", "/browse"];
 // /courses/<slug> is covered by the "/courses" prefix.
 
 const EXTERNAL = /^(https?:|mailto:|data:|\/\/)/;

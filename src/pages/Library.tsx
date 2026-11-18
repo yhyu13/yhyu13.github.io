@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { QrShare, QrTrigger } from "../components/QrShare";
+import { ShareTrigger } from "../components/ShareTrigger";
 import { getManual, MANUALS, type Manual, type ManualId } from "../data/manuals";
 import { stageWashAllowed, stageWashQueries } from "../lib/stageWash";
 
@@ -13,6 +13,12 @@ const CourseShelf = lazy(() =>
 );
 const CraftPanel = lazy(() =>
   import("../components/CraftPanel").then((m) => ({ default: m.CraftPanel })),
+);
+
+// The dialog pulls in the share inventory (which imports the archive posts),
+// so the gallery keeps it out of the entry chunk.
+const ShareDialog = lazy(() =>
+  import("../components/ShareDialog").then((m) => ({ default: m.ShareDialog })),
 );
 
 const IdentityProfile = lazy(() =>
@@ -42,7 +48,7 @@ function prefersReducedMotion() {
 export function Library({ openId }: LibraryProps) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [qrOpen, setQrOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(2);
   const [toast, setToast] = useState("");
   const [toastShow, setToastShow] = useState(false);
@@ -208,8 +214,8 @@ export function Library({ openId }: LibraryProps) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-      if (qrOpen) {
-        setQrOpen(false);
+      if (shareOpen) {
+        setShareOpen(false);
         return;
       }
       if (menuOpen) {
@@ -220,7 +226,7 @@ export function Library({ openId }: LibraryProps) {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [menuOpen, qrOpen, closeDetail]);
+  }, [menuOpen, shareOpen, closeDetail]);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -317,7 +323,7 @@ export function Library({ openId }: LibraryProps) {
           <Link className="icon-button" to="/browse" aria-label="Search everything on this site" title="Search everything (/)">
             <span className="search-glyph" aria-hidden="true" />
           </Link>
-          <QrTrigger onClick={() => setQrOpen(true)} />
+          <ShareTrigger onClick={() => setShareOpen(true)} />
           <button
             className="icon-button"
             type="button"
@@ -443,7 +449,16 @@ export function Library({ openId }: LibraryProps) {
         {toast}
       </div>
 
-      <QrShare open={qrOpen} onClose={() => setQrOpen(false)} />
+      {shareOpen ? (
+        <Suspense fallback={null}>
+          <ShareDialog
+            open
+            onClose={() => setShareOpen(false)}
+            fallbackTitle="Hang Yu · Field Manuals"
+            fallbackDescription="五本书、四十七份讲义、三门课、八个作品与八篇长文——一处索引可搜。"
+          />
+        </Suspense>
+      ) : null}
     </main>
   );
 }

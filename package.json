@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && node scripts/copy-404.mjs && node scripts/check-links.mjs && node scripts/check-budget.mjs && node scripts/check-profile.mjs",
+    "build": "tsc --noEmit && vite build && node scripts/copy-404.mjs && node scripts/gen-share-pages.mjs && node scripts/check-links.mjs && node scripts/check-budget.mjs && node scripts/check-profile.mjs",
     "test:profile": "node scripts/check-profile.mjs --self-test",
     "preview": "vite preview",
     "test:e2e": "playwright test",
-    "test:visual": "playwright test --config playwright.visual.config.ts"
+    "test:visual": "playwright test --config playwright.visual.config.ts",
+    "og": "python scripts/gen-og.py"
   },
   "dependencies": {
     "@designcodeio/threeui": "^1.1.0",

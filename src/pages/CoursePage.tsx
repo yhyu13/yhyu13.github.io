@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { QrShare, QrTrigger } from "../components/QrShare";
+import { ShareDialog } from "../components/ShareDialog";
+import { ShareTrigger } from "../components/ShareTrigger";
+import { getShareEntry } from "../data/share";
 import {
   getCourse,
   type Course,
@@ -49,7 +51,7 @@ export function CoursePage() {
   const course = slug ? getCourse(slug) : undefined;
   const [manifest, setManifest] = useState<Manifest | null>(null);
   const [error, setError] = useState("");
-  const [qrOpen, setQrOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   useEffect(() => {
     if (!course) return;
@@ -106,7 +108,7 @@ export function CoursePage() {
           <Link className="article-back" to="/browse">
             ⌕ Index
           </Link>
-          <QrTrigger onClick={() => setQrOpen(true)} />
+          <ShareTrigger onClick={() => setShareOpen(true)} />
         </div>
       </div>
       <div className="article-inner">
@@ -144,7 +146,7 @@ export function CoursePage() {
           <span># {course.term}</span>
         </p>
       </div>
-      <QrShare open={qrOpen} onClose={() => setQrOpen(false)} />
+      <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} entry={course ? getShareEntry(`/courses/${course.slug}`) : undefined} />
     </article>
   );
 }
