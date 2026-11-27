@@ -411,4 +411,34 @@ export const CRAFT_WORKS: CraftWork[] = [
     meta: "191 KB · 零依赖",
     tags: ["索引", "a16z"],
   },
+  {
+    id: "gta6-camera",
+    kind: "可交互场景 · 物理相机",
+    title: "物理相机 · 逆向《GTA6》海滨大道镜头",
+    description:
+      "白模复刻《GTA6》海滨大道「车内侧窗」那个镜头：自由机位、行人 POV、车内视角三种走位，镜头/测光/景深/快门整条链路联动，右侧实时读出焦距、EV、ND、CoC 与景深范围。",
+    href: "/labs/gta6-camera/index.html",
+    meta: "两文件 · 744 KB",
+    tags: ["逆向", "WebGL"],
+  },
+  {
+    id: "grill-me",
+    kind: "试场提案 · 概念片",
+    title: "Grill Me — 决定上桌",
+    description:
+      "「带一个你真的做过的决定来，对决定尖锐、对人友好。」七章、1 分 16 秒的提案片，把一场创业圆桌从开场讲到下一步。活动尚未定场，这是方案本身。",
+    href: "/labs/grill-me/index.html",
+    meta: "580 KB · 单文件",
+    tags: ["活动提案", "概念片"],
+  },
+  {
+    id: "thousand-town",
+    kind: "程序化小镇 · 可玩 Demo",
+    title: "千人小镇 — 天降筑城",
+    description:
+      "方块从天而降，落成 14×14 的街区：拖时间轴看一天怎么过、换城市编号重掷一座小镇、开自动环绕看满城生长。它和《千人小镇》那份技术拆解是同一套东西的可玩版。",
+    href: "/labs/thousand-town/index.html",
+    meta: "1.7 MB · p5 + three.js",
+    tags: ["程序化生成", "Three.js"],
+  },
 ];

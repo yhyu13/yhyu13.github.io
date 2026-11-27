@@ -70,9 +70,20 @@ def card(kicker, title, footer, out, title_size=64, bg=INK):
     for line in lines[:4]:
         d.text((72, y), line, font=f_title, fill=PAPER)
         y += int(title_size * 1.28)
-    # bottom hairline + footer
+    # bottom hairline + footer. The blurb wraps to two lines and stops short of
+    # the site label: a one-line footer used to run under it and off the card.
     d.rectangle([72, H - 108, W - 72, H - 107], fill=(70, 63, 50))
-    d.text((72, H - 86), footer, font=f_foot, fill=MUTED)
+    foot_all = wrap(d, footer, f_foot, W - 144 - 200) if footer else []
+    foot_lines = foot_all[:2]
+    if len(foot_all) > 2 and foot_lines:
+        last = foot_lines[1]
+        while last and d.textlength(last + "…", font=f_foot) > W - 144 - 200:
+            last = last[:-1]
+        foot_lines[1] = last + "…"
+    fy = H - 112 - 32 * len(foot_lines)
+    for line in foot_lines:
+        d.text((72, fy), line, font=f_foot, fill=MUTED)
+        fy += 32
     d.text((W - 72 - 168, H - 86), "yhyu13.github.io", font=font(SERIF_I, 26), fill=ACCENT)
     img.save(out, quality=90, optimize=True, progressive=True)
 
@@ -158,7 +169,7 @@ def main():
             vid = path.rsplit("/", 1)[-1] or "identity"
             card("FIELD MANUAL", title, desc, os.path.join(OG, f"volume-{vid}.jpg"))
         elif kind == "index":
-            card("INDEX · 64 ITEMS", title, desc, os.path.join(OG, "index.jpg"))
+            card(f"INDEX · {sum(1 for e in entries if e.get('kind') in ('deck', 'course', 'work', 'note'))} ITEMS", title, desc, os.path.join(OG, "index.jpg"))
         made += 1
     print(f"og cards: {made} written to public/og")
 
