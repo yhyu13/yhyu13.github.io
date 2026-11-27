@@ -592,6 +592,189 @@ export const DECKS: Deck[] = [
     description:
       "Ethan Mollick 那期访谈的 16 页整理：AI 把「做产品」的门槛压平之后，能赚钱的活儿挪到了理解场景、做判断和学摩尔定律上。",
   },
+
+  {
+    slug: "astra-ysm-one-shot",
+    title: "一轮出 YSM — 92 秒原片的拆解",
+    year: "2026",
+    date: "2026-11-21",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1o1s26sE79",
+    pdf: "/decks/astra-ysm-one-shot.pdf",
+    description:
+      "原片只有 92 秒：一张参考图、一个 Blockbench 模型、一段游戏内展示，既不展示提示词也不讲骨骼。这份课件补的是原片跳过的那一段——模型合同、校验器，和一条能验收的直出路径。",
+  },
+  {
+    slug: "blockbench-ai-modeling",
+    title: "让 AI 在 Blockbench 里做 MC 风格模型",
+    year: "2026",
+    date: "2026-11-21",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1ozH56tEzk",
+    pdf: "/decks/blockbench-ai-modeling.pdf",
+    description:
+      "从连接到建模、打分与修改，完整走一遍 Blockbench × AI。真正要留下的不是提示词，而是一套自己的技能库：适用范围、判断标准，以及这次 AI 猜错了什么。",
+  },
+  {
+    slug: "blockbench-course",
+    title: "GPT 操作 Blockbench — 建模全流程",
+    year: "2026",
+    date: "2026-11-21",
+    source: "Bilibili · RadorRador",
+    sourceUrl: "https://www.bilibili.com/video/BV1Fsx56CEfi",
+    pdf: "/decks/blockbench-course.pdf",
+    description:
+      "一支 4 分 24 秒的教程，加上在本机把整条链路重新跑一遍的结果：不是让 AI 画模型，而是把 Blockbench 变成可调用的工具端——插件开一个本地 MCP 服务，建模指令在编辑器里一块块长出来。",
+  },
+  {
+    slug: "brynjolfsson-10y-wealth",
+    title: "未来十年，钱往哪流 — Brynjolfsson 访谈解读",
+    year: "2026",
+    date: "2026-11-21",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1i8JD6WE3j",
+    pdf: "/decks/brynjolfsson-10y-wealth.pdf",
+    description:
+      "斯坦福经济学家 Erik Brynjolfsson 的任务迁移框架：不问「职业会不会被替代」，问手上那十几件事分别会怎样。两个机制、四种结果、一张能验收的动作表。",
+  },
+  {
+    slug: "deepseek-harness-tutorial",
+    title: "DeepSeek Harness — 从对话到交付",
+    year: "2026",
+    date: "2026-11-25",
+    source: "Bilibili · Git源宝",
+    sourceUrl: "https://www.bilibili.com/video/BV1REx46NEc4",
+    pdf: "/decks/deepseek-harness-tutorial.pdf",
+    description:
+      "50 分钟教程压成六个入口：模型与 Harness 的分工、安装与模型配置、四种模式与权限边界、插件（跨会话记忆与课程助手），以及按任务选择用法。",
+  },
+  {
+    slug: "dsh-graph-case-study",
+    title: "从空仓库到 v0.1 — dsh-graph 实战复盘",
+    year: "2026",
+    date: "2026-11-25",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1L4as6CE5v",
+    pdf: "/decks/dsh-graph-case-study.pdf",
+    description:
+      "一个 Agent 项目如何派发、返工与验收：5 小时 44 分工作、22 次结构化裁决、439 条自动化用例全绿。案例是 sld-editor，一个可离线运行的变电站接线图编辑器。",
+  },
+  {
+    slug: "dsh-memory-plugins",
+    title: "三款 DSH 记忆插件对比",
+    year: "2026",
+    date: "2026-11-25",
+    source: "Bilibili · 一桶布丁",
+    sourceUrl: "https://www.bilibili.com/video/BV1rDx46VENg",
+    pdf: "/decks/dsh-memory-plugins.pdf",
+    description:
+      "四路共同作答 687 题：Soul 在插件组排第一（402 题 · 58.5%），但仍落后 Qwen 直接检索对照（574 题 · 83.6%）。一张表看清插件记忆与直接检索的差距。",
+  },
+  {
+    slug: "dsh-model-fusion",
+    title: "DSH Model Fusion — 一个模型判断，一个模型执行",
+    year: "2026",
+    date: "2026-11-25",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1xcap6XEjm",
+    pdf: "/decks/dsh-model-fusion.pdf",
+    description:
+      "Lead 负责理解需求、交代范围与验收、审查证据；Sidekick 负责改代码、跑测试、按反馈返工。两个模型，对用户仍是一个入口。",
+  },
+  {
+    slug: "dsh-synapse-map",
+    title: "Synapse — 把 DSH 对话摊成一张地图",
+    year: "2026",
+    date: "2026-11-25",
+    source: "Bilibili · 良面Lab",
+    sourceUrl: "https://www.bilibili.com/video/BV1cQ8g6VEVz",
+    pdf: "/decks/dsh-synapse-map.pdf",
+    description:
+      "Synapse 不替换原生聊天，而是给同一工作区加一个地图视图：问答放在卡片上，连线显示追问关系，可以沿当前节点追问，也可以用原生 Fork 另开分支。",
+  },
+  {
+    slug: "grok-bot-claude-code",
+    title: "Grok Bot × Claude Code — 改动定档",
+    year: "2026",
+    date: "2026-11-21",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1314F6oEx9",
+    pdf: "/decks/grok-bot-claude-code.pdf",
+    description:
+      "编排 bot 想清楚、施工 bot 动手、人来定谁能自动合并。真正要留下的不是流程，而是一道一道能核的门。",
+  },
+  {
+    slug: "hyperframes-video-harness",
+    title: "HyperFrames — 让智能体少猜一次",
+    year: "2026",
+    date: "2026-11-25",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1DssE6NEJd",
+    pdf: "/decks/hyperframes-video-harness.pdf",
+    description:
+      "写得出视频，不等于看得懂视频。代码能表达排版与动效，但素材里有什么、谁挡住谁、音画错开多久，只有成片才知道；关键是把审片证据绑到明确的产物版本。",
+  },
+  {
+    slug: "learnharness-tutor",
+    title: "LearnHarness — AI 私教先摸你的底",
+    year: "2026",
+    date: "2026-11-18",
+    source: "Bilibili · 网络宝藏社",
+    sourceUrl: "https://www.bilibili.com/video/BV1hCs66aEnQ",
+    pdf: "/decks/learnharness-tutor.pdf",
+    description:
+      "一分钟推介片的重讲：AI 私教不是更会讲，而是先判断你懂到哪一步，再决定讲什么。原片的说法与仓库文档分开记，不混为一谈。",
+  },
+  {
+    slug: "skill-ablation-field-guide",
+    title: "Skill 没效果？先跑对照实验",
+    year: "2026",
+    date: "2026-11-26",
+    source: "Bilibili · 为什么叫QQ",
+    sourceUrl: "https://www.bilibili.com/video/BV1fp4E6WEBk",
+    pdf: "/decks/skill-ablation-field-guide.pdf",
+    description:
+      "把「Skill 有没有用」拆成两道可做的实验：先确认它真的被加载，再在未见任务上比配对差。给 Agent 与 CI 团队的一张发布检查表。",
+    links: [
+      {
+        label: "口播成片 · 2:09",
+        href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v4/skill-ablation-hts.mp4",
+      },
+    ],
+  },
+  {
+    slug: "system-duo-two-modes",
+    title: "System Duo — 快判断，慢推理",
+    year: "2026",
+    date: "2026-11-22",
+    source: "Bilibili",
+    sourceUrl: "https://www.bilibili.com/video/BV1B94Y6bEcW",
+    pdf: "/decks/system-duo-two-modes.pdf",
+    description:
+      "把大量定型判断从生成式推理里拆出来：快速决策模型负责分流与检查，慢速大模型负责规划与行动。不是替代，是各就各位。",
+  },
+  {
+    slug: "thoughtdag-context-map",
+    title: "ThoughtDAG — 把对话变成上下文地图",
+    year: "2026",
+    date: "2026-11-25",
+    source: "Bilibili · Chatchan",
+    sourceUrl: "https://www.bilibili.com/video/BV1mqbL6PEZz",
+    pdf: "/decks/thoughtdag-context-map.pdf",
+    description:
+      "节点存材料，连线选上下文。追问从当前节点长出支线，不必沿着同一条聊天继续；有用的节点连到新问题，只带入这次需要的材料。",
+  },
+  {
+    slug: "windows-computer-use-pro-v31",
+    title: "Windows Computer Use Pro v3.1 — 76 KB 接管 Windows",
+    year: "2026",
+    date: "2026-11-27",
+    source: "Bilibili · 异托思Sensrey",
+    sourceUrl: "https://www.bilibili.com/video/BV1PU1FzzEpP",
+    pdf: "/decks/windows-computer-use-pro-v31.pdf",
+    description:
+      "不换更贵的模型，而是换掉输入端：Win32 窗口枚举、UIA 控件树、Win11 离线 OCR 与私有剪贴板，替掉「每步截一张图、按像素猜坐标」。模型只负责决定，工具负责看清与执行。",
+  },
 ];
 
 // The shelf reads in array order; sorting by slug means a deck lands
