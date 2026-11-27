@@ -1,0 +1,1519 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>物理相机 · Physical Camera Rig — 逆向《GTA6》海滨大道镜头</title>
+<style>
+  :root{--bg:#07090c;--panel:rgba(14,18,24,.82);--line:rgba(255,255,255,.10);
+        --tx:#e8eef4;--tx2:#93a2b2;--acc:#5fd0c6;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);
+    font:13px/1.5 "Inter",-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow:hidden}
+  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(120% 120% at 50% 0%,#10151c 0%,#05070a 70%)}
+  #gl{display:block;box-shadow:0 30px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.06);
+    border-radius:3px;background:#000}
+  .pane{position:fixed;background:var(--panel);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:10px;padding:14px 15px}
+  #left{left:18px;top:18px;width:306px;max-height:calc(100vh - 36px);overflow-y:auto}
+  #right{right:18px;top:18px;width:292px;max-height:calc(100vh - 36px);overflow-y:auto}
+  #brand{font-size:15px;font-weight:700;letter-spacing:.3px;margin-bottom:2px}
+  #brand span{color:var(--acc)}
+  .sub{color:var(--tx2);font-size:11px;margin-bottom:12px}
+  h3{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--tx2);
+    margin:11px 0 6px;font-weight:600}
+  h3:first-of-type{margin-top:8px}
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg button{flex:1 1 0;min-width:74px;background:rgba(255,255,255,.045);color:var(--tx);
+    border:1px solid var(--line);border-radius:7px;padding:7px 4px;font-size:12px;cursor:pointer;
+    font-family:inherit;transition:.15s}
+  .seg button:hover{background:rgba(255,255,255,.09)}
+  .seg button.on{background:rgba(95,208,198,.16);border-color:rgba(95,208,198,.55);color:#d9fffb}
+  .row{display:flex;align-items:center;gap:7px;margin:6px 0}
+  .row label{flex:0 0 86px;color:var(--tx2);font-size:11.5px}
+  .row input[type=range]{flex:1 1 auto;min-width:0;accent-color:var(--acc);height:16px}
+  .row .val{flex:0 0 76px;text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;
+    color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:7px 10px;border:1px solid var(--line);border-radius:8px;margin:6px 0;cursor:pointer;
+    background:rgba(255,255,255,.03)}
+  .toggle:hover{background:rgba(255,255,255,.06)}
+  .toggle b{font-weight:600;font-size:12px}
+  .toggle small{display:block;color:var(--tx2);font-weight:400;font-size:10.5px;margin-top:2px}
+  .sw{width:38px;height:21px;border-radius:11px;background:rgba(255,255,255,.12);position:relative;
+    flex:0 0 38px;transition:.18s}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;
+    background:#cfd8e2;transition:.18s}
+  .toggle.on .sw{background:rgba(95,208,198,.75)}
+  .toggle.on .sw::after{left:19px;background:#052a28}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  td{padding:3.5px 0;font-size:11.5px;border-bottom:1px solid rgba(255,255,255,.05)}
+  td:first-child{color:var(--tx2)}
+  td:last-child{text-align:right;font-weight:600}
+  .note{color:var(--tx2);font-size:10.5px;line-height:1.55;margin-top:9px;
+    padding-top:9px;border-top:1px solid rgba(255,255,255,.07)}
+  .note b{color:var(--tx)}
+  #fov{width:100%;height:112px;display:block;margin-top:4px}
+  #fps{position:fixed;left:18px;bottom:16px;font-size:11px;color:var(--tx2);
+    background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 9px;
+    font-variant-numeric:tabular-nums}
+  /* ── 移动端：面板收进底部抽屉，场景全屏不被遮挡 ── */
+  #sheet{display:none}
+  @media (max-width:1000px){
+    #stage{padding-bottom:60px}
+    #slotL,#slotR{display:none}
+    .pane{position:static;width:auto;max-height:none;overflow:visible;background:none;
+      border:none;border-radius:0;padding:0;backdrop-filter:none}
+    .tp{display:none}
+    .tp.active{display:block}
+    .note{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+    #brand{font-size:14px}
+    .sub{display:none}
+    h3{margin:12px 0 6px}
+    .row{min-height:40px}
+    .row label{flex:0 0 84px}
+    .row input[type=range]{height:26px}
+    .row .val{flex:0 0 68px;font-size:12px}
+    .toggle{padding:11px 12px}
+    .seg button{min-height:40px}
+    #fps{left:8px;top:8px;bottom:auto;font-size:10px;padding:3px 7px;opacity:.9}
+    #sheet{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:10000;
+      flex-direction:column;max-height:80vh;max-height:80dvh;
+      background:var(--panel);backdrop-filter:blur(16px);
+      border-top:1px solid var(--line);border-radius:14px 14px 0 0;
+      box-shadow:0 -12px 40px rgba(0,0,0,.55);
+      transform:translateY(calc(100% - 56px));
+      transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+    #sheet.open{transform:translateY(0)}
+    #sheet.noanim{transition:none!important}
+    #sheethead{flex:0 0 56px;height:56px;display:flex;align-items:center;gap:8px;
+      padding:0 10px;border-bottom:1px solid var(--line);touch-action:none}
+    #grip{flex:0 0 40px;height:5px;border-radius:3px;background:rgba(255,255,255,.24);
+      position:relative;cursor:grab;touch-action:none}
+    #grip:active{cursor:grabbing}
+    #grip:after{content:"";position:absolute;inset:-18px -6px}
+    #sheetclose{flex:0 0 34px;width:34px;height:34px;border-radius:9px;line-height:1;
+      background:rgba(255,255,255,.06);color:var(--tx2);border:1px solid var(--line);
+      font-size:15px;font-family:inherit;cursor:pointer}
+    #sheetclose:active{background:rgba(255,255,255,.14);color:var(--tx)}
+    #sheettabs{flex:1 1 auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+    #sheettabs::-webkit-scrollbar{display:none}
+    #sheettabs button{flex:0 0 auto;background:rgba(255,255,255,.05);color:var(--tx);
+      border:1px solid var(--line);border-radius:7px;padding:8px 13px;font-size:12px;
+      font-family:inherit;cursor:pointer;min-height:38px}
+    #sheettabs button.on{background:rgba(95,208,198,.16);border-color:rgba(95,208,198,.55);color:#d9fffb}
+    #sheetbody{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 14px 26px}
+  }
+  .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;color:var(--acc)}
+  /* ── 虚拟摇杆 + 滑屏提示 ── */
+  #stick{position:fixed;left:22px;bottom:22px;width:118px;height:118px;z-index:9000;
+    display:none;touch-action:none;-webkit-user-select:none;user-select:none}
+  #stick.on{display:block}
+  #stickRing{position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.10),rgba(255,255,255,.03));
+    border:1.5px solid rgba(255,255,255,.22);box-shadow:0 6px 22px rgba(0,0,0,.45)}
+  #stickKnob{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;
+    border-radius:50%;background:rgba(95,208,198,.85);
+    border:1.5px solid rgba(255,255,255,.5);box-shadow:0 3px 12px rgba(0,0,0,.5);
+    transition:transform .06s linear}
+  #stickHint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:10px;color:rgba(255,255,255,.42);pointer-events:none;letter-spacing:1px}
+  #lookHint{position:fixed;right:20px;bottom:26px;z-index:9000;display:none;
+    font-size:10.5px;color:var(--tx2);background:var(--panel);border:1px solid var(--line);
+    border-radius:7px;padding:5px 9px;pointer-events:none;opacity:.85}
+  #lookHint.on{display:block}
+  @media (max-width:1000px){
+    #stick{left:14px;bottom:76px;width:104px;height:104px}
+    #stickKnob{width:46px;height:46px;margin:-23px 0 0 -23px}
+    #lookHint{right:14px;bottom:76px}
+  }
+  .btn{background:rgba(255,255,255,.05);color:var(--tx);border:1px solid var(--line);
+    border-radius:7px;padding:8px 12px;font-size:12px;font-family:inherit;cursor:pointer;flex:0 0 auto}
+  .btn:active{background:rgba(95,208,198,.18);border-color:rgba(95,208,198,.5)}
+  ::-webkit-scrollbar{width:7px;height:7px}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13);border-radius:4px}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="gl"></canvas></div>
+
+<div id="slotL"><div class="pane" id="left">
+  <div id="brand">物理相机 · <span>Physical Camera</span></div>
+  <div class="sub">逆向《GTA6》海滨大道「车内侧窗」镜头的镜头语言 · 白模复刻</div>
+
+  <section class="tp" data-t="cam">
+    <h3>机位</h3>
+    <div class="seg" id="scenes"></div>
+    <div id="master" class="toggle on">
+      <div><b>物理相机</b><small>镜头 / 测光 / 景深 / 快门 全链路</small></div><div class="sw"></div></div>
+    <div id="autoexp" class="toggle on">
+      <div><b>自动测光</b><small>按场景 EV 补偿曝光</small></div><div class="sw"></div></div>
+    <div id="gyro" class="toggle">
+      <div><b>陀螺仪操控</b><small>用手机姿态转头（需 HTTPS）</small></div><div class="sw"></div></div>
+    <div class="row">
+      <button id="gyroReset" class="btn">重置陀螺仪</button>
+      <button id="pauseBtn" class="btn">暂停画面</button>
+    </div>
+    <div class="val" id="gyroState" style="text-align:left;font-size:11px">未启用</div>
+    <div id="gyrobox"></div>
+  </section>
+
+  <section class="tp" data-t="lens">
+    <h3>镜头</h3><div id="lensbox"></div>
+  </section>
+
+  <section class="tp" data-t="body">
+    <h3>机身 / 传感器</h3><div id="bodybox"></div>
+  </section>
+
+  <section class="tp" data-t="frame">
+    <h3>画面</h3><div id="framebox"></div>
+  </section>
+
+  <div class="note">
+    <b>读法：</b>亮度由
+    <span class="kbd">EV100 = log2(N²/t × 100/ISO)</span> 与
+    <span class="kbd">B = L / 2^(EV100+ND+EVcomp)</span> 推出；
+    景深走薄透镜公式；快门角决定每帧采样时间窗。关掉「物理相机」= 普通游戏渲染。
+  </div>
+</div></div>
+
+<div id="slotR"><div class="pane" id="right">
+  <section class="tp" data-t="read">
+    <h3>镜头剖面</h3><svg id="fov" viewBox="0 0 260 112"></svg>
+    <h3>光学 / 曝光读数</h3><table id="read1"></table>
+    <h3>景深 / 快门</h3><table id="read2"></table>
+    <h3>渲染</h3><table id="read3"></table>
+    <div class="note" id="clipnote"></div>
+  </section>
+</div></div>
+
+<div id="sheet">
+  <div id="sheethead">
+    <div id="grip" title="展开 / 收起"></div>
+    <div id="sheettabs">
+      <button data-t="cam">机位</button>
+      <button data-t="lens">镜头</button>
+      <button data-t="body">机身</button>
+      <button data-t="frame">画面</button>
+      <button data-t="read">读数</button>
+    </div>
+    <button id="sheetclose" title="收起面板">✕</button>
+  </div>
+  <div id="sheetbody"></div>
+</div>
+
+<div id="fps">—</div>
+
+<!-- 自由移动用的虚拟摇杆：只在自由模式显示 -->
+<div id="stick" title="拖动行走">
+  <div id="stickRing"></div>
+  <div id="stickKnob"></div>
+  <div id="stickHint">走</div>
+</div>
+<div id="lookHint">滑屏转视角</div>
+
+<script type="importmap">{"imports":{"three":"./three.module.min.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ══════════ 0 · 常量与参数 ══════════ */
+const FPS=30, SENSOR_W=36, SENSOR_H=24, COC_LIMIT=0.03, SUN_LUX=95000, SKY_LUX=14000;
+const ASPECTS={'16:9':16/9,'9:16':9/16,'2.39:1':2.39,'1:1':1};
+
+// 街道沿 X 轴延伸，车流朝 +X。海在 -Z，酒店在 +Z。
+const PED_X=0, PED_Z=-8.6;          // 路人（海侧人行道）
+const HERO_Z=3.0, CAMCAR_Z=-3.0;    // 过路车在街对面(酒店侧)，摄影车在海侧车道
+const HERO_V=13.0, CAMCAR_V=8.6;
+const HERO_X0=-34, CAMCAR_X0=-22;   // 起点（远处驶来）
+const LOOP=260, BASE_YAW=Math.PI*0.56;
+
+const P={scene:'free',phys:true,autoExp:true,paused:false,dofGain:1.0,debugDepth:false,
+  focal:35,fstop:2.8,shutter:180,iso:100,nd:5.0,evcomp:0,gyroSens:1.0,
+  focusAuto:true,focusDist:12,blades:6,
+  samples:12,grain:1.0,ca:1.0,vignette:1.0,distort:1.0,bloom:0.6,sat:1.14,
+  aspect:'16:9',sunEl:56};
+
+/* 自由移动：玩家自己走，视角由滑屏 / 鼠标 / 陀螺仪决定 */
+const player={x:PED_X,z:PED_Z,yaw:BASE_YAW,pitch:-0.02,speed:3.4,eye:1.63,bob:0};
+const input={mx:0,mz:0,lookDX:0,lookDY:0,keys:{}};
+const S={frame:0,evScene:15.2,luma:3000,autoISO:100,fpsAvg:60,err:'',meterOk:false};
+
+/* 响应式断点：窄屏 / 手机 → 面板收进底部抽屉，保证场景全屏不被遮挡 */
+const MQ=matchMedia('(max-width:1000px)');    // 抽屉模式
+const PHONE=matchMedia('(max-width:760px)');  // 手机档默认值
+if(PHONE.matches && innerHeight>innerWidth && P.aspect==='16:9') P.aspect='9:16';  // 竖屏默认竖画幅
+/* 有效采样数：移动端 GPU 较弱，封顶 8；桌面保留用户设定值 */
+function effSamples(){ return MQ.matches?Math.min(P.samples,8):P.samples; }
+
+/* ══════════ 1 · 渲染器 / 场景 ══════════ */
+const canvas=document.getElementById('gl');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:false,powerPreference:'high-performance',stencil:false,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,MQ.matches?1:1.5));
+renderer.outputColorSpace=THREE.LinearSRGBColorSpace;
+renderer.toneMapping=THREE.NoToneMapping;
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setClearColor(0x000000,1);
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(40,16/9,0.08,6000);
+
+const sun=new THREE.DirectionalLight(0xffffff,SUN_LUX);
+sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+sun.shadow.camera.near=1; sun.shadow.camera.far=340;
+sun.shadow.camera.left=-90; sun.shadow.camera.right=90;
+sun.shadow.camera.top=90;   sun.shadow.camera.bottom=-90;
+sun.shadow.bias=-0.0007; sun.shadow.normalBias=0.05;
+scene.add(sun,sun.target);
+const hemi=new THREE.HemisphereLight(0xbcd8ff,0x6b6250,SKY_LUX);
+scene.add(hemi);
+const sunPos=new THREE.Vector3();
+
+function cv(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
+function mkTex(c,rx,ry){const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;
+  t.repeat.set(rx,ry);t.anisotropy=8;t.colorSpace=THREE.SRGBColorSpace;return t;}
+function roadTexture(){
+  const c=cv(1024,256),x=c.getContext('2d');
+  x.fillStyle='#3c3c3e';x.fillRect(0,0,1024,256);
+  const img=x.getImageData(0,0,1024,256),d=img.data;
+  for(let i=0;i<d.length;i+=4){const n=(Math.random()-0.5)*22;d[i]+=n;d[i+1]+=n;d[i+2]+=n;}
+  x.putImageData(img,0,0);
+  x.fillStyle='#c9c4b4';x.fillRect(498,0,12,256);x.fillRect(518,0,12,256);
+  x.fillStyle='#d6d6d2';x.fillRect(116,0,10,256);x.fillRect(898,0,10,256);
+  x.globalAlpha=.45;
+  for(let i=0;i<3000;i++){x.fillStyle=`rgba(${180+Math.random()*60|0},${172+Math.random()*56|0},150,.15)`;
+    x.beginPath();x.arc(Math.random()*1024,Math.random()*256,Math.random()*2.4,0,6.3);x.fill();}
+  x.globalAlpha=1; return mkTex(c,30,1);
+}
+function walkTexture(){
+  const c=cv(256,256),x=c.getContext('2d');
+  x.fillStyle='#8d877c';x.fillRect(0,0,256,256);
+  x.strokeStyle='#6f6a61';x.lineWidth=2;
+  for(let i=0;i<=256;i+=64){x.beginPath();x.moveTo(i,0);x.lineTo(i,256);x.stroke();
+    x.beginPath();x.moveTo(0,i);x.lineTo(256,i);x.stroke();}
+  for(let i=0;i<2600;i++){x.fillStyle=`rgba(0,0,0,${Math.random()*0.10})`;
+    x.fillRect(Math.random()*256,Math.random()*256,2,2);}
+  return mkTex(c,70,1);
+}
+function facadeTexture(base,accent){
+  /* 立面贴图：窗必须是竖向矩形（宽<高），并带窗台/窗框/窗帘层次。
+     交付里旧版用 30×36 的近正方形窗 + 重复 3×2，被拉伸后看起来像脏方块。 */
+  const W=512,H=512,c=cv(W,H),x=c.getContext('2d');
+  x.fillStyle=base; x.fillRect(0,0,W,H);
+  /* 底层轻微竖向分缝，模拟石材拼缝 */
+  x.strokeStyle='rgba(0,0,0,.05)'; x.lineWidth=1;
+  for(let i=0;i<W;i+=64){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,H); x.stroke(); }
+  const floorH=64, winW=26, winH=38, gap=13;
+  for(let y=14;y<H;y+=floorH){
+    /* 楼层线脚 */
+    x.fillStyle='rgba(255,255,255,.10)'; x.fillRect(0,y-9,W,3);
+    x.fillStyle='rgba(0,0,0,.14)';       x.fillRect(0,y-6,W,2);
+    for(let xx=gap;xx<W-winW;xx+=winW+gap*2){
+      /* 窗洞阴影 */
+      x.fillStyle='rgba(0,0,0,.20)'; x.fillRect(xx-2,y-2,winW+4,winH+4);
+      /* 玻璃：上深下浅，天空反射 */
+      const grd=x.createLinearGradient(0,y,0,y+winH);
+      grd.addColorStop(0,'#22323d'); grd.addColorStop(.45,accent); grd.addColorStop(1,'#3b5560');
+      x.fillStyle=grd; x.fillRect(xx,y,winW,winH);
+      /* 窗框十字 */
+      x.fillStyle='rgba(240,238,232,.75)';
+      x.fillRect(xx+winW/2-1,y,2,winH);
+      x.fillRect(xx,y+winH*.42,winW,2);
+      /* 窗台 */
+      x.fillStyle='rgba(255,255,255,.30)'; x.fillRect(xx-4,y+winH,winW+8,3);
+      /* 顶部檐影 */
+      x.fillStyle='rgba(0,0,0,.22)'; x.fillRect(xx,y,winW,4);
+    }
+  }
+  const t=mkTex(c,1,1);
+  t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;
+  return t;
+}
+
+/* 天空（绝对辐亮度 cd/m²） */
+const skyUni={uSun:{value:new THREE.Vector3(0,1,0)},uSunI:{value:1},uSunC:{value:new THREE.Color(1,1,1)}};
+const skyMat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,uniforms:skyUni,
+  vertexShader:`varying vec3 vD;void main(){vD=normalize(position);
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+  fragmentShader:`
+    varying vec3 vD;uniform vec3 uSun;uniform float uSunI;uniform vec3 uSunC;
+    float hash(vec2 p){p=fract(p*vec2(443.897,441.423));p+=dot(p,p+19.19);return fract(p.x*p.y);}
+    float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+      return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+    float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){s+=a*noise(p);p*=2.03;a*=.5;}return s;}
+    void main(){
+      vec3 d=normalize(vD);float h=clamp(d.y,0.,1.);
+      float sd=max(dot(d,normalize(uSun)),0.);
+      vec3 zen=vec3(5200.,7200.,14500.)*mix(0.30,1.0,smoothstep(0.,.42,h));
+      vec3 hor=vec3(11500.,12500.,14800.)*mix(0.26,1.0,smoothstep(0.,.26,h));
+      vec3 col=mix(hor,zen,pow(h,.5));
+      col+=uSunC*uSunI*(pow(sd,8.)*1.1e4+pow(sd,1.7)*700.);
+      if(d.y>0.015){
+        vec2 cp=d.xz/max(d.y,0.05)*0.5;
+        float c=fbm(cp*0.55+vec2(3.1,1.7));
+        float m=smoothstep(.50,.85,c)*smoothstep(.0,.22,d.y);
+        col=mix(col,vec3(15000.,14700.,14300.)*(0.5+0.5*pow(sd,3.)),m*0.8);
+      }
+      col+=uSunC*smoothstep(0.99962,0.99984,sd)*2.6e5*uSunI;
+      gl_FragColor=vec4(col,1.0);
+    }`});
+const sky=new THREE.Mesh(new THREE.SphereGeometry(4000,48,32),skyMat);
+sky.frustumCulled=false; scene.add(sky);
+
+/* 海面 */
+const seaUni={uSun:{value:new THREE.Vector3(0,1,0)},uTime:{value:0},uSunC:{value:new THREE.Color(1,1,1)}};
+const seaMat=new THREE.ShaderMaterial({uniforms:seaUni,
+  vertexShader:`varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);
+    vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+  fragmentShader:`
+    varying vec3 vW;uniform vec3 uSun;uniform float uTime;uniform vec3 uSunC;
+    float hash(vec2 p){p=fract(p*vec2(443.897,441.423));p+=dot(p,p+19.19);return fract(p.x*p.y);}
+    float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+      return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+    void main(){
+      vec3 V=normalize(cameraPosition-vW);
+      float d=length(vW.xz-cameraPosition.xz);
+      float det=1.0/(1.0+d*0.012);
+      vec2 p=vW.xz*0.20;
+      float w1=noise(p+vec2(uTime*0.22,0.)),w2=noise(p*2.3-vec2(0.,uTime*0.31));
+      vec3 n=normalize(vec3((w1-.5)*.6+(w2-.5)*.3,1.,(w2-.5)*.55+(w1-.5)*.25));
+      vec3 L=normalize(uSun);vec3 H=normalize(L+V);
+      float spec=pow(max(dot(n,H),0.),900.)*2.2e5;
+      float fres=pow(1.-max(dot(n,V),0.),5.);
+      vec3 col=mix(vec3(70.,220.,300.),vec3(8000.,10800.,13500.),fres*0.35*det);
+      col+=uSunC*spec;col+=uSunC*pow(max(dot(n,L),0.),3.)*180.;
+      gl_FragColor=vec4(col,1.0);
+    }`});
+const sea=new THREE.Mesh(new THREE.PlaneGeometry(9000,9000),seaMat);
+sea.rotation.x=-Math.PI/2; sea.position.set(0,-1.2,-1400); scene.add(sea);
+
+/* 街道 */
+const road=new THREE.Mesh(new THREE.PlaneGeometry(1600,12),
+  new THREE.MeshStandardMaterial({map:roadTexture(),roughness:.93}));
+road.rotation.x=-Math.PI/2; road.receiveShadow=true; scene.add(road);
+const walkMat=new THREE.MeshStandardMaterial({map:walkTexture(),roughness:.95});
+const walkSea=new THREE.Mesh(new THREE.BoxGeometry(1600,.22,4.8),walkMat);
+walkSea.position.set(0,.11,-8.6); walkSea.receiveShadow=true; scene.add(walkSea);
+const walkHot=new THREE.Mesh(new THREE.BoxGeometry(1600,.22,4.8),walkMat);
+walkHot.position.set(0,.11,8.6); walkHot.receiveShadow=true; scene.add(walkHot);
+const curbMat=new THREE.MeshStandardMaterial({color:0xbdb7ab,roughness:.9});
+[-6.2,6.2].forEach(z=>{
+  const cb=new THREE.Mesh(new THREE.BoxGeometry(1600,.26,.34),curbMat);
+  cb.position.set(0,.13,z); cb.receiveShadow=true; scene.add(cb);
+});
+const wall=new THREE.Mesh(new THREE.BoxGeometry(1600,1.0,.7),
+  new THREE.MeshStandardMaterial({color:0xbfb9ab,roughness:.88}));
+wall.position.set(0,.4,-11.2); wall.receiveShadow=true; scene.add(wall);
+
+const pal=['#f2e6df','#e7c7c4','#cfe3e0','#f6efe2','#dcc9e2','#c7d6ee'];
+for(let i=0;i<34;i++){
+  const w=10+Math.random()*9,h=13+Math.random()*15,d=13+Math.random()*9;
+  const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),
+    new THREE.MeshStandardMaterial({map:facadeTexture(pal[i%pal.length],i%3?'#2b3943':'#3b5962'),roughness:.72}));
+  b.position.set(-220+i*13+Math.random()*3,h/2,11.5+d/2);
+  b.castShadow=true;b.receiveShadow=true; scene.add(b);
+  if(i%2===0){
+    const a=new THREE.Mesh(new THREE.BoxGeometry(w*.85,.32,2.3),
+      new THREE.MeshStandardMaterial({color:[0xd9695f,0x4aa3a0,0xe0b64a][i%3],roughness:.8}));
+    a.position.set(b.position.x,3.5,11.5+1.0); a.castShadow=true; scene.add(a);
+  }
+}
+for(let i=0;i<8;i++){
+  const h=18+Math.random()*24;
+  const b=new THREE.Mesh(new THREE.BoxGeometry(16+Math.random()*8,h,16),
+    new THREE.MeshStandardMaterial({color:0xc7bcae,roughness:.85}));
+  b.position.set(-220+i*24,h/2,-42-Math.random()*10); b.castShadow=true; scene.add(b);
+}
+const leafShape=new THREE.Shape();
+/* 棕榈叶：宽基部 + 渐收尖端 + 叶尖微收，长度约 3.4。
+   叶片太细时从远处看就是"放射状尖刺"，必须给足基部宽度。 */
+leafShape.moveTo(0,0);
+leafShape.quadraticCurveTo(.92,1.5,.34,3.1);
+leafShape.quadraticCurveTo(.12,3.35,0,3.4);
+leafShape.quadraticCurveTo(-.12,3.35,-.34,3.1);
+leafShape.quadraticCurveTo(-.92,1.5,0,0);
+const leafGeo=new THREE.ShapeGeometry(leafShape,16);
+function palm(x,z,h){
+  const g=new THREE.Group();
+  const tr=new THREE.Mesh(new THREE.CylinderGeometry(.16,.34,h,10),
+    new THREE.MeshStandardMaterial({color:0x8a7455,roughness:.95}));
+  tr.position.y=h/2; tr.rotation.z=(Math.random()-.5)*.14; tr.castShadow=true; g.add(tr);
+  const fm=new THREE.MeshStandardMaterial({color:0x5f9440,roughness:.78,side:THREE.DoubleSide});
+  const crown=new THREE.Group(); crown.position.y=h; g.add(crown);
+  /* 两层叶：外圈长叶明显下垂，内圈短叶上翘，避免树冠中心露空。
+     叶片不投影——太薄的形体投影会变成黑块，比不投影更假。 */
+  const rings=[
+    {n:10, tilt:Math.PI/2+0.46, sc:[1.0,1.15], jitter:.16},
+    {n:7,  tilt:Math.PI/2-0.12, sc:[.62,.72], jitter:.22}
+  ];
+  for(const R of rings){
+    for(let i=0;i<R.n;i++){
+      const pivot=new THREE.Group();
+      pivot.rotation.y=i/R.n*Math.PI*2+Math.random()*R.jitter;
+      const f=new THREE.Mesh(leafGeo,fm);
+      f.rotation.x=R.tilt+(Math.random()-.5)*.14;
+      const s=R.sc[0]+Math.random()*(R.sc[1]-R.sc[0]);
+      f.scale.set(s,s,1);
+      pivot.add(f); crown.add(pivot);
+    }
+  }
+  const tip=new THREE.Mesh(new THREE.SphereGeometry(.3,10,8),
+    new THREE.MeshStandardMaterial({color:0x4a7530,roughness:.9}));
+  tip.position.y=h+.04; g.add(tip);
+  g.position.set(x,0,z); g.rotation.y=Math.random()*6.28; scene.add(g); return g;
+}
+for(let i=0;i<24;i++) palm(-220+i*18,-10.7,9+Math.random()*4);
+for(let i=0;i<16;i++) palm(-200+i*20,10.9,8+Math.random()*4);
+for(let i=0;i<16;i++){
+  const g=new THREE.Group();
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(.1,.14,6.2,8),
+    new THREE.MeshStandardMaterial({color:0x2b3138,roughness:.6,metalness:.4}));
+  pole.position.y=3.1; pole.castShadow=true; g.add(pole);
+  const arm=new THREE.Mesh(new THREE.BoxGeometry(1.5,.12,.12),
+    new THREE.MeshStandardMaterial({color:0x2b3138,roughness:.6,metalness:.4}));
+  arm.position.set(-.7,6.1,0); g.add(arm);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.24,12,8),
+    new THREE.MeshStandardMaterial({color:0xffe6b8,emissive:0x30260f,roughness:.4}));
+  head.position.set(-1.35,5.95,0); g.add(head);
+  g.position.set(-190+i*26,0,10.4); scene.add(g);
+}
+
+function makeCar(color,style){
+  const g=new THREE.Group();
+  const bodyMat=new THREE.MeshStandardMaterial({color,roughness:.26,metalness:.35});
+  const dark=new THREE.MeshStandardMaterial({color:0x14181c,roughness:.12,metalness:.1});
+  const body=new THREE.Mesh(new THREE.BoxGeometry(4.35,.70,1.92),bodyMat);
+  body.position.y=.70; body.castShadow=true; g.add(body);
+  const hood=new THREE.Mesh(new THREE.BoxGeometry(1.55,.32,1.86),bodyMat);
+  hood.position.set(1.32,.96,0); hood.castShadow=true; g.add(hood);
+  const deck=new THREE.Mesh(new THREE.BoxGeometry(1.30,.28,1.86),bodyMat);
+  deck.position.set(-1.38,.93,0); deck.castShadow=true; g.add(deck);
+  if(style==='coupe'){
+    const cab=new THREE.Mesh(new THREE.BoxGeometry(1.85,.58,1.66),dark);
+    cab.position.set(-.18,1.30,0); g.add(cab);
+  }else{
+    const cab=new THREE.Mesh(new THREE.BoxGeometry(2.0,.52,1.70),bodyMat);
+    cab.position.set(-.15,1.30,0); cab.castShadow=true; g.add(cab);
+  }
+  const glass=new THREE.Mesh(new THREE.BoxGeometry(1.55,.40,1.76),
+    new THREE.MeshStandardMaterial({color:0x16232b,roughness:.05,metalness:.3,transparent:true,opacity:.55}));
+  glass.position.set(-.15,1.26,0); glass.rotation.x=-.06; g.add(glass);
+  const wm=new THREE.MeshStandardMaterial({color:0x14161a,roughness:.85});
+  const rm=new THREE.MeshStandardMaterial({color:0xb9bec4,roughness:.28,metalness:.9});
+  /* 车轮轴必须沿车宽方向（Z）。CylinderGeometry 的轴是 +Y，绕 X 转 90° 才得到
+     "轮子立在车身侧、可滚动"的姿态；绕 Z 转会让轮面朝车头，看起来像横过来的圆盘。 */
+  [[1.42,1.02],[-1.42,1.02],[1.42,-1.02],[-1.42,-1.02]].forEach(([wx,wz])=>{
+    const w=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,.26,16),wm);
+    w.rotation.x=Math.PI/2; w.position.set(wx,.36,wz); w.castShadow=true; g.add(w);
+    const r=new THREE.Mesh(new THREE.CylinderGeometry(.20,.20,.28,12),rm);
+    r.rotation.x=Math.PI/2; r.position.set(wx,.36,wz); g.add(r);
+  });
+  const tl=new THREE.Mesh(new THREE.BoxGeometry(.12,.14,.42),
+    new THREE.MeshStandardMaterial({color:0xfff1d0,emissive:0xffd9a0,emissiveIntensity:.5}));
+  tl.position.set(2.19,.76,.60); g.add(tl);
+  const tl2=tl.clone(); tl2.position.z=-.60; g.add(tl2);
+  return g;
+}
+const heroCar=makeCar(0x19b98a,'conv'); scene.add(heroCar);
+const camCar =makeCar(0xe6e2d8,'sedan'); scene.add(camCar);
+const traffic=[];
+for(let i=0;i<9;i++){
+  const c=makeCar([0xd94f4f,0x2f5fa8,0xf2c14e,0xe8e4dc,0x7d5ba6,0x2b2f36,0xd9695f,0x3f8f6d,0xbfd6e0][i%9],'coupe');
+  scene.add(c);
+  /* 同车道车流必须与该车道主车同速：相对位置恒定 → 永不互相穿插、也不会被主车追上 */
+  const lane=(i%2)?CAMCAR_Z:HERO_Z;
+  traffic.push({m:c,x:-320+i*75,v:(lane===HERO_Z)?HERO_V:CAMCAR_V,z:lane});
+}
+function person(color){
+  const g=new THREE.Group();
+  const m=new THREE.MeshStandardMaterial({color,roughness:.85});
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(.19,.70,4,10),m); body.position.y=1.10; g.add(body);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.135,12,10),
+    new THREE.MeshStandardMaterial({color:0x8d6449,roughness:.9})); head.position.y=1.64; g.add(head);
+  const l=new THREE.Mesh(new THREE.CapsuleGeometry(.075,.60,4,8),m); l.position.set(0,.36,.09); g.add(l);
+  const r=l.clone(); r.position.z=-.09; g.add(r);
+  g.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+  return g;
+}
+const peds=[];
+for(let i=0;i<14;i++){
+  const p=person([0xf2f2ef,0x2f6f8f,0xc0463c,0x2b3a44,0xe0b64a,0xf0e0c8][i%6]);
+  peds.push({m:p,x:-190+i*30+Math.random()*8,z:-10.3-Math.random()*1.4,ph:i*1.7,ry:(Math.random()-.5)*2.4});
+  scene.add(p);
+}
+for(let i=0;i<6;i++){
+  const p=person([0xf2f2ef,0x2f6f8f,0x2b3a44][i%3]);
+  peds.push({m:p,x:-150+i*54+Math.random()*10,z:9.6+Math.random()*1.4,ph:i*2.3+1,ry:(Math.random()-.5)*3});
+  scene.add(p);
+}
+
+/* 车内机位：门框 / 内饰 / 后视镜（复刻原片近景遮挡） */
+const cabin=new THREE.Group();
+const interiorMat=new THREE.MeshStandardMaterial({color:0x14171b,roughness:.9});
+const doorCard=new THREE.Mesh(new THREE.BoxGeometry(3.0,.85,.14),interiorMat);
+doorCard.position.set(-.4,.62,.92); cabin.add(doorCard);
+/* 侧窗框架：窗洞必须落在相机视野中心。
+   相机在 cabin 局部坐标 x≈+0.55 处朝 +Z 看，35mm 镜头在 0.41m 窗距上只覆盖 ±0.21m
+   水平范围——旧窗洞中心在 x=-0.58，与相机错开 1.1m，于是整个视野都压在实心门框上，
+   看起来"车内视角完全不管用"。现把窗洞覆盖到 [-0.75, 1.90]。 */
+const frameShape=new THREE.Shape();
+frameShape.moveTo(-2.6,.20);frameShape.lineTo(2.6,.20);frameShape.lineTo(2.6,2.30);
+frameShape.lineTo(-2.6,2.30);frameShape.lineTo(-2.6,.20);
+const hole=new THREE.Path();
+hole.moveTo(-0.75,1.06);hole.lineTo(1.90,1.02);hole.lineTo(1.90,1.80);hole.lineTo(-0.75,1.88);
+hole.lineTo(-0.75,1.06);
+frameShape.holes.push(hole);
+const winFrame=new THREE.Mesh(new THREE.ShapeGeometry(frameShape),
+  new THREE.MeshStandardMaterial({color:0x1a1e23,roughness:.85,side:THREE.DoubleSide}));
+winFrame.position.z=.96; cabin.add(winFrame);
+const mirror=new THREE.Mesh(new THREE.BoxGeometry(.07,.20,.46),
+  new THREE.MeshStandardMaterial({color:0x0f1114,roughness:.35,metalness:.5}));
+mirror.position.set(1.25,1.02,.70); cabin.add(mirror);
+cabin.visible=false; scene.add(cabin);
+
+/* ══════════ 2 · 运镜（解析式，可子帧采样） ══════════ */
+function wrapX(x){ return ((x+120)%LOOP+LOOP)%LOOP-120; }
+function heroXAt(t){ return wrapX(HERO_X0+HERO_V*t); }
+function camCarXAt(t){ return wrapX(CAMCAR_X0+CAMCAR_V*t); }
+
+const sim={t:0,headY:BASE_YAW,headVY:0,headP:0,headVP:0,carYaw:Math.PI,carVY:0,hist:[]};
+const SIM_DT=1/240;
+function stepSim(dt){
+  sim.t+=dt;
+  /* ── 自由移动：摇杆 / WASD 推进，视角由滑屏与陀螺仪控制 ── */
+  if(P.scene==='free'){
+    let mx=input.mx, mz=input.mz;
+    const k=input.keys;
+    if(k['w']||k['arrowup'])mz+=1;
+    if(k['s']||k['arrowdown'])mz-=1;
+    if(k['a']||k['arrowleft'])mx-=1;
+    if(k['d']||k['arrowright'])mx+=1;
+    let m=Math.hypot(mx,mz);
+    if(m>1){mx/=m;mz/=m;m=1;}
+    if(m>0.02){
+      const s=player.speed*m;
+      const sy=Math.sin(player.yaw), cy=Math.cos(player.yaw);
+      /* yaw=0 时相机朝 -Z：前进 = (-sinY,-cosY)，右移 = (cosY,-sinY) */
+      player.x+=(-sy*mz+cy*mx)*s*dt;
+      player.z+=(-cy*mz-sy*mx)*s*dt;
+      /* 走路带一点上下起伏，比纯平移更像人 */
+      player.bob=Math.sin(sim.t*9.5)*0.022*m;
+    }else player.bob*=0.9;
+    player.x=Math.max(-210,Math.min(210,player.x));
+    /* 不穿墙：海侧人行道到酒店侧人行道之间 */
+    player.z=Math.max(-10.2,Math.min(10.2,player.z));
+    player.yaw-=input.lookDX;      player.pitch-=input.lookDY;
+    player.pitch=Math.max(-1.1,Math.min(0.95,player.pitch));
+    input.lookDX=0; input.lookDY=0;
+  }
+  const dx=heroXAt(sim.t)-PED_X, dz=HERO_Z-PED_Z;
+  let off=Math.atan2(-dx,-dz)-BASE_YAW;
+  while(off>Math.PI)off-=2*Math.PI; while(off<-Math.PI)off+=2*Math.PI;
+  /* 人转头能到 ±126°：旧版卡在 ±66°（1.15 rad），车一走近就"跟到一半停住"。 */
+  off=Math.max(-2.2,Math.min(2.2,off));
+  const tgt=BASE_YAW+off, wn=5.5, z=1.0;
+  sim.headVY+=(wn*wn*(tgt-sim.headY)-2*z*wn*sim.headVY)*dt;
+  sim.headY+=sim.headVY*dt;
+  const tp=-0.02+Math.sin(sim.t*.31)*0.006;
+  sim.headVP+=(wn*wn*(tp-sim.headP)-2*z*wn*sim.headVP)*dt;
+  sim.headP+=sim.headVP*dt;
+  /* 车内机位：视线跟着过路车走（带滞后），模拟乘客转头 */
+  const cdx=heroXAt(sim.t)-camCarXAt(sim.t), cdz=HERO_Z-CAMCAR_Z;
+  let phi=Math.atan2(cdx,cdz);                 // 0=正对跨街，+ = 车在前方
+  phi=Math.max(-0.95,Math.min(0.95,phi));
+  const cyaw=Math.PI+phi;
+  const wn2=4.2;
+  sim.carVY+=(wn2*wn2*(cyaw-sim.carYaw)-2*wn2*sim.carVY)*dt;
+  sim.carYaw+=sim.carVY*dt;
+  sim.hist.push({t:sim.t,y:sim.headY,p:sim.headP});
+  if(sim.hist.length>90)sim.hist.shift();
+}
+function histAt(t){
+  const h=sim.hist;
+  if(!h.length)return {y:BASE_YAW,p:0};
+  for(let i=h.length-1;i>=0;i--) if(h[i].t<=t) return h[i];
+  return h[0];
+}
+function breath(t){
+  return{y:.0072*Math.sin(t*2*Math.PI*.23),
+    yaw:.0016*Math.sin(t*2*Math.PI*.37+1.1),
+    pitch:.0022*Math.sin(t*2*Math.PI*.51+2.3),
+    roll:.0013*Math.sin(t*2*Math.PI*.29),
+    jx:.010*Math.sin(t*2*Math.PI*.83+.4),
+    jz:.007*Math.sin(t*2*Math.PI*.67+2.1)};
+}
+const camState={pos:new THREE.Vector3(),quat:new THREE.Quaternion()};
+const _o=new THREE.Object3D();
+/* 像素探针：直接从画布取样，用于校验真实出图（不依赖截图合成） */
+const probeC=document.createElement('canvas'); probeC.width=64; probeC.height=36;
+const probeCtx=probeC.getContext('2d',{willReadFrequently:true});
+S.avgRGB=[0,0,0]; S.maxPx=0;
+function probeCanvas(){
+  try{
+    probeCtx.drawImage(canvas,0,0,64,36);
+    const d=probeCtx.getImageData(0,0,64,36).data;
+    let r=0,g=0,b=0,mx=0;
+    for(let i=0;i<d.length;i+=4){r+=d[i];g+=d[i+1];b+=d[i+2];
+      const m=d[i]>d[i+1]?(d[i]>d[i+2]?d[i]:d[i+2]):(d[i+1]>d[i+2]?d[i+1]:d[i+2]);
+      if(m>mx)mx=m;}
+    const n=d.length/4;
+    S.avgRGB=[Math.round(r/n),Math.round(g/n),Math.round(b/n)]; S.maxPx=mx;
+  }catch(e){}
+}
+function evalCamera(t,snap){
+  const b=breath(t), s=snap||histAt(t);
+  if(P.scene==='free'){
+    /* 自由模式：位置由玩家走，朝向由滑屏/陀螺仪决定；呼吸与走路起伏仍叠加 */
+    _o.position.set(player.x+b.jx*.4, player.eye+(player.bob||0)+b.y*.5, player.z+b.jz*.4);
+    _o.rotation.set(player.pitch+b.pitch*.5, player.yaw+b.yaw*.5, b.roll,'YXZ');
+    cabin.visible=false;
+  }else if(P.scene==='ped'){
+    _o.position.set(PED_X+b.jx,1.63+b.y,PED_Z+b.jz);
+    _o.rotation.set(s.p+b.pitch,s.y+b.yaw,b.roll,'YXZ');
+    cabin.visible=false;
+  }else if(P.scene==='car'){
+    const x=camCarXAt(t);
+    const v=Math.sin(t*31.3)*.005+Math.sin(t*17.7+1.3)*.008+Math.sin(t*7.1)*.004;
+    const rv=Math.sin(t*5.3)*.005+Math.sin(t*11.9+2.)*.003;
+    _o.position.set(x+.55,1.17+v,CAMCAR_Z+.55);
+    _o.rotation.set(-.015+b.pitch*.5, sim.carYaw+b.yaw*.35, rv,'YXZ');
+    cabin.position.set(x,0,CAMCAR_Z); cabin.visible=true;
+  }else{
+    const x=heroXAt(t);
+    const k=1-Math.exp(-5.5*.016);
+    const tgt=new THREE.Vector3(x-7.4,1.85,HERO_Z+.8);
+    if(!sim.chase)sim.chase=tgt.clone();
+    sim.chase.lerp(tgt,k);
+    _o.position.copy(sim.chase); _o.position.y+=b.y*1.5;
+    _o.lookAt(x,1.05,HERO_Z); _o.rotateZ(b.roll*1.3);
+    cabin.visible=false;
+  }
+  const gq=applyGyro();
+  if(gq) _o.quaternion.multiply(gq);       // 陀螺仪姿态叠加在脚本机位之上
+  camState.pos.copy(_o.position); camState.quat.copy(_o.quaternion);
+}
+function placeActors(t){
+  heroCar.position.set(heroXAt(t),0,HERO_Z);
+  camCar.position.set(camCarXAt(t),0,CAMCAR_Z);
+  traffic.forEach(o=>{
+    o.m.position.set(wrapX(o.x+o.v*t),0,o.z);
+    o.m.rotation.y=Math.PI/2*0;   // 车头朝 +X
+    o.m.rotation.y=0;
+  });
+  peds.forEach(p=>{
+    const ph=t*4.2+p.ph;
+    p.m.position.set(p.x+Math.sin(ph*.5)*.5,Math.abs(Math.sin(ph))*.02,p.z);
+    p.m.rotation.y=p.ry+Math.sin(ph*.5)*.3;
+  });
+}
+
+/* ══════════ 2b · 陀螺仪操控（手机姿态转头） ══════════ */
+/* 思路：启用/重置时锁定「参考姿态」，此后只取相对旋转去驱动相机朝向。
+   去抖两道：① 死区（小于 0.6° 不更新）② 低通 slerp（逐帧收敛）。
+   灵敏度：把四元数拆成轴角后缩放角度，比直接缩放四元数分量更可控。 */
+const gyro={on:false,ok:false,calibrated:false,msg:'未启用',alpha:0,beta:0,gamma:0,
+  lastYaw:0,lastPitch:0,
+  refInv:new THREE.Quaternion(),smooth:new THREE.Quaternion(),out:new THREE.Quaternion()};
+const _gz=new THREE.Vector3(0,0,1), _ge=new THREE.Euler(),
+      _gq=new THREE.Quaternion(), _gq2=new THREE.Quaternion(), _gaxis=new THREE.Vector3();
+/* 关键：设备坐标系（手机平放时 +Z 朝上）与相机坐标系（朝 -Z 看）差一个
+   绕 X 轴 -90° 的固定旋转。w3c/generic-sensor 与 three.js 的
+   DeviceOrientationControls 都有这一步；漏掉它，姿态会被整体"折"90°，
+   表现出来就是"开了陀螺仪但镜头不跟手 / 乱转"。
+   q1 = 绕 X 轴 -90° = (sin(-45°), 0, 0, cos(-45°)) */
+const _q1=new THREE.Quaternion(-Math.SQRT1_2,0,0,Math.SQRT1_2);
+function screenAngleRad(){
+  const a=(screen.orientation&&screen.orientation.angle!=null)?screen.orientation.angle:(window.orientation||0);
+  return (a||0)*Math.PI/180;
+}
+function deviceQuat(){
+  _ge.set(gyro.beta*Math.PI/180,gyro.alpha*Math.PI/180,-gyro.gamma*Math.PI/180,'YXZ');
+  _gq.setFromEuler(_ge);
+  _gq.multiply(_q1);                                   // 设备 → 相机 的固定姿态映射
+  _gq2.setFromAxisAngle(_gz,-screenAngleRad());
+  return _gq.multiply(_gq2);
+}
+function gyroReset(){
+  if(!gyro.ok){gyro.msg='尚无姿态数据';return;}
+  gyro.refInv.copy(deviceQuat()).invert();
+  gyro.smooth.identity();
+  gyro.msg='已重置基准';
+}
+function onDeviceOrient(e){
+  if(e.alpha===null&&e.beta===null&&e.gamma===null) return;
+  gyro.alpha=e.alpha||0; gyro.beta=e.beta||0; gyro.gamma=e.gamma||0;
+  gyro.ok=true;
+  if(!gyro.calibrated){gyro.calibrated=true;gyroReset();gyro.msg='已启用';}
+}
+const _grel=new THREE.Quaternion(), _ge2=new THREE.Euler();
+function applyGyro(){
+  if(!gyro.on||!gyro.ok||!gyro.calibrated) return null;
+  _grel.copy(deviceQuat()).multiply(gyro.refInv);        // 相对参考姿态的旋转
+  const ang=2*Math.acos(Math.min(1,Math.abs(_grel.w)));
+  if(ang>0.010) gyro.smooth.slerp(_grel,0.22);           // 死区 + 低通去抖
+  /* 只取 yaw / pitch，丢掉 roll：手机侧倾不该让画面歪掉，
+     这是"转头看"和"VR 头盔"的差别。 */
+  _ge2.setFromQuaternion(gyro.smooth,'YXZ');
+  gyro.lastYaw=_ge2.y; gyro.lastPitch=_ge2.x;
+  gyro.out.setFromEuler(_ge2.set(_ge2.x*P.gyroSens,_ge2.y*P.gyroSens,0,'YXZ'));
+  return gyro.out;
+}
+async function gyroEnable(on){
+  if(!on){
+    gyro.on=false;gyro.msg='未启用';
+    window.removeEventListener('deviceorientation',onDeviceOrient);
+    syncGyro();return;
+  }
+  try{
+    if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+      const r=await DeviceOrientationEvent.requestPermission();
+      if(r!=='granted'){gyro.msg='权限被拒绝';gyro.on=false;syncGyro();return;}
+    }
+  }catch(e){gyro.msg='无法获取权限';gyro.on=false;syncGyro();return;}
+  gyro.on=true;gyro.ok=false;gyro.calibrated=false;gyro.msg='等待姿态数据…';
+  window.addEventListener('deviceorientation',onDeviceOrient);
+  setTimeout(()=>{ if(gyro.on&&!gyro.ok){gyro.msg='本设备不支持陀螺仪';gyro.on=false;syncGyro();} },2500);
+  syncGyro();
+}
+function syncGyro(){
+  const el=document.getElementById('gyro'); if(el) el.classList.toggle('on',gyro.on);
+  const st=document.getElementById('gyroState');
+  if(st){
+    if(!gyro.on){ st.textContent=gyro.msg; }
+    else{
+      st.textContent=gyro.msg+'  α'+gyro.alpha.toFixed(0)+'° β'+gyro.beta.toFixed(0)+
+        '° γ'+gyro.gamma.toFixed(0)+'°'+
+        (gyro.calibrated?'  yaw'+(gyro.lastYaw*57.3).toFixed(0)+'° pitch'+(gyro.lastPitch*57.3).toFixed(0)+'°':'');
+    }
+  }
+}
+
+/* ══════════ 3 · 物理相机参数 ══════════ */
+function usedSensor(){ const a=ASPECTS[P.aspect];
+  return a>=1.5?{w:36,h:36/a}:{w:24*a,h:24}; }
+function shutterTime(){ return (P.shutter/360)/FPS; }
+function ev100(){ return Math.log2((P.fstop*P.fstop)/shutterTime()*(100/P.iso)); }
+function exposureMult(){ return Math.pow(2,-(ev100()+P.nd+P.evcomp)); }
+function hyperfocal(){ return (P.focal*P.focal)/(P.fstop*COC_LIMIT)+P.focal; }
+function dofLimits(fdM){ const f=P.focal,N=P.fstop,H=hyperfocal();
+  return [(fdM*(H-f))/(H+fdM-2*f)/1000, fdM>=H?Infinity:((fdM*(H-f))/(H-fdM))/1000]; }
+function focusDistance(){
+  const t=sim.t;
+  if(P.scene==='free'){
+    /* 视线中心最近的一辆车：用视线与车位的夹角近似，没车就落到 10m */
+    let best=10e3;
+    const fx=-Math.sin(player.yaw), fz=-Math.cos(player.yaw);
+    const cands=[[heroXAt(t),HERO_Z],[camCarXAt(t),CAMCAR_Z]];
+    for(const [cx,cz] of cands){
+      const dx=cx-player.x, dz=cz-player.z, d=Math.hypot(dx,dz);
+      if(d<0.5) continue;
+      const cosA=(dx*fx+dz*fz)/d;
+      if(cosA>0.80) best=Math.min(best,d);
+    }
+    return best<60?Math.max(3,best):10;
+  }
+  if(P.scene==='chase')return 8.5;
+  if(P.scene==='car'){
+    const d=Math.hypot(heroXAt(t)-camCarXAt(t),HERO_Z-CAMCAR_Z);
+    return d<40?Math.max(4,d):20;
+  }
+  const d1=Math.hypot(heroXAt(t)-PED_X,HERO_Z-PED_Z);
+  const d2=Math.hypot(camCarXAt(t)-PED_X,CAMCAR_Z-PED_Z);
+  const d=Math.min(d1,d2);                       // 行人视角：锁最近的那辆车
+  return d<55?Math.max(3,d):22;
+}
+
+/* ══════════ 4 · 后期管线 ══════════ */
+const quadGeo=new THREE.BufferGeometry();
+quadGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array([-1,-1,0,3,-1,0,-1,3,0]),3));
+quadGeo.setAttribute('uv',new THREE.BufferAttribute(new Float32Array([0,0,2,0,0,2]),2));
+const quadCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const quadScene=new THREE.Scene();
+const quadMesh=new THREE.Mesh(quadGeo,null); quadMesh.frustumCulled=false; quadScene.add(quadMesh);
+function blit(mat,target){ quadMesh.material=mat; renderer.setRenderTarget(target||null); renderer.render(quadScene,quadCam); }
+function mkRT(w,h,o={}){
+  const rt=new THREE.WebGLRenderTarget(Math.max(1,w|0),Math.max(1,h|0),{
+    type:o.type||THREE.HalfFloatType,format:THREE.RGBAFormat,
+    minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,
+    depthBuffer:!!o.depth,stencilBuffer:false,generateMipmaps:false,colorSpace:THREE.LinearSRGBColorSpace});
+  if(o.depth){
+    /* 用 FloatType 深度纹理（DEPTH_COMPONENT32F）。默认的 UnsignedInt/8-bit 在本场景
+       near=0.08 / far=6000 的动态范围下会把 97% 的像素挤进 0.98~1.0 的少数台阶，
+       深度基本失效 → 景深恒定饱和。 */
+    const dt=new THREE.DepthTexture(Math.max(1,w|0),Math.max(1,h|0));
+    dt.type=THREE.FloatType; dt.format=THREE.DepthFormat;
+    dt.minFilter=THREE.NearestFilter; dt.magFilter=THREE.NearestFilter;
+    rt.depthTexture=dt;
+  }
+  return rt;
+}
+/* 线性深度 pass：把视空间 z 写进 RGBA16F，**单位与对焦距离一致取毫米**。
+   这里必须和 uFocus（= 对焦距离 m × 1000）同单位，否则薄透镜公式会差 1000 倍，
+   CoC 全部撞上上限 → 景深退化成全屏均匀模糊、且对光圈/对焦完全不敏感。 */
+const depthMat=new THREE.ShaderMaterial({
+  side:THREE.DoubleSide,
+  vertexShader:`varying float vZ;
+    void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);vZ=-mv.z*1000.0;
+      gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying float vZ;
+    void main(){gl_FragColor=vec4(vZ,0.0,0.0,1.0);}`});
+let depthRT=null;
+const VERT=`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}`;
+let W=1280,H=720,hdrRT,accA,accB,dofRT,lensRT,bloomA,bloomB,bloomC,meterA,meterB,meterC;
+function buildTargets(w,h){
+  [hdrRT,accA,accB,dofRT,lensRT,bloomA,bloomB,bloomC,meterA,meterB,meterC,depthRT].forEach(r=>r&&r.dispose());
+  hdrRT=mkRT(w,h,{depth:true});
+  depthRT=mkRT(w,h);
+  accA=mkRT(w,h); accB=mkRT(w,h); dofRT=mkRT(w,h); lensRT=mkRT(w,h);
+  bloomA=mkRT(w>>1,h>>1); bloomB=mkRT(w>>1,h>>1); bloomC=mkRT(w>>2,h>>2);
+  meterA=mkRT(Math.max(4,w>>6),Math.max(4,h>>6),{type:THREE.HalfFloatType});
+  meterB=mkRT(1,1,{type:THREE.UnsignedByteType});
+  meterC=mkRT(1,1,{type:THREE.UnsignedByteType});
+  renderer.setRenderTarget(accA); renderer.setClearColor(0x000000,1); renderer.clear();
+  /* 测光 ping-pong 缓冲预置成"合理曝光"对应的编码值（0.66 → logL≈9.1），
+     这样即使首帧测光还没跑，曝光也不会炸到全白。 */
+  renderer.setRenderTarget(meterB); renderer.setClearColor(0x000000,1); renderer.clear();
+  renderer.setClearColor(new THREE.Color(0.66,0,0),1);
+  renderer.setRenderTarget(meterB); renderer.clear();
+  renderer.setRenderTarget(meterC); renderer.clear();
+  renderer.setClearColor(0x000000,1);
+  renderer.setRenderTarget(null);
+}
+const accumMat=new THREE.ShaderMaterial({uniforms:{tPrev:{value:null},tCur:{value:null},w:{value:.5}},
+  vertexShader:VERT,fragmentShader:`varying vec2 vUv;uniform sampler2D tPrev,tCur;uniform float w;
+    void main(){gl_FragColor=mix(texture2D(tPrev,vUv),texture2D(tCur,vUv),w);}`});
+const dofMat=new THREE.ShaderMaterial({uniforms:{
+  tScene:{value:null},tDepth:{value:null},uTexel:{value:new THREE.Vector2()},
+  uNear:{value:.1},uFar:{value:6000},uFocal:{value:35},uApD:{value:12.5},uFocus:{value:12000},
+  uCocScale:{value:1},uBlades:{value:6},uMaxCoc:{value:16},uTaps:{value:32},uDoFGain:{value:1},
+  uDebug:{value:0}},
+  vertexShader:VERT,fragmentShader:`
+  varying vec2 vUv;uniform sampler2D tScene,tDepth;uniform vec2 uTexel;
+  uniform float uNear,uFar,uFocal,uApD,uFocus,uCocScale,uMaxCoc,uDoFGain,uDebug;
+  uniform int uBlades,uTaps;
+  /* tDepth 的 R 通道已经是视空间 z（米），见 depthMat */
+  float viewZ(vec2 uv){return texture2D(tDepth,uv).x;}
+  float cocPx(float z){
+    if(uDoFGain<=0.001) return 0.0;
+    float f=uFocal,zf=uFocus,c;
+    /* 薄透镜：c = apD·f/|zf−f| · |z−zf|/z   （apD·f = f²/N） */
+    float k=uApD*f/max(abs(zf-f),1.0);
+    if(z>=zf) c=k*(z-zf)/z; else c=k*(zf-z)/z;
+    return min(abs(c)*uCocScale*uDoFGain,uMaxCoc);}
+  float shape(float a){float b=6.2831853/float(uBlades);
+    float x=mod(a+b*0.5,b)-b*0.5;return cos(b*0.5)/max(cos(x),1e-3);}
+  void main(){
+    float z0=viewZ(vUv);
+    float c0=cocPx(z0);
+    if(uDebug>0.5){                       // 调试：R=z(mm)/64000，G=c0/上限，B=k/0.05
+      float f=uFocal,zf=uFocus;
+      float kk=uApD*f/max(abs(zf-f),1.0);
+      gl_FragColor=vec4(clamp(z0/64000.0,0.0,1.0), clamp(c0/uMaxCoc,0.0,1.0),
+                        clamp(kk/0.05,0.0,1.0), 1.0);
+      return;}
+    vec3 acc=texture2D(tScene,vUv).rgb;float wsum=1.0;
+    if(c0>0.7){const float GA=2.39996323;
+      for(int i=0;i<64;i++){ if(i>=uTaps)break;
+        float fi=float(i)+0.5;float r=sqrt(fi/float(uTaps));float th=fi*GA;
+        vec2 off=vec2(cos(th),sin(th))*r*shape(th)*c0*uTexel;
+        vec2 suv=clamp(vUv+off,vec2(.0015),vec2(.9985));
+        float zt=viewZ(suv);
+        float ct=cocPx(zt);float d=length(off/uTexel);
+        float w=clamp((ct-d)*.5+.5,0.,1.);
+        if(zt>z0)w*=clamp((c0*2.-d)*.5+.5,0.,1.);
+        acc+=texture2D(tScene,suv).rgb*w;wsum+=w;}}
+    gl_FragColor=vec4(acc/wsum,1.0);
+  }`});
+const lensMat=new THREE.ShaderMaterial({uniforms:{tScene:{value:null},
+  uCA:{value:.0016},uK1:{value:-.010},uK2:{value:.001}},
+  vertexShader:VERT,fragmentShader:`
+  varying vec2 vUv;uniform sampler2D tScene;uniform float uCA,uK1,uK2;
+  void main(){
+    vec2 d=vUv-0.5;float r2=dot(d,d);
+    /* 先做畸变（Brown-Conrady 径向），再在畸变后的坐标上做横向色差；
+       旧版把色差算完又被畸变那一次采样覆盖掉，所以色差滑块永远无效。 */
+    float f=1.0+uK1*r2+uK2*r2*r2;
+    vec2 ddist=d*f;
+    float k=uCA*(1.0+r2*2.6);
+    vec3 col;
+    col.r=texture2D(tScene,clamp(0.5+ddist*(1.0+k),vec2(0.),vec2(1.))).r;
+    col.g=texture2D(tScene,clamp(0.5+ddist,vec2(0.),vec2(1.))).g;
+    col.b=texture2D(tScene,clamp(0.5+ddist*(1.0-k*0.72),vec2(0.),vec2(1.))).b;
+    gl_FragColor=vec4(col,1.0);
+  }`});
+const brightMat=new THREE.ShaderMaterial({uniforms:{tScene:{value:null},tMeter:{value:null},
+  uExpManual:{value:1},uAuto:{value:1},uThresh:{value:1.0}},
+  vertexShader:VERT,fragmentShader:`
+  varying vec2 vUv;uniform sampler2D tScene,tMeter;uniform float uExpManual,uAuto,uThresh;
+  /* 测光解码必须钳到可信区间：测光 RT 尚未写入时读到 0 会解出 logL=-12，
+     曝光乘子被放大到 exp(12)≈1.6e5 倍，整幅过曝成全白。 */
+  float meterL(){vec4 m=texture2D(tMeter,vec2(.5));float v=m.r+m.g/255.;
+    return clamp(v*32.-12.,4.0,18.0);}
+  void main(){
+    float ex=mix(uExpManual,0.18*exp(-meterL()),uAuto);
+    vec3 c=texture2D(tScene,vUv).rgb*ex;
+    float l=dot(c,vec3(.2126,.7152,.0722));
+    float k=max(l-uThresh,0.)/max(l,1e-4);gl_FragColor=vec4(c*k,1.0);}`});
+const blurMat=new THREE.ShaderMaterial({uniforms:{tScene:{value:null},uDir:{value:new THREE.Vector2()}},
+  vertexShader:VERT,fragmentShader:`varying vec2 vUv;uniform sampler2D tScene;uniform vec2 uDir;
+  void main(){vec3 s=texture2D(tScene,vUv).rgb*.2270270;
+    s+=texture2D(tScene,vUv+uDir*1.3846153).rgb*.3162162;
+    s+=texture2D(tScene,vUv-uDir*1.3846153).rgb*.3162162;
+    s+=texture2D(tScene,vUv+uDir*3.2307692).rgb*.0702702;
+    s+=texture2D(tScene,vUv-uDir*3.2307692).rgb*.0702702;
+    gl_FragColor=vec4(s,1.0);}`});
+const downMat=new THREE.ShaderMaterial({uniforms:{tScene:{value:null},uTexel:{value:new THREE.Vector2()}},
+  vertexShader:VERT,fragmentShader:`varying vec2 vUv;uniform sampler2D tScene;uniform vec2 uTexel;
+  void main(){vec3 s=vec3(0.);
+    for(int i=0;i<4;i++)for(int j=0;j<4;j++)s+=texture2D(tScene,vUv+(vec2(float(i),float(j))-1.5)*uTexel*2.).rgb;
+    gl_FragColor=vec4(s/16.,1.0);}`});
+/* 测光：① 全帧降采样成 cell 网格（每 cell 取 6×6 tap 平均亮度，存 ln L）
+       ② 1×1 归约：24×24 采样 + 中心加权 → 编码进 RGBA8（R=高字节，G=小数）
+       注意：tap 必须铺满各自 cell，否则测光退化成「点测光」，曝光会随机漂移。 */
+const meterMat=new THREE.ShaderMaterial({uniforms:{tScene:{value:null},uCell:{value:new THREE.Vector2()}},
+  vertexShader:VERT,fragmentShader:`
+  varying vec2 vUv;uniform sampler2D tScene;uniform vec2 uCell;
+  void main(){
+    float s=0.;
+    for(int i=0;i<6;i++)for(int j=0;j<6;j++){
+      vec2 o=(vec2(float(i),float(j))/5.0-0.5)*uCell;
+      vec3 c=texture2D(tScene,clamp(vUv+o,vec2(0.0),vec2(1.0))).rgb;
+      s+=max(dot(c,vec3(.2126,.7152,.0722)),1e-3);}
+    gl_FragColor=vec4(log(s/36.0),0.,0.,1.);}`});
+const meterSmoothMat=new THREE.ShaderMaterial({uniforms:{tCur:{value:null},tPrev:{value:null},uRate:{value:.3}},
+  vertexShader:VERT,fragmentShader:`varying vec2 vUv;uniform sampler2D tCur,tPrev;uniform float uRate;
+  void main(){
+    float s=0.,wsum=0.;
+    for(int i=0;i<24;i++)for(int j=0;j<24;j++){
+      vec2 uv=(vec2(float(i),float(j))+0.5)/24.0;
+      float lg=texture2D(tCur,uv).r;
+      vec2 q=(uv-0.5)*vec2(1.6,1.0);
+      float w=0.12+0.88*exp(-2.2*dot(q,q));
+      s+=lg*w;wsum+=w;}
+    float logL=s/wsum;
+    float v=clamp((logL+12.)/32.,0.,1.);
+    float b=v*255.;float R=floor(b);float G=b-R;
+    vec4 cur=vec4(R/255.,G,0.,1.);
+    vec4 prev=texture2D(tPrev,vec2(.5));
+    gl_FragColor=vec4(mix(prev.rgb,cur.rgb,uRate),1.0);}`});
+const finalMat=new THREE.ShaderMaterial({uniforms:{
+  tScene:{value:null},tBloom:{value:null},tMeter:{value:null},
+  uExpManual:{value:1},uAuto:{value:1},uVig:{value:1},uFocal:{value:35},uSensorH:{value:24},
+  uAspect:{value:1.78},uGrain:{value:.02},uFrame:{value:0},uSunUV:{value:new THREE.Vector2(-9,-9)},
+  uSunVis:{value:0},uSunC:{value:new THREE.Color(1,1,1)},uBloomI:{value:.05},uPhys:{value:1},uFlare:{value:1},uSat:{value:1.14},uDebugD:{value:0}},
+  vertexShader:VERT,fragmentShader:`
+  varying vec2 vUv;
+  uniform sampler2D tScene,tBloom,tMeter;
+  uniform float uExpManual,uAuto,uVig,uFocal,uSensorH,uAspect,uGrain,uFrame,uSunVis,uBloomI,uPhys,uFlare,uSat,uDebugD;
+  uniform vec2 uSunUV;uniform vec3 uSunC;
+  const mat3 AGXI=mat3(0.856627153315983,0.137318972929847,0.11189821299995,
+                       0.0951212405381588,0.761241990602591,0.0767994186031903,
+                       0.0482516061458583,0.101439036467562,0.811302368396859);
+  const mat3 AGXO=mat3(1.1271005818144368,-0.1413297634984383,-0.14132976349843826,
+                       -0.11060664309660323,1.157823702216272,-0.11060664309660294,
+                       -0.016493938717834573,-0.016493938717834257,1.2519364065950405);
+  vec3 agxContrast(vec3 x){vec3 x2=x*x;vec3 x4=x2*x2;
+    return 15.5*x4*x2-40.14*x4*x+31.96*x4-6.868*x2*x+0.4298*x2+0.1191*x-0.00232;}
+  vec3 agx(vec3 c){c=AGXI*c;c=max(c,1e-10);c=log2(c);
+    c=(c+12.47393)/(4.026069+12.47393);c=clamp(c,0.,1.);c=agxContrast(c);c=AGXO*c;
+    return pow(max(vec3(0.),c),vec3(2.2));}
+  float hash(vec2 p){p=fract(p*vec2(443.897,441.423));p+=dot(p,p+19.19);return fract(p.x*p.y);}
+  float meterL(){vec4 m=texture2D(tMeter,vec2(.5));float v=m.r+m.g/255.;
+    return clamp(v*32.-12.,4.0,18.0);}
+  void main(){
+    vec3 c=texture2D(tScene,vUv).rgb;
+    if(uDebugD>0.5){ gl_FragColor=vec4(c,1.0); return; }   // 调试通道直通，不过曝光/tonemap
+    vec3 bl=texture2D(tBloom,vUv).rgb;
+    float ex=mix(uExpManual,0.18*exp(-meterL()),uAuto);
+    float exp0=ex;                 // A/B 两种模式曝光一致，只比镜头/后期差异
+    c*=exp0; bl*=uBloomI;
+    if(uFlare>0.0&&uSunVis>0.0){
+      vec2 d=(vUv-uSunUV)*vec2(uAspect,1.);
+      float r=length(d);
+      float glow=exp(-r*r*160.)*.9+exp(-r*r*22.)*.32;
+      float streak=exp(-d.y*d.y*2600.)*exp(-d.x*d.x*3.2)*.5;
+      float ghost=exp(-pow(length(d-vec2(.20,-.10)),2.)*900.)*.10;
+      c+=uSunC*(glow+streak+ghost)*uSunVis*uFlare*exp0*2.4;}
+    c+=bl;
+    if(uPhys>0.5){
+      vec2 p=(vUv-0.5)*vec2(uAspect,1.)*(uSensorH*0.5);
+      float th=atan(length(p)/uFocal);
+      c*=mix(1.,pow(cos(th),4.),uVig*0.85);}
+    vec3 disp=uPhys>0.5?agx(c):pow(clamp(c,0.,1.),vec3(1./2.2));
+    if(uPhys>0.5){float lm=dot(disp,vec3(.2126,.7152,.0722));
+      disp=mix(vec3(lm),disp,uSat);}
+    if(uPhys>0.5&&uGrain>0.){
+      float l=dot(disp,vec3(.2126,.7152,.0722));
+      float w=4.*l*(1.-l);
+      float n=hash(vUv*vec2(1920.,1080.)+uFrame*13.7)-.5;
+      float n2=hash(vUv*vec2(911.,577.)+uFrame*7.1+3.3)-.5;
+      disp+=vec3(n,n*.92+n2*.25,n*.86+n2*.34)*uGrain*w*2.2;}
+    disp=clamp(disp,0.,1.);
+    gl_FragColor=vec4(mix(disp*12.92,1.055*pow(disp,vec3(1./2.4))-.055,step(.0031308,disp)),1.0);
+  }`});
+
+/* ══════════ 5 · 尺寸 / UI ══════════ */
+/* 移动端：面板收进底部抽屉，场景全屏无遮挡 */
+const sheet=document.getElementById('sheet'), sheetBody=document.getElementById('sheetbody');
+const sheetTabs=document.getElementById('sheettabs');
+const leftP=document.getElementById('left'), rightP=document.getElementById('right');
+const slotL=document.getElementById('slotL'), slotR=document.getElementById('slotR');
+let curTab='cam';
+function setTab(t){
+  document.querySelectorAll('.tp').forEach(s=>s.classList.toggle('active',s.dataset.t===t));
+  sheetTabs.querySelectorAll('button[data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+}
+function applyLayout(){
+  if(MQ.matches){
+    if(leftP.parentElement!==sheetBody){ sheetBody.appendChild(leftP); sheetBody.appendChild(rightP); }
+    setTab(curTab);
+  }else{
+    if(leftP.parentElement!==slotL){ slotL.appendChild(leftP); slotR.appendChild(rightP); }
+    sheet.classList.remove('open');
+  }
+  renderer.setPixelRatio(Math.min(devicePixelRatio,MQ.matches?1:1.5));  // 断点切换后同步像素比
+  resize();
+}
+MQ.addEventListener('change',applyLayout);
+sheetTabs.querySelectorAll('button[data-t]').forEach(b=>{
+  b.onclick=()=>{
+    const t=b.dataset.t;
+    if(t===curTab && sheet.classList.contains('open')) sheet.classList.remove('open');
+    else { curTab=t; setTab(t); sheet.classList.add('open'); }
+  };
+});
+/* 抽屉拖拽：按住把手上下拖，松手按位置吸附；轻点则开合 */
+const SHEET_HANDLE=56;
+function sheetClosedY(){ return Math.max(0,sheet.offsetHeight-SHEET_HANDLE); }
+const grip=document.getElementById('grip');
+let sheetDrag=null;
+grip.addEventListener('pointerdown',e=>{
+  sheetDrag={id:e.pointerId,y0:e.clientY,
+    startY:sheet.classList.contains('open')?0:sheetClosedY(),wasOpen:sheet.classList.contains('open'),
+    moved:false,cur:0};
+  try{ grip.setPointerCapture(e.pointerId); }catch(err){}
+  e.preventDefault();
+});
+grip.addEventListener('pointermove',e=>{
+  if(!sheetDrag||e.pointerId!==sheetDrag.id) return;
+  const dy=e.clientY-sheetDrag.y0;
+  if(!sheetDrag.moved){ if(Math.abs(dy)<4) return; sheetDrag.moved=true; sheet.classList.add('noanim'); }
+  const maxY=sheetClosedY();
+  sheetDrag.cur=Math.max(0,Math.min(maxY,sheetDrag.startY+dy));
+  sheet.style.transform='translateY('+sheetDrag.cur+'px)';
+});
+function endSheetDrag(e){
+  if(!sheetDrag||(e&&e.pointerId!==sheetDrag.id)) return;
+  const moved=sheetDrag.moved, cur=sheetDrag.cur, startY=sheetDrag.startY, wasOpen=sheetDrag.wasOpen;
+  sheetDrag=null;
+  sheet.classList.remove('noanim');
+  sheet.style.transform='';
+  if(!moved){ sheet.classList.toggle('open'); return; }
+  const dy=cur-startY;                       // 向下为正
+  if(dy>90) sheet.classList.remove('open');  // 往下拉过阈值 → 收起
+  else if(dy<-30) sheet.classList.add('open'); // 往上推 → 展开
+  else sheet.classList.toggle('open',wasOpen); // 没拖够 → 回到原状态
+}
+grip.addEventListener('pointerup',endSheetDrag);
+grip.addEventListener('pointercancel',endSheetDrag);
+document.getElementById('sheetclose').onclick=()=>sheet.classList.remove('open');
+
+function resize(){
+  const stage=document.getElementById('stage');
+  const mob=MQ.matches;
+  const aw=stage.clientWidth-(mob?16:40), ah=stage.clientHeight-(mob?72:40);
+  const a=ASPECTS[P.aspect];
+  let cw=aw,ch=aw/a; if(ch>ah){ch=ah;cw=ah*a;}
+  canvas.style.width=cw+'px'; canvas.style.height=ch+'px';
+  renderer.setSize(cw,ch,false);
+  W=Math.round(cw*renderer.getPixelRatio()); H=Math.round(ch*renderer.getPixelRatio());
+  buildTargets(W,H);
+}
+window.addEventListener('resize',resize);
+function applyLens(){
+  const s=usedSensor();
+  camera.fov=2*Math.atan((s.h/2)/P.focal)*180/Math.PI;
+  camera.aspect=ASPECTS[P.aspect]; camera.near=.08; camera.far=6000;
+  camera.updateProjectionMatrix(); return s;
+}
+const scenebox=document.getElementById('scenes');
+[['free','自由行走'],['ped','行人 POV'],['car','车内侧窗'],['chase','跟车']].forEach(([k,n])=>{
+  const b=document.createElement('button'); b.textContent=n; b.dataset.k=k;
+  b.onclick=()=>{P.scene=k;syncUI();}; scenebox.appendChild(b);
+});
+
+/* ── 输入：虚拟摇杆 + 滑屏/鼠标转视角 + 键盘 ── */
+const stickEl=document.getElementById('stick'), knob=document.getElementById('stickKnob');
+const lookHint=document.getElementById('lookHint');
+let stickId=null, stickC={x:0,y:0};
+function stickSet(dx,dy){
+  const R=44;
+  let d=Math.hypot(dx,dy);
+  if(d>R){dx=dx/d*R; dy=dy/d*R; d=R;}
+  knob.style.transform=`translate(${dx}px,${dy}px)`;
+  input.mx=dx/R; input.mz=-dy/R;          // 屏幕向上 = 前进
+}
+stickEl.addEventListener('pointerdown',e=>{
+  stickId=e.pointerId;
+  const r=stickEl.getBoundingClientRect();
+  stickC={x:r.left+r.width/2,y:r.top+r.height/2};
+  try{ stickEl.setPointerCapture(e.pointerId); }catch(err){}
+  stickSet(e.clientX-stickC.x,e.clientY-stickC.y);
+  e.preventDefault(); e.stopPropagation();
+});
+stickEl.addEventListener('pointermove',e=>{
+  if(e.pointerId!==stickId) return;
+  stickSet(e.clientX-stickC.x,e.clientY-stickC.y);
+  e.preventDefault();
+});
+function stickEnd(e){
+  if(e.pointerId!==stickId) return;
+  stickId=null; input.mx=0; input.mz=0;
+  knob.style.transform='translate(0,0)';
+}
+stickEl.addEventListener('pointerup',stickEnd);
+stickEl.addEventListener('pointercancel',stickEnd);
+
+/* 滑屏转视角：canvas 上拖动。灵敏度按屏幕宽度归一，横竖屏手感一致。 */
+let lookId=null,lastX=0,lastY=0;
+const LOOK_SENS=2.6;                     // 弧度 / 屏幕宽度
+canvas.addEventListener('pointerdown',e=>{
+  lookId=e.pointerId; lastX=e.clientX; lastY=e.clientY;
+  try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
+  e.preventDefault();
+});
+canvas.addEventListener('pointermove',e=>{
+  if(e.pointerId!==lookId) return;
+  const w=Math.max(320,canvas.clientWidth);
+  const k=LOOK_SENS/w;
+  input.lookDX+=(e.clientX-lastX)*k;
+  input.lookDY+=(e.clientY-lastY)*k;
+  lastX=e.clientX; lastY=e.clientY;
+  e.preventDefault();
+});
+function lookEnd(e){ if(e.pointerId===lookId) lookId=null; }
+canvas.addEventListener('pointerup',lookEnd);
+canvas.addEventListener('pointercancel',lookEnd);
+
+/* 键盘：WASD / 方向键移动 */
+window.addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if('wasd'.includes(k)||k.indexOf('arrow')===0){
+    input.keys[k]=true;
+    if(k.indexOf('arrow')===0) e.preventDefault();
+  }
+});
+window.addEventListener('keyup',e=>{
+  const k=e.key.toLowerCase();
+  if(input.keys[k]!==undefined) input.keys[k]=false;
+});
+function toggle(el,key){ el.onclick=()=>{P[key]=!P[key];syncUI();}; }
+toggle(document.getElementById('master'),'phys');
+toggle(document.getElementById('autoexp'),'autoExp');
+function slider(host,key,min,max,step,fmt){
+  const row=document.createElement('div'); row.className='row';
+  const lb=document.createElement('label'); lb.textContent=fmt.label;
+  const inp=document.createElement('input'); inp.type='range';
+  inp.min=min;inp.max=max;inp.step=step;inp.value=P[key];
+  const val=document.createElement('div'); val.className='val';
+  const upd=()=>{val.textContent=fmt.f(P[key]);};
+  inp.oninput=()=>{P[key]=parseFloat(inp.value);upd();};
+  upd(); row.append(lb,inp,val); host.appendChild(row); return {inp,upd};
+}
+const lensBox=document.getElementById('lensbox'),bodyBox=document.getElementById('bodybox'),frameBox=document.getElementById('framebox');
+const sl={};
+sl.focal=slider(lensBox,'focal',14,135,1,{label:'焦距 f',f:v=>v+' mm'});
+sl.fstop=slider(lensBox,'fstop',1.2,22,.1,{label:'光圈 N',f:v=>'f/'+v.toFixed(1)});
+sl.blades=slider(lensBox,'blades',5,9,1,{label:'光圈叶片',f:v=>v+' 片'});
+const afRow=document.createElement('div'); afRow.className='toggle on';
+afRow.innerHTML='<div><b>自动对焦</b><small>锁在被摄体上</small></div><div class="sw"></div>';
+afRow.onclick=()=>{P.focusAuto=!P.focusAuto;syncUI();};
+lensBox.appendChild(afRow);
+sl.focusDist=slider(lensBox,'focusDist',1.5,60,.5,{label:'对焦距离',f:v=>v.toFixed(1)+' m'});
+sl.dofGain=slider(lensBox,'dofGain',0,4,.05,{label:'景深增益',f:v=>v===0?'关闭':v.toFixed(2)+'×'});
+sl.shutter=slider(bodyBox,'shutter',0,360,5,{label:'快门角',f:v=>v+'°'});
+sl.iso=slider(bodyBox,'iso',50,6400,10,{label:'ISO',f:v=>'ISO '+v});
+sl.nd=slider(bodyBox,'nd',0,9,.1,{label:'ND 减光',f:v=>v.toFixed(1)+' 档'});
+sl.evcomp=slider(bodyBox,'evcomp',-4,4,.1,{label:'曝光补偿',f:v=>(v>=0?'+':'')+v.toFixed(1)+' EV'});
+sl.sunEl=slider(bodyBox,'sunEl',4,86,1,{label:'太阳高度角',f:v=>v+'°'});
+sl.grain=slider(frameBox,'grain',0,2,.05,{label:'颗粒',f:v=>v.toFixed(2)+'×'});
+sl.ca=slider(frameBox,'ca',0,2,.05,{label:'色差',f:v=>v.toFixed(2)+'×'});
+sl.vignette=slider(frameBox,'vignette',0,2,.05,{label:'暗角',f:v=>v.toFixed(2)+'×'});
+sl.distort=slider(frameBox,'distort',0,2,.05,{label:'畸变',f:v=>v.toFixed(2)+'×'});
+sl.bloom=slider(frameBox,'bloom',0,2,.05,{label:'泛光',f:v=>v.toFixed(2)+'×'});
+sl.sat=slider(frameBox,'sat',.8,1.5,.02,{label:'饱和度',f:v=>v.toFixed(2)+'×'});
+sl.samples=slider(frameBox,'samples',2,24,1,{label:'快门采样',f:v=>v+' 帧'});
+sl.gyroSens=slider(document.getElementById('gyrobox'),'gyroSens',0,2,0.05,
+  {label:'陀螺仪灵敏度',f:v=>v.toFixed(2)+'×'});
+document.getElementById('gyro').onclick=()=>gyroEnable(!gyro.on);
+document.getElementById('gyroReset').onclick=()=>{gyroReset();syncGyro();};
+const pauseBtn=document.getElementById('pauseBtn');
+pauseBtn.onclick=()=>{P.paused=!P.paused;pauseBtn.textContent=P.paused?'继续画面':'暂停画面';
+  pauseBtn.style.borderColor=P.paused?'rgba(95,208,198,.6)':'';};
+const aspBox=document.createElement('div'); aspBox.className='seg';
+Object.keys(ASPECTS).forEach(a=>{
+  const b=document.createElement('button'); b.textContent=a; b.dataset.a=a;
+  b.onclick=()=>{P.aspect=a;resize();syncUI();}; aspBox.appendChild(b);
+});
+frameBox.appendChild(aspBox);
+function syncUI(){
+  scenebox.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===P.scene));
+  aspBox.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.a===P.aspect));
+  document.getElementById('master').classList.toggle('on',P.phys);
+  document.getElementById('autoexp').classList.toggle('on',P.autoExp);
+  afRow.classList.toggle('on',P.focusAuto);
+  sl.focusDist.inp.disabled=P.focusAuto;
+  sl.focusDist.inp.parentElement.style.opacity=P.focusAuto?.45:1;
+  /* 摇杆只在自由模式出现 */
+  const freeMode=P.scene==='free';
+  stickEl.classList.toggle('on',freeMode);
+  lookHint.classList.toggle('on',freeMode);
+  Object.values(sl).forEach(s=>s.upd&&s.upd());
+}
+function table(id,rows){ document.getElementById(id).innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join(''); }
+function drawFov(){
+  const svg=document.getElementById('fov'),s=usedSensor();
+  const hFov=2*Math.atan((s.w/2)/P.focal)*180/Math.PI, vFov=2*Math.atan((s.h/2)/P.focal)*180/Math.PI;
+  const fd=focusDistance(),[near,far]=dofLimits(fd*1000);
+  svg.innerHTML=`<defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#5fd0c6" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#5fd0c6" stop-opacity=".05"/></linearGradient></defs>
+    <circle cx="36" cy="56" r="9" fill="none" stroke="#e8eef4" stroke-width="2"/><circle cx="36" cy="56" r="4" fill="#e8eef4"/>
+    <path d="M36 56 L250 14 L250 98 Z" fill="url(#g1)" stroke="#5fd0c6" stroke-width="1" opacity=".8"/>
+    <rect x="243" y="46" width="14" height="20" fill="#0d1116" stroke="#93a2b2" stroke-width="1"/>
+    <text x="128" y="46" fill="#93a2b2" font-size="9">${hFov.toFixed(1)}° H</text>
+    <text x="128" y="72" fill="#93a2b2" font-size="9">${vFov.toFixed(1)}° V</text>
+    <text x="6" y="106" fill="#5fd0c6" font-size="9">f=${P.focal}mm · f/${P.fstop.toFixed(1)}</text>
+    <text x="148" y="106" fill="#93a2b2" font-size="9">DOF ${near.toFixed(1)}–${far===Infinity?'∞':far.toFixed(1)}m</text>`;
+}
+
+/* ══════════ 6 · 主循环 ══════════ */
+let last=performance.now(), meterTick=0, meterFlip=false, renderCount=0;
+function updateSun(){
+  const el=P.sunEl*Math.PI/180, az=2.63;
+  sunPos.set(Math.cos(el)*Math.sin(az),Math.sin(el),Math.cos(el)*Math.cos(az)).multiplyScalar(220);
+  sun.position.copy(sunPos); sun.target.position.set(0,0,0); sun.target.updateMatrixWorld();
+  const k=Math.min(1,Math.max(0,(P.sunEl-4)/40));
+  const c=new THREE.Color().setRGB(1,.55+.42*k,.26+.70*k);
+  sun.color.copy(c); sun.intensity=SUN_LUX*(.28+.72*k);
+  hemi.intensity=SKY_LUX*(.42+.58*k); hemi.color.setRGB(.60+.13*k,.72+.14*k,.95);
+  skyUni.uSun.value.copy(sunPos).normalize();
+  skyUni.uSunC.value.copy(c); skyUni.uSunI.value=.22+.95*k;
+  seaUni.uSun.value.copy(sunPos).normalize(); seaUni.uSunC.value.copy(c);
+  finalMat.uniforms.uSunC.value.copy(c);
+}
+function renderFrame(now){
+  const dt=Math.min(.05,(now-last)/1000); last=now;
+  S.fpsAvg=S.fpsAvg*.9+(1/Math.max(dt,1e-4))*.1;
+  const sensor=applyLens();
+  updateSun();
+
+  const K=P.phys?Math.max(1,Math.round(effSamples())):1;
+  const frameT=S.frame/FPS;
+  const shutterSpan=K>1?P.shutter/360/FPS:0;
+  let guard=0;
+  while(sim.t<frameT+shutterSpan/2 && guard++<600) stepSim(SIM_DT);
+
+  let prev=accA,next=accB;
+  for(let k=0;k<K;k++){
+    const tk=frameT-shutterSpan/2+shutterSpan*((k+.5)/K);
+    placeActors(tk);
+    evalCamera(tk,histAt(tk));
+    camera.position.copy(camState.pos); camera.quaternion.copy(camState.quat);
+    camera.updateMatrixWorld();
+    renderer.setRenderTarget(hdrRT); renderer.setClearColor(0x000000,1);
+    renderer.clear(true,true,false);
+    renderer.render(scene,camera);
+    accumMat.uniforms.tPrev.value=prev.texture;
+    accumMat.uniforms.tCur.value=hdrRT.texture;
+    accumMat.uniforms.w.value=(k+1)/(k+2);
+    blit(accumMat,next);
+    const tmp=prev; prev=next; next=tmp;
+  }
+  const accum=prev;
+
+  /* 线性深度 pass（每帧一次，不乘子帧）：视空间 z 写入 depthRT 的 R 通道 */
+  renderer.setRenderTarget(depthRT);
+  renderer.setClearColor(0x000000,1);
+  scene.overrideMaterial=depthMat;
+  renderer.clear(true,true,false);
+  renderer.render(scene,camera);
+  scene.overrideMaterial=null;
+  renderer.setRenderTarget(null);
+
+  const fd=P.focusAuto?focusDistance():P.focusDist;
+  dofMat.uniforms.tScene.value=accum.texture;
+  dofMat.uniforms.tDepth.value=depthRT.texture;
+  dofMat.uniforms.uTexel.value.set(1/W,1/H);
+  dofMat.uniforms.uNear.value=camera.near; dofMat.uniforms.uFar.value=camera.far;
+  dofMat.uniforms.uFocal.value=P.focal; dofMat.uniforms.uApD.value=P.focal/P.fstop;
+  dofMat.uniforms.uFocus.value=fd*1000; dofMat.uniforms.uCocScale.value=H/sensor.h;
+  dofMat.uniforms.uBlades.value=P.blades;
+  dofMat.uniforms.uMaxCoc.value=Math.min(26,Math.max(8,P.focal*0.5));
+  /* 薄透镜弥散圆 → 像素。必须含 f 因子：
+   CoC(mm) = f²/(N·(zf−f)) × |z−zf|/z  当 z≥zf，其中 f²/N = apD·f
+   少乘这个 f 会让景深整体小约 35 倍，表现出来就是「景深不管用」。 */
+dofMat.uniforms.uDoFGain.value=P.phys?P.dofGain:0;
+dofMat.uniforms.uTaps.value=P.phys?32:1;
+  dofMat.uniforms.uDebug.value=P.debugDepth?1:0;
+blit(dofMat,dofRT);
+
+  lensMat.uniforms.tScene.value=dofRT.texture;
+  const dbg=P.debugDepth;
+  /* 色差：真实镜头边缘约 1~3 像素级色散。系数按 35mm 基准归一，
+     拉到 2× 时能明显看出红/蓝分离但不至于像 3D 眼镜。 */
+  lensMat.uniforms.uCA.value=(P.phys&&!dbg)?0.0022*P.ca*(35/P.focal):0;
+  lensMat.uniforms.uK1.value=(P.phys&&!dbg)?-.024*P.distort:0;
+  lensMat.uniforms.uK2.value=(P.phys&&!dbg)?.004*P.distort:0;
+  blit(lensMat,lensRT);
+
+  /* 测光（GPU 端中心加权 + 平滑） */
+  meterMat.uniforms.tScene.value=accum.texture;
+  meterMat.uniforms.uCell.value.set(1/meterA.width,1/meterA.height);
+  blit(meterMat,meterA);
+  meterSmoothMat.uniforms.tCur.value=meterA.texture;
+  meterSmoothMat.uniforms.tPrev.value=(meterFlip?meterC:meterB).texture;
+  meterSmoothMat.uniforms.uRate.value=0.28;
+  blit(meterSmoothMat,meterFlip?meterB:meterC);
+  meterFlip=!meterFlip;
+
+  const expManual=exposureMult();
+  brightMat.uniforms.tScene.value=lensRT.texture;
+  brightMat.uniforms.tMeter.value=(meterFlip?meterC:meterB).texture;
+  brightMat.uniforms.uExpManual.value=expManual;
+  brightMat.uniforms.uAuto.value=P.autoExp?1:0;
+  brightMat.uniforms.uThresh.value=0.32;   // 曝光后亮度普遍 <1，阈值取 1.0 会一颗都不泛光
+  blit(brightMat,bloomA);
+  blurMat.uniforms.tScene.value=bloomA.texture;
+  blurMat.uniforms.uDir.value.set(1.4/bloomA.width,0); blit(blurMat,bloomB);
+  blurMat.uniforms.tScene.value=bloomB.texture;
+  blurMat.uniforms.uDir.value.set(0,1.4/bloomA.height); blit(blurMat,bloomA);
+  downMat.uniforms.tScene.value=bloomA.texture;
+  downMat.uniforms.uTexel.value.set(1/bloomA.width,1/bloomA.height);
+  blit(downMat,bloomC);
+  blurMat.uniforms.tScene.value=bloomC.texture;
+  blurMat.uniforms.uDir.value.set(2.6/bloomC.width,0); blit(blurMat,bloomB);
+  blurMat.uniforms.tScene.value=bloomB.texture;
+  blurMat.uniforms.uDir.value.set(0,2.6/bloomC.height); blit(blurMat,bloomC);
+
+  /* CPU 侧读数（低频回读 1×1 RGBA8） */
+  if(++meterTick%8===0){
+    const buf=new Uint8Array(4);
+    try{
+      renderer.readRenderTargetPixels(meterFlip?meterC:meterB,0,0,1,1,buf);
+      const v=(buf[0]+buf[1]/255)/255;
+      const logL=v*32-12;
+      if(isFinite(logL)&&logL>-20&&logL<40){
+        S.luma=Math.exp(logL); S.evScene=Math.log2(8*S.luma); S.meterOk=true;
+        S.autoISO=12.5*P.fstop*P.fstop*Math.pow(2,P.nd)/(shutterTime()*S.luma);
+      }else S.meterOk=false;
+    }catch(e){S.meterOk=false;S.meterErr=(e&&e.message)||String(e);}
+  }
+
+  /* 太阳位置 */
+  const sp=sunPos.clone().project(camera);
+  const inFront=sunPos.clone().sub(camera.position).dot(camera.getWorldDirection(new THREE.Vector3()))>0;
+  const su=sp.x*.5+.5, sv=sp.y*.5+.5;
+  finalMat.uniforms.uSunUV.value.set(su,sv);
+  finalMat.uniforms.uSunVis.value=(inFront&&su>-.35&&su<1.35&&sv>-.35&&sv<1.35)?1:0;
+
+  finalMat.uniforms.tScene.value=lensRT.texture;
+  finalMat.uniforms.tBloom.value=bloomC.texture;
+  finalMat.uniforms.tMeter.value=(meterFlip?meterC:meterB).texture;
+  finalMat.uniforms.uExpManual.value=expManual;
+  finalMat.uniforms.uAuto.value=P.autoExp?1:0;
+  finalMat.uniforms.uVig.value=P.vignette;
+  finalMat.uniforms.uFocal.value=P.focal;
+  finalMat.uniforms.uSensorH.value=sensor.h;
+  finalMat.uniforms.uAspect.value=ASPECTS[P.aspect];
+  finalMat.uniforms.uGrain.value=P.grain*.016*Math.pow(P.iso/100,.55);
+  finalMat.uniforms.uFrame.value=S.frame%64;
+  finalMat.uniforms.uBloomI.value=P.phys?(P.bloom*.45):0;
+  finalMat.uniforms.uSat.value=P.sat;
+  finalMat.uniforms.uPhys.value=P.phys?1:0;
+  finalMat.uniforms.uFlare.value=P.phys?1:0;
+  finalMat.uniforms.uDebugD.value=P.debugDepth?1:0;
+  blit(finalMat,null);
+
+  if(renderCount%4===0){ try{ updateReadout(sensor,fd); }catch(e){
+    const el=document.getElementById('fps');
+    if(el) el.textContent='HUD ERR: '+e.message;
+  } }
+  if(renderCount%15===0) probeCanvas();
+  renderCount++;
+  if(!P.paused) S.frame++;          // 暂停时画面定格，但参数改动仍即时重渲染
+}
+function updateReadout(sensor,fd){
+  const hFov=2*Math.atan((sensor.w/2)/P.focal)*180/Math.PI;
+  const vFov=2*Math.atan((sensor.h/2)/P.focal)*180/Math.PI;
+  const t=shutterTime(),ev=ev100();
+  const [near,far]=dofLimits(fd*1000);
+  table('read1',[
+    ['等效焦距',P.focal+' mm'],
+    ['水平视场 hFOV',hFov.toFixed(1)+'°'],
+    ['垂直视场 vFOV',vFov.toFixed(1)+'°'],
+    ['实际传感器',sensor.w.toFixed(1)+'×'+sensor.h.toFixed(1)+' mm'],
+    ['EV100 (相机)',ev.toFixed(2)],
+    ['ND 损失',P.nd.toFixed(1)+' 档'],
+    ['场景 EV (测光)',S.evScene.toFixed(2)+(S.meterOk?'':' ·未测')],
+    ['等效场景 EV',(ev+P.nd).toFixed(2)],
+    ['曝光倍率',exposureMult().toExponential(2)],
+    ['建议 ISO(含ND)',Math.round(S.autoISO)+' (当前 '+P.iso+')']]);
+  table('read2',[
+    ['快门时间 t',t.toFixed(4)+' s ('+(1/t).toFixed(0)+' 1/s)'],
+    ['快门角',P.shutter+'° @'+FPS+'fps'],
+    ['对焦距离',fd.toFixed(2)+' m'],
+    ['CoC 极限 (0.03mm)',(COC_LIMIT/sensor.h*H).toFixed(2)+' px'],
+    ['景深近限',near.toFixed(2)+' m'],
+    ['景深远限',far===Infinity?'∞':far.toFixed(2)+' m'],
+    ['超焦距',(hyperfocal()/1000).toFixed(1)+' m'],
+    ['光圈形状',P.blades+' 边形']]);
+  table('read3',[
+    ['渲染分辨率',W+'×'+H],
+    ['快门采样',(P.phys?effSamples():1)+' 帧/帧'+(MQ.matches?' (移动端封顶8)':'')],
+    ['画面',P.paused?'已暂停':'运行中'],
+    ['景深增益',P.dofGain.toFixed(2)+'×'+(P.dofGain===1?' (纯物理)':'')],
+    ['帧率',S.fpsAvg.toFixed(0)+' fps'],
+    ['物理相机',P.phys?'ON':'OFF'],
+    ['陀螺仪',gyro.on?gyro.msg:'OFF'],
+    ['自动测光',P.autoExp?'ON':'OFF'],
+    ['测光回读',S.meterOk?'OK':(S.meterErr||'未取到')],
+    ['太阳高度角',P.sunEl+'°']]);
+  drawFov(); syncGyro();
+  document.getElementById('fps').textContent=S.err?('ERR: '+S.err):
+    (S.fpsAvg.toFixed(0)+' fps · f'+S.frame+' · '+W+'×'+H+' · '+
+     'px('+S.avgRGB.join(',')+') max'+S.maxPx+' · '+
+     (P.phys?('EV'+ev.toFixed(1)+' · f/'+P.fstop.toFixed(1)+' · '+P.focal+'mm'):'普通渲染')+
+     (P.scene==='free'?(' · x'+player.x.toFixed(2)+' z'+player.z.toFixed(2)+
+        ' yaw'+(player.yaw*180/Math.PI).toFixed(0)+'° p'+(player.pitch*180/Math.PI).toFixed(0)+'°'):''));
+}
+document.getElementById('clipnote').innerHTML=
+  '<b>原片逆向结论：</b>该镜头几乎没有后期暗角（实测角/心亮度比 0.955），'+
+  '色差近零（边缘 R/B 偏移 &lt;0.11 px），颗粒几乎全部来自二次压制；'+
+  '真实感来自 <b>机身位置 + 视差 + 运动模糊</b>，不是镜头特效。'+
+  '所以本 demo 的重点也放在机位物理与快门采样上。';
+
+/* ══════════ 7 · 启动 ══════════ */
+applyLayout(); syncUI(); updateSun();
+window.__cam={P,S,gyro,get dof(){return {
+  uApD:dofMat.uniforms.uApD.value, uFocus:dofMat.uniforms.uFocus.value,
+  uCocScale:dofMat.uniforms.uCocScale.value, uMaxCoc:dofMat.uniforms.uMaxCoc.value,
+  uDoFGain:dofMat.uniforms.uDoFGain.value, uTaps:dofMat.uniforms.uTaps.value,
+  uNear:dofMat.uniforms.uNear.value, uFar:dofMat.uniforms.uFar.value};}};
+
+for(let i=0;i<30;i++) stepSim(SIM_DT);
+function loop(now){
+  requestAnimationFrame(loop);
+  try{ renderFrame(now); }
+  catch(e){
+    S.err=(e&&e.message)||String(e);
+    const el=document.getElementById('fps');
+    if(el) el.textContent='ERR: '+S.err+' @ '+((e&&e.stack)||'').split('\n')[1];
+  }
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

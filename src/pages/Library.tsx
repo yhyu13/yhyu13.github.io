@@ -455,7 +455,7 @@ export function Library({ openId }: LibraryProps) {
             open
             onClose={() => setShareOpen(false)}
             fallbackTitle="Hang Yu · Field Manuals"
-            fallbackDescription="五本书、六十三份讲义、三门课、八个作品与八篇长文——一处索引可搜。"
+            fallbackDescription="五本书、六十三份讲义、三门课、九个作品与八篇长文——一处索引可搜。"
           />
         </Suspense>
       ) : null}
