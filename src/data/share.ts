@@ -74,7 +74,7 @@ const volumeDescriptions: Record<string, string> = {
   identity: "Hang Yu 的自我介绍与公开渠道：这个人在写什么、在哪里写。",
   craft: "写作与教学：GitHub、Gitee、知乎、B 站，加上六个可当场打开的作品。",
   archive: "2017 年的两份复现笔记，与 2026 年的六篇研究长文。",
-  decks: "47 份视频讲义：每份都能翻页读、下载 PDF。",
+  decks: "63 份视频讲义：每份都能翻页读、下载 PDF。",
   courses: "三门课的完整学习包：讲义、讲解视频、逐字转写。",
 };
 
