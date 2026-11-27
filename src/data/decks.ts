@@ -774,6 +774,18 @@ export const DECKS: Deck[] = [
     pdf: "/decks/windows-computer-use-pro-v31.pdf",
     description:
       "不换更贵的模型，而是换掉输入端：Win32 窗口枚举、UIA 控件树、Win11 离线 OCR 与私有剪贴板，替掉「每步截一张图、按像素猜坐标」。模型只负责决定，工具负责看清与执行。",
+    links: [{ label: "网页版 · 12 页", href: "/labs/computer-use-pro/index.html" }],
+  },
+  {
+    slug: "garry-tan-ai-agents",
+    title: "AI 代理，两年内重塑一切 — YC 总裁 Garry Tan",
+    year: "2026",
+    date: "2026-11-11",
+    source: "Bilibili · KrillinAI俊希",
+    sourceUrl: "https://www.bilibili.com/video/BV1eexd6mEwU",
+    pdf: "/decks/garry-tan-ai-agents.pdf",
+    description:
+      "Garry Tan 与 Walter Isaacson 的 36 分钟对谈：YC 如何在十分钟里看一个创始人、为什么 AI 代理不是功能而是新的操作系统，以及从 Palantir 到 YC 的二十年。",
   },
 ];
 
