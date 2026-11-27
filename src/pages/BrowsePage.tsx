@@ -118,7 +118,12 @@ function score(entry: Entry, needle: string) {
   const title = entry.title.toLowerCase();
   if (title.startsWith(needle)) return 3;
   if (title.includes(needle)) return 2;
-  return entry.haystack.includes(needle) ? 1 : -1;
+  if (entry.haystack.includes(needle)) return 1;
+  // Slugs arrive with separators ("skill-ablation", "mit-14-13") while the
+  // haystack stores their words; try the spaced form before giving up.
+  const spaced = needle.replace(/[/_.-]+/g, " ").trim();
+  if (spaced !== needle && entry.haystack.includes(spaced)) return 1;
+  return -1;
 }
 
 export function BrowsePage() {
