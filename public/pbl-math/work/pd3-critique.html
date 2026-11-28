@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Math PBL · PD3 To C 项目文档、个人评阅贡献与图像资产">
+<title>PD-3 Grill &amp; Critic · 个人贡献 · Math PBL</title>
+<link rel="stylesheet" href="../assets/site.css"></head>
+<body><div class="topbar"><div class="wrap">
+  <a class="brand" href="../index.html"><span class="mark">½</span>
+    <span>Math PBL · PD3 To C<small>项目档案 / 个人贡献</small></span></a>
+  <nav class="links">
+    <a  href="../index.html">项目首页</a>
+    <a  href="../docs/pd1.html">项目文档</a>
+    <a class="on" href="../work/critique.html">Critique</a>
+    <a  href="../criteria.html">Criteria</a>
+    <a  href="../gallery.html">图像资产</a>
+  </nav>
+</div></div><div class="docbar"><div class="wrap"><span class="crumb">
+      <a href="../index.html">Math PBL</a> / 个人贡献 / PD-3 Grill &amp; Critic</span>
+      <span class="crumb">任务级 Agent 能力与学习证据审查</span></div></div>
+    <div class="wrap docgrid">
+      <aside class="toc"><h4>本页目录</h4><a href="#0">0. 一句话结论</a><a href="#1-pd-3">1. 四段对话说了什么（与 PD-3 相关的部分）</a><a href="#2-critic">2. Critic：已核实的问题</a><a href="#c1" style="padding-left:12px">C1（重大）把负责人的哲学原则误读为“多哲学家讨论”功能</a><a href="#c2-ai-pd-3" style="padding-left:12px">C2（重大）工具箱 AI 的风险比 PD-3 写的更重</a><a href="#c3pd-3" style="padding-left:12px">C3（中等）思维深度分可以靠关键词刷，PD-3 只写了长度和轮次</a><a href="#c4" style="padding-left:12px">C4（中等）年级口径与代码不一致</a><a href="#c5pd-3" style="padding-left:12px">C5（中等）基线提交本身就是一个需要定级的变化，PD-3 没提</a><a href="#c6l" style="padding-left:12px">C6（中等）L 级量尺有类别错误</a><a href="#c7" style="padding-left:12px">C7（中等）验收标准不可判定</a><a href="#c8-pd-3" style="padding-left:12px">C8（重大，该说的没说）组织规模与 PD-3 的角色表不匹配</a><a href="#c9pd-3" style="padding-left:12px">C9（中等，该说的没说）PD-3 与新产品形态没有接口</a><a href="#c10" style="padding-left:12px">C10（低）对话中需要提防的说法</a><a href="#3-grill">3. Grill：需要负责人回答的问题</a><a href="#4">4. 本次没有做的事</a></aside>
+      <article class="doc-body"><h1 id="pd-3-grill-critic-2026-11-26">PD-3 Grill &amp; Critic 审查（2026-11-26）</h1>
+<p>审查对象：本目录 <span class="doc-ref">README</span>、<span class="doc-ref">project-description</span>、<span class="doc-ref">prd</span>、<span class="doc-ref">research/agent-capability-learning-evidence</span>、<span class="doc-ref">research/market-research-youth-learning-games</span>，以及负责人提供的 <u>4</u> 段 ChatGPT 对话（原文已抽取到 <span class="doc-ref"><code>../chatgpt-shares/</code></span>）。</p>
+<p>代码复核基线：<code>pbl main = 160bdcfd</code>（与 PD-3 声明一致，已在本地 <code>git show</code> 核对）。</p>
+<p>本文是审查提议，不是决定。每条都写了证据、为什么重要、建议怎么改。</p>
+<hr />
+<h2 id="0">0. 一句话结论</h2>
+<p>PD-3 的代码事实基本属实，治理骨架（任务级定级、L 级与政策分离、首次尝试、撤掉 AI 后的独立证据）是对的；但它和负责人在 <u>4</u> 段对话里表达的产品方向<em>没有接上</em>，并且把负责人的“五位哲学家”误读成了一个 Agent 角色扮演功能。另有 <u>4</u> 处代码风险比 PD-3 写的更重，<u>2</u> 处年级口径与代码不一致。</p>
+<hr />
+<h2 id="1-pd-3">1. 四段对话说了什么（与 PD-3 相关的部分）</h2>
+<table>
+<thead>
+<tr>
+<th>对话</th>
+<th>负责人的核心意图</th>
+<th>对 PD-3 的含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="doc-ref">6b082f82 · AI 原生游戏 / 世界引擎</span></td>
+<td>想做“游戏化学习软件”；以建筑 → 几何、方程、运筹学为第一个学科入口；团队约 <u>3 人</u></td>
+<td>产品形态是<em>可玩的模拟世界</em>，不是现有 <code>pbl</code> 的六阶段表单 + 聊天</td>
+</tr>
+<tr>
+<td><span class="doc-ref">6b052419 · 塞尔达迁移分析</span></td>
+<td>怀疑“好玩 ≠ 学会”；要拆塞尔达的认知操作；明确说“我的教育原则就是这些哲学家的原则”（波普尔、维特根斯坦、阿伦特、杜威、康德）</td>
+<td>哲学家是<em>学习目标与判断标准</em>，不是聊天角色</td>
+</tr>
+<tr>
+<td><span class="doc-ref">6b082f4c · 虚幻引擎调研</span></td>
+<td>UE5.9 / Babylon.js + Havok 技术选型；要求物理强、网页可玩；使用 Spec 与 pstack</td>
+<td>运行时与学习数据（假设、参数、结果、修正）需要在 PD-3 的证据字段里有位置</td>
+</tr>
+<tr>
+<td><span class="doc-ref">6b07fbdf · 微积分基本定理</span></td>
+<td>“剥洋葱再 build up”的讲法</td>
+<td>这是一种<em>前置知识依赖图</em>的教学模型，PD-3 没有知识结构层</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-critic">2. Critic：已核实的问题</h2>
+<h3 id="c1">C1（重大）把负责人的哲学原则误读为“多哲学家讨论”功能</h3>
+<ul>
+<li>证据：对话 6b052419 第 <u>2</u> 轮（第 <u>407–479</u> 行；该对话只有 <u>2</u> 个用户轮次），负责人写明“我的教育原则就是这些哲学家的原则……就是我教给学生的内容”。PD-3 <span class="doc-ref">project-description.md:103-105</span> 却把“多哲学家或多角色讨论”定为未实现的 Agent 模式，<span class="doc-ref">market-research:44</span> 还把它列为“只有角色热闹”的失败反例。</li>
+<li>为什么重要：负责人审稿时会认为 PD-3 没读懂他的教学法。更关键的是，五条原则本身就能直接支撑 PD-3 的核心规则，PD-3 却改用 EEF、HPL2 作为唯一依据。</li>
+<li>建议：新增一节“负责人原则 → 产品规则”映射，把“多角色讨论”与“哲学原则”分开：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>负责人原话要点</th>
+<th>对应 PD-3 规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>波普尔 · 可证伪</td>
+<td>说不出错在哪，就不能由它署名</td>
+<td>首次尝试时学生写“什么情况下我错”；Agent 输出也必须可被反驳（T-03）</td>
+</tr>
+<tr>
+<td>维特根斯坦 · 自我修正</td>
+<td>修正必须能被解释</td>
+<td>FR-04“说明理由”改为“旧模型 → 新证据 → 为何修改”三段</td>
+</tr>
+<tr>
+<td>阿伦特 · 平庸之恶</td>
+<td>“AI 生成、我来署名”时判断已停</td>
+<td>L 级上限与 <code>HUMAN_ONLY</code> 的根本理由；保存 AI 回复前必须表态同意/反对</td>
+</tr>
+<tr>
+<td>杜威 · 做中学</td>
+<td>工具能自动学会，标准不能</td>
+<td>独立证据“撤掉 AI 重做”</td>
+</tr>
+<tr>
+<td>康德 · 谁定义问题</td>
+<td>框架交出去，人就只剩接收</td>
+<td>教师草案预填驱动问题、低年级自动选主题的风险（见 C5）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c2-ai-pd-3">C2（重大）工具箱 AI 的风险比 PD-3 写的更重</h3>
+<p>PD-3 <span class="doc-ref">project-description.md:120</span> 写了“无禁答、首次尝试、日限额与留痕”，属实。但复核 <code>app/api/tools/chat/route.ts</code>（<u>75 行</u>）还发现：</p>
+<ul>
+<li>客户端传来的 <code>history</code> 原样拼进请求，接口类型允许 <code>role: 'system'</code>，服务端不校验角色。学生可以自带一条 system 消息覆盖原设定。</li>
+<li><code>history</code> 无长度上限，单次 <code>max_tokens</code> 为 <u>8000</u>，成本没有边界。</li>
+<li>系统提示词明确要求“请完整输出所有代码，不要分段或省略”，这是在指示代做。</li>
+<li>注释显示 <u>2026-11-09</u> 已取消上学时间窗，“登录即可用”。</li>
+</ul>
+<p>建议：C-03 的交付里点名这 <u>4</u> 项；T-05 增加“伪造 system 消息被拒绝”的用例。</p>
+<h3 id="c3pd-3">C3（中等）思维深度分可以靠关键词刷，PD-3 只写了长度和轮次</h3>
+<ul>
+<li>证据：<code>lib/ai/sipa.ts:218-232</code>。基础 <u>20 分</u>；超过 <u>20 字</u> +15、超过 <u>60 字</u> +10；包含“为什么/怎么/如果/因为/所以”任一词 +20；包含“为什么/怎么会” +10（<code>askedWhy</code>，第 <u>260</u> 行同一句文本判定）。</li>
+<li>推算：一条超过 <u>60 字</u>、含“为什么”的消息，不带证据、不带历史轮次即得 <u>75 分</u>（基础 <u>20</u> + 长度 <u>25</u> + 关键词 <u>20</u> + <code>askedWhy</code> <u>10</u>，<code>lib/ai/sipa.ts:224-229</code>）。关键词分与 <code>askedWhy</code> 分都对同一句学生文本判定（第 <u>228</u>、<u>260</u> 行），同一个词记 <u>2</u> 次。<code>lib/stage-eval.ts:72-74</code> 规定思维深度 ≥ <u>70</u> 时 <code>pbl*</code> 维度不低于 <u>2 星</u>（是否真的抬分见下一条）。</li>
+<li>对星级的影响（决定稿 council 第 <u>1</u> 轮更正）：<code>pbl*</code> 维度的默认星级本来就是 <u>2 星</u>（<code>lib/curriculum.ts:110-113</code>）。<code>lib/stage-eval.ts:72-74</code> 在思维深度 ≥ <u>70</u> 时只是<em>不下调</em>到 <u>2 星</u>以下，不抬分。所以思维深度分本身不改星级。PD-3 <span class="doc-ref">project-description.md:101</span> 说该指标“可能影响默认星级”，按代码看这也不准确。真正抬星级的路径是证据条数：≥ <u>1</u> 条 <u>2 星</u>，≥ <u>3</u> 条 <u>3 星</u>（<code>lib/stage-eval.ts:70-71</code>）。</li>
+<li>建议：C3 的问题收窄为<u>2</u> 条。其一，思维深度分可以用关键词和长度刷到 <u>75 分以上</u>，而它被当作“思维深度”展示给学生或教师。其二，PD-3 <span class="doc-ref">project-description.md:101</span> 把它写成“可能影响默认星级”，应改为“不直接影响星级；星级由证据条数决定”。T-07 的用例应针对<u>2</u>件事：刷分路径，以及证据条数抬星级。</li>
+</ul>
+<h3 id="c4">C4（中等）年级口径与代码不一致</h3>
+<ul>
+<li>代码 <code>lib/curriculum.ts:43-47</code>：<u>1–2 年级</u> = low，<u>4–6 年级</u> = high，其余（含 <u>3 年级</u>和<em>年级缺失</em>）= mid。<code>lib/actions/teacher.ts:851</code> 也接受到 <u>6 年级</u>。</li>
+<li>PD-3 年级表只写到 <u>4–5 年级</u>，<u>6 年级</u>没有上限。</li>
+<li>PD-3 核对清单写“数据不足时标未分类”，但共享函数 <code>gradeBandFromGrade</code> 把缺失年级默认成 mid。<em>需要收窄</em>：SIPA 主路径已经另做保守兜底（未知年级降到 <u>2</u> 年级，并追加“先问年级”指令块，<code>lib/ai/sipa.ts:88-94,244-246</code>）；仍按 mid 展开的是共享函数本身与其他调用点，例如 <code>lib/ai/prompts.ts:884</code>。所以风险成立，但不在 SIPA，而在其他消费方。</li>
+<li>建议：表格补 <u>6 年级</u>；把“年级缺失默认 mid”列为现状缺口，并点名仍在用 mid 的调用点，不只写一句概括。</li>
+</ul>
+<h3 id="c5pd-3">C5（中等）基线提交本身就是一个需要定级的变化，PD-3 没提</h3>
+<ul>
+<li><code>160bdcfd</code> 的提交说明：一二年级“只有一个比赛时自动选好，主题自动选唯一的「1.」”，“说说它”改为选填。</li>
+<li>这正落在 PD-3 自己的风险点上（系统预填、学生选择空间、康德“谁定义问题”）。它可能合理（只有一个选项时自动选不剥夺选择），但 PD-3 应该明确给出结论，而不是对自己的基线沉默。</li>
+<li>建议：在“当前产品的任务级定位”表加一行“低段创建项目自动选比赛/主题”，判断为“系统事务预填，非 Agent；学生仍须填写在哪里、做什么”，并写明边界：选项多于一个时不得自动选。</li>
+</ul>
+<h3 id="c6l">C6（中等）L 级量尺有类别错误</h3>
+<ul>
+<li>L0–L5 描述的是 <em>Agent</em> 的自主程度。PD-3 却把“教师明确点击发布”定为“L1 事务动作”（<span class="doc-ref">project-description.md:95</span>、<span class="doc-ref">:116</span>）。点击发布是人的动作，不存在 Agent 自主度。</li>
+<li>同样，“默认七维评价”是规则代码，不是 Agent。</li>
+<li>建议：动作分三类分别记录：Agent 动作（给 L 级）、规则自动化（给政策，不给 L 级）、人类动作（给责任人，不给 L 级）。这样也能消除“用 L1 名义绕过审查”的担心。</li>
+</ul>
+<h3 id="c7">C7（中等）验收标准不可判定</h3>
+<ul>
+<li>T-01“能一致区分”没有一致性阈值。建议写成“两名评审独立定级，一致率 ≥ <u>80%</u>（估算起点，待 M0 校准）；不一致项全部有裁决记录”。</li>
+<li>市场调研第七节写“数值是事先拟定的决策阈值”，但 E0–E6 表中没有任何数值。要么补数，要么删掉这句。这属于“说过头”。</li>
+<li>E0 中“一句话生成都市替代核心动作”疑为笔误（应为“都替代”）。</li>
+</ul>
+<h3 id="c8-pd-3">C8（重大，该说的没说）组织规模与 PD-3 的角色表不匹配</h3>
+<ul>
+<li>对话 6b082f82 明确团队约 <u>3 人</u>；对话 6b082f4c 称 OPC（一人公司）。</li>
+<li>PD-3 的行动表与 PRD 角色表要求教研、合规、数据负责人、学习研究负责人、监护人审批等至少 <u>6</u> 类角色，C-01 至 C-08 共 <u>8</u> 项互为门禁，没有顺序、工期或第一个可交付物。</li>
+<li>风险：对 <u>3 人</u>团队，这套门禁容易变成“什么都不能开始”。</li>
+<li>建议：每个角色写“当前由谁兼任”；把 C-01 至 C-08 排成 <u>2–3</u> 个批次，并指定第一个 <u>2 周</u>内（估算）可完成的产物，例如一张建筑场景任务的责任卡样张。</li>
+</ul>
+<h3 id="c9pd-3">C9（中等，该说的没说）PD-3 与新产品形态没有接口</h3>
+<ul>
+<li>对话里的产品是建筑/桥梁模拟世界：学生搭桥、桥塌、提出假设、改参数、再试。Babylon 提示词里已有 <code>Hypothesis / Parameters / Result / Error / Revision</code> 的实验日志。</li>
+<li>PD-3 的证据字段全部围绕聊天和文本提交（AI 来源、修改幅度、复述），没有“操作轨迹”和“实验记录”类证据，也没说 Agent 在世界里扮演客户、工头、AI 同事时该定几级。</li>
+<li>建议：在 PRD 第 <u>4</u> 节责任卡加 <code>evidenceType</code>（文本 / 口述 / 操作轨迹 / 实验日志），并用“桥梁任务”做一张完整示例卡，覆盖 NPC Agent（建议 L2）、AI 同事故意给错方案（对应 T-03 与阿伦特原则）。</li>
+</ul>
+<h3 id="c10">C10（低）对话中需要提防的说法</h3>
+<ul>
+<li>对话 6b052419、6b082f82 建议“隐性评估（stealth assessment）”：系统从行为推断学生不会什么，再悄悄改关卡。这与 PD-3 的透明、最小数据、监护人可见范围存在张力，需要单独定政策。</li>
+<li>对话 6b082f4c 说 UE5.9 Web 打包“要求 C++ 项目”。检索显示 5.9 Preview 2 已支持纯 Blueprint 项目的网页构建，且 Web 目标仍是 experimental。该对话的这部分结论在几周内已过时 [来源: 3-Epic 论坛/媒体，仅供参考，未做 0–2 级交叉验证]。</li>
+<li>对话中“Roblox 超过 80% 热门游戏使用 AI 工具”“Genie 4”“UE6 抢先体验 2027 年底”、塞尔达挪威九年级词汇实验等，本次均<em>未核实</em>，不应直接写进 PD-3。</li>
+<li>对话 6b082f4c 的 Babylon 提示词一次列了 <u>19</u> 个实验，和对话 6b082f82 “MVP 压到一个工地”的建议矛盾。</li>
+<li>对话 6b07fbdf 的数学推导本身没有错误；“第二基本定理依赖第一基本定理”只在被积函数连续时成立，对不连续但黎曼可积的函数另有证法。作为教学素材可以用，作为知识图谱要标适用条件。</li>
+</ul>
+<hr />
+<h2 id="3-grill">3. Grill：需要负责人回答的问题</h2>
+<p>每题附审查建议的默认答案。负责人否决即按负责人意见改。</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>问题</th>
+<th>为什么必须先答</th>
+<th>建议默认</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1</td>
+<td>PD-3 管的是现有 <code>pbl</code>（六阶段 + 聊天），还是对话里的建筑模拟游戏，还是两者？</td>
+<td>决定证据字段、L 级示例和行动表全部内容</td>
+<td>两者：治理规则共用，示例先用桥梁任务</td>
+</tr>
+<tr>
+<td>G2</td>
+<td>五位哲学家是“教学目标”还是“Agent 角色”？</td>
+<td>决定 C1 的改法</td>
+<td>教学目标；角色扮演另列为可选研究条件</td>
+</tr>
+<tr>
+<td>G3</td>
+<td><u>3 人</u>团队中谁兼任教研、合规、数据负责人？</td>
+<td>没有人，就没有门禁能被执行</td>
+<td>每个角色写兼任人；合规外包审阅</td>
+</tr>
+<tr>
+<td>G4</td>
+<td>第一个交付物是什么、多久？</td>
+<td>当前 <u>8</u> 项行动没有起点</td>
+<td>一张桥梁任务责任卡 + T-01 双评审，<u>2 周</u>（估算）</td>
+</tr>
+<tr>
+<td>G5</td>
+<td>工具箱 AI 要不要先下线或接到 SIPA 后面？</td>
+<td>C2 是正在运行的风险，不是未来功能</td>
+<td>先修 system 角色注入并加日志；是否对学生开放另行决定</td>
+</tr>
+<tr>
+<td>G6</td>
+<td>是否接受隐性评估？</td>
+<td>和最小数据、透明原则冲突</td>
+<td>只记录学生知道会被记录的实验日志，不做隐性画像</td>
+</tr>
+<tr>
+<td>G7</td>
+<td>低段自动选比赛/主题是否算替学生“定义问题”？</td>
+<td>基线提交已上线</td>
+<td>只有一个选项时可以；多于一个时必须学生选</td>
+</tr>
+<tr>
+<td>G8</td>
+<td>现有 <code>pbl</code> 用户是 <u>1–6 年级</u>，模拟游戏的目标年龄是多少？</td>
+<td>对话中的二次方程、三角函数、运筹学超出小学</td>
+<td>先锁一个年级段；若是初中，需另写年级表</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4">4. 本次没有做的事</h2>
+<ul>
+<li>没有修改 PD-3 原文件，只新增本审查文件，等负责人对 G1–G8 表态后再改。</li>
+<li>没有逐条复核市场调研 <u>22</u> 个外部来源；只抽查了 UE5.9 一条。</li>
+<li><code>chat-panel.tsx:255-278</code> 的保存逻辑已核对，与 PD-3 描述一致（预填最近一条 AI 回复，可直接保存）。</li>
+</ul>
+<blockquote>
+<p>免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p>
+</blockquote></article>
+    </div><footer><div class="wrap">
+  <span>Math PBL · PD3 To C 项目档案 · 2026-11-28</span>
+  <span>本内容由 AI 生成，请核实后使用。</span>
+</div></footer>
+<script src="../assets/site.js"></script></body></html>
