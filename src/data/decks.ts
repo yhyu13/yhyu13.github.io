@@ -174,6 +174,40 @@ export const DECKS: Deck[] = [
       "14 页拆 Alpha School 的学习法：每天两小时学术时间怎么做到十倍效率，Worked Example + 初始掌握 + 间隔重复三件套，以及 AI 在其中的位置。嘉宾姓名两处来源不一致：搬运标题写 Joe Liemandt，deck 与 ASR 稿写 Joe Lonsdale；本页不代为判定，以原片为准。",
   },
   {
+    slug: "huberman-reaching-the-sublime",
+    title: "Huberman × Robert Greene — 触及崇高之境",
+    year: "",
+    date: "",
+    source: "Bilibili · Andrew Huberman",
+    sourceUrl: "https://www.bilibili.com/video/BV1zbypzoEXg",
+    pdf: "/decks/huberman-reaching-the-sublime.pdf",
+    description:
+      "14 页重述 Huberman 与 Robert Greene 的 2 小时 10 分对谈：意识是一个圈、崇高在圈外；拉丁语 sublimin 是「走到门槛前」；中风后的病房窗口如何改写雄心，以及把崇高感落回日常。要点重述，不是原片翻译。",
+    links: [
+      {
+        label: "口播成片",
+        href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v5/huberman-reaching-the-sublime-voiced.mp4",
+      },
+    ],
+  },
+  {
+    slug: "huberman-ross-edgley",
+    title: "Huberman × Ross Edgley — 动力与韧性",
+    year: "",
+    date: "",
+    source: "Bilibili · Andrew Huberman",
+    sourceUrl: "https://www.bilibili.com/video/BV1LWsp6pEj6",
+    pdf: "/decks/huberman-ross-edgley.pdf",
+    description:
+      "16 页重述 Huberman 与 Ross Edgley 的 2 小时 36 分长谈：动力不是开关，而是一组可以轮换的理由；从十岁背包里的石头，到环英国、环冰岛，再到空转时怎么重新点火。片内时间码均指原片。",
+    links: [
+      {
+        label: "口播成片",
+        href: "https://github.com/yhyu13/yhyu13.github.io/releases/download/video-slides-extras-v5/huberman-ross-edgley-voiced.mp4",
+      },
+    ],
+  },
+  {
     slug: "meyerowitz-photography-master",
     title: "乔尔·梅耶罗维茨 — 拆解摄影大师 001",
     year: "2026",
