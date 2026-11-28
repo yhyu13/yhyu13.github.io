@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Math PBL · PD3 To C 项目文档、个人评阅贡献与图像资产">
+<title>PD-3 PRD · 项目文档 · Math PBL</title>
+<link rel="stylesheet" href="../assets/site.css"></head>
+<body><div class="topbar"><div class="wrap">
+  <a class="brand" href="../index.html"><span class="mark">½</span>
+    <span>Math PBL · PD3 To C<small>项目档案 / 个人贡献</small></span></a>
+  <nav class="links">
+    <a  href="../index.html">项目首页</a>
+    <a class="on" href="../docs/pd1.html">项目文档</a>
+    <a  href="../work/critique.html">Critique</a>
+    <a  href="../criteria.html">Criteria</a>
+    <a  href="../gallery.html">图像资产</a>
+  </nav>
+</div></div><div class="docbar"><div class="wrap"><span class="crumb">
+      <a href="../index.html">Math PBL</a> / 项目文档 / PD-3 PRD</span>
+      <span class="crumb">任务级 Agent 自主、学习证据与责任门禁</span></div></div>
+    <div class="wrap docgrid">
+      <aside class="toc"><h4>本页目录</h4><a href="#1">1. 产品问题</a><a href="#2">2. 目标与非目标</a><a href="#_1" style="padding-left:12px">目标</a><a href="#_2" style="padding-left:12px">非目标</a><a href="#3">3. 角色与权限（拟议）</a><a href="#4">4. 核心对象：任务责任卡</a><a href="#5">5. 功能需求</a><a href="#fr-01" style="padding-left:12px">FR-01 任务注册与政策包</a><a href="#fr-02" style="padding-left:12px">FR-02 首次尝试门禁</a><a href="#fr-03" style="padding-left:12px">FR-03 交互模式</a><a href="#fr-04" style="padding-left:12px">FR-04 来源、保存与修改</a><a href="#fr-05" style="padding-left:12px">FR-05 独立检查</a><a href="#fr-06" style="padding-left:12px">FR-06 人类审批</a><a href="#fr-07" style="padding-left:12px">FR-07 降级、停止与恢复</a><a href="#fr-08" style="padding-left:12px">FR-08 成人可见与最小数据</a><a href="#fr-09" style="padding-left:12px">FR-09 对照研究</a><a href="#6">6. 目标流程与状态（拟议）</a><a href="#7">7. 成功指标与反指标</a><a href="#8">8. 分阶段交付</a><a href="#9">9. 验收</a><a href="#10">10. 决策清单</a><a href="#11">11. 当前差距</a></aside>
+      <article class="doc-body"><h1 id="pd-3-prd-agent">PD-3 PRD：任务级 Agent 自主、学习证据与责任门禁</h1>
+<p>状态：独立 PPL 产品草案，供 grill；不是现有 <code>pbl</code> 功能说明，也不是学生生产环境开发授权。</p>
+<h2 id="1">1. 产品问题</h2>
+<p>“这个 Agent 是 L3”无法指导产品，因为同一功能中的朗读、提问、草案、发布、评价和公开可能具有不同自主程度。若只追求项目完成，Agent 还可能替代问题提出、方案选择和独立验证，使完成量掩盖没有学习。</p>
+<p>本需求把 Agent 能力拆到任务级，并将自主程度、使用政策和学习证据放在同一个可验收闭环中。</p>
+<h2 id="2">2. 目标与非目标</h2>
+<h3 id="_1">目标</h3>
+<ul>
+<li>为每个 PBL 阶段和横切动作建立任务责任卡。</li>
+<li>默认从 L0/L1 起步，只有首次尝试和独立证据满足后才允许按任务升级。</li>
+<li>支持非 Agent、苏格拉底式追问、受控草案和获批多角色对照，而非只支持聊天生成。</li>
+<li>保存 AI 来源、学生选择、实质修改、核验和无 AI 重做/迁移证据。</li>
+<li>让教师、监护人、产品和研究者在各自权限内批准、降级、停止和审计。</li>
+</ul>
+<h3 id="_2">非目标</h3>
+<ul>
+<li>给学生完整项目或课程的一键代做。</li>
+<li>将 L5 当作教学目标，或让 Agent 自主设学习目标并自动评价学生。</li>
+<li>用聊天轮次、文本长度、作品数量或使用时长代替学习。</li>
+<li>自动作出最终评价、纪律、安全、公开、监护同意或隐私决定。</li>
+<li>未经验证向所有年级、地区和家庭推广同一策略。</li>
+</ul>
+<h2 id="3">3. 角色与权限（拟议）</h2>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>可以做什么</th>
+<th>不能做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>学生</td>
+<td>首次尝试、请求允许的帮助、选择/拒绝、修改、复述、重做和迁移</td>
+<td>自行提高任务 L 级；把 AI 输出冒充独立成果</td>
+</tr>
+<tr>
+<td>教师</td>
+<td>设学习目标、任务边界和阶段上限；审查证据；确认评价；降级/停止</td>
+<td>将成人点击批准当作学生已经参与</td>
+</tr>
+<tr>
+<td>监护人</td>
+<td>在 C 端获批范围内开通、查看最小摘要、撤回和删除</td>
+<td>代替孩子完成核心任务或授权超范围数据</td>
+</tr>
+<tr>
+<td>教研/研究负责人</td>
+<td>定义任务量规、对照条件、独立证据和研究停止点</td>
+<td>用互动热度证明效果</td>
+</tr>
+<tr>
+<td>产品/研发</td>
+<td>配置注册表、策略执行、来源和审计</td>
+<td>通过技术默认绕过人类审批</td>
+</tr>
+<tr>
+<td>数据/合规负责人</td>
+<td>审批数据、模型提供方、保留、跨境和删除</td>
+<td>将敏感数据授权转交给 Agent</td>
+</tr>
+</tbody>
+</table>
+<p>这些角色和权限是目标产品需求，不是当前 <code>pbl</code> 已有能力。</p>
+<h2 id="4">4. 核心对象：任务责任卡</h2>
+<p>每个任务在运行前必须有唯一记录，字段如下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必填内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>taskId/stage/gradeBand</code></td>
+<td>具体任务、PBL 阶段和适用年级</td>
+</tr>
+<tr>
+<td><code>learningObjective</code></td>
+<td>学生要学会什么，而不是页面要完成什么</td>
+</tr>
+<tr>
+<td><code>initiator</code></td>
+<td>学生、教师、系统或 Agent；学生正式流程默认不允许 Agent 自主发起</td>
+</tr>
+<tr>
+<td><code>decisionRights</code></td>
+<td>谁决定目标、方案、继续、公开和评价</td>
+</tr>
+<tr>
+<td><code>executionScope</code></td>
+<td>Agent 可执行的具体步骤和禁止步骤</td>
+</tr>
+<tr>
+<td><code>autonomyLevel</code></td>
+<td>L0–L5；阶段关闭时为 <code>N/A</code></td>
+</tr>
+<tr>
+<td><code>usagePolicy</code></td>
+<td><code>ALLOWED/HUMAN_ONLY/RESEARCH_ONLY/FORBIDDEN</code></td>
+</tr>
+<tr>
+<td><code>firstAttempt</code></td>
+<td>Agent 介入前学生必须完成的动作和证据</td>
+</tr>
+<tr>
+<td><code>approvalGranularity</code></td>
+<td>每一步、每一草案、每一项目或每一发布动作</td>
+</tr>
+<tr>
+<td><code>independentEvidence</code></td>
+<td>复述、修改、错误纠正、无 AI 重做和迁移要求</td>
+</tr>
+<tr>
+<td><code>stopDowngrade</code></td>
+<td>触发条件、降到何级、谁负责和审计位置</td>
+</tr>
+</tbody>
+</table>
+<p>缺少任一核心字段时任务为 <code>NOT_READY</code>，不能进入学生环境。实际允许等级取阶段、年级和当前证据上限的最低值；Agent 不能自行升级。</p>
+<h2 id="5">5. 功能需求</h2>
+<h3 id="fr-01">FR-01 任务注册与政策包</h3>
+<ul>
+<li>支持六阶段和横切动作分别配置，不给整个 Agent 永久等级。</li>
+<li>年级上限是待验证政策起点，不作为认知定律。</li>
+<li>任何变更需版本化；历史任务保留当时政策和模型信息。</li>
+<li>非 Agent 路径是正式选项，L0 不等于产品失败。</li>
+</ul>
+<h3 id="fr-02">FR-02 首次尝试门禁</h3>
+<ul>
+<li>核心学习任务在 Agent 介入前记录学生初稿、猜想、口头说明或操作尝试。</li>
+<li>未满足时只允许 L1 无障碍/输入辅助或帮助学生理解“如何开始”的提示，不生成核心答案。</li>
+<li>教师不能通过批量点击替学生制造首次尝试。</li>
+</ul>
+<h3 id="fr-03">FR-03 交互模式</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>允许任务</th>
+<th>默认限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>非 Agent</td>
+<td>创作、编辑、模拟、搭建、练习和展示</td>
+<td>必须保留完整可用路径，作为对照</td>
+</tr>
+<tr>
+<td>苏格拉底式</td>
+<td>学生先尝试后的提问、线索、反例和检查</td>
+<td>默认 L2；不直接替学生回答核心问题</td>
+</tr>
+<tr>
+<td>草案协同</td>
+<td>教师项目草案、学生成熟后局部方案比较</td>
+<td>草案 L3；逐项审查、来源、修改和理由</td>
+</tr>
+<tr>
+<td>多角色讨论</td>
+<td>获批研究中的利益相关者/反方视角</td>
+<td>L2–L3；角色不得冒充权威来源</td>
+</tr>
+<tr>
+<td>多步事务执行</td>
+<td>成人批准目标下的格式、归档等非核心事务</td>
+<td>可评估 L4；检查点和验收不可省略</td>
+</tr>
+<tr>
+<td>自主闭环</td>
+<td>仅限合成成人研究</td>
+<td>学生正式流程 <code>FORBIDDEN</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="fr-04">FR-04 来源、保存与修改</h3>
+<ul>
+<li>AI 输出必须带任务、模型、时间、来源类型和对应学生首次尝试的关联。</li>
+<li>保存 AI 内容为成果前，要求学生选择采纳/拒绝、作出有意义修改并说明理由。</li>
+<li>不能只改标点或点击保存；具体“有意义修改”由任务量规判断，不能仅用字数差。</li>
+<li>最近一条 AI 回复不能绕过收口、修改和证据要求直接成为最终学习成果。</li>
+</ul>
+<h3 id="fr-05">FR-05 独立检查</h3>
+<ul>
+<li>学生需在无 Agent 条件下复述核心选择、重做关键一步或完成相邻迁移任务。</li>
+<li>含可核验错误的合成回答用于测试学生能否发现、查证和纠正。</li>
+<li>未通过时任务标为需要教学/降级，不标为“完成且掌握”。</li>
+<li>独立检查不自动生成最终学科评价，教师保留责任。</li>
+</ul>
+<h3 id="fr-06">FR-06 人类审批</h3>
+<p>最终评价、纪律、安全处置、监护同意、隐私范围、外部数据处理、公开分享和作品发布必须单独配置责任人。自动批准草案和批量确认评价默认 <code>FORBIDDEN</code>，除非逐项审批、留痕并重新验收。</p>
+<h3 id="fr-07">FR-07 降级、停止与恢复</h3>
+<p>出现直接索答、无法复述、无实质修改、来源不可核验、隐私/安全信号或模型异常时立即停止当前帮助并降到 L0/L1。恢复需由责任人复核新证据，Agent 不得自行恢复。</p>
+<h3 id="fr-08">FR-08 成人可见与最小数据</h3>
+<p>C 端监护人默认只看到孩子选择的学习证据、AI 使用摘要和必要风险提醒，不默认获得无限监控、情绪识别或公开排名。原始语音、图像、自由文本和聊天正文是否保存需独立审批，不作为责任卡的隐含副作用。</p>
+<h3 id="fr-09">FR-09 对照研究</h3>
+<p>同年龄、同任务、同情境比较 L0、L2、L3 和多角色条件，固定内容、轮次预算、设备和时间。主要结果为独立复述、错误纠正、实质修改和迁移；消息数量、完成速度和满意度仅为辅助指标。</p>
+<h2 id="6">6. 目标流程与状态（拟议）</h2>
+<pre><code class="language-text">NOT_READY
+  → READY
+  → FIRST_ATTEMPT_RECORDED
+  → ASSISTANCE_ACTIVE
+  → STUDENT_REVISION
+  → INDEPENDENT_CHECK
+  → COMPLETE
+
+任意帮助阶段 → DOWNGRADED / BLOCKED
+L0 路径 → FIRST_ATTEMPT_RECORDED → INDEPENDENT_CHECK → COMPLETE
+</code></pre>
+<ul>
+<li>状态用于防绕行，不代表当前系统已有这些字段。</li>
+<li>返回修改不能自动清除此前的 AI 来源和降级记录。</li>
+<li>成人批准与学生独立证据是两个并行条件，不能互相替代。</li>
+</ul>
+<h2 id="7">7. 成功指标与反指标</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>学习证据</td>
+<td>无 AI 复述、关键步骤重做、相邻任务迁移、错误发现和纠正</td>
+</tr>
+<tr>
+<td>主体性</td>
+<td>学生能说明采纳/拒绝理由和关键取舍</td>
+</tr>
+<tr>
+<td>安全</td>
+<td>未授权公开、自动评价、敏感数据外传和越级执行为零</td>
+</tr>
+<tr>
+<td>可用性</td>
+<td>学生知道何时不用 AI；非 Agent 退路可完成任务</td>
+</tr>
+<tr>
+<td>反指标</td>
+<td>聊天更长、消息更多、作品更多、Agent 完成率更高</td>
+</tr>
+</tbody>
+</table>
+<p>若完成率提高而独立迁移不提高，不能判为学习产品成功；若 L0 与 Agent 条件没有学习差异，应保留非 Agent 方案。</p>
+<h2 id="8">8. 分阶段交付</h2>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>交付</th>
+<th>门禁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M0 合成政策包</td>
+<td>六阶段责任卡、风险清单、合成任务与人工双评审</td>
+<td>定义分歧未裁决则不开发</td>
+</tr>
+<tr>
+<td>M1 交互原型</td>
+<td>非 Agent + L2 + L3 对照、来源/修改/独立检查记录</td>
+<td>只用合成数据；越级即失败</td>
+</tr>
+<tr>
+<td>M2 获批教学研究</td>
+<td>小样本课堂观察、访谈、复述和迁移</td>
+<td>同意、退出、删除和模型审批齐备</td>
+</tr>
+<tr>
+<td>M3 C 端场景试验</td>
+<td>从市场调研选择一个窄场景，验证使用与付费</td>
+<td>不因 M2 完成自动商业化；另做地区和设备门禁</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9">9. 验收</h2>
+<p>沿用 Project Description 的 T-01 至 T-08，并增加：</p>
+<ul>
+<li>未记录首次尝试时，核心生成请求被拒绝。</li>
+<li>学生无实质修改或不能复述时，成果不能标为独立掌握。</li>
+<li>自动公开、自动评价、自动批准和 Agent 自行升级均被拒绝并留审计。</li>
+<li>L0 路径可完成同一学习目标，且不被界面故意弱化。</li>
+<li>多角色若只增加成本/消息而不增加迁移，停止扩展。</li>
+<li>原始内容未获批准时，系统仍能以最小元数据运行或明确不进入研究。</li>
+</ul>
+<h2 id="10">10. 决策清单</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>待负责人决定</th>
+<th>默认草案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>各年级/阶段实际上限</td>
+<td>从 L0/L1 起步，核心任务高年级最高 L3</td>
+</tr>
+<tr>
+<td>D2</td>
+<td>谁可改责任卡与恢复降级</td>
+<td>教师/教研与相应数据责任人，不是 Agent</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>首次尝试和实质修改的量规</td>
+<td>按任务定义，不能统一用字数/轮次</td>
+</tr>
+<tr>
+<td>D4</td>
+<td>独立证据由谁审核</td>
+<td>教师确认最终评价；研究另做盲评校准</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>外部模型、地域、保存和再训练</td>
+<td>未核实前停留合成环境</td>
+</tr>
+<tr>
+<td>D6</td>
+<td>C 端监护人可见范围</td>
+<td>最小摘要，不默认全量监控</td>
+</tr>
+<tr>
+<td>D7</td>
+<td>首发 C 端场景</td>
+<td>从 S1 或 S5 选一个，先做成人合成原型</td>
+</tr>
+<tr>
+<td>D8</td>
+<td>商业化与地区扩展</td>
+<td>真实学习增量和付费场景分别验证</td>
+</tr>
+</tbody>
+</table>
+<h2 id="11">11. 当前差距</h2>
+<p>当前 <code>pbl</code> 没有完整责任卡、首次尝试硬门禁、AI 来源/修改幅度/独立复述字段，也存在工具箱绕行和最近 AI 回复直接保存风险。PD-3 不能用新文档掩盖这些差距，也不能假定它们已在 PPL 实现。</p></article>
+    </div><footer><div class="wrap">
+  <span>Math PBL · PD3 To C 项目档案 · 2026-11-28</span>
+  <span>本内容由 AI 生成，请核实后使用。</span>
+</div></footer>
+<script src="../assets/site.js"></script></body></html>

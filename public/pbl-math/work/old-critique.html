@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Math PBL · PD3 To C 项目文档、个人评阅贡献与图像资产">
+<title>旧三任务稿复核 · 个人贡献 · Math PBL</title>
+<link rel="stylesheet" href="../assets/site.css"></head>
+<body><div class="topbar"><div class="wrap">
+  <a class="brand" href="../index.html"><span class="mark">½</span>
+    <span>Math PBL · PD3 To C<small>项目档案 / 个人贡献</small></span></a>
+  <nav class="links">
+    <a  href="../index.html">项目首页</a>
+    <a  href="../docs/pd1.html">项目文档</a>
+    <a class="on" href="../work/critique.html">Critique</a>
+    <a  href="../criteria.html">Criteria</a>
+    <a  href="../gallery.html">图像资产</a>
+  </nav>
+</div></div><div class="docbar"><div class="wrap"><span class="crumb">
+      <a href="../index.html">Math PBL</a> / 个人贡献 / 旧三任务稿复核</span>
+      <span class="crumb">事实基线与重写原则</span></div></div>
+    <div class="wrap docgrid">
+      <aside class="toc"><h4>本页目录</h4><a href="#_2">结论</a><a href="#_3">已有代码证据的错误</a><a href="#_4">方法上为什么不合格</a><a href="#_5" style="padding-left:12px">证据没有封口</a><a href="#_6" style="padding-left:12px">验收不是可判定测试</a><a href="#_7" style="padding-left:12px">偏差被误写成原因</a><a href="#_8" style="padding-left:12px">隐私被当成文档章节，而非停止条件</a><a href="#agent" style="padding-left:12px">Agent 等级混淆</a><a href="#_9">该说的没说</a><a href="#_10">仍然保留的合理方向</a><a href="#_11">新交付之间的关系</a><a href="#_12">参考</a></aside>
+      <article class="doc-body"><h1 id="_1">旧三任务稿复核与重写原则</h1>
+<p>状态：复核完成，供 grill。grill 指逐项质询、否决或批准，不是文档已经生效。</p>
+<h2 id="_2">结论</h2>
+<p>旧稿不是“覆盖面不够”，而是把<em>意图、代码事实、历史记忆和产品假设混成了同一级事实</em>，并给出可能带出未成年人身份信息的执行建议。新稿保留三条业务方向，但废弃旧稿的事实基线、生产导出优先级、强制四分类和 Agent 三分类。</p>
+<p>本次事实基线：<code>pbl</code> 仓库 <code>main = origin/main = 160bdcfd</code>，提交时间为 <u>2026-11-25 20:38:48（UTC-6）</u>。旧稿与旧评审均为未跟踪文件，不属于主干；本次新复核稿、PD-1、PD-2、PD-3 和双手册均位于独立审查目录 <code>C:/Git-repo-AI/AI_Turtor/2026-11-26-pbl-3-pd</code>，不属于 <code>pbl</code> 主干，也未获批准迁入或实施。</p>
+<h2 id="_3">已有代码证据的错误</h2>
+<table>
+<thead>
+<tr>
+<th>旧稿说法</th>
+<th>最新核对</th>
+<th>为什么影响执行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“全仓无 MediaRecorder，全站只传文本不传音频”</td>
+<td><code>components/ui/file-upload.tsx:271-320</code> 存在录音 Blob 上传；测评听写不存音频只是局部边界</td>
+<td>会把项目录音附件错误地带进回放或导出范围</td>
+</tr>
+<tr>
+<td>优先运行现有测评导出，称其“无姓名、隐私成本低”</td>
+<td><code>scripts/export-assessment-data.ts:137,195,201</code> 会写真实班级、<code>username</code> 和原始转写；<code>prisma/schema.prisma:149-152</code> 说明 <code>username</code> 是学籍号</td>
+<td>不能直接外送，必须先改字段白名单、授权与传输流程</td>
+</tr>
+<tr>
+<td>研究导出已有足够脱敏</td>
+<td><code>scripts/export-research-data.ts:24-28,99-113</code> 使用固定盐假名，并保留原始嵌套 payload 与多个可关联 ID</td>
+<td>假名化不等于匿名化，关联后仍可能识别学生</td>
+</tr>
+<tr>
+<td>默认研究导出为 <u>6 张 CSV</u></td>
+<td><code>scripts/export-research-data.ts:356-363</code> 当前为 <u>7 张 CSV</u></td>
+<td>旧清单的数据字典和验收口径失真</td>
+</tr>
+<tr>
+<td>密码登录成功已覆盖</td>
+<td>实际表单进入 <code>app/auth/login/route.ts:45-69</code>，该路径未记 <code>login</code>；另一 API 路径才记录</td>
+<td>登录、激活和留存指标会漏计，并与设备类型产生选择偏差</td>
+</tr>
+<tr>
+<td>只用可见时长与活跃密度就能识别“开小差”</td>
+<td><code>hooks/use-track.ts:96-136</code> 只测标签页可见；线下讨论、制作、发呆和漏报可产生相同空档</td>
+<td>不能把数据空档变成对学生或教师的道德评价</td>
+</tr>
+<tr>
+<td><code>Class.grade</code> 缺失统一回退到三年级并污染历史事件</td>
+<td>AI 路径在 <code>app/api/ai/chat/route.ts:323-334</code> 使用二年级兜底；评价分档在 <code>lib/curriculum.ts:42-47</code> 回退 mid；<code>LearningEvent</code> 本身无 grade 字段</td>
+<td>不同链路必须分别处理，历史年级需按当时班级关系恢复或标缺失</td>
+</tr>
+<tr>
+<td>“关联竞赛可选”的旧手册仍可沿用</td>
+<td><code>lib/actions/student.ts:49-78,278-287</code> 当前要求有效竞赛；最新主干还改变了一二年级建项表单</td>
+<td>手册必须按代码和实际界面重写，不能只做文字润色</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">方法上为什么不合格</h2>
+<h3 id="_5">证据没有封口</h3>
+<p>“同上”“记忆库”“后台调研”无法让另一位评审复现。新稿统一分成四类：代码事实、运行证据、负责人提供的背景、待验证假设。只有前两类可以支撑现状结论。</p>
+<h3 id="_6">验收不是可判定测试</h3>
+<p>“负责人体验后验收”没有预设输入、步骤、期望结果和停止条件。新稿必须逐项包含环境、操作、期望和失败时停止点；复核中发现的缺项需先补齐，不能自称已经满足。验证等级 L1–L4 仅指静态、行为、构建、真实环境，与 Agent 自主等级完全无关。[文档: <code>docs/testing-strategy.md:25-38</code>]</p>
+<h3 id="_7">偏差被误写成原因</h3>
+<p>“使用少”“点击多”“提交少”只是观察结果，不足以唯一推出不能用、不会用、不想用或教师组织问题。新稿要求先列使用机会、分母、缺失率和替代解释，再决定是否需课堂观察或访谈。</p>
+<h3 id="_8">隐私被当成文档章节，而非停止条件</h3>
+<p>《个人信息保护法》第 <u>28</u> 条将不满 <u>14 周岁</u>未成年人的个人信息列为敏感个人信息；第 <u>31</u> 条要求取得父母或其他监护人同意并制定专门规则。[来源: 1-PIPL] 因此“先录下来再讨论用途”不是可接受路径。是否需要处理、处理哪些字段、保存多久、谁能看、如何撤回与删除，未批准前均不得上生产。</p>
+<h3 id="agent">Agent 等级混淆</h3>
+<p>旧稿同时使用验证 L1–L4、数据层 L0–L5 和 Agent 能力，却没有说明它们不是同一把尺子。新独立项目只把 L0–L5 定义为<em>任务自主程度</em>，并额外记录学生责任、教师责任、数据风险和独立学习证据。</p>
+<h2 id="_9">该说的没说</h2>
+<p>旧稿还没有充分说明：</p>
+<ul>
+<li>已有规则会按证据条数确定性地抬升部分默认星级，教师一键确认会放大“AI 使用越多、证据越多”的偏差；消息长度与轮数还会影响思维深度指标。[代码: <code>lib/stage-eval.ts:46-86</code>；<code>lib/ai/sipa.ts:218-233</code>；<code>lib/actions/stage-eval.ts:346-389</code>]</li>
+<li>教师给项目组打同一组星级会写入全体成员，不能当作每位学生的独立能力测量。[代码: <code>lib/actions/stage-eval.ts:603-697</code>]</li>
+<li>工具箱 AI 不落库、不计入 SIPA 日限额；因此“AI 总使用量”不能只统计 SIPA。[代码: <code>app/api/tools/chat/route.ts</code>；文档: <code>memory/core/invariants.md:30</code>]</li>
+<li>项目附件可以含照片、音频等，回放不仅要遮输入框，还要拒收媒体内容、播放地址和二维码。</li>
+<li>测试站部署跟随最新版本标签而不是 main；本地 main 与测试服可能不是同一版本。[文档: <code>AGENTS.md:68-93</code>]</li>
+<li>SIPA、工具箱和教师草案会把学生文本发送到可配置的外部模型服务，默认基址在代码中为 DeepSeek；数据处理方、地域、保存与再训练规则均未由仓库证明，回放之前就要先审这条现有链路。[代码: <code>app/api/ai/chat/route.ts:466-479</code>；<code>app/api/tools/chat/route.ts:26-59</code>；<code>lib/actions/project-drafts.ts</code>]</li>
+<li>当前保存 AI 成果没有首次尝试、必须修改或独立复述门禁；教师草案还可自动批准并预填项目核心字段。这些是 PD-3 必须先处理的现状，不得把期望中的护栏写成已存在。[代码: <code>components/chat/chat-panel.tsx:255-278,1093-1113</code>；<code>lib/actions/project-drafts.ts:642-688</code>]</li>
+<li>扫码登录日志还保存 IP、完整 User-Agent、设备键和卡记录；课内/在家情境又由 IP 与课表推导。回放字段白名单不能只管新事件而遗漏这些既有数据。[代码: <code>prisma/schema.prisma:1310-1328</code>；<code>lib/analytics/context.ts:122-188</code>]</li>
+<li>manager PPT 确实存在，但它是游戏化决策提案，不是使用手册；旧稿不能替负责人确认“就是那份 PPT”。</li>
+</ul>
+<h2 id="_10">仍然保留的合理方向</h2>
+<ul>
+<li>先语义事件回放，谨慎评估 DOM 或像素录制。</li>
+<li>双手册先于完整生产行为研究，不让取数阻塞所有工作。</li>
+<li>市场调研同时覆盖 Agent 与非 Agent 路线，并绑定具体场景。</li>
+<li>真实设备、校园网、语音和触摸必须另做真实环境验收。</li>
+</ul>
+<h2 id="_11">新交付之间的关系</h2>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>回答的问题</th>
+<th>不代表什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="doc-ref">PD-1，学习证据与语义回放</span></td>
+<td>数据能回答什么、怎样补证据、何时停止</td>
+<td>已获生产取数或录制批准</td>
+</tr>
+<tr>
+<td><span class="doc-ref">PD-2，心智模型与双手册</span></td>
+<td>不同角色怎样完成任务、哪些步骤待走查</td>
+<td>已证明真实儿童认知或课堂因果关系</td>
+</tr>
+<tr>
+<td><span class="doc-ref">PD-3，PPL Agent 能力分级</span></td>
+<td>每个任务允许多大自主权、学生必须留下什么证据</td>
+<td>L5 是教学目标或行业统一标准；该文件也不属于 <code>160bdcfd</code> 的 Git 基线</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_12">参考</h2>
+<ul>
+<li>[来源: 1-PIPL] 中国人大网，《中华人民共和国个人信息保护法》，第 <u>28–31</u> 条：<a href="http://www.npc.gov.cn/c2/c30834/202108/t20210820_313088.html">http://www.npc.gov.cn/c2/c30834/202108/t20210820_313088.html</a></li>
+<li>[来源: 2-HPL2] National Academies of Sciences, Engineering, and Medicine，<em>How People Learn II</em>，<u>2018 年</u>，DOI <code>10.17226/24783</code>。用于支持“学习受已有知识、情境、动机与自我调节共同影响”，不用于证明某个产品功能有效。</li>
+<li>[来源: 2-EEF] Education Endowment Foundation，<em>Metacognition and Self-Regulated Learning</em>，<u>2025 年第 2 版</u>。用于支持计划、监控、评价和逐步独立练习的设计，不引用宣传性效果月数。</li>
+</ul>
+<blockquote>
+<p>免责声明：本输出由 AI 辅助生成，仅用于信息整理与研究参考，不构成专业意见或决策依据。</p>
+</blockquote></article>
+    </div><footer><div class="wrap">
+  <span>Math PBL · PD3 To C 项目档案 · 2026-11-28</span>
+  <span>本内容由 AI 生成，请核实后使用。</span>
+</div></footer>
+<script src="../assets/site.js"></script></body></html>
